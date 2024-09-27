@@ -1,0 +1,41 @@
+# Correction des exercices {#sec-chap12}
+
+## Exercices du chapitre 1 {#sec-0601}
+
+### Exercice 1 {#sec-06011}
+
+### Exercice 2 {#sec-06012}
+
+### Exercice 3 {#sec-06013}
+
+## Exercices du chapitre 2 {#sec-0602}
+
+### Exercice 1 {#sec-06021}
+
+### Exercice 2 {#sec-06022}
+
+### Exercice 3 {#sec-06023}
+
+## Exercices du chapitre 3 {#sec-0603}
+
+### Exercice 1 {#sec-06031}
+
+### Exercice 2 {#sec-06032}
+
+### Exercice 3 {#sec-06033}
+
+## Exercices du chapitre 4 {#sec-0604}
+
+### Exercice 1 {#sec-06041}
+
+### Exercice 2 {#sec-06042}
+
+### Exercice 3 {#sec-06043}
+
+## Exercices du chapitre 5 {#sec-0605}
+
+### Exercice 1 {#sec-06051}
+
+### Exercice 2 {#sec-06052}
+
+### Exercice 3 {#sec-06053}

@@ -1,0 +1,174 @@
+# Extensions de la régression géographiquement pondérée {#sec-chap05}
+
+Dans le [chapitre @sec-chap04], nous avons présenté les trois formes classiques de la régression géographiquement pondérée (GWR) qui permettent de modéliser des variables dépendantes continues (GWR gaussienne), dichotomiques (GWR logistique) ou des variables de comptage (GWR Poisson). Depuis la publication de l'ouvrage de référence de Steward Fotheringham, Chris Brunsdon et Martin Charlton [-@fotheringham2003geographically], plusieurs extensions ont vu le jour. Parmi celles-ci, nous abordons dans ce chapitre :
+
+-   la GWR mixte qui permet de spécifier des variables indépendantes variant spatialement et d'autres étant fixes [@fotheringham2003geographically].
+-   La régression géographiquement pondérée multiéchelle (*Multiscale Geographically Weighted Regression* -- MGWR) [@fotheringham2017multiscale].
+-   La régression géographiquement et temporellement pondérée (*Geographical and Temporal Weighted Regression* -- GTWR) [@fotheringham2015geographical].
+-   Les GWR mixtes intégrant des variables spatialement décalées (MGWR-SAR) [@geniaux2018new].
+
+
+::: bloc_objectif
+::: bloc_objectif-header
+::: bloc_objectif-icon
+:::
+
+**Objectifs d'apprentissage visés dans ce chapitre**
+:::
+
+::: bloc_objectif-body
+
+À la fin de ce chapitre, vous devriez être en mesure de : 
+
+-   Comprendre pourquoi utiliser différentes extensions de la GWR (GWR-mixte, MGWR, GTWR et MGWR-SAR).
+-   Assimiler les principes fondamentaux de ces différentes extensions de la GWR.
+-   Appréhender les différentes extensions de la GWR (GWR-mixte, MGWR, GTWR et MGWR-SAR).
+-   Analyser les résultats produits par ces différentes extensions.
+-   Mettre en pratique ces extensions de la GWR dans R.
+:::
+:::
+
+
+::: bloc_package
+::: bloc_package-header
+::: bloc_package-icon
+:::
+
+**Liste des *packages* utilisés dans ce chapitre**
+:::
+
+::: bloc_package-body
+-   Pour importer et manipuler des fichiers géographiques :
+    -   `sf` pour importer et manipuler des données vectorielles.
+    -   `dplyr` pour manipuler les données.
+-   Pour construire des cartes et des graphiques :
+    -   `tmap` pour les cartes.
+    -   `ggplot2` pour construire des graphiques.
+-   Pour construire différentes extensions de la GWR :
+    -   `GWmodel` pour construire des GWR mixtes, des MGWR et des GTWR.
+    -   `mgwrsar` pour construire des GWR avec des variables spatialement décalées.
+:::
+:::
+
+## Régression géographiquement pondérée mixte {#sec-051}
+
+### Principe de base de la GWR mixte {#sec-0511}
+
+#### Pourquoi recourir à une GWR mixte {#sec-05111}
+
+#### Formulation de la GWR mixte {#sec-05112}
+
+### Mise en oeuvre de la GWR mixte dans R {#sec-0512}
+
+## Régression géographiquement pondérée multiéchelle {#sec-052}
+
+### Principe de base de la MGWR {#sec-0521}
+
+#### Pourquoi recourir à une GWR mixte {#sec-05211}
+
+#### Formulation de la GWR mixte {#sec-05212}
+
+### Mise en oeuvre de la MGWR dans R {#sec-0522}
+
+## Régression temporellement et géographiquement pondérée {#sec-053}
+
+### Principe de base de la GTWR {#sec-0531}
+
+#### Pourquoi recourir à une GTWR {#sec-05311}
+
+#### Formulation de la GTWR {#sec-05312}
+
+### Mise en oeuvre de la GTWR dans R {#sec-0532}
+
+## Régression géographiquement pondérée mixte avec des variables spatialement décalée {#sec-054}
+
+### Principe de base de la MGWR-SAR {#sec-0541}
+
+#### Pourquoi recourir à une MGWR-SAR {#sec-05411}
+
+#### Formulation de la MGWR-SAR {#sec-05412}
+
+### Mise en oeuvre de la MGWR-SAR dans R {#sec-0542}
+
+## Quiz de révision {#sec-055}
+
+```{r}
+#| label: quizChapitre05
+#| echo: false 
+#| eval: true 
+#| message: false 
+#| warning: false 
+#| results: asis
+
+source("code_complementaire/QuizzFunctions.R")
+Chap05Quiz <- quizz("quiz/Chap05.yml", "Chap05")
+render_quizz(Chap05Quiz)
+```
+
+## Exercices de révision {#sec-056}
+
+::: bloc_exercice
+::: bloc_exercice-header
+::: bloc_exercice-icon
+:::
+
+**Exercice 1.** Réalisation d'un GWR classique
+:::
+
+::: bloc_exercice-body
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+library(sf)
+library(spgwr)
+```
+
+Correction à la [section @sec-06041].
+:::
+:::
+
+::: bloc_exercice
+::: bloc_exercice-header
+::: bloc_exercice-icon
+:::
+
+**Exercice 2.** Réalisation d'un GWR classique mixte
+:::
+
+::: bloc_exercice-body
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+library(sf)
+library(spgwr)
+```
+
+Correction à la [section @sec-06042].
+:::
+:::
+
+::: bloc_exercice
+::: bloc_exercice-header
+::: bloc_exercice-icon
+:::
+
+**Exercice 3.** Réalisation d'un GWR classique multiéchelle
+:::
+
+::: bloc_exercice-body
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+library(sf)
+library(spgwr)
+```
+
+Correction à la [section @sec-06043].
+:::
+:::

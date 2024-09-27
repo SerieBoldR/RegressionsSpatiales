@@ -1,0 +1,147 @@
+# Modèles d'économétrie spatiale par panel {#sec-chap03}
+
+Dans ce chapitre, nous abordons une extension des modèles autorégressifs, soit les modèles spatiaux par panel qui permettent de modéliser des données spatiales longitudinales.
+
+
+::: bloc_objectif
+::: bloc_objectif-header
+::: bloc_objectif-icon
+:::
+**Objectifs d'apprentissage visés dans ce chapitre**
+:::
+::: bloc_objectif-body
+À la fin de ce chapitre, vous devriez être en mesure de : 
+
+-   Comprendre les différentes formulations des modèles spatiaux par panel (SLPDM, SEPDM et SEPDM).
+-   Assimiler les principes fondamentaux de ces différentes modèles.
+-   Identifier le modèle spatial par panel le plus approprié (SLPDM, SEPDM et SEPDM).
+-   Analyser les résultats produits par ces différentes modèles.
+-   Mettre en pratique ces modèles spatiaux par panel dans R.
+:::
+:::
+
+
+::: bloc_package
+::: bloc_package-header
+::: bloc_package-icon
+:::
+
+**Liste des *packages* utilisés dans ce chapitre**
+:::
+
+::: bloc_package-body
+-   Pour importer et manipuler des fichiers géographiques :
+    -   `sf` pour importer et manipuler des données vectorielles.
+-   Pour construire des cartes et des graphiques :
+    -   `tmap` pour construire des cartes thématiques.
+    -   `ggplot2` est un *package* pour construire des graphiques.
+-   Pour les régressions :
+    -   `spdep` pour construire des matrices spatiales et calculer des mesures d’autocorrélation spatiale.
+    -   `plm` pour construire des modèles de régression par panel.
+    -   `splm` pour construire des modèles de régression spatiale par panel.
+:::
+:::
+
+##	Bref retour sur les modèles en panel {#sec-031}
+
+##	Formulation des différents modèles spatiaux par panel {#sec-032}
+
+### Description des différents modèles {#sec-0321}
+
+### Modèle SLPDM : autocorrélation sur la variable dépendante {#sec-0322}
+### Modèle SEPDM : autocorrélation sur le terme d’erreur {#sec-0323}
+### Modèle SEPDM : autocorrélation sur la variable dépendante et les variables indépendantes  {#sec-0324}
+
+## Sélection du modèle spatial par panel le plus approprié {#sec-033}
+
+##	Mise en œuvre dans R {#sec-034}
+
+## Quiz de révision {#sec-035}
+
+```{r}
+#| label: quizChapitre03
+#| echo: false 
+#| eval: true 
+#| message: false 
+#| warning: false 
+#| results: asis
+
+source("code_complementaire/QuizzFunctions.R")
+Chap03Quiz <- quizz("quiz/Chap03.yml", "Chap03")
+render_quizz(Chap03Quiz)
+```
+
+## Exercices de révision {#sec-036}
+
+::: bloc_exercice
+::: bloc_exercice-header
+::: bloc_exercice-icon
+:::
+
+**Exercice 1.** Calcul du centre moyen et de la distance standard pour les accidents
+:::
+
+::: bloc_exercice-body
+Complétez le code ci-dessous.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+library(sf)
+library(tmap)
+```
+
+Correction à la [section @sec-06031].
+:::
+:::
+
+::: bloc_exercice
+::: bloc_exercice-header
+::: bloc_exercice-icon
+:::
+
+**Exercice 2.** Calcul et cartographie de la densité des accidents dans un maillage irrégulier
+:::
+
+::: bloc_exercice-body
+Pour l'année 2021, complétez le code ci-dessous.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+library(sf)
+library(tmap)
+```
+
+Correction à la [section @sec-06032].
+:::
+:::
+
+::: bloc_exercice
+::: bloc_exercice-header
+::: bloc_exercice-icon
+:::
+
+**Exercice 3.** Calcul et cartographie de la densité des accidents dans un maillage régulier
+:::
+
+::: bloc_exercice-body
+Pour l'année 2021, complétez le code ci-dessous.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+library(sf)
+library(spatstat)
+library(tmap)
+```
+
+Correction à la [section @sec-06033].
+:::
+:::

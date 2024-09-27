@@ -1,0 +1,15 @@
+- label: "Un modèle de régression géographiquement pondérée permet d'explorer"
+  type: uc
+  response: 1
+  answers:
+     - "L'instabilité spatiale du modèle"
+     - "La dépendance du modèle" 
+  help: "Relisez le deuxième encadré à la [section @sec-0431]."
+
+- label: "Un modèle de régression géographiquement pondérée produit autant de régressions que d'entités spatiales dans le jeu de données à l'étude."
+  type: uc
+  response: 1
+  answers:
+     - "Vrai"
+     - "Faux" 
+  help: "Relisez le deuxième encadré à la [section @sec-0431]."

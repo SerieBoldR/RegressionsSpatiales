@@ -1,0 +1,42 @@
+# Modèles avec des vecteurs propres spatiaux {#sec-chap07}
+
+Dans ce chapitre, nous abordons les modèles linéaires généralisés avec des vecteurs spatiaux proposés par Daniel Griffith [-@fotheringham2003geographically; @griffith2019spatial].
+
+::: bloc_objectif
+::: bloc_objectif-header
+::: bloc_objectif-icon
+:::
+
+**Objectifs d'apprentissage visés dans ce chapitre**
+:::
+
+::: bloc_objectif-body
+
+À la fin de ce chapitre, vous devriez être en mesure de : 
+
+-  À compléter.
+-  À compléter.
+-   Analyser les résultats produits par ce type de modèle.
+-   Les mettre en pratique dans R.
+:::
+:::
+
+
+::: bloc_package
+::: bloc_package-header
+::: bloc_package-icon
+:::
+
+**Liste des *packages* utilisés dans ce chapitre**
+:::
+
+::: bloc_package-body
+-   Pour importer et manipuler des fichiers géographiques :
+    -   `sf` pour importer et manipuler des données vectorielles.
+-   Pour construire des cartes et des graphiques :
+    -   `tmap` est certainement le meilleur *package* pour la cartographie.
+    -   `ggplot2` pour construire des graphiques.
+-   Pour construire des modèles GAM :
+    -   `spfilteR` est un package dédié à ce type de modèles.
+:::
+:::

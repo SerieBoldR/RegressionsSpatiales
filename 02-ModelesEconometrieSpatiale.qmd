@@ -1,0 +1,744 @@
+# Modèles d'économétrie spatiale {#sec-chap02}
+
+L'objectif de ce chapitre est de donner un aperçu des différents modèles économétriques spatiaux.
+
+
+::: bloc_objectif
+::: bloc_objectif-header
+::: bloc_objectif-icon
+:::
+**Objectifs d'apprentissage visés dans ce chapitre**
+:::
+::: bloc_objectif-body
+À la fin de ce chapitre, vous devriez être en mesure de : 
+
+-   À modifier.
+-   À modifier.
+-   À modifier.
+-   Analyser les résultats produits par ces différentes modèles.
+-   Mettre en pratique ces modèles spatiaux par panel dans R.
+:::
+:::
+
+::: bloc_package
+::: bloc_package-header
+::: bloc_package-icon
+:::
+
+**Liste des *packages* utilisés dans ce chapitre**
+:::
+
+::: bloc_package-body
+-   Pour importer et manipuler des fichiers géographiques :
+    -   `sf` pour importer et manipuler des données vectorielles.
+-   Pour construire des cartes et des graphiques :
+    -   `tmap` est certainement le meilleur *package* pour la cartographie.
+    -   `ggplot2` pour construire des graphiques.
+-   Pour construire des modèles spatiaux :
+    -   `spdep` pour construire des matrices de pondération spatiales et calculer le *I* de Moran.
+    -   `spatialreg` pour construire des modèles économétriques spatiaux.
+:::
+:::
+
+Pour décrire les différents modèles, nous proposons d'utiliser le jeu de données spatiales `LyonIris` du *package* `geocmeans`. Ce jeu de données spatiales pour l'agglomération lyonnaise (France) comprend dix variables, dont quatre environnementales (EN) et six socioéconomiques (SE), pour les îlots regroupés pour l'information statistique (IRIS) de l'agglomération lyonnaise (@tbl-datageocmeans et @fig-datacarto).
+
+```{r}
+#| label: tbl-datageocmeans
+#| tbl-cap: Statistiques descriptives du jeu de données LyonIris
+#| echo: false
+#| message: false
+#| warning: false
+library(sf)
+load("data/chap02/DonneesLyon.Rdata")
+Data <- st_drop_geometry(LyonIris)
+Data <-  Data[c("Lden","NO2","PM25","VegHautPrt",
+                        "Pct0_14","Pct_65","Pct_Img",
+                        "TxChom1564","Pct_brevet","NivVieMed")]
+
+intitule <- c("Bruit routier (Lden dB(A))",
+              "Dioxyde d'azote (ug/m^3^)",
+              "Particules fines (PM$_{2,5}$)",
+              "Canopée (%)",
+              "Moins de 15 ans (%)",
+              "65 ans et plus (%)",
+              "Immigrants (%)",
+              "Taux de chômage",
+              "Personnes à faible scolarité (%)",
+              "Médiane du niveau de vie (milliers d'euros)")
+
+stats <- data.frame(variable = names(Data),
+                    nom = intitule,
+                    type = c("EN","EN","EN","EN","SE","SE","SE","SE","SE","SE"),
+                    moy = round(sapply(Data, mean),2),
+                    et = round(sapply(Data, sd),2), 
+                    minimum =round(sapply(Data, min),2), 
+                    maximum =round(sapply(Data, max),2)
+                    )
+
+knitr::kable(stats,
+			digits = 1,
+			format.args = list(decimal.mark = ',', big.mark = " "),
+			col.names=c("Nom","Intitulé","Type","Moy.", "E.-T.", "Min.", "Max."),
+			align= c("l","l", "c","r", "r", "r", "r"),
+			format = "markdown")
+```
+
+![Cartographie des variables du jeu de données LyonIris](images/chap02/FigureDataLyon.png){#fig-datacarto width="100%" fig-align="center"}
+
+## Pourquoi recourir à des modèles économétriques spatiaux? {#sec-021}
+
+::: bloc_attention
+::: bloc_attention-header
+::: bloc_attention-icon
+:::
+
+**Régression linéaire multiple et modèles économétriques spatiaux**
+:::
+
+::: bloc_attention-body
+Dans cette section, nous décrivons uniquement les modèles économétriques spatiaux dont la variable dépendante est continue. Sommairement, ces modèles sont des extensions de la régression linéaire multiple dans laquelle est intégrée l'autocorrélation spatiale. Avant de lire cette section, il faut donc bien maîtriser la régression linéaire multiple. Si ce n'est pas le cas, nous vous invitons vivement à lire le [chapitre suivant](https://serieboldr.github.io/MethodesQuantitatives/07-regressionlineaire.html) [@RBoldAir].
+
+Ces deux dernières décennies, plusieurs ouvrages traitant des modèles économétriques spatiaux ont été publiés, surtout en anglais [@lesage2008introduction; @anselin2014modern; @bivand2008applied]. Ils méritent grandement d'être consultés, tout comme l'excellent livre en français de Jean Dubé et Diègo Legros [-@dube2014econometrie].
+:::
+:::
+
+Dans un modèle, les résidus ($\epsilon$) sont la différence entre les valeurs observées ($y_i$) et les valeurs prédites par le modèle ($\widehat{y_i}$). Une des hypothèses de la régression linéaire multiple est que les observations doivent être indépendantes les unes des autres (*indépendance du terme d'erreur*). Le non-respect de cette hypothèse produit des résultats biaisés, notamment pour les coefficients de régression.
+
+Lorsque les observations sont des entités spatiales (polygones, points par exemple), si les résidus du modèle sont autocorrélés spatialement, il y a un problème de dépendance spatiale du modèle. Autrement dit, les observations ne sont pas spatialement indépendantes les unes des autres. Pour vérifier la dépendance spatiale d'un modèle, il suffit de calculer le *I* de Moran sur les résidus du modèle, comme décrit au chapitre 2 ([section @sec-023]).
+
+Autrement dit, un modèle de régression construit avec des données spatiales ne devrait pas avoir des résidus spatialement autocorrélés. Or, les modèles économétriques spatiaux permettent justement d'intégrer l'autocorrélation spatiale de différentes manières afin de s'assurer que l'hypothèse de l'indépendance du terme d'erreur est respectée.
+
+### Les différents modèles spatiaux autorégressifs {#sec-0212}
+
+Selon Jean Dubé et Diègo Legros, « cinq raisons peuvent motiver le choix d'un modèle autorégressif : la présence d'externalités, les effets d'entraînement, l'omission de variables importantes, la présence d'hétérogénéité spatiale des comportements, les effets mixtes » [-@dube2014econometrie, p. 120]. Les effets mixtes peuvent être la combinaison d'externalités avec des effets d'entraînement ou encore d'externalités avec l'omission d'une ou de plusieurs variables importantes spatialement structurées.
+
+#### Modèle SLX : autocorrélation spatiale sur les variables indépendantes {#sec-02121}
+
+Dans un modèle SLX, l'autocorrélation spatiale est intégrée au niveau des variables indépendantes. Autrement dit, les variables indépendantes spatialement décalées ($WX$) sont introduites aussi dans le modèle. Par conséquent, la valeur de chaque unité spatiale du modèle est ainsi expliquée à la fois par ses propres caractéristiques et celles dans le voisinage ou à proximité en fonction de la matrice de pondération spatiale ($W$).
+
+::: bloc_aller_loin
+::: bloc_aller_loin-header
+::: bloc_aller_loin-icon
+:::
+
+**Rappel sur les variables spatialement décalées**
+:::
+
+::: bloc_aller_loin-body
+Dans le chapitre 2 sur l'autocorrélation spatiale, nous avons vu comment calculer une variable spatialement décalée avec une matrice de pondération spatiale (@fig-Chap02FigureVariableSpatialementDecalee). À titre de rappel, lorsque cette dernière est standardisée en ligne, elle correspond à la valeur moyenne dans le voisinage.
+:::
+:::
+
+L'idée est alors d'introduire des **externalités** puisque les caractéristiques des entités spatiales proches ou voisines peuvent avoir un effet sur la variable dépendante [@dube2014econometrie]. L'équation du modèle SLX, qui est estimée selon la méthode des moindres carrés ordinaires (comme la régression linéaire multiple), s'écrit alors :
+
+$$
+y = X\beta + WX\theta + \epsilon
+$$ {#eq-SLX}
+
+avec :
+
+-   $y$, la variable dépendante.
+-   $X$, les variables indépendantes.
+-   $\beta$, les coefficients des variables indépendantes.
+-   $W$, la matrice de pondération spatiale.
+-   $WX$, les variables indépendantes spatiales décalées.
+-   $\theta$, les coefficients des variables indépendantes spatiales décalées.
+-   $\epsilon$, les résidus.
+
+**Construction du modèle SLX dans R**
+
+Le modèle SLX est construit avec la fonction `lmSLX` du *package* `spatialreg` [@bivand2021review]. Remarquez, dans le code ci-dessous, le paramètre `listw=W.Rook` qui est utilisé pour spécifier la matrice de pondération spatiale.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+## Chargemement des packages
+library(sf)
+library(tmap)
+library(spdep)
+library(spatialreg)
+## Matrice de contiguïté selon le partage d'un segment (Rook)
+Rook <- poly2nb(LyonIris, queen=FALSE)
+W.Rook <- nb2listw(Rook, zero.policy=TRUE, style = "W")
+## Construction du modèle MCO
+Modele.MCO <- lm(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+                 data = LyonIris)
+## Construction du modèle
+Modele.SLX <- lmSLX(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+                   listw=W.Rook,     # matrice de pondération spatiale
+                   data = LyonIris)  # dataframe
+## Résultats du modèle
+summary(Modele.SLX)
+```
+
+
+::: bloc_attention
+::: bloc_attention-header
+::: bloc_attention-icon
+:::
+
+**Effets directs, indirects et totaux**
+:::
+
+::: bloc_attention-body
+La formulation d'un modèle SLX implique deux types d'effets pour les variables indépendantes ($X$) : 
+
+-   les **effets directs**, soit ceux des caractéristiques des entités spatiales. Ils correspondent aux coefficients $\beta$ des variables indépendantes ($X$). Autrement dit, pour une observation $i$, à chaque augmentation d'une unité d'une caractéristique $X$, la valeur de $y_i$ va varier (augmenter ou diminuer) en fonction du coefficient $\beta$.
+
+-   les **effets indirects**, soit ceux des caractéristiques des entités spatiales voisines ou proches définies selon la matrice de pondération spatiale. Ils correspondent aux coefficients $\theta$ des variables indépendantes spatialement décalées ($WX$). Autrement dit, les valeurs de $WX$ des entités spatiales proches ou voisines $j$ de $i$ vont aussi être amenées à varier, impactant alors les valeurs $y_j$ selon les coefficients $\theta$.
+
+
+Prenons l'exemple d'un modèle visant à prédire le prix de vente des maisons dans une ville en fonction de leurs caractéristiques des maisons, dont la superficie du jardin. Il est probable que plus la superficie du jardin de la maison $i$ augmente, plus le prix de vente augmente également (**effet direct**, coefficient $\beta$). Cette augmentation de la taille du jardin aura aussi un impact sur le prix des maisons voisines puisque leur prix est dépendant de la taille des jardins des maisons voisines. Ainsi, chaque maison $j$, voisine de $i$ verra son prix augmenter à cause de l'augmentation de la taille du jardin de la maison $i$ (**effet indirect**).
+
+
+Pour capturer l'impact total sur le prix des maisons d'une augmentation de la superficie du jardin de la maison $i$, il suffit de sommer son effet direct (augmentation du prix de la maison $i$) et son effet indirect (augmentation du prix des maisons $j$) pour obtenir son effet total.
+
+Le code suivant permet de calculer ces effets directs et indirects.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+## Effets directs, indirects et totaux (uniquement les coefficients)
+impacts(Modele.SLX)
+## Effets directs, indirects et totaux (coefficients, valeurs de z et de p)
+summary(impacts(Modele.SLX))
+```
+
+À la lecture des valeurs de *p*, nous constatons que seule la variable `Pct0_14` a un impact direct et indirect significatif au seuil 0,01. L'augmentation d'un point de pourcentage de la population de moins de 15 ans est associé localement à une réduction de 0,20 de la concentration annuelle du dioxyde d'azote. Chez les entités voisines, cette réduction est de 0,78 et l'effet total est donc une réduction de 0,98.
+
+:::
+:::
+
+
+**Dépendance spatiale du modèle SLX?**
+
+Ce modèle a-t-il corrigé le problème de dépendance spatiale du modèle de régression linéaire classique? Avec une valeur du *I* de Moran de 0,605 (*p* \< 0,001), les résidus sont toujours fortement autocorrélés spatialement (@fig-figCartoResSLX).
+
+```{r}
+#| echo: true 
+#| eval: true 
+#| message: false 
+#| warning: false
+#| label: fig-figCartoResSLX
+#| fig-align: center
+#| fig-cap: Cartographie des résidus du modèle SLX
+#| out-width: 85%
+
+lm.morantest(Modele.SLX, W.Rook, alternative="two.sided")
+LyonIris$SLX.Residus <- residuals(Modele.SLX)
+tm_shape(LyonIris)+
+  tm_fill(col="SLX.Residus", n = 5, style = "quantile", 
+          legend.format = list(text.separator = "à"),
+          palette = "-RdBu", title = "Résidus") +
+  tm_layout(frame=FALSE) + 
+  tm_scale_bar(breaks = c(0,5))
+```
+
+#### Modèle SAR : autocorrélation spatiale sur la variable dépendante {#sec-02122}
+
+Dans le modèle SAR (aussi appelé SAR-LAG), l'autocorrélation spatiale est intégrée au niveau de la variable dépendante ($Wy$), qui est ainsi spatialement décalée. L'idée générale est que la valeur de la variable dépendante pour une observation ($y_i$) peut être influencée par les valeurs de $y$ des observations voisines et proches. L'exemple le plus classique est le prix de vente des maisons : il est influencé à la fois par les caractéristiques intrinsèques de la maison ($X$, par exemple, la superficie habitable, le nombre de chambres à coucher, de salles de bains, etc.) et par le prix de vente des maisons voisines ($Wy$). Jean Dubé et Diègo Legros [-@dube2014econometrie] qualifient ce phénomène « **d'effets d'entraînement ou d'effets de débordement** (*spillover effects*) » [-@dube2014econometrie, p. 123]. L'équation du modèle SAR s'écrit alors :
+
+$$
+y = Wy\rho + X\beta + \epsilon
+$$ {#eq-SLM}
+
+avec :
+
+-   $y$, la variable dépendante.
+-   $W$, la matrice de pondération spatiale.
+-   $Wy$, la variable dépendante spatialement décalée.
+-   $\rho$ (prononcez *rho*), le coefficient de la variable dépendante spatialement décalée. Il varie de -1 à 1.
+-   $X$, les variables indépendantes.
+-   $\beta$, les coefficients des variables indépendantes.
+-   $\epsilon$, les résidus.
+
+**Construction du modèle SAR dans R**
+
+Le modèle SAR est construit avec la fonction `lagsarlm` du *package* `spatialreg`.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+## Construction du modèle
+Modele.SAR <- lagsarlm(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+                              listw=W.Rook,    # matrice de pondération spatiale
+                              data = LyonIris, # dataframe
+                              type = 'lag')    # Modèle lag par défaut
+## Résultats du modèle
+summary(Modele.SAR, Nagelkerke=TRUE)
+```
+
+Dans les résultats ci-dessus, la valeur de *rho* est de 0,88 (LR = 620, *p* \< 0,001), traduisant un très fort effet d'entraînement. Autrement dit, lorsqu'en moyenne la concentration de dioxyde d'azote augmente dans les IRIS voisines ($Wy$), elle augmente aussi fortement chaque IRIS ($y$).
+
+
+::: bloc_attention
+::: bloc_attention-header
+::: bloc_attention-icon
+:::
+
+**Effets directs, indirects et totaux**
+:::
+
+::: bloc_attention-body
+Tout comme le modèle SLX vu précédemment, la formulation du modèle SAR-LAG implique des effets particuliers. Reprenons l'exemple d'un modèle prédisant le prix de vente des maisons avec cette fois-ci un modèle de type SAR-LAG :
+
+1. L'augmentation de la superficie du jardin de la maison $i$ va faire augmenter le prix de la maison $i$ ($y_i$).
+2. Cette augmentation de prix de la maison $i$ aura un impact sur les voisins de $i$, soit les maisons $j$, car leur prix dépend du prix de la maison $i$ au travers du terme $Wy\rho$ du modèle. Par exemple, si $\rho$ vaut 0,8, alors 80% de l'augmentation du prix de $i$ va se répercuter sur le prix des maisons $j$.
+3. De même, les voisines des maisons $j$, les maisons $k$ vont aussi être impactées par le changement de prix des maisons $j$ et ainsi de suite de voisins en voisins.
+4. Au final, la maison $i$ verra son prix augmenter encore plus, car le prix de ses voisines aura augmenté par effet de rétroaction.
+
+Ce processus de propagation est appelé l'effet d'entraînement ou de débordement (*spillover*) en économétrie. 
+
+L'effet original de l'augmentation de la taille du jardin sur la maison $i$, combiné à l'augmentation par rétroaction, est appelé l'effet direct. L'effet cumulé de l'augmentation de la taille du jardin sur toutes les autres maisons ($\neq i$) est appelé l'effet indirect. La somme des effets indirects et des directs est appelée effets totaux.
+
+À nouveau, il est possible d'utiliser la fonction `impacts` pour calculer ces effets directs et indirects.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+## Effets directs, indirects et totaux (uniquement les coefficients)
+impacts(Modele.SAR, listw = W.Rook, R = 999)
+## Effets directs, indirects et totaux (coefficients, valeurs de z et de p)
+summary(impacts(Modele.SAR, listw = W.Rook, R = 999), zstats = TRUE, short = TRUE)
+```
+
+L'interprétation des effets directs se rapproche de celle des coefficients classiques. Ainsi, selon ce modèle, l'augmentation du niveau de vie médian de 1000 € dans un IRIS est associée avec une diminution moyenne de la concentration de dioxyde d'azote de 0,14 dans cet IRIS. L'effet total est de -0.82, indiquant qu'en moyenne, l'augmentation de 1000 € du niveau de vie médian dans un IRIS est associée avec une diminution moyenne de 0,82 de la concentration de dioxyde d'azote dans l'ensemble des IRIS. Au final, l'effet indirect est simplement la différence entre l'effet total et l'effet direct. Nous pouvons constater ici que les effets indirects sont plus importants que les effets directs.
+
+:::
+:::
+
+**Dépendance spatiale du modèle SAR?**
+
+Ce modèle a-t-il corrigé le problème de dépendance spatiale du modèle de régression linéaire classique? Avec une valeur du *I* de Moran de -0,014 (*p* = 0,654), les résidus ne sont plus spatialement autocorrélés (@fig-figCartoResSAR).
+
+```{r}
+#| echo: true 
+#| eval: true 
+#| message: false 
+#| warning: false
+#| label: fig-figCartoResSAR
+#| fig-align: center
+#| fig-cap: Cartographie des résidus du modèle SAR
+#| out-width: 85%
+
+## Autocorrélation spatiale des résidus
+moran.mc(resid(Modele.SAR), W.Rook, nsim=999)
+## Cartographie des résidus
+LyonIris$SAR.Residus <- resid(Modele.SAR)
+tm_shape(LyonIris)+
+  tm_fill(col="SAR.Residus", n = 5, style = "quantile", 
+          legend.format = list(text.separator = "à"),
+          palette = "-RdBu", title = "Résidus") +
+  tm_layout(frame=FALSE) + 
+  tm_scale_bar(breaks = c(0,5))
+```
+
+#### Modèle SEM : autocorrélation spatiale sur le terme d'erreur {#sec-02123}
+
+Dans le modèle SEM (*Spatial Error Model*, appelé aussi *SAR-ERROR*), l'intégration de l'autocorrélation spatiale est réalisée sur le terme d'erreur, ce qui pourrait se justifier par l'omission d'une variable dépendante spatialement structurée [@dube2014econometrie, p. 126]. L'équation du modèle SEM s'écrit :
+
+$$
+y = X\beta + u \textrm{, } u = \lambda Wu + \epsilon
+$$ {#eq-SEM}
+
+avec :
+
+-   $y$, la variable dépendante.
+-   $W$, la matrice de pondération spatiale.
+-   $\lambda$ (prononcez *lambda*), le coefficient sur le terme d'erreur spatialement décalé. Il varie de -1 à 1.
+-   $X$, les variables indépendantes.
+-   $\beta$, les coefficients des variables indépendantes.
+-   $\epsilon$, les résidus.
+
+**Construction du modèle SAR dans R**
+
+Le modèle SEM est construit avec la fonction `errorsarlm` du *package* `spatialreg`.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+## Construction du modèle
+Modele.SEM <- errorsarlm(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+                         listw=W.Rook,    # matrice de pondération spatiale
+                         data = LyonIris) # dataframe
+## Résultats du modèle
+summary(Modele.SEM, Nagelkerke=TRUE)
+```
+
+Dans les résultats ci-dessus, la valeur de *lambda* est de 0,91 (LR = 613, *p* \< 0,001), traduisant une très forte autocorrélation spatiale sur le terme d'erreur.
+
+**Dépendance spatiale du modèle SEM?**
+
+Ce modèle a-t-il corrigé le problème de dépendance spatiale du modèle de régression linéaire classique? Avec une valeur du *I* de Moran de -0,013 (*p* = 0,614), les résidus ne sont plus spatialement autocorrélés.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+## Autocorrélation spatiale des résidus
+moran.mc(resid(Modele.SEM), W.Rook, nsim=999)
+```
+
+#### Modèle SDM : autocorrélation spatiale sur la variable dépendante et les variables indépendantes {#sec-02124}
+
+Le modèle SDM (*Spatial Durbin Model*) est un modèle mixte qui intègre à la fois l'autocorrélation spatiale sur la variable dépendante ($Wy$, **effets d'entraînement ou de débordement**) et sur les variables indépendantes ($WX$, **externalités**). Il s'écrit alors :
+
+$$
+y = Wy\rho + X\beta + WX\theta + \epsilon
+$$ {#eq-SDM}
+
+avec :
+
+-   $y$, la variable dépendante.
+-   $W$, la matrice de pondération spatiale.
+-   $Wy$, la variable dépendante spatialement décalée.
+-   $\rho$, le coefficient de la variable dépendante spatialement décalée.
+-   $X$, les variables indépendantes.
+-   $\beta$, les coefficients des variables indépendantes.
+-   $WX$, les variables indépendantes spatiales décalées.
+-   $\theta$, les coefficients des variables indépendantes spatiales décalées.
+-   $\epsilon$, les résidus.
+
+**Construction du modèle SDM dans R**
+
+Le modèle SDM est construit avec la fonction `lagsarlm` du *package* `spatialreg`. Notez que le paramètre `type = "mixed"` spécifie l'utilisation d'un modèle mixte.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+## Construction du modèle
+Modele.DurbinSpatial <- lagsarlm(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+                       listw = W.Rook,    # matrice de pondération spatiale
+                       data = LyonIris,   # dataframe
+                       type = "mixed")
+## Résultats du modèles
+summary(Modele.DurbinSpatial, Nagelkerke=TRUE)
+```
+
+**Effets directs, indirects et totaux**
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+# Effets directs, indirects et totaux (uniquement les coefficients)
+impacts(Modele.DurbinSpatial, listw = W.Rook, R = 999)
+# Effets directs, indirects et totaux (coefficients, valeurs de z et de p)
+summary(impacts(Modele.DurbinSpatial, listw = W.Rook, R = 999), zstats = TRUE, short = TRUE)
+```
+
+**Dépendance spatiale du modèle SDM?**
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+moran.mc(resid(Modele.DurbinSpatial), W.Rook, nsim=999)
+```
+
+#### Modèle SDEM : autocorrélation spatiale sur les variables indépendantes et sur le terme d'erreur {#sec-02125}
+
+Le modèle SDEM (*Spatial Durbin Error Model* en anglais) est un autre modèle mixte qui intègre à la fois l'autocorrélation spatiale sur les valeurs indépendantes ($WX$, **externalités**) et sur le terme d'erreur ($u = \lambda Wu + \epsilon$). Il s'écrit alors :
+
+$$
+y = X\beta + WX\theta + u \textrm{, } u = \lambda Wu + \epsilon
+$$ {#eq-SDEM}
+
+avec :
+
+-   $y$, la variable dépendante.
+-   $W$, la matrice de pondération spatiale.
+-   $X$, les variables indépendantes.
+-   $\beta$, les coefficients des variables indépendantes.
+-   $WX$, les variables dépendantes spatiales décalées.
+-   $\theta$, les coefficients des variables indépendantes spatiales décalées.
+-   $\lambda$ (prononcez *lambda*), le coefficient sur le terme d'erreur spatialement décalé.
+-   $\epsilon$, les résidus.
+
+**Construction du modèle SDEM dans R**
+
+Le modèle SDEM est construit avec la fonction `errorsarlm` du *package* `spatialreg`. Notez que le paramètre `etype = "mixed"` spécifie l'utilisation d'un modèle mixte.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+## Construction du modèle
+Modele.DurbinErreur <- errorsarlm(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+                                  listw=W.Rook,    # matrice de pondération spatiale
+                                  data = LyonIris, # dataframe
+                                  etype = 'emixed')
+## Résultats du modèle
+summary(Modele.DurbinErreur, Nagelkerke=TRUE)
+```
+
+**Effets directs, indirects et totaux**
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+## Effets directs, indirects et totaux (uniquement les coefficients)
+impacts(Modele.DurbinErreur, listw = W.Rook, R = 999)
+## Effets directs, indirects et totaux (coefficients, valeurs de z et de p)
+summary(impacts(Modele.DurbinErreur, listw = W.Rook, R = 999), zstats = TRUE, short = TRUE)
+```
+
+**Dépendance spatiale du modèle SDEM?**
+
+Avec une valeur du *I* de Moran de -0,010 (*p* = 0,619), les résidus du modèle SDEM ne sont pas spatialement autocorrélés.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+moran.mc(resid(Modele.DurbinErreur), W.Rook, nsim=999)
+```
+
+### Quel modèle choisir? {#sec-0213}
+
+#### Tests du multiplicateur de Lagrange sur le modèle MCO {#sec-02131}
+
+L'utilisation des tests du multiplicateur de Lagrange (simple et robuste) a été largement popularisée par Anselin *et al.* [-@anselin1996simple] pour vérifier si le recours à un modèle autorégressif est nécessaire, comparativement à un modèle de régression classique (MCO). Les tests sont calculés sur le modèle MCO avec la fonction `lm.LMtests` et une matrice de pondération spatiale. Ces tests permettent aussi de choisir entre les modèles SAR et SEM. La démarche suivante peut être utilisée pour choisir un modèle :
+
+1.  Si toutes les valeurs des tests (simples et robustes) sont non significatives (*p* \> 0,05), alors le recours à un modèle autorégressif n'est pas nécessaire. Nous pouvons conserver le modèle de régression classique (MCO).
+2.  Si les valeurs de `LMlag` ou `RLMlag` sont non significatives (*p* \> 0,05), alors le recours au modèle SAR n'est pas nécessaire.
+3.  Si les valeurs de `LMerr` ou `RLMerr` sont non significatives (*p* \> 0,05), alors le recours au modèle SEM n'est pas nécessaire.
+4.  Si les valeurs de `RLMlag` et `RLMerr` sont significatives (*p* \< 0,001), nous choisissons le modèle ayant la plus forte statistique.
+
+Dans les résultats ci-dessous, nous ne retenons pas le modèle SEM car la valeur de 0,740 pour le `RLMerr` n'est pas significative (*p* = 0,3898). Par contre, les valeurs de `LMlag` et de `RLMlag` (555 et 123) sont significatives, ce qui justifie la sélection du modèle SAR.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+summary(lm.LMtests(model = Modele.MCO,
+                   listw = W.Rook,
+                   test = c("LMlag","LMerr","RLMlag","RLMerr")))
+```
+
+#### Comparaison des modèles mixtes et non mixtes {#sec-02132}
+
+Nous avons vu qu'il existe deux modèles mixtes (SDM et SDEM). Il convient alors de vérifier si le recours d'un modèle mixte est justifié comparativement à un modèle non mixte. Dans le code ci-dessous, nous vérifions si le modèle SDM est statistiquement différent du modèle SAR avec les fonctions `LR.Sarlm` et `anova`. Les résultats signalent un écart significatif des valeurs du log-vraisemblance (26,101, *p* \< 0,001). Par conséquent, ce modèle mixte a un apport significatif.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+## SDM et SEM sont-ils significativement différents?
+LR.Sarlm(Modele.DurbinSpatial, Modele.SAR)
+anova(Modele.DurbinSpatial, Modele.SAR)
+```
+
+À l'inverse, la différence entre les valeurs du log-vraisemblance des modèles SDEM et SEM n'est pas significative (4,9728, *p* = 0,42), signalant que l'utilisation d'un modèle SDEM comparativement à un modèle SEM n'est pas nécessaire.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+## SDEM et SEM sont-ils significativement différents?
+LR.Sarlm(Modele.DurbinErreur, Modele.SEM)
+anova(Modele.DurbinErreur, Modele.SEM)
+```
+
+#### Mesures AIC et BIC et dépendance spatiale {#sec-02133}
+
+Le critère d'information d'Akaike (AIC) et le critère d'information bayésien (BIC) sont largement utilisés pour évaluer la qualité d'ajustement du modèle. Plus leurs valeurs sont faibles, meilleur est le modèle. Il est donc possible de comparer leurs valeurs pour les différents modèles (MCO, SLX, SAR, SEM, SDM et SDEM). Nous pouvons aussi comparer l'autocorrélation spatiale des résidus des modèles avec le *I* de Moran.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+## Valeurs d'AIC et de BIC
+AICs <- AIC(Modele.MCO, Modele.SLX, Modele.SAR, Modele.SEM, 
+            Modele.DurbinSpatial, Modele.DurbinErreur)
+BICs <- BIC(Modele.MCO, Modele.SLX, Modele.SAR, Modele.SEM, 
+            Modele.DurbinSpatial, Modele.DurbinErreur)
+## Autocorrélation spatiale des résidus
+IMoran.MCO <- moran.mc(resid(Modele.MCO), W.Rook, nsim=999)
+IMoran.SLX <- moran.mc(resid(Modele.SLX), W.Rook, nsim=999)
+IMoran.SLM <- moran.mc(resid(Modele.SAR), W.Rook, nsim=999)
+IMoran.SEM <- moran.mc(resid(Modele.SEM), W.Rook, nsim=999)
+IMoran.DurbinS <- moran.mc(resid(Modele.DurbinSpatial), W.Rook, nsim=999)
+IMoran.DurbinE <- moran.mc(resid(Modele.DurbinErreur), W.Rook, nsim=999)
+MoranI.s <- c(IMoran.MCO$statistic, IMoran.SLX$statistic,
+             IMoran.SLM$statistic, IMoran.SEM$statistic,
+             IMoran.DurbinS$statistic, IMoran.DurbinE$statistic)
+MoranI.p <- c(IMoran.MCO$p.value, IMoran.SLX$p.value,
+             IMoran.SLM$p.value, IMoran.SEM$p.value,
+             IMoran.DurbinS$p.value, IMoran.DurbinE$p.value)
+## Tableau
+Comparaison <- data.frame(Modele = c("MCO", "SLX", "SAR", "SEM", "Durbin S", "Durbin E"),
+                          AIC = AICs$AIC,
+                          BIC = BICs$BIC,
+                          dl = AICs$df,
+                          MoranI = MoranI.s,
+                          MoranIp = MoranI.p)
+Comparaison
+```
+
+Quelques lignes de code suffisent pour créer deux graphiques permettant de comparer visuellement les résultats des différents modèles (@fig-GraphComparaison). Les résultats démontrent que :
+
+-   Les modèles MCO et SLX ont un problème de dépendance spatiale puisque leurs résidus sont significativement autocorrélés spatialement. Par conséquent, ils ne devraient pas être retenus.
+-   Les modèles SDM, SAR et SEM sont les plus performants avec les valeurs d'AIC les plus faibles.
+
+```{r}
+#| echo: true 
+#| eval: true 
+#| message: false 
+#| warning: false
+#| label: fig-GraphComparaison
+#| fig-align: center
+#| fig-cap: Comparaison des différents modèles
+#| out-width: 85%
+
+library(ggplot2)
+library(ggpubr)
+## Graphique pour l'autocorrélation spatiale
+g1 <- ggplot(data=Comparaison, aes(x=reorder(Modele,MoranI), y=MoranI)) +
+      geom_segment(aes(x=reorder(Modele, MoranI),
+                   xend=reorder(Modele, MoranI),
+                   y=0, yend=MoranI)) +
+  geom_point( size=4,fill="red",shape=21)+
+  xlab("Modèle") + ylab("I de Moran")+
+  labs(title="Autocorrélation spatiale des résidus",
+       caption="Plus la valeur du I de Moran est faible, \nmoins il y a d'autocorrélation spatiale.")
+## Graphique pour les valeurs d'AIC
+g2 <- ggplot(data=Comparaison, aes(x=reorder(Modele,AIC), y=AIC)) +
+  geom_segment(aes(x=reorder(Modele, AIC),
+                   xend=reorder(Modele, AIC),
+                   y=0, yend=AIC)) +
+  geom_point( size=4,fill="red",shape=21)+
+  xlab("Modèle") + ylab("AIC")+
+  labs(title="Qualité d'ajustement du modèle",
+       caption="Plus la valeur d'AIC est faible, \nplus le modèle est performant.")
+## Figure avec les deux graphiques
+ggarrange(g1, g2)
+```
+
+
+## Quiz de révision {#sec-024}
+
+```{r}
+#| label: quizChapitre02
+#| echo: false 
+#| eval: true 
+#| message: false 
+#| warning: false 
+#| results: asis
+
+source("code_complementaire/QuizzFunctions.R")
+Chap02Quiz <- quizz("quiz/Chap02.yml", "Chap02")
+render_quizz(Chap02Quiz)
+```
+
+## Exercices de révision {#sec-025}
+
+::: bloc_exercice
+::: bloc_exercice-header
+::: bloc_exercice-icon
+:::
+
+**Exercice 1.** Réalisation de modèles de régression autorégressifs spatiaux
+:::
+
+::: bloc_exercice-body
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+library(sf)
+library(spatialreg)
+# Matrice de contiguïté selon le partage d'un segment (Rook)
+load("data/chap02/DonneesLyon.Rdata")
+Rook <- poly2nb(LyonIris, queen=FALSE)
+Rook <- poly2nb(LyonIris, queen=FALSE)
+W.Rook <- nb2listw(Rook, zero.policy=TRUE, style = "W")
+# Modèles
+formule <- "PM25 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed"
+Modele.SLX <- à compléter
+Modele.SAR <- à compléter
+Modele.SEM <- à compléter
+Modele.DurbinSpatial <- à compléter
+Modele.DurbinErreur <- à compléter
+```
+
+Correction à la [section @sec-06071].
+:::
+:::
+
+::: bloc_exercice
+::: bloc_exercice-header
+::: bloc_exercice-icon
+:::
+
+**Exercice 2.** Réalisation d'un modèle GAM
+:::
+
+::: bloc_exercice-body
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+library(sf)
+library(mgcv)
+load("data/chap02/DonneesLyon.Rdata")
+# Ajout des coordonnées x et y
+xy <- à compléter
+LyonIris$X <- à compléter
+LyonIris$Y <- à compléter
+# Construction du modèle
+formule <- "PM25 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed"
+Modele.GAM2 <- gam(NO2 ~  à compléter
+                          à compléter,
+                          data = LyonIris)
+summary(Modele.GAM2)
+```
+
+Correction à la [section @sec-06072].
+:::
+:::
+
+::: bloc_exercice
+::: bloc_exercice-header
+::: bloc_exercice-icon
+:::
+
+**Exercice 2.** Réalisation d'un modèle GWR
+:::
+
+::: bloc_exercice-body
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+library(sf)
+library(spgwr)
+load("data/chap02/DonneesLyon.Rdata")
+# Ajout des coordonnées x et y
+xy <- à compléter
+LyonIris$X <- à compléter
+LyonIris$Y <- à compléter
+# Optimisation du nombre de voisins avec le CV
+formule <- "PM25 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed"
+bwaCV.voisins  <- gwr.sel(à compléter)
+# Optimisation du nombre de voisins avec l'AIC
+bwaCV.voisins  <- gwr.sel(à compléter)
+# Réalisation de la GWR
+Modele.GWR <- gwr(à compléter)
+# Affichage des résultats
+Modele.GWR
+```
+
+Correction à la [section @sec-06073].
+:::
+:::

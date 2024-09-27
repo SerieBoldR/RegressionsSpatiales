@@ -1,0 +1,294 @@
+# Modèles généralisées additifs {#sec-chap06}
+
+Dans ce chapitre, nous abordons deux formes de modèles généralisées additifs (*Generalized additive model en anglais* -- GAM) qui permettent d'introduire l'espace de manière différente : les modèles GAM avec une *spline* bivariée avec les coordonnées géographiques (x, y) pour capturer les variations continues dans l'espace; les modèles GAM avec un lissage par champ aléatoire de Markov (*random markov field* – RMF) pour modéliser la dépendance spatiale entre les unités spatiales voisines.
+
+
+::: bloc_objectif
+::: bloc_objectif-header
+::: bloc_objectif-icon
+:::
+
+**Objectifs d'apprentissage visés dans ce chapitre**
+:::
+
+::: bloc_objectif-body
+
+À la fin de ce chapitre, vous devriez être en mesure de : 
+
+-   Comprendre pourquoi utiliser un modèle GAM avec un spline bivariée sur les coordonnées géographiques ou avec un lissage par champ aléatoire de Markov.
+-   Comprendre les différentes entre ces deux modèles : effets spatiaux lisses et globaux *versus* effets spatiaux locaux avec dépendance de voisinage.
+-   Analyser les résultats produits par ces deux types de modèles GAM.
+-   Les mettre en pratique dans R.
+:::
+:::
+
+
+
+
+::: bloc_package
+::: bloc_package-header
+::: bloc_package-icon
+:::
+
+**Liste des *packages* utilisés dans ce chapitre**
+:::
+
+::: bloc_package-body
+-   Pour importer et manipuler des fichiers géographiques :
+    -   `sf` pour importer et manipuler des données vectorielles.
+-   Pour construire des cartes et des graphiques :
+    -   `tmap` est certainement le meilleur *package* pour la cartographie.
+    -   `ggplot2` pour construire des graphiques.
+-   Pour construire des modèles GAM :
+    -   `mcgv` pour pratiquer ses GAM dans R!
+:::
+:::
+
+## Modèles généralisés additifs (GAM) avec une *spline* bivariée sur les coordonnées géographiques {#sec-061}
+
+Les modèles généralisés additifs (*Generalized additive models* en anglais) permettent d'intégrer à la fois des effets linéaires et des effets non linéaires avec des *splines*. Ils peuvent alors être utilisés en intégrant une *spline* bivariée sur les coordonnées géographiques des centroïdes des entités spatiales.
+
+::: bloc_attention
+::: bloc_attention-header
+::: bloc_attention-icon
+:::
+
+**Modèles généralisés additifs**
+:::
+
+::: bloc_attention-body
+Pour une description détaillée des modèles généralisés additifs, nous vous invitons vivement à lire le [chapitre suivant](https://serieboldr.github.io/MethodesQuantitatives/11-GAM.html) [@RBoldAir].
+:::
+:::
+
+### Principe de base d'un GAM intégrant l'espace {#sec-0611}
+
+#### Formulation d'un modèle GAM vec une spline bivariée sur les coordonnées géographiques {#sec-06111}
+
+Avec une *spline* bivariée sur les coordonnées géographiques, l'équation d'un modèle généralisé additif s'écrit :
+
+$$
+g(Y) \ = \beta_{0} \ + X\beta + s(CoordX,CoordY) \ + \epsilon
+$$ {#eq-GAM}
+
+avec :
+
+-   $y$, la variable dépendante.
+-   $\beta_{0}$, la constante.
+-   $X$, les variables indépendantes.
+-   $\beta$, les coefficients des variables dépendantes.
+-   $s(CoordX,CoordY)$, *spline* bivariée sur les coordonnées *x* et *y*.
+-   $\epsilon$, les résidus.
+
+
+#### Pourquoi recourir à un modèle GAM avec une spline bivariée sur les coordonnées géographiques {#sec-06112}
+
+L'intérêt de recourir à une *spline* bivariée sur les coordonnées géographiques est double :
+
+1.  Contrôler l'effet de la localisation sur la variable dépendante ($y$). Les coefficients des autres variables indépendantes sont ainsi obtenus une fois l'espace pris en compte.
+
+2.  Évaluer l'effet de la localisation (patron spatial), une fois les autres variables indépendantes contrôlées. Autrement dit, toutes choses étant égales par ailleurs, quel est l'effet de la localisation sur la variable dépendante?
+
+### Mise en oeuvre et analyse dans R {#sec-0612}
+
+#### Réalisation du modèle GAM {#sec-06121}
+
+Pour construire des modèles GAM dans R, nous utilisons la fonction `gam` du *package* `mgcv` [@wood2011fast].
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+#| warning: false
+## Chargement des packages
+library(sf)
+library(spdep)
+library(mgcv)
+
+## Chargement des données
+load("data/chap04/DonneesLyon.Rdata")
+## Ajout des coordonnées X et Y dans LyonIris 
+xy <- st_coordinates(st_centroid(LyonIris))
+LyonIris$X <- xy[,1]
+LyonIris$Y <- xy[,2]
+## Construction du modèle MCO
+Modele.MCO <- lm(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+                 data = LyonIris)
+## Construction du modèle GAM
+Modele.GAM1 <- gam(NO2 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed+
+                          s(X, Y),    # spline sur les coordonnées X, Y
+                    data = LyonIris)  # dataframe
+## Résultats du modèle
+summary(Modele.GAM1)
+```
+
+Les résultats ci-dessus signalent que la localisation a un effet très significatif puisque (s(X,Y) = 26,5 avec *p* \< 0,001). Notez que la valeur de *p* permet de déterminer si la *spline* bivariée (et donc l'espace) a ou non un effet significatif. Si la valeur de *p* est supérieure à 0,05, alors il n'est pas nécessaire de conserver la *spline* bivariée sur les coordonnées géographiques.
+
+De plus, le code ci-dessous permet de constater que le modèle GAM est plus performant que le modèle linéaire multiple classique (MCO).
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+anova(Modele.MCO, Modele.GAM1)
+```
+
+Nous pouvons aussi introduire une *spline* plus complexe en augmentant le nombre de nœuds à 40.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+Modele.GAM2 <- gam(NO2 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed+
+                          s(X, Y, k= 40), data = LyonIris)
+summary(Modele.GAM2)
+```
+
+La valeur plus faible d'AIC pour le second modèle GAM signale qu'il est plus performant que le premier.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+AIC(Modele.MCO, Modele.GAM1, Modele.GAM2)
+
+```
+
+#### Visualisation de l'effet de l'espace {#sec-06122}
+
+Pour visualiser les prédictions du modèle dans l'espace, toutes choses étant égales par ailleurs, nous utilisons la fonction `vis.gam` (@fig-EffetLocalisation1). Les contours signalent qu'au centre de Lyon, les valeurs de dioxyde d'azote sont les plus élevées et dépassent même 40 $\mu$g/m^3^.
+
+```{r}
+#| echo: true 
+#| eval: true 
+#| message: false 
+#| warning: false
+#| label: fig-EffetLocalisation1
+#| fig-align: center
+#| fig-cap: "Visualisation des prédictions dans l'espace avec la fonction `vis.gam`"
+#| out-width: 85%
+
+vis.gam(Modele.GAM2, view=c("X", "Y"), plot.type = "contour", color="terrain")
+```
+
+Toutefois, il est plus intéressant de la représenter dans un *raster*, une fois contrôlées les autres variables indépendantes. Pour ce faire, six étapes sont nécessaires :
+
+1.  Créer une *grid*.
+2.  Fixer les autres paramètres à leur moyenne respective.
+3.  Calculer la prédiction pour la localisation.
+4.  Centrer la prédiction.
+5.  Construire le *raster* avec les prédictions.
+6.  Découper et cartographier le *raster*.
+
+```{r}
+#| echo: true 
+#| eval: true 
+#| message: false 
+#| warning: false
+#| label: fig-EffetLocalisation2
+#| fig-align: center
+#| fig-cap: "Visualisation de l'effet de la localisation centrée sur zéro"
+#| out-width: 85%
+
+library(raster)
+library(terra)
+## Étape 1 : création d'une grid pour la prédiction de 100 mètres de résolution spatiale
+Xcoords <- seq(min(LyonIris$X-100), max(LyonIris$X+100), by=100)
+Ycoords <- seq(min(LyonIris$Y-100), max(LyonIris$Y+100), by=100)
+PredDF <- expand.grid(Xcoords,Ycoords)
+names(PredDF) <- c("X","Y")
+## Étape 2 : fixation de tous les autres paramètres à leur moyenne
+for(Var in c("VegHautPrt","Pct0_14","Pct_65","Pct_Img","Pct_brevet", "NivVieMed")){
+  PredDF[[Var]] <- mean(LyonIris[[Var]])
+}
+## Étape 3 : calcul de la prédiction
+PredDF$PM25 <- predict(Modele.GAM2,newdata=PredDF)
+## Étape 4 : centrage de la prédiction (sans la constante)
+PredDF$CenterPredPM25 <- PredDF$PM25 - mean(PredDF$PM25)
+### Étape 5 : construction du raster
+rasterGAM <- rasterFromXYZ(PredDF[, c("X", "Y", "CenterPredPM25")])
+crs(rasterGAM) <- crs(as(LyonIris, "Spatial"))
+rasterGAM <- rast(rasterGAM)
+### Étape 6 : découpage et cartographie du raster
+LyonIris.SpatVector <- vect(LyonIris)
+rasterGAM <- terra::mask(rasterGAM, LyonIris.SpatVector)
+terra::plot(rasterGAM)
+```
+
+La @fig-EffetLocalisation2 signale que dans le centre de Lyon, le dioxyde d'azote est plus élevé de 10 à 20 $\mu$g/m^3^, toutes choses étant égales par ailleurs. À l'inverse, dans les zones périphériques, il est faible. Cela signale un net patron spatial décroissant du centre vers la périphérie.
+
+#### Dépendance spatiale du modèle GAM {#sec-06123}
+
+Par contre, bien que l'autocorrélation spatiale des résidus du modèle GAM soit plus faible que pour le modèle MCO (*I* de Moran de 0,337 contre 0,570 avec *p* \< 0,001), il reste que le problème de la dépendance spatiale n'est pas corrigé.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+## Matrice de contiguïté selon le partage d'un segment (Rook)
+Rook <- poly2nb(LyonIris, queen=FALSE)
+W.Rook <- nb2listw(Rook, zero.policy=TRUE, style = "W")
+## Autocorrélation sur les résidus du modèle GAM
+moran.mc(resid(Modele.GAM2), W.Rook, nsim=999)
+```
+
+
+## GAM avec un lissage par champ aléatoire de Markov {#sec-062}
+
+### Principe de base d'un avec un champ aléatoire de Markov {#sec-0621}
+
+### Mise en oeuvre et analyse dans R {#sec-0622}
+
+https://fromthebottomoftheheap.net/2017/10/19/first-steps-with-mrf-smooths/
+
+
+## Quiz de révision {#sec-063}
+
+```{r}
+#| label: quizChapitre06
+#| echo: false 
+#| eval: true 
+#| message: false 
+#| warning: false 
+#| results: asis
+
+source("code_complementaire/QuizzFunctions.R")
+Chap06Quiz <- quizz("quiz/Chap06.yml", "Chap06")
+render_quizz(Chap06Quiz)
+```
+
+
+## Exercices de révision {#sec-064}
+
+::: bloc_exercice
+::: bloc_exercice-header
+::: bloc_exercice-icon
+:::
+
+**Exercice 1.** Réalisation d'un modèle GAM
+:::
+
+::: bloc_exercice-body
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+library(sf)
+library(mgcv)
+load("data/chap07/DonneesLyon.Rdata")
+# Ajout des coordonnées x et y
+xy <- à compléter
+LyonIris$X <- à compléter
+LyonIris$Y <- à compléter
+# Construction du modèle
+formule <- "PM25 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed"
+Modele.GAM2 <- gam(NO2 ~  à compléter
+                          à compléter,
+                          data = LyonIris)
+summary(Modele.GAM2)
+```
+
+Correction à la [section @sec-12072].
+:::
+:::
