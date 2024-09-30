@@ -30,15 +30,14 @@ Dans ce chapitre, nous décrivons comment importer, manipuler et cartographier d
 ### Standardisation des matrices de pondération spatiale en ligne {#sec-0123}
 ### Mise en œuvre dans R {#sec-0124}
 
-## Notion de variable spatialement décalée {#sec-0123}
-
+## Notion de variable spatialement décalée {#sec-013}
 
 ## Notion d'autocorrélation spatiale {#sec-014}
 ### Autocorrélation spatiale globale {#sec-0141}
 #### Statistique du *I* de Moran {#sec-01411}
 #### Statistiques de comptage de jointure {#sec-01412}
 
-### Autocorrélation spatiale locale {#sec-01412}
+### Autocorrélation spatiale locale {#sec-0142}
 #### Statistiques locales de Getis et Ord {#sec-014121}
 #### Typologie basée sur le diagramme de Moran {#sec-014122}
 #### Version locale des statistiques de comptage de jointure {#sec-014123}
@@ -46,6 +45,7 @@ Dans ce chapitre, nous décrivons comment importer, manipuler et cartographier d
 
 ## Retour sur la régression linéaire multiple  {#sec-015}
 ## Notion de dépendance spatiale et d’hétérogénéité spatiale et de non-stationnarité spatiale  {#sec-016}
+
 ## Pourquoi recourir à des régressions spatiales?  {#sec-017}
 
 

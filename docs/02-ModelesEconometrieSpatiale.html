@@ -759,27 +759,27 @@ Simulation results ( variance matrix):
 ========================================================
 Simulated standard errors
                Direct  Indirect     Total
-Pct0_14    0.04067599 0.2337226 0.2698255
-Pct_65     0.03663202 0.1931541 0.2286602
-Pct_Img    0.03568852 0.1889274 0.2237419
-Pct_brevet 0.02476222 0.1308931 0.1550375
-NivVieMed  0.07042122 0.3799232 0.4466745
+Pct0_14    0.04232402 0.2387631 0.2764106
+Pct_65     0.03765749 0.1976269 0.2340098
+Pct_Img    0.03495773 0.1788812 0.2129360
+Pct_brevet 0.02514896 0.1294400 0.1540050
+NivVieMed  0.06983355 0.3672732 0.4336593
 
 Simulated z-values:
               Direct  Indirect     Total
-Pct0_14    -3.403759 -2.982124 -3.096228
-Pct_65     -1.267777 -1.212513 -1.227337
-Pct_Img     1.197595  1.144679  1.157591
-Pct_brevet -1.131679 -1.085537 -1.097233
-NivVieMed  -1.978966 -1.847324 -1.883256
+Pct0_14    -3.268727 -2.888134 -2.995273
+Pct_65     -1.370386 -1.299862 -1.318291
+Pct_Img     1.186492  1.149464  1.160417
+Pct_brevet -1.060366 -1.019037 -1.029650
+NivVieMed  -1.975716 -1.869384 -1.901368
 
 Simulated p-values:
-           Direct     Indirect  Total   
-Pct0_14    0.00066465 0.0028626 0.001960
-Pct_65     0.20487746 0.2253162 0.219696
-Pct_Img    0.23107476 0.2523420 0.247031
-Pct_brevet 0.25776934 0.2776838 0.272540
-NivVieMed  0.04781980 0.0647002 0.059666</code></pre>
+           Direct    Indirect  Total   
+Pct0_14    0.0010803 0.0038753 0.002742
+Pct_65     0.1705665 0.1936483 0.187406
+Pct_Img    0.2354279 0.2503646 0.245879
+Pct_brevet 0.2889783 0.3081853 0.303175
+NivVieMed  0.0481869 0.0615693 0.057254</code></pre>
 </div>
 </div>
 <p>L’interprétation des effets directs se rapproche de celle des coefficients classiques. Ainsi, selon ce modèle, l’augmentation du niveau de vie médian de 1000&nbsp;€ dans un IRIS est associée avec une diminution moyenne de la concentration de dioxyde d’azote de 0,14 dans cet IRIS. L’effet total est de -0.82, indiquant qu’en moyenne, l’augmentation de 1000&nbsp;€ du niveau de vie médian dans un IRIS est associée avec une diminution moyenne de 0,82 de la concentration de dioxyde d’azote dans l’ensemble des IRIS. Au final, l’effet indirect est simplement la différence entre l’effet total et l’effet direct. Nous pouvons constater ici que les effets indirects sont plus importants que les effets directs.</p>
@@ -798,7 +798,7 @@ data:  resid(Modele.SAR)
 weights: W.Rook  
 number of simulations + 1: 1000 
 
-statistic = -0.014281, observed rank = 326, p-value = 0.674
+statistic = -0.014281, observed rank = 328, p-value = 0.672
 alternative hypothesis: greater</code></pre>
 </div>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Cartographie des résidus</span></span>
@@ -892,7 +892,7 @@ data:  resid(Modele.SEM)
 weights: W.Rook  
 number of simulations + 1: 1000 
 
-statistic = -0.011827, observed rank = 377, p-value = 0.623
+statistic = -0.011827, observed rank = 374, p-value = 0.626
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
@@ -1000,27 +1000,27 @@ Simulation results ( variance matrix):
 ========================================================
 Simulated standard errors
                Direct  Indirect     Total
-Pct0_14    0.04106311 0.3396766 0.3650989
-Pct_65     0.03664127 0.2920234 0.3153259
-Pct_Img    0.03377750 0.2699441 0.2902463
-Pct_brevet 0.02581429 0.2013609 0.2187497
-NivVieMed  0.06788621 0.4887442 0.5225855
+Pct0_14    0.04327488 0.3360273 0.3646389
+Pct_65     0.03621012 0.2831102 0.3060171
+Pct_Img    0.03249959 0.2686861 0.2889084
+Pct_brevet 0.02422890 0.2010798 0.2164395
+NivVieMed  0.06647469 0.4919150 0.5248779
 
 Simulated z-values:
                Direct   Indirect       Total
-Pct0_14    -3.0127353 -3.0311420 -3.15892579
-Pct_65     -0.5835156  0.1462641  0.06764998
-Pct_Img     1.9301470  3.5197736  3.49819332
-Pct_brevet -0.7749628 -2.3517376 -2.25624591
-NivVieMed  -2.3182567 -0.2919589 -0.57420432
+Pct0_14    -2.8905819 -3.0557742 -3.15905174
+Pct_65     -0.6069750  0.1675100  0.08314945
+Pct_Img     2.0322028  3.5630368  3.54224484
+Pct_brevet -0.8120021 -2.3874270 -2.30890139
+NivVieMed  -2.3720987 -0.2804918 -0.56329790
 
 Simulated p-values:
-           Direct   Indirect   Total     
-Pct0_14    0.002589 0.00243631 0.00158352
-Pct_65     0.559546 0.88371291 0.94606427
-Pct_Img    0.053589 0.00043192 0.00046842
-Pct_brevet 0.438362 0.01868595 0.02405523
-NivVieMed  0.020435 0.77031804 0.56582954</code></pre>
+           Direct    Indirect   Total     
+Pct0_14    0.0038453 0.00224480 0.00158283
+Pct_65     0.5438675 0.86696876 0.93373270
+Pct_Img    0.0421331 0.00036659 0.00039674
+Pct_brevet 0.4167904 0.01696677 0.02094905
+NivVieMed  0.0176874 0.77910025 0.57323205</code></pre>
 </div>
 </div>
 <p><strong>Dépendance spatiale du modèle SDM?</strong></p>
@@ -1034,7 +1034,7 @@ data:  resid(Modele.DurbinSpatial)
 weights: W.Rook  
 number of simulations + 1: 1000 
 
-statistic = -0.0046127, observed rank = 465, p-value = 0.535
+statistic = -0.0046127, observed rank = 474, p-value = 0.526
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
@@ -1171,7 +1171,7 @@ data:  resid(Modele.DurbinErreur)
 weights: W.Rook  
 number of simulations + 1: 1000 
 
-statistic = -0.010362, observed rank = 388, p-value = 0.612
+statistic = -0.010362, observed rank = 400, p-value = 0.6
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
@@ -1286,10 +1286,10 @@ Modele.SEM              2  8 2755.5 -1369.7    2  4.9728  0.4192</code></pre>
 <pre><code>    Modele      AIC      BIC dl       MoranI MoranIp
 1      MCO 3366.626 3396.212  7  0.587312061   0.001
 2      SLX 3222.594 3273.313 12  0.604660275   0.001
-3      SAR 2748.314 2782.126  8 -0.014281059   0.667
-4      SEM 2755.474 2789.286  8 -0.011826605   0.627
-5 Durbin S 2732.212 2787.157 13 -0.004612686   0.501
-6 Durbin E 2760.501 2815.446 13 -0.010361653   0.604</code></pre>
+3      SAR 2748.314 2782.126  8 -0.014281059   0.660
+4      SEM 2755.474 2789.286  8 -0.011826605   0.614
+5 Durbin S 2732.212 2787.157 13 -0.004612686   0.514
+6 Durbin E 2760.501 2815.446 13 -0.010361653   0.628</code></pre>
 </div>
 </div>
 <p>Quelques lignes de code suffisent pour créer deux graphiques permettant de comparer visuellement les résultats des différents modèles (<a href="#fig-GraphComparaison">figure&nbsp;<span>2.4</span></a>). Les résultats démontrent que&nbsp;:</p>
