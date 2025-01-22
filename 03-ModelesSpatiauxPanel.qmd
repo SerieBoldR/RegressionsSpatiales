@@ -61,7 +61,7 @@ Dans ce chapitre, nous abordons une extension des modèles autorégressifs, soit
 ```{r}
 #| label: quizChapitre03
 #| echo: false 
-#| eval: true 
+#| eval: false 
 #| message: false 
 #| warning: false 
 #| results: asis

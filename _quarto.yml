@@ -6,9 +6,12 @@ latex-auto-install: true
 
 lang: fr
 language:
+  toc-title-document: "Table des matières"
   title-block-author-plural: "Auteurs"
   repo-action-links-issue: "Signaler un problème ou<br>formuler une suggestion"
 crossref:
+  lof-title: "Liste des figures"
+  lot-title: "Listes des tableaux"
   fig-prefix: figure
   tbl-prefix: tableau
   sec-prefix: section
@@ -17,7 +20,7 @@ crossref:
   tbl-title: Tableau
   eq-title: Équation
 book:
-  title: 'Régressions spatiales : un grand bol d’R'
+  title: 'Méthodes de régression spatiale : un grand bol d’R'
   search: true
   author: 
     - name: Philippe Apparicio
@@ -41,7 +44,7 @@ book:
   reader-mode: false
   page-footer:
     left: |
-      Régressions spatiales : un grand bol d’R.
+      Méthodes de régression spatiale : un grand bol d’R.
     right: |
       Ce livre a été réalisé avec <a href="https://quarto.org/">Quarto</a>.
   cover-image: images/introduction/CouvertureP1.png
@@ -51,17 +54,17 @@ book:
   repo-branch: main
   repo-actions:
   - issue
-  # downloads: pdf
+  downloads: pdf
   chapters:
   - index.qmd
   - 00-auteurs.qmd
   - part: Partie 1. Notions de base
-  - 01-NotionsDeBase.qmd
+  # - 01-NotionsDeBase.qmd
   - part: Partie 2. Économétrie spatiale
   - 02-ModelesEconometrieSpatiale.qmd
   - 03-ModelesSpatiauxPanel.qmd
   - part: Partie 3. Régressions géographiquement pondérées
-  #- 04-GWRClassique.qmd
+  - 04-GWRClassique.qmd
   - 05-GWRExtensions.qmd
   - part: Partie 4. Autres approches de modélisations spatiales
   - 06-GAM.qmd
@@ -72,6 +75,7 @@ book:
       
 bibliography: references.bib
 csl: StyleRefs.csl
+
 
 format:
   html:
@@ -85,3 +89,50 @@ format:
     fontsize: 11pt
     mainfont: Helvetica Neue,Helvetica,Arial,sans-serif
     monofont: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace
+  pdf:
+    filters:
+      - lua/callout_custom_pdf.lua
+    pdf-engine: pdflatex
+    documentclass: scrbook
+    papersize: letter
+    keep-tex: false
+    classoption:
+      # Remove odd-even page breaks (for printing PDF)
+      - open=any
+      - twoside=false # don't use even/odd pages, no blank pages
+      # pass french to book class (babel will see it automatically)
+      - french
+    output: "MéthodesRegressionsSpatiales.pdf"
+    hyperrefoptions:
+      - pdfstartview={XYZ null null 0.75}
+      - pdfpagemode=UseOutlines
+      - pdfdisplaydoctitle=true
+      - pdfpagelayout=SinglePage
+      - pdfstartpage=1
+    geometry:
+      - top=20mm
+      - left=15mm
+      - right=15mm
+      - heightrounded
+    fontfamily: libertinus
+    fontfamilyoptions:
+      - p
+    lof: true
+    lot: true
+    toc: true
+    toc-depth: 4
+    code-block-border-left: false
+    fontsize: 11pt
+    urlcolor: Green4
+    citecolor: violet
+    linkcolor: violet
+    colorlinks: true
+    include-in-header:
+      - tex-hacks/color-tables.tex
+      - tex-hacks/code-font.tex
+      - tex-hacks/fix-unicode-chars.tex
+      - tex-hacks/image-on-title-page.tex
+      - tex-hacks/callout.tex
+    header-includes:
+      - \renewcommand{\thepart}{} % Enlever numérotation des parties
+      - \setcounter{secnumdepth}{3} % Activer la numérotation des sections jusqu'au niveau des sous-sections

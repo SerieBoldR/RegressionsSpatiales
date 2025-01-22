@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.353">
+<meta name="generator" content="quarto-1.6.32">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Régressions spatiales : un grand bol d’R - 5&nbsp; Modèles généralisées additifs</title>
+<title>5&nbsp; Modèles généralisées additifs – Méthodes de régression spatiale : un grand bol d’R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,7 +19,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -30,7 +30,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -55,6 +55,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
+  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -87,16 +88,22 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-2486e1f0a3ee9ee1fc393803a1361cdb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap-9e975f8ad5abb1a75f6b80547d83af80.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "Pas de résultats",
     "search-matching-documents-text": "documents trouvés",
@@ -105,32 +112,60 @@ div.csl-indent {
     "search-more-match-text": "correspondance de plus dans ce document",
     "search-more-matches-text": "correspondances de plus dans ce document",
     "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Annuler",
-    "search-submit-button-title": "Envoyer"
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
   }
-}</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><link rel="stylesheet" href="css/quizlib.min.css">
+}</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script><link rel="stylesheet" href="css/quizlib.min.css">
 </head>
 <body class="nav-sidebar floating">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06-GAM.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Modèles généralisées additifs</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06-GAM.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Modèles généralisées additifs</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Régressions spatiales : un grand bol d’R</a> 
+      <a href="./">Méthodes de régression spatiale : un grand bol d’R</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/SerieBoldR/RegressionsSpatiales" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/SerieBoldR/RegressionsSpatiales" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
+    <a href="./Méthodes-de-régression-spatiale---un-grand-bol-d’R.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
 </div>
     </div>
       </div>
@@ -157,12 +192,6 @@ div.csl-indent {
       <span class="sidebar-item-text sidebar-link text-start">
  <span class="menu-text">Partie 1. Notions de base</span></span>
   </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./01-NotionsDeBase.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Notions de base</span></span></a>
-  </div>
-</li>
         <li class="sidebar-item sidebar-item-section">
       <span class="sidebar-item-text sidebar-link text-start">
  <span class="menu-text">Partie 2. Économétrie spatiale</span></span>
@@ -170,19 +199,25 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./02-ModelesEconometrieSpatiale.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./03-ModelesSpatiauxPanel.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <span class="sidebar-item-text sidebar-link text-start">
  <span class="menu-text">Partie 3. Régressions géographiquement pondérées</span></span>
   </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-GWRClassique.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Régressions géographiquement pondérées classiques</span></span></a>
+  </div>
+</li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./05-GWRExtensions.html" class="sidebar-item-text sidebar-link">
@@ -223,7 +258,7 @@ div.csl-indent {
 </li>
     </ul>
 </div>
-</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table des matières</h2>
@@ -245,7 +280,7 @@ div.csl-indent {
 </li>
   <li><a href="#sec-063" id="toc-sec-063" class="nav-link" data-scroll-target="#sec-063"><span class="header-section-number">5.3</span> Quiz de révision</a></li>
   <li><a href="#sec-064" id="toc-sec-064" class="nav-link" data-scroll-target="#sec-064"><span class="header-section-number">5.4</span> Exercices de révision</a></li>
-  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action">Signaler un problème ou<br>formuler une suggestion</a></p></div></div></nav>
+  </ul><div class="toc-actions"><ul><li><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
@@ -262,7 +297,8 @@ div.csl-indent {
   </div>
   
 
-</header><p>Dans ce chapitre, nous abordons deux formes de modèles généralisées additifs (<em>Generalized additive model en anglais</em> – GAM) qui permettent d’introduire l’espace de manière différente&nbsp;: les modèles GAM avec une <em>spline</em> bivariée avec les coordonnées géographiques (x, y) pour capturer les variations continues dans l’espace; les modèles GAM avec un lissage par champ aléatoire de Markov (<em>random markov field</em> – RMF) pour modéliser la dépendance spatiale entre les unités spatiales voisines.</p>
+
+</header><p>Dans ce chapitre, nous abordons deux formes de modèles généralisées additifs (<em>Generalized additive model en anglais</em> – GAM) qui permettent d’introduire l’espace deux manières différentes&nbsp;: les modèles GAM avec une <em>spline</em> bivariée avec les coordonnées géographiques (x, y) pour capturer les variations continues dans l’espace; les modèles GAM avec un lissage par champ aléatoire de Markov (<em>random markov field</em> – RMF) pour modéliser la dépendance spatiale entre les unités spatiales voisines.</p>
 <div class="bloc_objectif">
 <div class="bloc_objectif-header">
 <div class="bloc_objectif-icon">
@@ -323,7 +359,7 @@ div.csl-indent {
 <p><strong>Modèles généralisés additifs</strong></p>
 </div>
 <div class="bloc_attention-body">
-<p>Pour une description détaillée des modèles généralisés additifs, nous vous invitons vivement à lire le <a href="https://serieboldr.github.io/MethodesQuantitatives/11-GAM.html">chapitre suivant</a> <span class="citation" data-cites="RBoldAir">(<a href="references.html#ref-RBoldAir" role="doc-biblioref">Apparicio et Gelb 2022</a>)</span>.</p>
+<p>Pour une description détaillée des modèles généralisés additifs, nous vous invitons vivement à lire le <a href="https://serieboldr.github.io/MethodesQuantitatives/11-GAM.html">chapitre suivant</a> <span class="citation" data-cites="RBoldAirMethodesAnalysesSpatiales">(<a href="references.html#ref-RBoldAirMethodesAnalysesSpatiales" role="doc-biblioref">Apparicio et Gelb 2024</a>)</span>.</p>
 </div>
 </div>
 <section id="sec-0611" class="level3" data-number="5.1.1"><h3 data-number="5.1.1" class="anchored" data-anchor-id="sec-0611">
@@ -360,13 +396,11 @@ g(Y) \ = \beta_{0} \ + X\beta + s(CoordX,CoordY) \ + \epsilon
 <span class="header-section-number">5.1.2.1</span> Réalisation du modèle GAM</h4>
 <p>Pour construire des modèles GAM dans R, nous utilisons la fonction <code>gam</code> du <em>package</em> <code>mgcv</code> <span class="citation" data-cites="wood2011fast">(<a href="references.html#ref-wood2011fast" role="doc-biblioref">Wood 2011</a>)</span>.</p>
 <div class="cell">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Chargement des packages</span></span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Chargement des packages et des données</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/spdep/">spdep</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">mgcv</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## Chargement des données</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"data/chap04/DonneesLyon.Rdata"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"data/Lyon.Rdata"</span><span class="op">)</span></span>
 <span><span class="co">## Ajout des coordonnées X et Y dans LyonIris </span></span>
 <span><span class="va">xy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html">st_coordinates</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_centroid</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">LyonIris</span><span class="op">$</span><span class="va">X</span> <span class="op">&lt;-</span> <span class="va">xy</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span></span>
@@ -376,8 +410,9 @@ g(Y) \ = \beta_{0} \ + X\beta + s(CoordX,CoordY) \ + \epsilon
 <span>                 data <span class="op">=</span> <span class="va">LyonIris</span><span class="op">)</span></span>
 <span><span class="co">## Construction du modèle GAM</span></span>
 <span><span class="va">Modele.GAM1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/gam.html">gam</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span>  <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span><span class="op">+</span></span>
-<span>                          <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html">s</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">Y</span><span class="op">)</span>,    <span class="co"># spline sur les coordonnées X, Y</span></span>
-<span>                    data <span class="op">=</span> <span class="va">LyonIris</span><span class="op">)</span>  <span class="co"># dataframe</span></span>
+<span>                          <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html">s</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">Y</span><span class="op">)</span>,           <span class="co"># spline sur les coordonnées X, Y</span></span>
+<span>                          family<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/family.html">gaussian</a></span><span class="op">(</span><span class="op">)</span>, <span class="co"># distribution</span></span>
+<span>                          data <span class="op">=</span> <span class="va">LyonIris</span><span class="op">)</span>   <span class="co"># dataframe</span></span>
 <span><span class="co">## Résultats du modèle</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">Modele.GAM1</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -430,7 +465,9 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>Nous pouvons aussi introduire une <em>spline</em> plus complexe en augmentant le nombre de nœuds à 40.</p>
 <div class="cell">
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">Modele.GAM2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/gam.html">gam</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span>  <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span><span class="op">+</span></span>
-<span>                          <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html">s</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">Y</span>, k<span class="op">=</span> <span class="fl">40</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">LyonIris</span><span class="op">)</span></span>
+<span>                          <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html">s</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">Y</span>, k<span class="op">=</span> <span class="fl">40</span><span class="op">)</span>, </span>
+<span>                          family<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/family.html">gaussian</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>                          data <span class="op">=</span> <span class="va">LyonIris</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">Modele.GAM2</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -474,13 +511,17 @@ Modele.GAM2 42.67520 2868.355</code></pre>
 </div>
 </section><section id="sec-06122" class="level4" data-number="5.1.2.2"><h4 data-number="5.1.2.2" class="anchored" data-anchor-id="sec-06122">
 <span class="header-section-number">5.1.2.2</span> Visualisation de l’effet de l’espace</h4>
-<p>Pour visualiser les prédictions du modèle dans l’espace, toutes choses étant égales par ailleurs, nous utilisons la fonction <code>vis.gam</code> (<a href="#fig-EffetLocalisation1">figure&nbsp;<span>5.1</span></a>). Les contours signalent qu’au centre de Lyon, les valeurs de dioxyde d’azote sont les plus élevées et dépassent même 40&nbsp;<span class="math inline">\(\mu\)</span>g/m<sup>3</sup>.</p>
+<p>Pour visualiser les prédictions du modèle dans l’espace, toutes choses étant égales par ailleurs, nous utilisons la fonction <code>vis.gam</code> (<a href="#fig-EffetLocalisation1" class="quarto-xref">figure&nbsp;<span>5.1</span></a>). Les contours signalent qu’au centre de Lyon, les valeurs de dioxyde d’azote sont les plus élevées et dépassent même 40&nbsp;<span class="math inline">\(\mu\)</span>g/m<sup>3</sup>.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/vis.gam.html">vis.gam</a></span><span class="op">(</span><span class="va">Modele.GAM2</span>, view<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="st">"Y"</span><span class="op">)</span>, plot.type <span class="op">=</span> <span class="st">"contour"</span>, color<span class="op">=</span><span class="st">"terrain"</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-EffetLocalisation1" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure"><p><img src="06-GAM_files/figure-html/fig-EffetLocalisation1-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;5.1: Visualisation des prédictions dans l’espace avec la fonction <code>vis.gam</code></figcaption></figure>
+<div id="fig-EffetLocalisation1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-EffetLocalisation1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="06-GAM_files/figure-html/fig-EffetLocalisation1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-EffetLocalisation1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.1: Visualisation des prédictions dans l’espace avec la fonction <code>vis.gam</code>
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -518,13 +559,17 @@ Modele.GAM2 42.67520 2868.355</code></pre>
 <span><span class="va">rasterGAM</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/mask.html">mask</a></span><span class="op">(</span><span class="va">rasterGAM</span>, <span class="va">LyonIris.SpatVector</span><span class="op">)</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html">plot</a></span><span class="op">(</span><span class="va">rasterGAM</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-EffetLocalisation2" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure"><p><img src="06-GAM_files/figure-html/fig-EffetLocalisation2-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;5.2: Visualisation de l’effet de la localisation centrée sur zéro</figcaption></figure>
+<div id="fig-EffetLocalisation2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-EffetLocalisation2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="06-GAM_files/figure-html/fig-EffetLocalisation2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-EffetLocalisation2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.2: Visualisation de l’effet de la localisation centrée sur zéro
+</figcaption></figure>
 </div>
 </div>
 </div>
-<p>La <a href="#fig-EffetLocalisation2">figure&nbsp;<span>5.2</span></a> signale que dans le centre de Lyon, le dioxyde d’azote est plus élevé de 10 à 20&nbsp;<span class="math inline">\(\mu\)</span>g/m<sup>3</sup>, toutes choses étant égales par ailleurs. À l’inverse, dans les zones périphériques, il est faible. Cela signale un net patron spatial décroissant du centre vers la périphérie.</p>
+<p>La <a href="#fig-EffetLocalisation2" class="quarto-xref">figure&nbsp;<span>5.2</span></a> signale que dans le centre de Lyon, le dioxyde d’azote est plus élevé de 10 à 20&nbsp;<span class="math inline">\(\mu\)</span>g/m<sup>3</sup>, toutes choses étant égales par ailleurs. À l’inverse, dans les zones périphériques, il est faible. Cela signale un net patron spatial décroissant du centre vers la périphérie.</p>
 </section><section id="sec-06123" class="level4" data-number="5.1.2.3"><h4 data-number="5.1.2.3" class="anchored" data-anchor-id="sec-06123">
 <span class="header-section-number">5.1.2.3</span> Dépendance spatiale du modèle GAM</h4>
 <p>Par contre, bien que l’autocorrélation spatiale des résidus du modèle GAM soit plus faible que pour le modèle MCO (<em>I</em> de Moran de 0,337 contre 0,570 avec <em>p</em>&nbsp;&lt;&nbsp;0,001), il reste que le problème de la dépendance spatiale n’est pas corrigé.</p>
@@ -553,355 +598,40 @@ alternative hypothesis: greater</code></pre>
 </section><section id="sec-0622" class="level3" data-number="5.2.2"><h3 data-number="5.2.2" class="anchored" data-anchor-id="sec-0622">
 <span class="header-section-number">5.2.2</span> Mise en oeuvre et analyse dans R</h3>
 <p>https://fromthebottomoftheheap.net/2017/10/19/first-steps-with-mrf-smooths/</p>
+<div class="bloc_aller_loin">
+<div class="bloc_aller_loin-header">
+<div class="bloc_aller_loin-icon">
+
+</div>
+<p><strong>Modèles généralisées additifs avec d’autres distributions pour la variable dépendante</strong></p>
+</div>
+<div class="bloc_aller_loin-body">
+<p>Dans ce chapitre, nous avons créé des modèles GAM en introduisant l’espace de deux manières différentes, et ce, avec une distribution gaussienne. Or, il est aussi possible de construire ces deux types deux modèles avec des variables dépendantes qualitatives (modèles logistique, probit, multinomial, ordinal), de comptage (modèles Poisson, binomial négatif, avec excès fixe de zéros, avec excès ajusté de zéros), continues (gaussien, Student, Gamma, bêta).</p>
+<p>La fonction <code>gam</code> du <em>package</em> <code>mgcv</code> comprend un argument <code>family</code> dont la valeur par défaut est <code><a href="https://rdrr.io/r/stats/family.html">gaussian()</a></code>. Cet argument permet de spécifier la famille de distribution et la fonction de lien en utilisant les familles de distribution disponibles dans la fonction de <code>glm</code> (<em>Generalized Linear Models</em> pour régressions linéaires généralisées)&nbsp;:</p>
+<ul>
+<li><code>binomial(link = "logit")</code></li>
+<li><code>gaussian(link = "identity")</code></li>
+<li><code>Gamma(link = "inverse")</code></li>
+<li><code>inverse.gaussian(link = "1/mu^2")</code></li>
+<li><code>poisson(link = "log")</code></li>
+<li><code>quasi(link = "identity", variance = "constant")</code></li>
+<li><code>quasibinomial(link = "logit")</code></li>
+<li><code>quasipoisson(link = "log")</code></li>
+</ul>
+<p>D’autres familles de distribution sont aussi spécifiques la fonction <code>gam</code> de <code>mgcv</code>&nbsp;:</p>
+<ul>
+<li><code>betar(link="logit")</code></li>
+<li><code>cnorm(theta=NULL,link="identity")</code></li>
+<li><code>nb(theta = NULL, link = "log")</code></li>
+<li><code>ocat(theta=NULL,link="identity",R=NULL)</code></li>
+<li><code>scat(theta = NULL, link = "identity",min.df=3)</code></li>
+<li><code>tw(theta = NULL, link = "log",a=1.01,b=1.99)</code></li>
+<li><code>ziP(theta = NULL, link = "identity",b=0)</code></li>
+</ul>
+</div>
+</div>
 </section></section><section id="sec-063" class="level2" data-number="5.3"><h2 data-number="5.3" class="anchored" data-anchor-id="sec-063">
 <span class="header-section-number">5.3</span> Quiz de révision</h2>
-<div id="Chap06" class="card">
-<link type="text/javascript" src="libs/quizlib.1.0.1.min.js">
-<script>var Quiz=function(a,b){this.Classes=Object.freeze({QUESTION:"quizlib-question",QUESTION_TITLE:"quizlib-question-title",QUESTION_ANSWERS:"quizlib-question-answers",QUESTION_WARNING:"quizlib-question-warning",CORRECT:"quizlib-correct",INCORRECT:"quizlib-incorrect",TEMP:"quizlib-temp"}),this.unansweredQuestionText="Question sans réponse !",this.container=document.getElementById(a),this.questions=[],this.result=new QuizResult,this.answers=b;for(var c=0;c<this.container.children.length;c++)this.container.children[c].classList.contains(Quiz.Classes.QUESTION)&&this.questions.push(this.container.children[c]);if(this.answers.length!=this.questions.length)throw new Error("Number of answers does not match number of questions!")};Quiz.Classes=Object.freeze({QUESTION:"quizlib-question",QUESTION_TITLE:"quizlib-question-title",QUESTION_ANSWERS:"quizlib-question-answers",QUESTION_WARNING:"quizlib-question-warning",CORRECT:"quizlib-correct",INCORRECT:"quizlib-incorrect",TEMP:"quizlib-temp"}),Quiz.prototype.checkAnswers=function(a){void 0===a&&(a=!0);for(var b=[],c=[],d=0;d<this.questions.length;d++){var e=this.questions[d],f=this.answers[d],g=[];this.clearHighlights(e);for(var h,i=e.getElementsByClassName(Quiz.Classes.QUESTION_ANSWERS)[0].getElementsByTagName("input"),j=0;j<i.length;j++)h=i[j],"checkbox"===h.type||"radio"===h.type?h.checked&&g.push(h.value):""!==h.value&&g.push(h.value);1!=g.length||Array.isArray(f)?0===g.length&&b.push(e):g=g[0],c.push(Utils.compare(g,f))}if(0===b.length||!a)return this.result.setResults(c),!0;for(d=0;d<b.length;d++){var k=document.createElement("span");k.appendChild(document.createTextNode(this.unansweredQuestionText)),k.className=Quiz.Classes.QUESTION_WARNING,b[d].getElementsByClassName(Quiz.Classes.QUESTION_TITLE)[0].appendChild(k)}return!1},Quiz.prototype.clearHighlights=function(a){for(var b=a.getElementsByClassName(Quiz.Classes.QUESTION_WARNING);b.length>0;)b[0].parentNode.removeChild(b[0]);var c,d=[a.getElementsByClassName(Quiz.Classes.CORRECT),a.getElementsByClassName(this.Classes.INCORRECT)];for(i=0;i<d.length;i++)for(;d[i].length>0;)c=d[i][0],c.classList.remove(Quiz.Classes.CORRECT),c.classList.remove(Quiz.Classes.INCORRECT);for(var e=a.getElementsByClassName(Quiz.Classes.TEMP);e.length>0;)e[0].parentNode.removeChild(e[0])},Quiz.prototype.highlightResults=function(a){for(var b,c=0;c<this.questions.length;c++)b=this.questions[c],b.getElementsByClassName(Quiz.Classes.QUESTION_TITLE)[0].classList.add(this.result.results[c]?Quiz.Classes.CORRECT:Quiz.Classes.INCORRECT),void 0!==a&&a(this,b,c,this.result.results[c])};var QuizResult=function(){this.results=[],this.totalQuestions=0,this.score=0,this.scorePercent=0,this.scorePercentFormatted=0};QuizResult.prototype.setResults=function(a){this.results=a,this.totalQuestions=this.results.length,this.score=0;for(var b=0;b<this.results.length;b++)this.results[b]&&this.score++;this.scorePercent=this.score/this.totalQuestions,this.scorePercentFormatted=Math.floor(100*this.scorePercent)};var Utils=function(){};Utils.compare=function(a,b){if(a.length!=b.length)return!1;if(Array.isArray(a)&&Array.isArray(b)){for(var c=0;c<a.length;c++)if(a[c]!==b[c])return!1;return!0}return a===b};
-
-function showResults(quiz) {
-    // Check answers and continue if all questions have been answered
-    if (quiz.checkAnswers()) {
-        var quizScorePercent = quiz.result.scorePercentFormatted; // The unformatted percentage is a decimal in range 0 - 1
-        var quizResultElement = document.getElementById('quiz-result');
-        quizResultElement.style.display = 'block';
-        document.getElementById('quiz-percent').innerHTML = quizScorePercent.toString();
-
-        // Change background colour of results div according to score percent
-        if (quizScorePercent > 75) quizResultElement.style.backgroundColor = '#4caf50';
-        else if (quizScorePercent > 50) quizResultElement.style.backgroundColor = '#ffc107';
-        else if (quizScorePercent > 25) quizResultElement.style.backgroundColor = '#ff9800';
-        else if (quizScorePercent > 0) quizResultElement.style.backgroundColor = '#f44336';
-
-        // Highlight questions according to whether they were correctly answered. The callback allows us to highlight/show the correct answer
-        quiz.highlightResults(handleAnswers);
-    }
-}
-
-/** Callback for Quiz.highlightResults. Highlights the correct answers of incorrectly answered questions
- * Parameters are: the quiz object, the question element, question number, correctly answered flag
- */
-function handleAnswers(quiz, question, no, correct) {
-    if (!correct) {
-        var answers = question.getElementsByTagName('input');
-        for (var i = 0; i < answers.length; i++) {
-            if (answers[i].type === 'checkbox' || answers[i].type === 'radio'){
-                // If the current input element is part of the correct answer, highlight it
-                if (quiz.answers[no].indexOf(answers[i].value) > -1) {
-                    answers[i].parentNode.classList.add(Quiz.Classes.CORRECT);
-                }
-            } else {
-                // If the input is anything other than a checkbox or radio button, show the correct answer next to the element
-                var correctAnswer = document.createElement('span');
-                correctAnswer.classList.add(Quiz.Classes.CORRECT);
-                correctAnswer.classList.add(Quiz.Classes.TEMP); // quiz.checkAnswers will automatically remove elements with the temp class
-                correctAnswer.innerHTML = quiz.answers[no];
-                correctAnswer.style.marginLeft = '10px';
-                answers[i].parentNode.insertBefore(correctAnswer, answers[i].nextSibling);
-            }
-        }
-    }
-}
-
-  var quizz_Chap06;
-  window.onload = function() {
-    quizz_Chap06 = new Quiz('Chap06', [['1', '4', '5'],['1', '2', '3'],'2','2','2','2','1','2']);
-  };</script><link rel="stylesheet" type="text/css" src="css/quizlib.min.css">
-<div class="card quizlib-question">
-<div class="quizlib-question-title">
-Quels problèmes posent l’utilisation des méthodes classiques d’analyse spatiale pour des données se produisant sur un réseau?
-</div>
-<div>
-Relisez au besoin la <a href="#sec-061">section&nbsp;<span>5.1</span></a>.
-</div>
-<div class="quizlib-question-answers">
-
-<table class="table table-sm table-striped small">
-<tbody><tr>
-<td>
-<label>La distance euclidienne tend à sous-estimer les distances réelles.</label>
-</td>
-<td>
-<input type="checkbox" name="q1" value="1">
-</td>
-</tr>
-<tr>
-<td>
-<label>La distance euclidienne tend à surestimer les distances réelles.</label>
-</td>
-<td>
-<input type="checkbox" name="q1" value="2">
-</td>
-</tr>
-<tr>
-<td>
-<label>Le réseau est un espace comportant davantage de dimensions qu’un espace planaire.</label>
-</td>
-<td>
-<input type="checkbox" name="q1" value="3">
-</td>
-</tr>
-<tr>
-<td>
-<label>Le réseau est un espace ne respectant pas les hypothèses d’homogénéité et d’isotropie de l’espace planaire.</label>
-</td>
-<td>
-<input type="checkbox" name="q1" value="4">
-</td>
-</tr>
-<tr>
-<td>
-<label>Les méthodes classiques analysent des portions de l’espace en dehors du réseau.</label>
-</td>
-<td>
-<input type="checkbox" name="q1" value="5">
-</td>
-</tr>
-</tbody></table>
-</div>
-</div>
-<div class="card quizlib-question">
-<div class="quizlib-question-title">
-Pour adapter la méthode classique du Kernel Density Estimate, il est nécessaire de :
-</div>
-<div>
-Relisez au besoin le début de la <a href="#sec-062">section&nbsp;<span>5.2</span></a>.
-</div>
-<div class="quizlib-question-answers">
-
-<table class="table table-sm table-striped small">
-<tbody><tr>
-<td>
-<label>Utiliser une distance réseau plutôt qu’euclidienne.</label>
-</td>
-<td>
-<input type="checkbox" name="q2" value="1">
-</td>
-</tr>
-<tr>
-<td>
-<label>N’estimer les densités que le long des lixels représentant des fragments réguliers du réseau.</label>
-</td>
-<td>
-<input type="checkbox" name="q2" value="2">
-</td>
-</tr>
-<tr>
-<td>
-<label>Adapter la fonction de Kernel pour tenir compte de la division de la masse aux intersections.</label>
-</td>
-<td>
-<input type="checkbox" name="q2" value="3">
-</td>
-</tr>
-<tr>
-<td>
-<label>Appliquer une pénalité aux portions du réseau avec peu d’évènements.</label>
-</td>
-<td>
-<input type="checkbox" name="q2" value="4">
-</td>
-</tr>
-</tbody></table>
-</div>
-</div>
-<div class="card quizlib-question">
-<div class="quizlib-question-title">
-Pour une NKDE, il est uniquement possible de calculer des densités selon une bandwidth fixe.
-</div>
-<div>
-Relisez au besoin la <span class="quarto-unresolved-ref">?sec-06213</span>.
-</div>
-<div class="quizlib-question-answers">
-
-<table class="table table-sm table-striped small">
-<tbody><tr>
-<td>
-<label>Vrai</label>
-</td>
-<td>
-<input type="radio" name="q3" value="1">
-</td>
-</tr>
-<tr>
-<td>
-<label>Faux</label>
-</td>
-<td>
-<input type="radio" name="q3" value="2">
-</td>
-</tr>
-</tbody></table>
-</div>
-</div>
-<div class="card quizlib-question">
-<div class="quizlib-question-title">
-Contrairement à la KDE classique, la NKDE est moins sensible au choix de la bandwidth.
-</div>
-<div>
-Relisez au besoin la <span class="quarto-unresolved-ref">?sec-06214</span>.
-</div>
-<div class="quizlib-question-answers">
-
-<table class="table table-sm table-striped small">
-<tbody><tr>
-<td>
-<label>Vrai</label>
-</td>
-<td>
-<input type="radio" name="q4" value="1">
-</td>
-</tr>
-<tr>
-<td>
-<label>Faux</label>
-</td>
-<td>
-<input type="radio" name="q4" value="2">
-</td>
-</tr>
-</tbody></table>
-</div>
-</div>
-<div class="card quizlib-question">
-<div class="quizlib-question-title">
-L’extension spatio-temporelle du NKDE (TNKDE) consiste à :
-</div>
-<div>
-Relisez au besoin la <a href="#sec-0621">section&nbsp;<span>5.2.1</span></a>.
-</div>
-<div class="quizlib-question-answers">
-
-<table class="table table-sm table-striped small">
-<tbody><tr>
-<td>
-<label>Calculer une somme des densités spatiales et temporelles des évènements le long du réseau.</label>
-</td>
-<td>
-<input type="radio" name="q5" value="1">
-</td>
-</tr>
-<tr>
-<td>
-<label>Calculer le produit des densités spatiales et temporelles des évènements le long du réseau.</label>
-</td>
-<td>
-<input type="radio" name="q5" value="2">
-</td>
-</tr>
-<tr>
-<td>
-<label>Calculer l’intégrale des densités spatiales et temporelles des évènements le long du réseau.</label>
-</td>
-<td>
-<input type="radio" name="q5" value="3">
-</td>
-</tr>
-</tbody></table>
-</div>
-</div>
-<div class="card quizlib-question">
-<div class="quizlib-question-title">
-Pour une TNKDE, il est uniquement possible de calculer des densités selon une bandwidth fixe.
-</div>
-<div>
-Relisez au besoin la <a href="#sec-0621">section&nbsp;<span>5.2.1</span></a>.
-</div>
-<div class="quizlib-question-answers">
-
-<table class="table table-sm table-striped small">
-<tbody><tr>
-<td>
-<label>Vrai</label>
-</td>
-<td>
-<input type="radio" name="q6" value="1">
-</td>
-</tr>
-<tr>
-<td>
-<label>Faux</label>
-</td>
-<td>
-<input type="radio" name="q6" value="2">
-</td>
-</tr>
-</tbody></table>
-</div>
-</div>
-<div class="card quizlib-question">
-<div class="quizlib-question-title">
-Les méthodes KDE, NKDE, et TNKDE peuvent être vues comme :
-</div>
-<div>
-Relisez au besoin la <a href="#sec-062">section&nbsp;<span>5.2</span></a>.
-</div>
-<div class="quizlib-question-answers">
-
-<table class="table table-sm table-striped small">
-<tbody><tr>
-<td>
-<label>Des méthodes descriptives visant à résumer un grand ensemble d’évènements en une carte de chaleur plus facilement interprétable.</label>
-</td>
-<td>
-<input type="radio" name="q7" value="1">
-</td>
-</tr>
-<tr>
-<td>
-<label>Des méthodes inférentielles permettant de déterminer statistiquement la présence de points chauds ou de points froids.</label>
-</td>
-<td>
-<input type="radio" name="q7" value="2">
-</td>
-</tr>
-<tr>
-<td>
-<label>Des algorithmes de type boite noire réduisant la dimensionnalité des données.</label>
-</td>
-<td>
-<input type="radio" name="q7" value="3">
-</td>
-</tr>
-</tbody></table>
-</div>
-</div>
-<div class="card quizlib-question">
-<div class="quizlib-question-title">
-L’utilisation d’une distance réseau plutôt qu’euclidienne pour un algorithme DBSCAN risque de :
-</div>
-<div>
-Relisez au besoin la <a href="#sec-064">section&nbsp;<span>5.4</span></a>.
-</div>
-<div class="quizlib-question-answers">
-
-<table class="table table-sm table-striped small">
-<tbody><tr>
-<td>
-<label>Augmenter la taille des groupes détectés par l’algorithme, car la recherche de voisin sera plus facile sur le réseau</label>
-</td>
-<td>
-<input type="radio" name="q8" value="1">
-</td>
-</tr>
-<tr>
-<td>
-<label>Réduire la taille des groupes formés par l’algorithme, car la distance euclidienne tend à sous-estimer les distances réelles sur le réseau</label>
-</td>
-<td>
-<input type="radio" name="q8" value="2">
-</td>
-</tr>
-</tbody></table>
-</div>
-</div>
-<button type="button" onclick="showResults(quizz_Chap06);" id="buttonID">
-Vérifier votre résultat
-</button>
-<div id="quiz-result" class="card">
-<p><span id="quiz-percent"></span></p>
-</div>
-</div>
 </section><section id="sec-064" class="level2" data-number="5.4"><h2 data-number="5.4" class="anchored" data-anchor-id="sec-064">
 <span class="header-section-number">5.4</span> Exercices de révision</h2>
 <div class="bloc_exercice">
@@ -932,9 +662,9 @@ Vérifier votre résultat
 </div>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
-<div id="ref-RBoldAir" class="csl-entry" role="listitem">
-Apparicio, Philippe et Jérémy Gelb. 2022. <em>Méthodes quantitatives en sciences sociales : un grand bol d’R</em>. FabriqueREL, Licence CC BY-SA. <a href="https://serieboldr.github.io/MethodesQuantitatives/">https://serieboldr.github.io/MethodesQuantitatives/</a>.
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-RBoldAirMethodesAnalysesSpatiales" class="csl-entry" role="listitem">
+Apparicio, Philippe et Jérémy Gelb. 2024. <em>Méthodes d’analyse spatiales : un grand bol d’R</em>. FabriqueREL, Licence CC BY-SA. <a href="https://serieboldr.github.io/MethodesAnalyseSpatiale/">https://serieboldr.github.io/MethodesAnalyseSpatiale/</a>.
 </div>
 <div id="ref-wood2011fast" class="csl-entry" role="listitem">
 Wood, Simon N. 2011. <span>«&nbsp;Fast stable restricted maximum likelihood and marginal likelihood estimation of semiparametric generalized linear models.&nbsp;»</span> <em>Journal of the Royal Statistical Society Series B: Statistical Methodology</em> 73 (1): 3‑36. <a href="https://doi.org/10.1111/j.1467-9868.2010.00749.x">https://doi.org/10.1111/j.1467-9868.2010.00749.x</a>.
@@ -975,18 +705,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1018,11 +737,50 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
-  function tippyHover(el, contentFn) {
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/serieboldr\.github\.io\/RegressionsSpatiales\/index\.html");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1032,8 +790,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1045,7 +812,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1089,6 +979,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1114,6 +1005,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1173,23 +1090,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="./05-GWRExtensions.html" class="pagination-link">
+      <a href="./05-GWRExtensions.html" class="pagination-link" aria-label="Extensions de la régression géographiquement pondérée">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./07-SEM.html" class="pagination-link">
+      <a href="./07-SEM.html" class="pagination-link" aria-label="Modèles avec des vecteurs propres spatiaux">
         <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Modèles avec des vecteurs propres spatiaux</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
 <footer class="footer"><div class="nav-footer">
-    <div class="nav-footer-left">Régressions spatiales : un grand bol d’R.</div>   
+    <div class="nav-footer-left">
+<p>Méthodes de régression spatiale : un grand bol d’R.</p>
+</div>   
     <div class="nav-footer-center">
       &nbsp;
-    </div>
-    <div class="nav-footer-right">Ce livre a été réalisé avec <a href="https://quarto.org/">Quarto</a>.</div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Ce livre a été réalisé avec <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
   </div>
 </footer>
 

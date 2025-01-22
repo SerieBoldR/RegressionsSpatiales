@@ -2,14 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.353">
+<meta name="generator" content="quarto-1.6.32">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="author" content="Philippe Apparicio">
 <meta name="author" content="Jean Dubé">
 <meta name="author" content="Jérémy Gelb">
 <meta name="author" content="Joan Carles Martori">
-<meta name="dcterms.date" content="2024-09-29">
-<title>Régressions spatiales : un grand bol d’R</title>
+<meta name="dcterms.date" content="2025-01-21">
+<title>Méthodes de régression spatiale : un grand bol d’R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -24,7 +24,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -35,7 +35,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -56,7 +56,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
@@ -72,16 +92,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-2486e1f0a3ee9ee1fc393803a1361cdb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap-9e975f8ad5abb1a75f6b80547d83af80.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "Pas de résultats",
     "search-matching-documents-text": "documents trouvés",
@@ -90,8 +116,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "correspondance de plus dans ce document",
     "search-more-matches-text": "correspondances de plus dans ce document",
     "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Annuler",
-    "search-submit-button-title": "Envoyer"
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
   }
 }</script><link rel="stylesheet" href="css/quizlib.min.css">
 </head>
@@ -99,23 +127,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Préface</a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Préface</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Régressions spatiales : un grand bol d’R</a> 
+      <a href="./">Méthodes de régression spatiale : un grand bol d’R</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/SerieBoldR/RegressionsSpatiales" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/SerieBoldR/RegressionsSpatiales" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
+    <a href="./Méthodes-de-régression-spatiale---un-grand-bol-d’R.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
 </div>
     </div>
       </div>
@@ -142,12 +171,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <span class="sidebar-item-text sidebar-link text-start">
  <span class="menu-text">Partie 1. Notions de base</span></span>
   </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./01-NotionsDeBase.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Notions de base</span></span></a>
-  </div>
-</li>
         <li class="sidebar-item sidebar-item-section">
       <span class="sidebar-item-text sidebar-link text-start">
  <span class="menu-text">Partie 2. Économétrie spatiale</span></span>
@@ -155,19 +178,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./02-ModelesEconometrieSpatiale.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./03-ModelesSpatiauxPanel.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <span class="sidebar-item-text sidebar-link text-start">
  <span class="menu-text">Partie 3. Régressions géographiquement pondérées</span></span>
   </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-GWRClassique.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Régressions géographiquement pondérées classiques</span></span></a>
+  </div>
+</li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./05-GWRExtensions.html" class="sidebar-item-text sidebar-link">
@@ -208,7 +237,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
     </ul>
 </div>
-</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table des matières</h2>
@@ -221,15 +250,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#sect002" id="toc-sect002" class="nav-link" data-scroll-target="#sect002">Comment lire ce manuel?</a></li>
   <li><a href="#sect003" id="toc-sect003" class="nav-link" data-scroll-target="#sect003">Comment utiliser les données du livre pour reproduire les exemples?</a></li>
   <li><a href="#sect004" id="toc-sect004" class="nav-link" data-scroll-target="#sect004">Liste des <em>packages</em> utilisés</a></li>
-  <li><a href="#sect005" id="toc-sect005" class="nav-link" data-scroll-target="#sect005">Structure du livre</a></li>
-  <li><a href="#sect006" id="toc-sect006" class="nav-link" data-scroll-target="#sect006">Remerciements</a></li>
+  <li><a href="#sect005" id="toc-sect005" class="nav-link" data-scroll-target="#sect005">Bref historique sur les modèles de régressions spatiales en économie et en géographie</a></li>
+  <li><a href="#sect006" id="toc-sect006" class="nav-link" data-scroll-target="#sect006">Structure du livre</a></li>
+  <li><a href="#sect007" id="toc-sect007" class="nav-link" data-scroll-target="#sect007">Remerciements</a></li>
   </ul>
 </li>
-  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action">Signaler un problème ou<br>formuler une suggestion</a></p></div></div></nav>
+  </ul><div class="toc-actions"><ul><li><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<h1 class="title">Régressions spatiales : un grand bol d’R</h1>
+<h1 class="title">Méthodes de régression spatiale : un grand bol d’R</h1>
 </div>
 
 
@@ -240,44 +270,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div class="quarto-title-meta-contents">
     <p class="author"><a href="https://www.usherbrooke.ca/recherche/fr/specialistes/details/philippe.apparicio">Philippe Apparicio</a> </p>
   </div>
-    <div class="quarto-title-meta-contents">
+  <div class="quarto-title-meta-contents">
         <p class="affiliation">
             <a href="https://www.usherbrooke.ca/geomatique/">
             Département de géomatique appliquée<br>Université de Sherbrooke, Canada
             </a>
           </p>
       </div>
-      <div class="quarto-title-meta-contents">
+    <div class="quarto-title-meta-contents">
     <p class="author"><a href="https://www.esad.ulaval.ca/personnel/professeurs/jean-dube">Jean Dubé</a> </p>
   </div>
-    <div class="quarto-title-meta-contents">
+  <div class="quarto-title-meta-contents">
         <p class="affiliation">
             <a href="https://www.ulaval.ca/">
             ÉSAD<br>Université Laval, Canada
             </a>
           </p>
       </div>
-      <div class="quarto-title-meta-contents">
+    <div class="quarto-title-meta-contents">
     <p class="author"><a href="https://scholar.google.com/citations?user=oFofDScAAAAJ&amp;hl=fr">Jérémy Gelb</a> </p>
   </div>
-    <div class="quarto-title-meta-contents">
+  <div class="quarto-title-meta-contents">
         <p class="affiliation">
             <a href="https://www.artm.quebec/">
             Autorité régionale de transport métropolitain<br>Montréal, Canada
             </a>
           </p>
       </div>
-      <div class="quarto-title-meta-contents">
+    <div class="quarto-title-meta-contents">
     <p class="author"><a href="https://mon.uvic.cat/dam/">Joan Carles Martori</a> </p>
   </div>
-    <div class="quarto-title-meta-contents">
+  <div class="quarto-title-meta-contents">
         <p class="affiliation">
             <a href="https://mon.uvic.cat/">
             Département d’économie<br>Université de Vic, Espagne
             </a>
           </p>
       </div>
-    </div>
+  </div>
 
 <div class="quarto-title-meta">
 
@@ -285,7 +315,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Date de publication</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">2024-09-29</p>
+      <p class="date">2025-01-21</p>
     </div>
   </div>
   
@@ -293,37 +323,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
-</header><p><img src="images/introduction/CouvertureP1.png" title="Régressions spatiales : un grand bol d’R" class="quarto-cover-image img-fluid"></p>
+
+</header><p><img src="images/introduction/CouvertureP1.png" title="Méthodes de régression spatiale : un grand bol d’R" class="quarto-cover-image img-fluid"></p>
 <p><strong>Résumé&nbsp;:</strong> Ce livre vise à décrire une panoplie de méthodes de régression spatiale avec le logiciel ouvert R. La philosophie de ce livre est de donner toutes les clefs de compréhension et de mise en œuvre des méthodes abordées dans R. La présentation des méthodes est basée sur une approche compréhensive et intuitive plutôt que mathématique, sans pour autant négliger la rigueur statistique.</p>
 <p><strong>Remerciements&nbsp;:</strong> Ce manuel a été réalisé avec le soutien de la fabriqueREL. Fondée en 2019, la fabriqueREL est portée par divers établissements d’enseignement supérieur du Québec et agit en collaboration avec les services de soutien pédagogique et les bibliothèques. Son but est de faire des ressources éducatives libres (REL) le matériel privilégié en enseignement supérieur au Québec.</p>
 <p><strong>Maquette de la page couverture et identité graphique du livre&nbsp;:</strong> Andrés Henao Florez.</p>
 <p><strong>Mise en page&nbsp;:</strong> Philippe Apparicio et Marie-Hélène Gadbois Del Carpio.</p>
 <p><strong>Révision linguistique&nbsp;:</strong> Denise Latreille.</p>
-<p>© Philippe Apparicio et Jérémy Gelb.</p>
-<p><strong>Pour citer cet ouvrage&nbsp;:</strong> Apparicio P., J. Dubé, J. Gelb et J. C. Martori Cañas (2024). <em>Régressions spatiales&nbsp;: un grand bol d’R</em>. Université Laval et Université de Sherbrooke. fabriqueREL. Licence CC&nbsp;BY-SA. <br><br></p>
+<p>© Philippe Apparicio, Jean Dubé, Jérémy Gelb et Joan Carles Martori.</p>
+<p><strong>Pour citer cet ouvrage&nbsp;:</strong> Apparicio P., J. Dubé, J. Gelb et J. C. Martori (2024). <em>Méthodes de régression spatiale&nbsp;: un grand bol d’R</em>. Université Laval et Université de Sherbrooke. fabriqueREL. Licence CC&nbsp;BY-SA. <br><br></p>
 <div class="quarto-figure quarto-figure-left">
-<figure class="figure"><p><img src="images/introduction/CouvertureP2.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<figure class="figure"><p><img src="images/introduction/CouvertureP2.png" class="img-fluid quarto-figure quarto-figure-left figure-img" style="width:80.0%"></p>
 </figure>
 </div>
 <section id="préface" class="level1 unnumbered"><h1 class="unnumbered">Préface</h1>
 <section id="sect001" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="sect001">Un manuel sous la forme d’une ressource éducative libre</h2>
 <p><strong>Pourquoi un manuel sous licence libre?</strong></p>
-<p>Les logiciels libres sont aujourd’hui très répandus. Comparativement aux logiciels propriétaires, l’accès au code source permet à quiconque de l’utiliser, de le modifier, de le dupliquer et de le partager. Le logiciel R, dans lequel sont mises en œuvre les méthodes de régression spatiale décrites dans ce livre, est d’ailleurs à la fois un langage de programmation et un logiciel libre (sous la licence publique générale <a href="https://fr.wikipedia.org/wiki/Licence_publique_g%C3%A9n%C3%A9rale_GNU">GNU GPL2</a>). Par analogie aux logiciels libres, il existe aussi des <strong>ressources éducatives libres (REL)</strong> «&nbsp;dont la licence accorde les permissions désignées par les 5R (<strong>Retenir — Réutiliser — Réviser — Remixer — Redistribuer</strong>) et donc permet nécessairement la modification&nbsp;» (<a href="https://fabriquerel.org/rel/"><strong><em>fabriqueREL</em></strong></a>). La licence de ce livre, CC BY-SA (<a href="#fig-Licence">figure&nbsp;<span>1</span></a>), permet donc de&nbsp;:</p>
+<p>Les logiciels libres sont aujourd’hui très répandus. Comparativement aux logiciels propriétaires, l’accès au code source permet à quiconque de l’utiliser, de le modifier, de le dupliquer et de le partager. Le logiciel R, dans lequel sont mises en œuvre les méthodes de régression spatiale décrites dans ce livre, est d’ailleurs à la fois un langage de programmation et un logiciel libre (sous la licence publique générale <a href="https://fr.wikipedia.org/wiki/Licence_publique_g%C3%A9n%C3%A9rale_GNU">GNU GPL2</a>). Par analogie aux logiciels libres, il existe aussi des <strong>ressources éducatives libres (REL)</strong> «&nbsp;dont la licence accorde les permissions désignées par les 5R (<strong>Retenir — Réutiliser — Réviser — Remixer — Redistribuer</strong>) et donc permet nécessairement la modification&nbsp;» (<a href="https://fabriquerel.org/rel/"><strong><em>fabriqueREL</em></strong></a>). La licence de ce livre, CC BY-SA (<a href="#fig-Licence" class="quarto-xref">figure&nbsp;<span>1</span></a>), permet donc de&nbsp;:</p>
 <ul>
 <li><p><strong>Retenir</strong>, c’est-à-dire télécharger et imprimer gratuitement le livre. Notez qu’il aurait été plutôt surprenant d’écrire un livre payant sur un logiciel libre et donc gratuit. Aussi, nous aurions été très embarrassés que des personnes étudiantes avec des ressources financières limitées doivent payer pour avoir accès au livre, sans pour autant savoir préalablement si le contenu est réellement adapté à leurs besoins.</p></li>
 <li><p><strong>Réutiliser</strong>, c’est-à-dire utiliser la totalité ou une section du livre sans limitation et sans compensation financière. Cela permet ainsi à d’autres personnes enseignantes de l’utiliser dans le cadre d’activités pédagogiques.</p></li>
-<li><p><strong>Réviser</strong>, c’est-à-dire modifier, adapter et traduire le contenu en fonction d’un besoin pédagogique précis puisqu’aucun manuel n’est parfait, tant s’en faut! Le livre a d’ailleurs été écrit intégralement dans R avec <a href="https://quarto.org/">Quatro</a>. Quiconque peut ainsi télécharger gratuitement le code source du livre sur <a href="https://github.com/SerieBoldR/RegressionsSpatiales">github</a> et le modifier à sa guise (voir l’encadré intitulé <em>Suggestions d’adaptation du manuel</em>).</p></li>
+<li><p><strong>Réviser</strong>, c’est-à-dire modifier, adapter et traduire le contenu en fonction d’un besoin pédagogique précis puisqu’aucun manuel n’est parfait, tant s’en faut! Le livre a d’ailleurs été écrit intégralement dans R avec <a href="https://quarto.org/">Quarto</a>. Quiconque peut ainsi télécharger gratuitement le code source du livre sur <a href="https://github.com/SerieBoldR/RegressionsSpatiales">github</a> et le modifier à sa guise (voir l’encadré intitulé <em>Suggestions d’adaptation du manuel</em>).</p></li>
 <li><p><strong>Remixer</strong>, c’est-à-dire «&nbsp;combiner la ressource avec d’autres ressources dont la licence le permet aussi pour créer une nouvelle ressource intégrée&nbsp;» (<a href="https://fabriquerel.org/rel/"><strong><em>fabriqueREL</em></strong></a>).</p></li>
 <li><p><strong>Redistribuer</strong>, c’est-à-dire distribuer, en totalité ou en partie le manuel ou une version révisée sur d’autres canaux que le site Web du livre (par exemple, sur le site Moodle de votre université ou en faire une version imprimée).</p></li>
 </ul>
-<p>La licence de ce livre, CC BY-SA (<a href="#fig-Licence">figure&nbsp;<span>1</span></a>), oblige donc à&nbsp;:</p>
+<p>La licence de ce livre, CC BY-SA (<a href="#fig-Licence" class="quarto-xref">figure&nbsp;<span>1</span></a>), oblige donc à&nbsp;:</p>
 <ul>
 <li><p>Attribuer la paternité de l’auteur dans vos versions dérivées, ainsi qu’une mention concernant les grandes modifications apportées, en utilisant la formulation suivante&nbsp;: Apparicio Philippe et Jérémy Gelb (2024). <em>Méthodes d’analyses spatiales&nbsp;: un grand bol d’R</em>. Université de Sherbrooke. fabriqueREL. Licence CC&nbsp;BY-SA.</p></li>
 <li><p>Utiliser la même licence ou une licence similaire à toutes versions dérivées.</p></li>
 </ul>
-<div id="fig-Licence" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure"><p><img src="images/introduction/LicenceCCBY-SA.jpg" class="img-fluid figure-img" style="width:80.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;1: Licence Creative Commons du livre</figcaption></figure>
+<div id="fig-Licence" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-Licence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/introduction/LicenceCCBY-SA.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-Licence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Licence Creative Commons du livre
+</figcaption></figure>
 </div>
 <div class="bloc_astuce">
 <div class="bloc_astuce-header">
@@ -429,10 +464,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section><section id="sect003" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="sect003">Comment utiliser les données du livre pour reproduire les exemples?</h2>
 <p>Ce livre comprend des exemples détaillés et appliqués dans R pour chacune des méthodes abordées. Ces exemples se basent sur des jeux de données structurés et mis à disposition avec le livre. Ils sont disponibles sur le <em>repo github</em> dans le sous-dossier <code>data</code>, à l’adresse <a href="https://github.com/SerieBoldR/RegressionsSpatiales/tree/main/data" class="uri">https://github.com/SerieBoldR/RegressionsSpatiales/tree/main/data</a>.</p>
-<p>Une autre option est de télécharger le <em>repo</em> complet du livre directement sur <em>github</em> (<a href="https://github.com/SerieBoldR/RegressionsSpatiales" class="uri">https://github.com/SerieBoldR/RegressionsSpatiales</a>) en cliquant sur le bouton <code>Code</code>, puis le bouton <code>Download ZIP</code> (<a href="#fig-downloaffromgit">figure&nbsp;<span>2</span></a>). Les données se trouvent alors dans le sous-dossier nommé <code>data</code>.</p>
-<div id="fig-downloaffromgit" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure"><p><img src="images/introduction/download_github.png" class="img-fluid figure-img" style="width:40.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;2: Téléchargement de l’intégralité du livre</figcaption></figure>
+<p>Une autre option est de télécharger le <em>repo</em> complet du livre directement sur <em>github</em> (<a href="https://github.com/SerieBoldR/RegressionsSpatiales" class="uri">https://github.com/SerieBoldR/RegressionsSpatiales</a>) en cliquant sur le bouton <code>Code</code>, puis le bouton <code>Download ZIP</code> (<a href="#fig-downloaffromgit" class="quarto-xref">figure&nbsp;<span>2</span></a>). Les données se trouvent alors dans le sous-dossier nommé <code>data</code>.</p>
+<div id="fig-downloaffromgit" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-downloaffromgit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/introduction/download_github.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:40.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-downloaffromgit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Téléchargement de l’intégralité du livre
+</figcaption></figure>
 </div>
 </section><section id="sect004" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="sect004">Liste des <em>packages</em> utilisés</h2>
 <p>Dans ce livre, nous utilisons de nombreux <em>packages</em> R que vous pouvez installer avec le code ci-dessous.</p>
@@ -445,34 +484,82 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="co"># Installation des packages manquants</span></span>
 <span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">new.packages</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="va">PackagesNonInstalles</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="sect005" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="sect005">Structure du livre</h2>
-<p>Le livre est organisé autour de cinq grandes parties.</p>
-<p><strong>Partie 1. Notions de base.</strong> Dans cette première partie, nous présentons les jeux de données utilisées pour mettre en œuvre les différentes méthodes de régression spatiale présentées dans le livre (<a href="01-NotionsDeBase.html">chapitre&nbsp;<span>1</span></a>). Nous discutons aussi de plusieurs notions fondamentales et méthodes qu’il importe de bien maîtriser avant d’aborder les chapitres suivants consacrés aux méthodes de régression spatiale, notamment&nbsp;: l’autocorrélation spatiale (globale et locale), la notion de variable spatialement décalée et la régression linéaire multiple. Nous conclurons ce chapitre en exposant les raisons qui justifient l’utilisation de différentes formes de régressions spatiales pour modéliser des données spatiales ou spatiotemporelles.</p>
-<p><strong>Partie 2. Modèles d’économétrie spatiale</strong>. Cette seconde partie est consacrée aux modèles d’économétrie spatiale qui vise à modéliser la <strong>dépendance spatiale</strong>. Dans le <a href="02-ModelesEconometrieSpatiale.html">chapitre&nbsp;<span>2</span></a>, nous décrivons ainsi les principaux modèles spatiaux autorégressifs qui permettent d’introduire l’autocorrélation spatiale sur les variables indépendantes (modèle SLX), la variable dépendante (SAR), sur le terme d’erreur (SEM), à la fois sur la variable dépendante et les variables indépendantes (SDM) ou à la fois sur le sur les variables indépendantes et sur le terme d’erreur (SDEM). Dans le <a href="03-ModelesSpatiauxPanel.html">chapitre&nbsp;<span>3</span></a>, nous abordons une extension des modèles autorégressifs, soit les modèles spatiaux par panel qui permettent de modéliser des données spatiales longitudinales.</p>
-<p><strong>Partie 3. Régressions géographiquement pondérées</strong>. Dans cette partie, nous abordons les régressions géographiquement pondérées (GWR) qui permettent de modéliser l’<strong>hétérogénéité spatiale</strong>, soit l’instabilité des relations entre la variable dépendante et celles indépendantes. Premièrement, nous décrirons les formes dites classiques de la GWR qui s’appliquent à des variables dépendantes continues, dichotomiques (logistique) et de comptage (Poisson) (<span class="quarto-unresolved-ref">?sec-chap04</span>). Deuxièmement, nous abordons des extensions des la GWR, particulièrement la GWR mixte, la GWR multiéchelle, la régression temporellement et géographiquement pondérée (GTWR) et les GWR mixtes avec des variables spatialement décalées (MGWR-SAR) (<a href="05-GWRExtensions.html">chapitre&nbsp;<span>4</span></a>).</p>
-<p><strong>Partie 4. Autres approches de modélisation spatiale</strong>. Dans cette dernière partie, nous abordons</p>
-<p>L’autocorrélation spatiale est une notion fondamentale en analyse spatiale permettant de vérifier si les entités proches ou voisines ont tendance à être (dis)semblables en fonction d’un phénomène donné. Dans le <a href="02-ModelesEconometrieSpatiale.html">chapitre&nbsp;<span>2</span></a>, nous décrivons une panoplie de méthodes permettant de définir des matrices de pondération spatiale qui sont utilisées pour évaluer la dépendance spatiale d’une ou de plusieurs variables, soit les mesures d’autocorrélation spatiale globale et locale. La compréhension de la notion de dépendance spatiale et des différentes mesures d’autocorrélation spatiale est primordiale puisqu’elles sont largement mobilisées dans d’autres méthodes d’analyses spatiales décrites dans les chapitres suivants, notamment les régressions spatiales (<a href="02-ModelesEconometrieSpatiale.html">chapitre&nbsp;<span>2</span></a>) et les méthodes de classification spatiale (<a href="03-ModelesSpatiauxPanel.html">chapitre&nbsp;<span>3</span></a>).</p>
-<p><strong>Partie 4. Autres modèles de régressions spatiales</strong>. Cette cinquième et dernière partie comprend deux chapitres. Le <a href="07-SEM.html">chapitre&nbsp;<span>6</span></a> est consacré à plusieurs méthodes de régression intégrant l’espace&nbsp;: modèles d’économétrie spatiale, modèles généralisés additifs (GAM) avec une <em>spline</em> bivariée sur les coordonnées géographiques, régressions géographiquement pondérées. Dans le <span class="quarto-unresolved-ref">?sec-chap08</span>, nous décrivons des méthodes permettant de regrouper des entités spatiales d’une région en plusieurs classes en fonction de leurs caractéristiques évaluées à partir de plusieurs variables. Nous distinguons deux types de méthodes de classification non supervisée spatiale&nbsp;: les méthodes de classification non supervisée avec contrainte spatiale visant à regrouper des entités spatiales en plusieurs régions avec une absence de mitage (algorithmes AZP, SKATER, REDCAP, etc.); les méthodes de classification non supervisée avec une dimension spatiale (méthode <em>ClustGeo</em> et classification floue c-moyennes spatiale).</p>
-</section><section id="sect006" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="sect006">Remerciements</h2>
+</section><section id="sect005" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="sect005">Bref historique sur les modèles de régressions spatiales en économie et en géographie</h2>
+<p>Depuis une cinquantaine d’années, les économistes et les géographes conçoivent et utilisent largement des méthodes de régression prenant en compte la dimension spatiale : modèles d’économétrie spatiale, régressions géographiquement pondérées, modèles généralisés additifs intégrant une dimension spatiale, modèles avec des vecteurs propres spatiaux, etc.</p>
+<p>La notion d’autocorrélation spatiale, étroitement liée aux régressions spatiales, remonte à une période encore plus ancienne. Elle a été introduite notamment par les travaux de Patrick Moran, d’abord en 1948 puis en 1950, suivis par ceux de Robert Geary en 1954 et de Nathan Mantel en 1967 <span class="citation" data-cites="moran1948interpretation moran1950test geary1954contiguity mantel1967detection">(<a href="references.html#ref-moran1948interpretation" role="doc-biblioref">Moran 1948</a>; <a href="references.html#ref-moran1950test" role="doc-biblioref">Moran 1950</a>; <a href="references.html#ref-geary1954contiguity" role="doc-biblioref">Geary 1954</a>; <a href="references.html#ref-mantel1967detection" role="doc-biblioref">Mantel 1967</a>)</span>. La formalisation des relations spatiales trouve son origine, plus précisément, dans la première loi de la géographie énoncée par Waldo Tobler en 1970 qui stipule que «&nbsp;tout interagit avec tout, mais les objets proches ont plus de chance de le faire que les objets éloignés [<em>Everything is related to everything else, but near things are more related than distant things</em>]&nbsp;» <span class="citation" data-cites="tobler1970computer">(<a href="references.html#ref-tobler1970computer" role="doc-biblioref">1970</a>)</span>.</p>
+<p>En économie, le terme «&nbsp;économétrie spatiale&nbsp;» a été utilisé pour la première fois par Jean Paelinck <span class="citation" data-cites="paelinck1978spatial">(<a href="references.html#ref-paelinck1978spatial" role="doc-biblioref">1978</a>)</span> à la fin des années 1970. Cependant, il est resté relativement peu exploité jusqu’aux travaux de Luc Anselin, qui publie en 1988 un ouvrage de référence sur le sujet intitulé <em>Spatial econometrics: methods and models</em> <span class="citation" data-cites="anselin1988">(<a href="references.html#ref-anselin1988" role="doc-biblioref">Anselin 1988</a>)</span>. Il faut néanmoins attendre le développement des outils informatiques avant de voir les applications affluées. Ainsi, au début des années 1990, l’économétrie spatiale a véritablement pris son essor (voir Anselin <span class="citation" data-cites="anselin2010thirty">(<a href="references.html#ref-anselin2010thirty" role="doc-biblioref">2010</a>)</span> pour un historique détaillé). Depuis, ce domaine a gagné en importance, s’établissant presque comme un incontournable pour la prise en compte des effets spatiaux, mais aussi, et surtout, des fameux efforts de débordements (nous y reviendrons).</p>
+<p>En géographie, Daniel Griffith est certainement l’un des géographes les plus actifs dans le domaine des régressions spatiales, y allant de plusieurs propositions dans le but de contrôler pour la présence d’autocorrélation spatiale résiduelle. Ses premiers travaux remontent aux années 1980, et il a publié depuis un grand nombre d’ouvrages <span class="citation" data-cites="Griffith1988 griffith2003spatial griffith2019spatial">(notamment, <a href="references.html#ref-Griffith1988" role="doc-biblioref">Griffith 1988</a>; <a href="references.html#ref-griffith2003spatial" role="doc-biblioref">Griffith 2003</a>; <a href="references.html#ref-griffith2019spatial" role="doc-biblioref">Griffith, Chun et Li 2019</a>)</span>. Puis, dans les années 1990, trois géographes –&nbsp;Stewart Fotheringham, Chris Brunsdon et Martin Charlton&nbsp;– ont introduit la régression géographiquement pondérée, une méthode permettant d’analyser localement les relations entre la variable dépendante et les variables indépendantes d’un modèle de régression <span class="citation" data-cites="stewart1996geography brunsdon1996geographically brunsdon1998spatial">(<a href="references.html#ref-stewart1996geography" role="doc-biblioref">Stewart Fotheringham, Charlton et Brunsdon 1996</a>; <a href="references.html#ref-brunsdon1996geographically" role="doc-biblioref">Brunsdon, Fotheringham et Charlton 1996</a>; <a href="references.html#ref-brunsdon1998spatial" role="doc-biblioref">Brunsdon, Fotheringham et Charlton 1998</a>)</span>. En 2003, la parution de leur ouvrage intitulé <em>Geographically weighted regression: the analysis of spatially varying relationships</em> <span class="citation" data-cites="fotheringham2003geographically">(<a href="references.html#ref-fotheringham2003geographically" role="doc-biblioref">Fotheringham, Brunsdon et Charlton 2003</a>)</span> a largement contribué à la popularisation de cette méthode.</p>
+</section><section id="sect006" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="sect006">Structure du livre</h2>
+<p>Depuis une cinquantaine d’années, les économètres, les épidémiologistes et les géographes conçoivent et utilisent largement des méthodes de régression prenant en compte la dimension spatiale, dont les principales sont présentées dans ce manuel. Ce dernier est structuré en cinq grandes sections.</p>
+<p><strong>Partie 1. Notions de base.</strong> Dans cette première partie, nous présentons les jeux de données utilisées pour mettre en œuvre les différentes méthodes de régression spatiale présentées dans le livre (<span class="quarto-unresolved-ref">?sec-chap01</span>). Nous discutons aussi de plusieurs notions fondamentales et méthodes qu’il importe de bien maîtriser avant d’aborder les chapitres suivants consacrés aux méthodes de régression spatiale, notamment&nbsp;: l’autocorrélation spatiale (globale et locale), la notion de variable spatialement décalée et la régression linéaire multiple. Nous conclurons ce chapitre en exposant les raisons qui justifient l’utilisation de différentes formes de régressions spatiales pour modéliser des données spatiales ou spatiotemporelles.</p>
+<p><strong>Partie 2. Modèles d’économétrie spatiale</strong>. Cette seconde partie est consacrée aux modèles d’économétrie spatiale qui vise à modéliser la <strong>dépendance spatiale</strong>. Dans le <a href="02-ModelesEconometrieSpatiale.html" class="quarto-xref">chapitre&nbsp;<span>1&nbsp; Modèles d’économétrie spatiale</span></a>, nous décrivons ainsi les principaux modèles spatiaux autorégressifs qui permettent d’introduire l’autocorrélation spatiale sur les variables indépendantes (modèle SLX), la variable dépendante (SAR), sur le terme d’erreur (SEM), à la fois sur la variable dépendante et les variables indépendantes (SDM) ou à la fois sur le sur les variables indépendantes et sur le terme d’erreur (SDEM). Dans le <a href="03-ModelesSpatiauxPanel.html" class="quarto-xref">chapitre&nbsp;<span>2&nbsp; Modèles d’économétrie spatiale par panel</span></a>, nous abordons une extension des modèles autorégressifs, soit les modèles spatiaux par panel qui permettent de modéliser des données spatiales longitudinales.</p>
+<p><strong>Partie 3. Régressions géographiquement pondérées</strong>. Dans cette partie, nous abordons les régressions géographiquement pondérées (GWR) qui permettent de modéliser l’<strong>hétérogénéité spatiale</strong>, soit l’instabilité des relations entre la variable dépendante et celles indépendantes. Premièrement, nous décrirons les formes dites classiques de la GWR qui s’appliquent à des variables dépendantes continues, dichotomiques (logistique) et de comptage (Poisson) (<a href="04-GWRClassique.html" class="quarto-xref">chapitre&nbsp;<span>3&nbsp; Régressions géographiquement pondérées classiques</span></a>). Deuxièmement, nous abordons des extensions des la GWR, particulièrement la GWR mixte, la GWR multiéchelle et les GWR mixtes avec des variables spatialement décalées (MGWR-SAR) (<a href="05-GWRExtensions.html" class="quarto-xref">chapitre&nbsp;<span>4&nbsp; Extensions de la régression géographiquement pondérée</span></a>).</p>
+<p><strong>Partie 4. Autres modèles de régressions spatiales</strong>. Cette quatrième et dernière partie comprend deux chapitres. Le <a href="06-GAM.html" class="quarto-xref">chapitre&nbsp;<span>5&nbsp; Modèles généralisées additifs</span></a> est consacré aux modèles généralisés additifs qui permettent d’introduire l’espace deux manières différentes&nbsp;: les modèles GAM avec une <em>spline</em> bivariée avec les coordonnées géographiques (x, y) pour capturer les variations continues dans l’espace; les modèles GAM avec un lissage par champ aléatoire de Markov (<em>random markov field</em> – RMF) pour modéliser la dépendance spatiale entre les unités spatiales voisines. Dans le <a href="07-SEM.html" class="quarto-xref">chapitre&nbsp;<span>6&nbsp; Modèles avec des vecteurs propres spatiaux</span></a>, nous nous abordons les modèles linéaires généralisés avec des vecteurs spatiaux proposés par Daniel Griffith <span class="citation" data-cites="fotheringham2003geographically griffith2019spatial">(<a href="references.html#ref-fotheringham2003geographically" role="doc-biblioref">2003</a>; <a href="references.html#ref-griffith2019spatial" role="doc-biblioref">Griffith, Chun et Li 2019</a>)</span>.</p>
+</section><section id="sect007" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="sect007">Remerciements</h2>
 <p>De nombreuses personnes ont contribué à l’élaboration de ce manuel.</p>
 <p>Ce projet a bénéficié du soutien pédagogique et financier de la <a href="https://fabriquerel.org/"><strong><em>fabriqueREL</em></strong></a> (ressources éducatives libres). Les différentes rencontres avec le comité de suivi nous ont permis de comprendre l’univers des ressources éducatives libres (REL) et notamment leurs <a href="https://fabriquerel.org/rel/">fameux 5R</a> (Retenir — Réutiliser — Réviser — Remixer — Redistribuer), de mieux définir le besoin pédagogique visé par ce manuel, d’identifier des ressources pédagogiques et des outils pertinents pour son élaboration. Ainsi, nous remercions chaleureusement les membres de la <em>fabriqueREL</em> pour leur soutien inconditionnel&nbsp;:</p>
 <ul>
-<li><p>Myriam Beaudet, bibliothécaire à l’Université de Sherbrooke.</p></li>
-<li><p>Marianne Dubé, coordonnatrice de la fabriqueREL, Université de Sherbrooke.</p></li>
-<li><p>Serge Piché, conseiller pédagogique, Université de Sherbrooke.</p></li>
-<li><p>Claude Potvin, conseiller en formation, Service de soutien à l’enseignement, Université Laval.</p></li>
+<li><p>Marianne Demers-Desmarais, bibliothécaire, Université Laval.</p></li>
+<li><p>Julie-Christine Gagné, conseillère en pédagogie universitaire, Université Laval.</p></li>
+<li><p>Claude Potvin, conseiller pédagogique à la fabriqueREL, Université Laval.</p></li>
+<li><p>Nadia Villeuneuve, bibliothécaire, Université Laval.</p></li>
 </ul>
-<p>Nous remercions chaleureusement les personnes étudiantes du cours <strong>GMQ405 - Modélisation et analyse spatiale</strong> du <a href="https://www.usherbrooke.ca/admission/programme/271/baccalaureat-en-geomatiqueappliquee-a-lenvironnement/">Baccalauréat en géomatique appliquée à l’environnement</a> et du <a href="https://www.usherbrooke.ca/admission/programme/429/microprogramme-de-1er-cycleen-geomatique-appliquee/">Microprogramme de 1er cycle en géomatique appliquée</a> du <a href="https://www.usherbrooke.ca/geomatique/">Département de géomatique appliquée</a> de l’<a href="https://www.usherbrooke.ca/">Université de Sherbrooke</a> de la session d’été 2023&nbsp;: Hermann B. Beaudin, Jérémie Durand, Marie-Hélène Gadbois Del Carpio, David Lapointe, Marc-Antoine Lecours-Toutloff, Rosemarie Légaré, Frédéric Malo, Anthony Mandeville, Gurwen Meret, Sarah Pion, Anne-Sophie Roy, William Scrive, Aldin Evrad Tampe et Kévin Therrien. Vos suggestions et commentaires nous ont permis d’améliorer grandement la version préliminaire de ce manuel qui a été utilisée dans le cadre de ce cours.</p>
-<p>Nous remercions aussi les membres du comité de révision pour leurs commentaires et suggestions très constructifs. Ce comité est composé de quatre personnes étudiantes du <a href="https://www.usherbrooke.ca/geomatique/">Département de géomatique appliquée</a> de l’<a href="https://www.usherbrooke.ca/">Université de Sherbrooke</a>&nbsp;:</p>
+<p>À MODIFIER PLUS TARD. Nous remercions aussi les membres du comité de révision pour leurs commentaires et suggestions très constructifs. Ce comité est composé de quatre personnes étudiantes du <a href="https://www.usherbrooke.ca/geomatique/">Département de géomatique appliquée</a> de l’<a href="https://www.usherbrooke.ca/">Université de Sherbrooke</a>&nbsp;:</p>
 <ul>
 <li><p>Gaël Machemin et Loek Pascaud, étudiants à la <a href="https://www.usherbrooke.ca/geomatique/etudes/programmes/2e-cycle/maitrise-en-geomatique-appliquee-et-teledetection-type-recherche">maîtrise en géomatique appliquée et télédétection (type recherche)</a>.</p></li>
-<li><p>Rosemarie Légaré, étudiante au <a href="https://www.usherbrooke.ca/admission/programme/271/baccalaureat-en-geomatiqueappliquee-a-lenvironnement/">baccalauréat en géomatique appliquée à l’environnement</a>.</p></li>
+<li><p>Rosemarie Légaré, étudiante à la maîtrise <a href="https://www.usherbrooke.ca/admission/programme/622/maitrise-en-geomatique-appliquee-et-teledetection/">en géomatique appliquée et télédétection</a>.</p></li>
+<li><p>Marie-Hélène Gadbois Del Carpio, étudiante à la maîtrise <a href="https://www.usherbrooke.ca/admission/programme/622/maitrise-en-geomatique-appliquee-et-teledetection/">en géomatique appliquée et télédétection</a> a participé activement à la mise en page du manuel; elle est désormais une grande spécialiste des feuilles de style en cascade (CSS) et de Quarto.</p></li>
 </ul>
-<p>Marie-Hélène Gadbois Del Carpio, étudiante de troisième année au <a href="https://www.usherbrooke.ca/admission/programme/271/baccalaureat-en-geomatiqueappliquee-a-lenvironnement/">baccalauréat en géomatique appliquée à l’environnement</a> a participé activement à la mise en page du manuel; elle est désormais une grande spécialiste des feuilles de style en cascade (CSS) et de Quarto.</p>
-<p>Aussi, les discussions enrichissantes avec Geneviève Crevier et Amélie Fréchette ont largement contribué à définir et à bonifier la table des matières.</p>
 <p>Finalement, nous remercions Denise Latreille, réviseure linguistique et chargée de cours à l’Université Sherbrooke, pour la révision du manuel.</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-anselin1988" class="csl-entry" role="listitem">
+Anselin, Luc. 1988. <em>Spatial econometrics: methods and models</em>. Kluwer Academic Publishers.
+</div>
+<div id="ref-anselin2010thirty" class="csl-entry" role="listitem">
+———. 2010. <span>«&nbsp;Thirty years of spatial econometrics.&nbsp;»</span> <em>Papers in regional science</em> 89 (1): 3‑26. <a href="https://doi.org/10.1111/j.1435-5957.2010.00279.x">https://doi.org/10.1111/j.1435-5957.2010.00279.x</a>.
+</div>
+<div id="ref-brunsdon1998spatial" class="csl-entry" role="listitem">
+Brunsdon, Chris, A Stewart Fotheringham et Martin Charlton. 1998. <span>«&nbsp;Spatial nonstationarity and autoregressive models.&nbsp;»</span> <em>Environment and Planning A</em> 30 (6). SAGE Publications Sage UK: London, England: 957‑973.
+</div>
+<div id="ref-brunsdon1996geographically" class="csl-entry" role="listitem">
+Brunsdon, Chris, A Stewart Fotheringham et Martin E Charlton. 1996. <span>«&nbsp;Geographically weighted regression: a method for exploring spatial nonstationarity.&nbsp;»</span> <em>Geographical analysis</em> 28 (4). Wiley Online Library: 281‑298.
+</div>
+<div id="ref-fotheringham2003geographically" class="csl-entry" role="listitem">
+Fotheringham, A Stewart, Chris Brunsdon et Martin Charlton. 2003. <em>Geographically weighted regression: the analysis of spatially varying relationships</em>. John Wiley &amp; Sons.
+</div>
+<div id="ref-geary1954contiguity" class="csl-entry" role="listitem">
+Geary, Robert C. 1954. <span>«&nbsp;The contiguity ratio and statistical mapping.&nbsp;»</span> <em>The incorporated statistician</em> 5 (3): 115‑146. <a href="https://doi.org/10.2307/2986645">https://doi.org/10.2307/2986645</a>.
+</div>
+<div id="ref-Griffith1988" class="csl-entry" role="listitem">
+Griffith, Daniel A. 1988. <em>Advanced Spatial Statistics: Special Topics in the Exploration of Quantitative Spatial Data Series</em>. Kluwer Academic Publishers.
+</div>
+<div id="ref-griffith2003spatial" class="csl-entry" role="listitem">
+———. 2003. <em>Spatial autocorrelation and spatial filtering: gaining understanding through theory and scientific visualization</em>. Springer.
+</div>
+<div id="ref-griffith2019spatial" class="csl-entry" role="listitem">
+Griffith, Daniel A., Yongwan Chun et Bin Li. 2019. <em>Spatial regression analysis using eigenvector spatial filtering</em>. Academic Press.
+</div>
+<div id="ref-mantel1967detection" class="csl-entry" role="listitem">
+Mantel, Nathan. 1967. <span>«&nbsp;The detection of disease clustering and a generalized regression approach.&nbsp;»</span> <em>Cancer research</em> 27 (2_Part_1): 209‑220.
+</div>
+<div id="ref-moran1948interpretation" class="csl-entry" role="listitem">
+Moran, Patrick. 1948. <span>«&nbsp;The interpretation of statistical maps.&nbsp;»</span> <em>Journal of the Royal Statistical Society. Series B (Methodological)</em> 10 (2): 243‑251. <a href="https://www.jstor.org/stable/2983777">https://www.jstor.org/stable/2983777</a>.
+</div>
+<div id="ref-moran1950test" class="csl-entry" role="listitem">
+———. 1950. <span>«&nbsp;A test for the serial independence of residuals.&nbsp;»</span> <em>Biometrika</em> 37 (1/2): 178‑181. <a href="https://doi.org/10.2307/2332162">https://doi.org/10.2307/2332162</a>.
+</div>
+<div id="ref-paelinck1978spatial" class="csl-entry" role="listitem">
+Paelinck, Jean. 1978. <span>«&nbsp;Spatial econometrics.&nbsp;»</span> <em>Economics Letters</em> 1 (1): 59‑63. <a href="https://doi.org/10.1016/0165-1765(78)90097-6">https://doi.org/10.1016/0165-1765(78)90097-6</a>.
+</div>
+<div id="ref-stewart1996geography" class="csl-entry" role="listitem">
+Stewart Fotheringham, A, Martin Charlton et Chris Brunsdon. 1996. <span>«&nbsp;The geography of parameter space: an investigation of spatial non-stationarity.&nbsp;»</span> <em>International journal of geographical information systems</em> 10 (5). Taylor &amp; Francis: 605‑627.
+</div>
+<div id="ref-tobler1970computer" class="csl-entry" role="listitem">
+Tobler, Waldo R. 1970. <span>«&nbsp;A computer movie simulating urban growth in the Detroit region.&nbsp;»</span> <em>Economic geography</em> 46 (sup1): 234‑240. <a href="https://doi.org/10.2307/143141">https://doi.org/10.2307/143141</a>.
+</div>
+</div>
 </section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -508,18 +595,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -551,11 +627,50 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
-  function tippyHover(el, contentFn) {
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/serieboldr\.github\.io\/RegressionsSpatiales\/index\.html");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -565,8 +680,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -578,7 +702,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -622,6 +869,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -647,6 +895,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -708,18 +982,22 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./00-auteurs.html" class="pagination-link">
+      <a href="./00-auteurs.html" class="pagination-link" aria-label="À propos des auteurs">
         <span class="nav-page-text">À propos des auteurs</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
 <footer class="footer"><div class="nav-footer">
-    <div class="nav-footer-left">Régressions spatiales : un grand bol d’R.</div>   
+    <div class="nav-footer-left">
+<p>Méthodes de régression spatiale : un grand bol d’R.</p>
+</div>   
     <div class="nav-footer-center">
       &nbsp;
-    </div>
-    <div class="nav-footer-right">Ce livre a été réalisé avec <a href="https://quarto.org/">Quarto</a>.</div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Ce livre a été réalisé avec <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
   </div>
 </footer>
 

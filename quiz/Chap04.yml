@@ -1,53 +1,59 @@
-- label: "L'algorithme DBSCAN est basé sur :"
+- label: "Un modèle de régression géographiquement pondérée permet d'explorer :"
   type: uc
-  response: 2
+  response: 1
   answers:
-     - "La distance entre les points"
-     - "La densité des points"
-  help: "Relisez au besoin la [section @sec-04111]."
+     - "L'instabilité spatiale du modèle"
+     - "La dépendance du modèle"
+  help: "Relisez le deuxième encadré à la [section @sec-0411]."
 
-- label : "Avec l'algorithme DBSCAN, vous devez spécifier le nombre de groupes (agrégats)."
-  type: uc
-  response: 2
-  answers:
-     - "Vrai"
-     - "Faux"
-  help: "Relisez au besoin la [section @sec-04111]."
-
-- label: "Quels sont les trois types de points identifiés par DBSCAN?"
-  type: mc
-  response: [1,3,4]
-  answers:
-    - "Points centraux"
-    - "Points médians"
-    - "Points frontières"
-    - "Points aberrants"
-  help: "Relisez au besoin l'encadré à la [section @sec-04111]."
-
-- label: "Quels sont les deux paramètres de l'algorithme DBSCAN?"
-  type: mc
-  response: [1,2]
-  answers:
-     - "Le nombre de points minimum pour identifier les points centraux (MinPts)"
-     - "Le rayon de recherche (epsilon)"
-     - "La distance standard (DS)"
-  help: "Relisez au besoin la [section @sec-04111]."
-  
-- label : "Plus la valeur d'epsilon est grande, plus le nombre d'agrégats diminue."
+- label: "Un modèle de régression géographiquement pondérée produit autant de régressions que d'entités spatiales dans le jeu de données à l'étude."
   type: uc
   response: 1
   answers:
      - "Vrai"
      - "Faux"
-  help: "Relisez au besoin la [section @sec-04112]."
+  help: "Relisez le deuxième encadré à la [section @sec-0412]."
   
-- label: "Quels sont les trois paramètres de l'algorithme ST-DBSCAN?"
+- label: "Quelles sont les deux principales fonctions Kernel pour définir la pondération W(i) dans un modèle GWR?"
   type: mc
-  response: [1,2,3]
+  response: [2,3]
   answers:
-     - "Le nombre de points minimum pour identifier les points centraux (MinPts)"
-     - "Le rayon de recherche pour la proximité spatiale (eps1)"
-     - "Le rayon de recherche pour la proximité temporelle (eps2)"
-     - "La région d'étude"
+     - "Fonction quadratique"
+     - "Fonction gaussienne"
+     - "Fonction bicarrée"
+     - "Fonction Epanechnikov"
+     - "Fonction Triangulaire"
   help: "Relisez au besoin la [section @sec-0412]."
+  
+- label: "Quelles sont les deux méthodes pour optimiser la zone d’influence optimale avec la fonction gwr.sel?"
+  type: mc
+  response: [2,4]
+  answers:
+     - "Méthode des moindres carrés"
+     - "Méthode CV (cross-validation)"
+     - "Méthode basée sur la matrice de corrélation"
+     - "Méthode basée sur l'AIC"
+  help: "Relisez au besoin la [section @sec-0421]."
+
+- label: "Quelles fonctions du package spgwr permettent de comparer les modèles MCO (global)?"
+  type: mc
+  response: [1,2,3,4,5]
+  answers:
+     - "anova(Modele.GWR)"
+     - "BFC99.gwr.test(Modele.GWR)"
+     - "BFC02.gwr.test(Modele.GWR)"
+     - "LMZ.F1GWR.test"
+     - "LMZ.F2GWR.test"
+     - "LMZ.F3GWR.test"
+  help: "Relisez le deuxième encadré à la [section @sec-0423]."
+
+- label: "Quelle fonction du package spgwr permet de vérifier si les coefficients de régression varient significativement dans l'espace?"
+  type: uc
+  response: 4
+  answers:
+     - "gwr.sel"
+     - "LMZ.F1GWR.test"
+     - "LMZ.F2GWR.test"
+     - "LMZ.F3GWR.test"
+  help: "Relisez le deuxième encadré à la [section @sec-0423]."
   

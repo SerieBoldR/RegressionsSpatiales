@@ -4,7 +4,6 @@ Dans le [chapitre @sec-chap04], nous avons présenté les trois formes classique
 
 -   la GWR mixte qui permet de spécifier des variables indépendantes variant spatialement et d'autres étant fixes [@fotheringham2003geographically].
 -   La régression géographiquement pondérée multiéchelle (*Multiscale Geographically Weighted Regression* -- MGWR) [@fotheringham2017multiscale].
--   La régression géographiquement et temporellement pondérée (*Geographical and Temporal Weighted Regression* -- GTWR) [@fotheringham2015geographical].
 -   Les GWR mixtes intégrant des variables spatialement décalées (MGWR-SAR) [@geniaux2018new].
 
 
@@ -70,32 +69,22 @@ Dans le [chapitre @sec-chap04], nous avons présenté les trois formes classique
 
 ### Mise en oeuvre de la MGWR dans R {#sec-0522}
 
-## Régression temporellement et géographiquement pondérée {#sec-053}
+## Régression géographiquement pondérée mixte avec des variables spatialement décalée {#sec-053}
 
-### Principe de base de la GTWR {#sec-0531}
+### Principe de base de la MGWR-SAR {#sec-0531}
 
-#### Pourquoi recourir à une GTWR {#sec-05311}
+#### Pourquoi recourir à une MGWR-SAR {#sec-05311}
 
-#### Formulation de la GTWR {#sec-05312}
+#### Formulation de la MGWR-SAR {#sec-05312}
 
-### Mise en oeuvre de la GTWR dans R {#sec-0532}
+### Mise en oeuvre de la MGWR-SAR dans R {#sec-0532}
 
-## Régression géographiquement pondérée mixte avec des variables spatialement décalée {#sec-054}
-
-### Principe de base de la MGWR-SAR {#sec-0541}
-
-#### Pourquoi recourir à une MGWR-SAR {#sec-05411}
-
-#### Formulation de la MGWR-SAR {#sec-05412}
-
-### Mise en oeuvre de la MGWR-SAR dans R {#sec-0542}
-
-## Quiz de révision {#sec-055}
+## Quiz de révision {#sec-054}
 
 ```{r}
 #| label: quizChapitre05
 #| echo: false 
-#| eval: true 
+#| eval: false 
 #| message: false 
 #| warning: false 
 #| results: asis
@@ -105,7 +94,7 @@ Chap05Quiz <- quizz("quiz/Chap05.yml", "Chap05")
 render_quizz(Chap05Quiz)
 ```
 
-## Exercices de révision {#sec-056}
+## Exercices de révision {#sec-055}
 
 ::: bloc_exercice
 ::: bloc_exercice-header

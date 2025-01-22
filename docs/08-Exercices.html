@@ -1,13 +1,10 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
-
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.353">
-
+<meta name="generator" content="quarto-1.6.32">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-
-
-<title>Régressions spatiales : un grand bol d’R - 7&nbsp; Correction des exercices</title>
+<title>7&nbsp; Correction des exercices – Méthodes de régression spatiale : un grand bol d’R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,8 +17,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
-
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
@@ -38,17 +68,22 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-2486e1f0a3ee9ee1fc393803a1361cdb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
-<script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap-9e975f8ad5abb1a75f6b80547d83af80.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "Pas de résultats",
     "search-matching-documents-text": "documents trouvés",
@@ -57,42 +92,35 @@ ul.task-list li input[type="checkbox"] {
     "search-more-match-text": "correspondance de plus dans ce document",
     "search-more-matches-text": "correspondances de plus dans ce document",
     "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Annuler",
-    "search-submit-button-title": "Envoyer"
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
   }
-}</script>
-
-
-<link rel="stylesheet" href="css/quizlib.min.css">
+}</script><link rel="stylesheet" href="css/quizlib.min.css">
 </head>
-
 <body class="nav-sidebar floating">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./08-Exercices.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Correction des exercices</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./08-Exercices.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Correction des exercices</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
-  </nav>
-</header>
-<!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Régressions spatiales : un grand bol d’R</a> 
+      <a href="./">Méthodes de régression spatiale : un grand bol d’R</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/SerieBoldR/RegressionsSpatiales" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/SerieBoldR/RegressionsSpatiales" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
+    <a href="./Méthodes-de-régression-spatiale---un-grand-bol-d’R.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
 </div>
     </div>
       </div>
@@ -103,7 +131,7 @@ ul.task-list li input[type="checkbox"] {
         </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Préface</span></a>
@@ -119,12 +147,6 @@ ul.task-list li input[type="checkbox"] {
       <span class="sidebar-item-text sidebar-link text-start">
  <span class="menu-text">Partie 1. Notions de base</span></span>
   </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./01-NotionsDeBase.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Notions de base</span></span></a>
-  </div>
-</li>
         <li class="sidebar-item sidebar-item-section">
       <span class="sidebar-item-text sidebar-link text-start">
  <span class="menu-text">Partie 2. Économétrie spatiale</span></span>
@@ -132,19 +154,25 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./02-ModelesEconometrieSpatiale.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./03-ModelesSpatiauxPanel.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <span class="sidebar-item-text sidebar-link text-start">
  <span class="menu-text">Partie 3. Régressions géographiquement pondérées</span></span>
   </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-GWRClassique.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Régressions géographiquement pondérées classiques</span></span></a>
+  </div>
+</li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./05-GWRExtensions.html" class="sidebar-item-text sidebar-link">
@@ -184,53 +212,57 @@ ul.task-list li input[type="checkbox"] {
   </div>
 </li>
     </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table des matières</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table des matières</h2>
    
   <ul>
-  <li><a href="#sec-0601" id="toc-sec-0601" class="nav-link active" data-scroll-target="#sec-0601"><span class="header-section-number">7.1</span> Exercices du chapitre&nbsp;1</a>
+<li>
+<a href="#sec-0801" id="toc-sec-0801" class="nav-link active" data-scroll-target="#sec-0801"><span class="header-section-number">7.1</span> Exercices du chapitre&nbsp;1</a>
   <ul class="collapse">
-  <li><a href="#sec-06011" id="toc-sec-06011" class="nav-link" data-scroll-target="#sec-06011"><span class="header-section-number">7.1.1</span> Exercice&nbsp;1</a></li>
-  <li><a href="#sec-06012" id="toc-sec-06012" class="nav-link" data-scroll-target="#sec-06012"><span class="header-section-number">7.1.2</span> Exercice&nbsp;2</a></li>
-  <li><a href="#sec-06013" id="toc-sec-06013" class="nav-link" data-scroll-target="#sec-06013"><span class="header-section-number">7.1.3</span> Exercice&nbsp;3</a></li>
-  </ul></li>
-  <li><a href="#sec-0602" id="toc-sec-0602" class="nav-link" data-scroll-target="#sec-0602"><span class="header-section-number">7.2</span> Exercices du chapitre&nbsp;2</a>
-  <ul class="collapse">
-  <li><a href="#sec-06021" id="toc-sec-06021" class="nav-link" data-scroll-target="#sec-06021"><span class="header-section-number">7.2.1</span> Exercice&nbsp;1</a></li>
-  <li><a href="#sec-06022" id="toc-sec-06022" class="nav-link" data-scroll-target="#sec-06022"><span class="header-section-number">7.2.2</span> Exercice&nbsp;2</a></li>
-  <li><a href="#sec-06023" id="toc-sec-06023" class="nav-link" data-scroll-target="#sec-06023"><span class="header-section-number">7.2.3</span> Exercice&nbsp;3</a></li>
-  </ul></li>
-  <li><a href="#sec-0603" id="toc-sec-0603" class="nav-link" data-scroll-target="#sec-0603"><span class="header-section-number">7.3</span> Exercices du chapitre&nbsp;3</a>
-  <ul class="collapse">
-  <li><a href="#sec-06031" id="toc-sec-06031" class="nav-link" data-scroll-target="#sec-06031"><span class="header-section-number">7.3.1</span> Exercice&nbsp;1</a></li>
-  <li><a href="#sec-06032" id="toc-sec-06032" class="nav-link" data-scroll-target="#sec-06032"><span class="header-section-number">7.3.2</span> Exercice&nbsp;2</a></li>
-  <li><a href="#sec-06033" id="toc-sec-06033" class="nav-link" data-scroll-target="#sec-06033"><span class="header-section-number">7.3.3</span> Exercice&nbsp;3</a></li>
-  </ul></li>
-  <li><a href="#sec-0604" id="toc-sec-0604" class="nav-link" data-scroll-target="#sec-0604"><span class="header-section-number">7.4</span> Exercices du chapitre&nbsp;4</a>
-  <ul class="collapse">
-  <li><a href="#sec-06041" id="toc-sec-06041" class="nav-link" data-scroll-target="#sec-06041"><span class="header-section-number">7.4.1</span> Exercice&nbsp;1</a></li>
-  <li><a href="#sec-06042" id="toc-sec-06042" class="nav-link" data-scroll-target="#sec-06042"><span class="header-section-number">7.4.2</span> Exercice&nbsp;2</a></li>
-  <li><a href="#sec-06043" id="toc-sec-06043" class="nav-link" data-scroll-target="#sec-06043"><span class="header-section-number">7.4.3</span> Exercice&nbsp;3</a></li>
-  </ul></li>
-  <li><a href="#sec-0605" id="toc-sec-0605" class="nav-link" data-scroll-target="#sec-0605"><span class="header-section-number">7.5</span> Exercices du chapitre&nbsp;5</a>
-  <ul class="collapse">
-  <li><a href="#sec-06051" id="toc-sec-06051" class="nav-link" data-scroll-target="#sec-06051"><span class="header-section-number">7.5.1</span> Exercice&nbsp;1</a></li>
-  <li><a href="#sec-06052" id="toc-sec-06052" class="nav-link" data-scroll-target="#sec-06052"><span class="header-section-number">7.5.2</span> Exercice&nbsp;2</a></li>
-  <li><a href="#sec-06053" id="toc-sec-06053" class="nav-link" data-scroll-target="#sec-06053"><span class="header-section-number">7.5.3</span> Exercice&nbsp;3</a></li>
-  </ul></li>
+<li><a href="#sec-08011" id="toc-sec-08011" class="nav-link" data-scroll-target="#sec-08011"><span class="header-section-number">7.1.1</span> Exercice&nbsp;1</a></li>
+  <li><a href="#sec-08012" id="toc-sec-08012" class="nav-link" data-scroll-target="#sec-08012"><span class="header-section-number">7.1.2</span> Exercice&nbsp;2</a></li>
+  <li><a href="#sec-08013" id="toc-sec-08013" class="nav-link" data-scroll-target="#sec-08013"><span class="header-section-number">7.1.3</span> Exercice&nbsp;3</a></li>
   </ul>
-<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action">Signaler un problème ou<br>formuler une suggestion</a></p></div></div></nav>
+</li>
+  <li>
+<a href="#sec-0802" id="toc-sec-0802" class="nav-link" data-scroll-target="#sec-0802"><span class="header-section-number">7.2</span> Exercices du chapitre&nbsp;2</a>
+  <ul class="collapse">
+<li><a href="#sec-08021" id="toc-sec-08021" class="nav-link" data-scroll-target="#sec-08021"><span class="header-section-number">7.2.1</span> Exercice&nbsp;1</a></li>
+  <li><a href="#sec-08022" id="toc-sec-08022" class="nav-link" data-scroll-target="#sec-08022"><span class="header-section-number">7.2.2</span> Exercice&nbsp;2</a></li>
+  <li><a href="#sec-08023" id="toc-sec-08023" class="nav-link" data-scroll-target="#sec-08023"><span class="header-section-number">7.2.3</span> Exercice&nbsp;3</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#sec-0803" id="toc-sec-0803" class="nav-link" data-scroll-target="#sec-0803"><span class="header-section-number">7.3</span> Exercices du chapitre&nbsp;3</a>
+  <ul class="collapse">
+<li><a href="#sec-08031" id="toc-sec-08031" class="nav-link" data-scroll-target="#sec-08031"><span class="header-section-number">7.3.1</span> Exercice&nbsp;1</a></li>
+  <li><a href="#sec-08032" id="toc-sec-08032" class="nav-link" data-scroll-target="#sec-08032"><span class="header-section-number">7.3.2</span> Exercice&nbsp;2</a></li>
+  <li><a href="#sec-08033" id="toc-sec-08033" class="nav-link" data-scroll-target="#sec-08033"><span class="header-section-number">7.3.3</span> Exercice&nbsp;3</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#sec-0804" id="toc-sec-0804" class="nav-link" data-scroll-target="#sec-0804"><span class="header-section-number">7.4</span> Exercices du chapitre&nbsp;4</a>
+  <ul class="collapse">
+<li><a href="#sec-08041" id="toc-sec-08041" class="nav-link" data-scroll-target="#sec-08041"><span class="header-section-number">7.4.1</span> Exercice&nbsp;1</a></li>
+  <li><a href="#sec-08042" id="toc-sec-08042" class="nav-link" data-scroll-target="#sec-08042"><span class="header-section-number">7.4.2</span> Exercice&nbsp;2</a></li>
+  <li><a href="#sec-08043" id="toc-sec-08043" class="nav-link" data-scroll-target="#sec-08043"><span class="header-section-number">7.4.3</span> Exercice&nbsp;3</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#sec-0805" id="toc-sec-0805" class="nav-link" data-scroll-target="#sec-0805"><span class="header-section-number">7.5</span> Exercices du chapitre&nbsp;5</a>
+  <ul class="collapse">
+<li><a href="#sec-08051" id="toc-sec-08051" class="nav-link" data-scroll-target="#sec-08051"><span class="header-section-number">7.5.1</span> Exercice&nbsp;1</a></li>
+  <li><a href="#sec-08052" id="toc-sec-08052" class="nav-link" data-scroll-target="#sec-08052"><span class="header-section-number">7.5.2</span> Exercice&nbsp;2</a></li>
+  <li><a href="#sec-08053" id="toc-sec-08053" class="nav-link" data-scroll-target="#sec-08053"><span class="header-section-number">7.5.3</span> Exercice&nbsp;3</a></li>
+  </ul>
+</li>
+  </ul><div class="toc-actions"><ul><li><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
 <h1 class="title"><span id="sec-chap12" class="quarto-section-identifier"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Correction des exercices</span></span></h1>
 </div>
 
@@ -244,73 +276,191 @@ ul.task-list li input[type="checkbox"] {
   </div>
   
 
-</header>
 
-<section id="sec-0601" class="level2" data-number="7.1">
-<h2 data-number="7.1" class="anchored" data-anchor-id="sec-0601"><span class="header-section-number">7.1</span> Exercices du chapitre&nbsp;1</h2>
-<section id="sec-06011" class="level3" data-number="7.1.1">
-<h3 data-number="7.1.1" class="anchored" data-anchor-id="sec-06011"><span class="header-section-number">7.1.1</span> Exercice&nbsp;1</h3>
-</section>
-<section id="sec-06012" class="level3" data-number="7.1.2">
-<h3 data-number="7.1.2" class="anchored" data-anchor-id="sec-06012"><span class="header-section-number">7.1.2</span> Exercice&nbsp;2</h3>
-</section>
-<section id="sec-06013" class="level3" data-number="7.1.3">
-<h3 data-number="7.1.3" class="anchored" data-anchor-id="sec-06013"><span class="header-section-number">7.1.3</span> Exercice&nbsp;3</h3>
-</section>
-</section>
-<section id="sec-0602" class="level2" data-number="7.2">
-<h2 data-number="7.2" class="anchored" data-anchor-id="sec-0602"><span class="header-section-number">7.2</span> Exercices du chapitre&nbsp;2</h2>
-<section id="sec-06021" class="level3" data-number="7.2.1">
-<h3 data-number="7.2.1" class="anchored" data-anchor-id="sec-06021"><span class="header-section-number">7.2.1</span> Exercice&nbsp;1</h3>
-</section>
-<section id="sec-06022" class="level3" data-number="7.2.2">
-<h3 data-number="7.2.2" class="anchored" data-anchor-id="sec-06022"><span class="header-section-number">7.2.2</span> Exercice&nbsp;2</h3>
-</section>
-<section id="sec-06023" class="level3" data-number="7.2.3">
-<h3 data-number="7.2.3" class="anchored" data-anchor-id="sec-06023"><span class="header-section-number">7.2.3</span> Exercice&nbsp;3</h3>
-</section>
-</section>
-<section id="sec-0603" class="level2" data-number="7.3">
-<h2 data-number="7.3" class="anchored" data-anchor-id="sec-0603"><span class="header-section-number">7.3</span> Exercices du chapitre&nbsp;3</h2>
-<section id="sec-06031" class="level3" data-number="7.3.1">
-<h3 data-number="7.3.1" class="anchored" data-anchor-id="sec-06031"><span class="header-section-number">7.3.1</span> Exercice&nbsp;1</h3>
-</section>
-<section id="sec-06032" class="level3" data-number="7.3.2">
-<h3 data-number="7.3.2" class="anchored" data-anchor-id="sec-06032"><span class="header-section-number">7.3.2</span> Exercice&nbsp;2</h3>
-</section>
-<section id="sec-06033" class="level3" data-number="7.3.3">
-<h3 data-number="7.3.3" class="anchored" data-anchor-id="sec-06033"><span class="header-section-number">7.3.3</span> Exercice&nbsp;3</h3>
-</section>
-</section>
-<section id="sec-0604" class="level2" data-number="7.4">
-<h2 data-number="7.4" class="anchored" data-anchor-id="sec-0604"><span class="header-section-number">7.4</span> Exercices du chapitre&nbsp;4</h2>
-<section id="sec-06041" class="level3" data-number="7.4.1">
-<h3 data-number="7.4.1" class="anchored" data-anchor-id="sec-06041"><span class="header-section-number">7.4.1</span> Exercice&nbsp;1</h3>
-</section>
-<section id="sec-06042" class="level3" data-number="7.4.2">
-<h3 data-number="7.4.2" class="anchored" data-anchor-id="sec-06042"><span class="header-section-number">7.4.2</span> Exercice&nbsp;2</h3>
-</section>
-<section id="sec-06043" class="level3" data-number="7.4.3">
-<h3 data-number="7.4.3" class="anchored" data-anchor-id="sec-06043"><span class="header-section-number">7.4.3</span> Exercice&nbsp;3</h3>
-</section>
-</section>
-<section id="sec-0605" class="level2" data-number="7.5">
-<h2 data-number="7.5" class="anchored" data-anchor-id="sec-0605"><span class="header-section-number">7.5</span> Exercices du chapitre&nbsp;5</h2>
-<section id="sec-06051" class="level3" data-number="7.5.1">
-<h3 data-number="7.5.1" class="anchored" data-anchor-id="sec-06051"><span class="header-section-number">7.5.1</span> Exercice&nbsp;1</h3>
-</section>
-<section id="sec-06052" class="level3" data-number="7.5.2">
-<h3 data-number="7.5.2" class="anchored" data-anchor-id="sec-06052"><span class="header-section-number">7.5.2</span> Exercice&nbsp;2</h3>
-</section>
-<section id="sec-06053" class="level3" data-number="7.5.3">
-<h3 data-number="7.5.3" class="anchored" data-anchor-id="sec-06053"><span class="header-section-number">7.5.3</span> Exercice&nbsp;3</h3>
+</header><section id="sec-0801" class="level2" data-number="7.1"><h2 data-number="7.1" class="anchored" data-anchor-id="sec-0801">
+<span class="header-section-number">7.1</span> Exercices du chapitre&nbsp;1</h2>
+<section id="sec-08011" class="level3" data-number="7.1.1"><h3 data-number="7.1.1" class="anchored" data-anchor-id="sec-08011">
+<span class="header-section-number">7.1.1</span> Exercice&nbsp;1</h3>
+</section><section id="sec-08012" class="level3" data-number="7.1.2"><h3 data-number="7.1.2" class="anchored" data-anchor-id="sec-08012">
+<span class="header-section-number">7.1.2</span> Exercice&nbsp;2</h3>
+</section><section id="sec-08013" class="level3" data-number="7.1.3"><h3 data-number="7.1.3" class="anchored" data-anchor-id="sec-08013">
+<span class="header-section-number">7.1.3</span> Exercice&nbsp;3</h3>
+</section></section><section id="sec-0802" class="level2" data-number="7.2"><h2 data-number="7.2" class="anchored" data-anchor-id="sec-0802">
+<span class="header-section-number">7.2</span> Exercices du chapitre&nbsp;2</h2>
+<section id="sec-08021" class="level3" data-number="7.2.1"><h3 data-number="7.2.1" class="anchored" data-anchor-id="sec-08021">
+<span class="header-section-number">7.2.1</span> Exercice&nbsp;1</h3>
+</section><section id="sec-08022" class="level3" data-number="7.2.2"><h3 data-number="7.2.2" class="anchored" data-anchor-id="sec-08022">
+<span class="header-section-number">7.2.2</span> Exercice&nbsp;2</h3>
+</section><section id="sec-08023" class="level3" data-number="7.2.3"><h3 data-number="7.2.3" class="anchored" data-anchor-id="sec-08023">
+<span class="header-section-number">7.2.3</span> Exercice&nbsp;3</h3>
+</section></section><section id="sec-0803" class="level2" data-number="7.3"><h2 data-number="7.3" class="anchored" data-anchor-id="sec-0803">
+<span class="header-section-number">7.3</span> Exercices du chapitre&nbsp;3</h2>
+<section id="sec-08031" class="level3" data-number="7.3.1"><h3 data-number="7.3.1" class="anchored" data-anchor-id="sec-08031">
+<span class="header-section-number">7.3.1</span> Exercice&nbsp;1</h3>
+</section><section id="sec-08032" class="level3" data-number="7.3.2"><h3 data-number="7.3.2" class="anchored" data-anchor-id="sec-08032">
+<span class="header-section-number">7.3.2</span> Exercice&nbsp;2</h3>
+</section><section id="sec-08033" class="level3" data-number="7.3.3"><h3 data-number="7.3.3" class="anchored" data-anchor-id="sec-08033">
+<span class="header-section-number">7.3.3</span> Exercice&nbsp;3</h3>
+</section></section><section id="sec-0804" class="level2" data-number="7.4"><h2 data-number="7.4" class="anchored" data-anchor-id="sec-0804">
+<span class="header-section-number">7.4</span> Exercices du chapitre&nbsp;4</h2>
+<section id="sec-08041" class="level3" data-number="7.4.1"><h3 data-number="7.4.1" class="anchored" data-anchor-id="sec-08041">
+<span class="header-section-number">7.4.1</span> Exercice&nbsp;1</h3>
+<div class="cell">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rsbivand/spgwr/">spgwr</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"data/Lyon.Rdata"</span><span class="op">)</span></span>
+<span><span class="co"># Ajout des coordonnées x et y</span></span>
+<span><span class="va">xy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html">st_coordinates</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_centroid</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">LyonIris</span><span class="op">$</span><span class="va">X</span> <span class="op">&lt;-</span> <span class="va">xy</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span></span>
+<span><span class="va">LyonIris</span><span class="op">$</span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="va">xy</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span></span>
+<span><span class="co"># Optimisation du nombre de voisins avec le CV</span></span>
+<span><span class="va">formule</span> <span class="op">&lt;-</span> <span class="st">"PM25 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed"</span></span>
+<span><span class="va">bwaCV.voisins</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/gwr.cv.html">gwr.sel</a></span><span class="op">(</span><span class="va">formule</span>,</span>
+<span>                          data <span class="op">=</span> <span class="va">LyonIris</span>,</span>
+<span>                          method <span class="op">=</span> <span class="st">"cv"</span>,</span>
+<span>                          gweight<span class="op">=</span><span class="va">gwr.bisquare</span>,</span>
+<span>                          adapt<span class="op">=</span><span class="cn">TRUE</span>,</span>
+<span>                          verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                          RMSE <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                          longlat <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                          coords<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">$</span><span class="va">X</span>,<span class="va">LyonIris</span><span class="op">$</span><span class="va">Y</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># Optimisation du nombre de voisins avec l'AIC</span></span>
+<span><span class="va">formule</span> <span class="op">&lt;-</span> <span class="st">"PM25 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed"</span></span>
+<span><span class="va">bwaCV.voisins</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/gwr.cv.html">gwr.sel</a></span><span class="op">(</span><span class="va">formule</span>,</span>
+<span>                          data <span class="op">=</span> <span class="va">LyonIris</span>,</span>
+<span>                          method <span class="op">=</span> <span class="st">"CV"</span>,</span>
+<span>                          gweight<span class="op">=</span><span class="va">gwr.bisquare</span>,</span>
+<span>                          adapt<span class="op">=</span><span class="cn">TRUE</span>,</span>
+<span>                          verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                          RMSE <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                          longlat <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                          coords<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">$</span><span class="va">X</span>,<span class="va">LyonIris</span><span class="op">$</span><span class="va">Y</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># Réalisation de la GWR</span></span>
+<span><span class="va">Modele.GWR</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/gwr.html">gwr</a></span><span class="op">(</span><span class="va">formule</span>,</span>
+<span>              data <span class="op">=</span> <span class="va">LyonIris</span>,</span>
+<span>              adapt<span class="op">=</span><span class="va">bwaCV.voisins</span>,</span>
+<span>              gweight<span class="op">=</span><span class="va">gwr.bisquare</span>,</span>
+<span>              hatmatrix<span class="op">=</span><span class="cn">TRUE</span>,</span>
+<span>              se.fit<span class="op">=</span><span class="cn">TRUE</span>,</span>
+<span>              coords<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">$</span><span class="va">X</span>,<span class="va">LyonIris</span><span class="op">$</span><span class="va">Y</span><span class="op">)</span>,</span>
+<span>              longlat<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co"># Affichage des résultats</span></span>
+<span><span class="va">Modele.GWR</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="sec-08042" class="level3" data-number="7.4.2"><h3 data-number="7.4.2" class="anchored" data-anchor-id="sec-08042">
+<span class="header-section-number">7.4.2</span> Exercice&nbsp;2</h3>
+<div class="cell">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Modèle MCO</span></span>
+<span><span class="va">Modele.Global</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">formule</span>, data <span class="op">=</span> <span class="va">LyonIris</span><span class="op">)</span></span>
+<span><span class="co"># Comparaison des R2</span></span>
+<span><span class="va">R2.global</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">Modele.Global</span><span class="op">)</span><span class="op">$</span><span class="va">r.squared</span></span>
+<span><span class="va">rss</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="op">(</span><span class="va">Modele.GWR</span><span class="op">$</span><span class="va">lm</span><span class="op">$</span><span class="va">y</span> <span class="op">-</span> <span class="va">Modele.GWR</span><span class="op">$</span><span class="va">SDF</span><span class="op">$</span><span class="va">pred</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> </span>
+<span><span class="va">tss</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="op">(</span><span class="va">Modele.GWR</span><span class="op">$</span><span class="va">lm</span><span class="op">$</span><span class="va">y</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">Modele.GWR</span><span class="op">$</span><span class="va">SDF</span><span class="op">$</span><span class="va">pred</span><span class="op">)</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> </span>
+<span><span class="va">R2.GWRquasiglobal</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">-</span> <span class="op">(</span><span class="va">rss</span> <span class="op">/</span> <span class="va">tss</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"R2 global (LM) = "</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">R2.global</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>    <span class="st">"\nR2 quasi-global (GWR) : "</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">R2.GWRquasiglobal</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># Comparaison des R2</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span><span class="op">(</span><span class="va">Modele.GWR</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/LMZ.F3GWR.test.html">LMZ.F1GWR.test</a></span><span class="op">(</span><span class="va">Modele.GWR</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/LMZ.F3GWR.test.html">LMZ.F2GWR.test</a></span><span class="op">(</span><span class="va">Modele.GWR</span><span class="op">)</span></span>
+<span><span class="co"># Les coefficients du modèle GWR varient-ils significativement dans l'espace?</span></span>
+<span><span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/LMZ.F3GWR.test.html">LMZ.F3GWR.test</a></span><span class="op">(</span><span class="va">Modele.GWR</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="sec-08043" class="level3" data-number="7.4.3"><h3 data-number="7.4.3" class="anchored" data-anchor-id="sec-08043">
+<span class="header-section-number">7.4.3</span> Exercice&nbsp;3</h3>
+<div class="cell">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/">tmap</a></span><span class="op">)</span></span>
+<span><span class="co"># Récupération du R carré locaux et valeurs de t locales</span></span>
+<span><span class="va">LyonIris</span><span class="op">$</span><span class="va">GWR.R2</span> <span class="op">&lt;-</span> <span class="va">Modele.GWR</span><span class="op">$</span><span class="va">SDF</span><span class="op">$</span><span class="va">localR2</span></span>
+<span><span class="va">VarsIndep</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Pct0_14"</span>, <span class="st">"Pct_65"</span>, <span class="st">"Pct_Img"</span>, <span class="st">"Pct_brevet"</span>, <span class="st">"NivVieMed"</span><span class="op">)</span></span>
+<span><span class="kw">for</span><span class="op">(</span><span class="va">e</span> <span class="kw">in</span> <span class="va">VarsIndep</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="co"># Nom des nouvelles variables</span></span>
+<span>  <span class="va">var.coef</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"GWR."</span>, <span class="st">"B_"</span>, <span class="va">e</span><span class="op">)</span></span>
+<span>  <span class="va">var.t</span>    <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"GWR."</span>, <span class="st">"T_"</span>, <span class="va">e</span><span class="op">)</span></span>
+<span>  <span class="co"># Récupération des coefficients pour les variables indépendantes</span></span>
+<span>  <span class="va">LyonIris</span><span class="op">[[</span><span class="va">var.coef</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">Modele.GWR</span><span class="op">$</span><span class="va">SDF</span><span class="op">[[</span><span class="va">e</span><span class="op">]</span><span class="op">]</span></span>
+<span>  <span class="co"># Calcul des valeurs de t pour les variables indépendantes</span></span>
+<span>  <span class="va">LyonIris</span><span class="op">[[</span><span class="va">var.t</span><span class="op">]</span><span class="op">]</span>    <span class="op">&lt;-</span> <span class="va">Modele.GWR</span><span class="op">$</span><span class="va">SDF</span><span class="op">[[</span><span class="va">e</span><span class="op">]</span><span class="op">]</span> <span class="op">/</span> <span class="va">Modele.GWR</span><span class="op">$</span><span class="va">SDF</span><span class="op">[[</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">e</span>, <span class="st">"_se"</span><span class="op">)</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="co"># Cartographie des R2 locaux</span></span>
+<span><span class="va">legendes.parametres</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>text.separator <span class="op">=</span> <span class="st">"à"</span>,</span>
+<span>                            decimal.mark <span class="op">=</span> <span class="st">","</span>,</span>
+<span>                            big.mark <span class="op">=</span> <span class="st">" "</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_borders</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"gray25"</span>, lwd<span class="op">=</span><span class="fl">.5</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"GWR.R2"</span>, </span>
+<span>          palette<span class="op">=</span><span class="st">"YlOrBr"</span>, </span>
+<span>          n<span class="op">=</span><span class="fl">5</span>, style<span class="op">=</span><span class="st">"quantile"</span>,</span>
+<span>          legend.format <span class="op">=</span> <span class="va">legendes.parametres</span>,</span>
+<span>          title <span class="op">=</span> <span class="st">"R2 locaux"</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_scale_bar.html">tm_scale_bar</a></span><span class="op">(</span>breaks<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Cartographie des valeurs de t locales</span></span>
+<span><span class="co">## Paramètres pour la légende </span></span>
+<span><span class="va">legende.parametres</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>text.separator <span class="op">=</span> <span class="st">"à"</span>,</span>
+<span>                           text.less.than <span class="op">=</span> <span class="st">"Moins de"</span>,</span>
+<span>                           text.or.more <span class="op">=</span>  <span class="st">"et plus"</span>,</span>
+<span>                           decimal.mark <span class="op">=</span> <span class="st">","</span>,</span>
+<span>                           big.mark <span class="op">=</span> <span class="st">" "</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## Cartographie</span></span>
+<span><span class="va">classes.intervalles</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="cn">Inf</span>, <span class="op">-</span><span class="fl">3.29</span>, <span class="op">-</span><span class="fl">2.58</span>, <span class="op">-</span><span class="fl">1.96</span>, <span class="fl">1.96</span>, <span class="fl">2.58</span>, <span class="fl">3.29</span>, <span class="cn">Inf</span><span class="op">)</span></span>
+<span><span class="va">Carte1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span><span class="op">+</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_borders</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"gray25"</span>, lwd<span class="op">=</span><span class="fl">.5</span><span class="op">)</span><span class="op">+</span></span>
+<span>          <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"GWR.T_Pct0_14"</span>, palette<span class="op">=</span><span class="st">"-RdBu"</span>, </span>
+<span>                  midpoint <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>                  breaks <span class="op">=</span> <span class="va">classes.intervalles</span>,</span>
+<span>                  legend.format <span class="op">=</span> <span class="va">legende.parametres</span>,</span>
+<span>                  title <span class="op">=</span> <span class="st">"Moins de 15 ans (%)"</span><span class="op">)</span><span class="op">+</span></span>
+<span>          <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span>, legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">Carte2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span><span class="op">+</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_borders</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"gray25"</span>, lwd<span class="op">=</span><span class="fl">.5</span><span class="op">)</span><span class="op">+</span></span>
+<span>          <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"GWR.T_Pct_65"</span>, palette<span class="op">=</span><span class="st">"-RdBu"</span>,</span>
+<span>                  midpoint <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>                  breaks <span class="op">=</span> <span class="va">classes.intervalles</span>,</span>
+<span>                  legend.format <span class="op">=</span> <span class="va">legende.parametres</span>,</span>
+<span>                  title <span class="op">=</span> <span class="st">"65 ans et plus (%)"</span><span class="op">)</span><span class="op">+</span></span>
+<span>          <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span>, legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">Carte3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span><span class="op">+</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_borders</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"gray25"</span>, lwd<span class="op">=</span><span class="fl">.5</span><span class="op">)</span><span class="op">+</span></span>
+<span>          <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"GWR.T_Pct_Img"</span>, palette<span class="op">=</span><span class="st">"-RdBu"</span>, </span>
+<span>                  midpoint <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>                  breaks <span class="op">=</span> <span class="va">classes.intervalles</span>,</span>
+<span>                  legend.format <span class="op">=</span> <span class="va">legende.parametres</span>,</span>
+<span>                  title <span class="op">=</span> <span class="st">"Immigrants (%)"</span><span class="op">)</span><span class="op">+</span></span>
+<span>          <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span>, legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">Carte4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span><span class="op">+</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_borders</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"gray25"</span>, lwd<span class="op">=</span><span class="fl">.5</span><span class="op">)</span><span class="op">+</span></span>
+<span>          <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"GWR.B_Pct_brevet"</span>, palette<span class="op">=</span><span class="st">"-RdBu"</span>, </span>
+<span>                  midpoint <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>                  breaks <span class="op">=</span> <span class="va">classes.intervalles</span>,</span>
+<span>                  legend.format <span class="op">=</span> <span class="va">legende.parametres</span>,</span>
+<span>                  title <span class="op">=</span> <span class="st">"Faible scolarité (%)"</span><span class="op">)</span><span class="op">+</span></span>
+<span>          <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span>, legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">Carte5</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span><span class="op">+</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_borders</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"gray25"</span>, lwd<span class="op">=</span><span class="fl">.5</span><span class="op">)</span><span class="op">+</span></span>
+<span>          <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"GWR.T_NivVieMed"</span>, palette<span class="op">=</span><span class="st">"-RdBu"</span>, </span>
+<span>                 midpoint <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>                 breaks <span class="op">=</span> <span class="va">classes.intervalles</span>,</span>
+<span>                 legend.format <span class="op">=</span> <span class="va">legende.parametres</span>,</span>
+<span>                 title <span class="op">=</span> <span class="st">"Niveau de vie (€1000)"</span><span class="op">)</span><span class="op">+</span></span>
+<span>          <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span>, legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">+</span></span>
+<span>          <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_scale_bar.html">tm_scale_bar</a></span><span class="op">(</span>breaks<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tmap_arrange.html">tmap_arrange</a></span><span class="op">(</span><span class="va">Carte1</span>, <span class="va">Carte2</span>, <span class="va">Carte3</span>, <span class="va">Carte4</span>, <span class="va">Carte5</span>, ncol <span class="op">=</span> <span class="fl">2</span>, nrow<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section></section><section id="sec-0805" class="level2" data-number="7.5"><h2 data-number="7.5" class="anchored" data-anchor-id="sec-0805">
+<span class="header-section-number">7.5</span> Exercices du chapitre&nbsp;5</h2>
+<section id="sec-08051" class="level3" data-number="7.5.1"><h3 data-number="7.5.1" class="anchored" data-anchor-id="sec-08051">
+<span class="header-section-number">7.5.1</span> Exercice&nbsp;1</h3>
+</section><section id="sec-08052" class="level3" data-number="7.5.2"><h3 data-number="7.5.2" class="anchored" data-anchor-id="sec-08052">
+<span class="header-section-number">7.5.2</span> Exercice&nbsp;2</h3>
+</section><section id="sec-08053" class="level3" data-number="7.5.3"><h3 data-number="7.5.3" class="anchored" data-anchor-id="sec-08053">
+<span class="header-section-number">7.5.3</span> Exercice&nbsp;3</h3>
 
 
-</section>
-</section>
-
-</main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
+</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -345,18 +495,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -388,11 +527,50 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
-  function tippyHover(el, contentFn) {
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/serieboldr\.github\.io\/RegressionsSpatiales\/index\.html");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -402,8 +580,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -415,7 +602,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -459,6 +769,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -484,6 +795,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -542,30 +879,30 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
-      <a href="./07-SEM.html" class="pagination-link">
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./07-SEM.html" class="pagination-link" aria-label="Modèles avec des vecteurs propres spatiaux">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Modèles avec des vecteurs propres spatiaux</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./references.html" class="pagination-link">
+      <a href="./references.html" class="pagination-link" aria-label="Bibliographie">
         <span class="nav-page-text">Bibliographie</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer">
-  <div class="nav-footer">
-    <div class="nav-footer-left">Régressions spatiales : un grand bol d’R.</div>   
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Méthodes de régression spatiale : un grand bol d’R.</p>
+</div>   
     <div class="nav-footer-center">
       &nbsp;
-    </div>
-    <div class="nav-footer-right">Ce livre a été réalisé avec <a href="https://quarto.org/">Quarto</a>.</div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Ce livre a été réalisé avec <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
   </div>
 </footer>
-
 
 
 </body></html>

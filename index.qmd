@@ -11,9 +11,9 @@
 
 **Révision linguistique :** Denise Latreille.
 
-© Philippe Apparicio et Jérémy Gelb.
+© Philippe Apparicio, Jean Dubé, Jérémy Gelb et Joan Carles Martori.
 
-**Pour citer cet ouvrage :** Apparicio P., J. Dubé, J. Gelb et J. C. Martori Cañas (2024). *Régressions spatiales : un grand bol d'R*. Université Laval et Université de Sherbrooke. fabriqueREL. Licence CC BY-SA. <br /> <br />
+**Pour citer cet ouvrage :** Apparicio P., J. Dubé, J. Gelb et J. C. Martori (2024). *Méthodes de régression spatiale : un grand bol d'R*. Université Laval et Université de Sherbrooke. fabriqueREL. Licence CC BY-SA. <br /> <br />
 
 ![](images/introduction/CouvertureP2.png){width="80%" fig-align="left"}
 
@@ -29,7 +29,7 @@ Les logiciels libres sont aujourd'hui très répandus. Comparativement aux logic
 
 -   **Réutiliser**, c'est-à-dire utiliser la totalité ou une section du livre sans limitation et sans compensation financière. Cela permet ainsi à d'autres personnes enseignantes de l'utiliser dans le cadre d'activités pédagogiques.
 
--   **Réviser**, c'est-à-dire modifier, adapter et traduire le contenu en fonction d'un besoin pédagogique précis puisqu'aucun manuel n'est parfait, tant s'en faut! Le livre a d'ailleurs été écrit intégralement dans R avec [Quatro](https://quarto.org/). Quiconque peut ainsi télécharger gratuitement le code source du livre sur [github](https://github.com/SerieBoldR/RegressionsSpatiales) et le modifier à sa guise (voir l'encadré intitulé *Suggestions d'adaptation du manuel*).
+-   **Réviser**, c'est-à-dire modifier, adapter et traduire le contenu en fonction d'un besoin pédagogique précis puisqu'aucun manuel n'est parfait, tant s'en faut! Le livre a d'ailleurs été écrit intégralement dans R avec [Quarto](https://quarto.org/). Quiconque peut ainsi télécharger gratuitement le code source du livre sur [github](https://github.com/SerieBoldR/RegressionsSpatiales) et le modifier à sa guise (voir l'encadré intitulé *Suggestions d'adaptation du manuel*).
 
 -   **Remixer**, c'est-à-dire « combiner la ressource avec d'autres ressources dont la licence le permet aussi pour créer une nouvelle ressource intégrée » ([***fabriqueREL***](https://fabriquerel.org/rel/)).
 
@@ -199,50 +199,55 @@ PackagesNonInstalles <- ListePackages[!(ListePackages %in% installed.packages()[
 if(length(new.packages)) install.packages(PackagesNonInstalles)
 ```
 
-## Structure du livre {#sect005 .unnumbered}
 
-Le livre est organisé autour de cinq grandes parties.
+## Bref historique sur les modèles de régressions spatiales en économie et en géographie {#sect005 .unnumbered}
+
+Depuis une cinquantaine d’années, les économistes et les géographes conçoivent et utilisent largement des méthodes de régression prenant en compte la dimension spatiale : modèles d'économétrie spatiale, régressions géographiquement pondérées, modèles généralisés additifs intégrant une dimension spatiale, modèles avec des vecteurs propres spatiaux, etc.
+
+La notion d’autocorrélation spatiale, étroitement liée aux régressions spatiales, remonte à une période encore plus ancienne. Elle a été introduite notamment par les travaux de Patrick Moran, d’abord en 1948 puis en 1950, suivis par ceux de Robert Geary en 1954 et de Nathan Mantel en 1967 [@moran1948interpretation; @moran1950test; @geary1954contiguity; @mantel1967detection]. La formalisation des relations spatiales trouve son origine, plus précisément, dans la première loi de la géographie énoncée par Waldo Tobler en 1970 qui stipule que « tout interagit avec tout, mais les objets proches ont plus de chance de le faire que les objets éloignés \[*Everything is related to everything else, but near things are more related than distant things*\] » [-@tobler1970computer].
+
+
+En économie, le terme « économétrie spatiale » a été utilisé pour la première fois par Jean Paelinck [-@paelinck1978spatial] à la fin des années 1970. Cependant, il est resté relativement peu exploité jusqu'aux travaux de Luc Anselin, qui publie en 1988 un ouvrage de référence sur le sujet intitulé *Spatial econometrics: methods and models* [@anselin1988]. Il faut néanmoins attendre le développement des outils informatiques avant de voir les applications affluées. Ainsi, au début des années 1990, l’économétrie spatiale a véritablement pris son essor (voir Anselin [-@anselin2010thirty] pour un historique détaillé). Depuis, ce domaine a gagné en importance, s’établissant presque comme un incontournable pour la prise en compte des effets spatiaux, mais aussi, et surtout, des fameux efforts de débordements (nous y reviendrons).
+
+En géographie, Daniel Griffith est certainement l’un des géographes les plus actifs dans le domaine des régressions spatiales, y allant de plusieurs propositions dans le but de contrôler pour la présence d’autocorrélation spatiale résiduelle. Ses premiers travaux remontent aux années 1980, et il a publié depuis un grand nombre d’ouvrages [notamment, @Griffith1988; @griffith2003spatial; @griffith2019spatial]. Puis, dans les années 1990, trois géographes – Stewart Fotheringham, Chris Brunsdon et Martin Charlton – ont introduit la régression géographiquement pondérée, une méthode permettant d’analyser localement les relations entre la variable dépendante et les variables indépendantes d'un modèle de régression [@stewart1996geography; @brunsdon1996geographically; @brunsdon1998spatial]. En 2003, la parution de leur ouvrage intitulé *Geographically weighted regression: the analysis of spatially varying relationships* [@fotheringham2003geographically] a largement contribué à la popularisation de cette méthode.
+
+
+## Structure du livre {#sect006 .unnumbered}
+
+Depuis une cinquantaine d’années, les économètres, les épidémiologistes et les géographes conçoivent et utilisent largement des méthodes de régression prenant en compte la dimension spatiale, dont les principales sont présentées dans ce manuel. Ce dernier est structuré en cinq grandes sections.
 
 **Partie 1. Notions de base.** Dans cette première partie, nous présentons les jeux de données utilisées pour mettre en œuvre les différentes méthodes de régression spatiale présentées dans le livre ([chapitre @sec-chap01]). Nous discutons aussi de plusieurs notions fondamentales et méthodes qu'il importe de bien maîtriser avant d'aborder les chapitres suivants consacrés aux méthodes de régression spatiale, notamment : l'autocorrélation spatiale (globale et locale), la notion de variable spatialement décalée et la régression linéaire multiple. Nous conclurons ce chapitre en exposant les raisons qui justifient l’utilisation de différentes formes de régressions spatiales pour modéliser des données spatiales ou spatiotemporelles.
-
 
 **Partie 2. Modèles d'économétrie spatiale**. Cette seconde partie est consacrée aux modèles d'économétrie spatiale qui vise à modéliser la **dépendance spatiale**. Dans le [chapitre @sec-chap02], nous décrivons ainsi les principaux modèles spatiaux autorégressifs qui permettent d'introduire l'autocorrélation spatiale sur les variables indépendantes (modèle SLX), la variable dépendante (SAR), sur le terme d'erreur (SEM), à la fois sur la variable dépendante et les variables indépendantes (SDM) ou à la fois sur le sur les variables indépendantes et sur le terme d’erreur (SDEM). Dans le [chapitre @sec-chap03], nous abordons une extension des modèles autorégressifs, soit les modèles spatiaux par panel qui permettent de modéliser des données spatiales longitudinales.
 
 
-**Partie 3. Régressions géographiquement pondérées**. Dans cette partie, nous abordons les régressions géographiquement pondérées (GWR) qui permettent de modéliser l'**hétérogénéité spatiale**, soit l'instabilité des relations entre la variable dépendante et celles indépendantes. Premièrement, nous décrirons les formes dites classiques de la GWR qui s'appliquent à des variables dépendantes continues, dichotomiques (logistique) et de comptage (Poisson) ([chapitre @sec-chap04]). Deuxièmement, nous abordons des extensions des la GWR, particulièrement la GWR mixte, la GWR multiéchelle, la régression temporellement et géographiquement pondérée (GTWR) et les GWR mixtes avec des variables spatialement décalées (MGWR-SAR) ([chapitre @sec-chap05]).
+**Partie 3. Régressions géographiquement pondérées**. Dans cette partie, nous abordons les régressions géographiquement pondérées (GWR) qui permettent de modéliser l'**hétérogénéité spatiale**, soit l'instabilité des relations entre la variable dépendante et celles indépendantes. Premièrement, nous décrirons les formes dites classiques de la GWR qui s'appliquent à des variables dépendantes continues, dichotomiques (logistique) et de comptage (Poisson) ([chapitre @sec-chap04]). Deuxièmement, nous abordons des extensions des la GWR, particulièrement la GWR mixte, la GWR multiéchelle et les GWR mixtes avec des variables spatialement décalées (MGWR-SAR) ([chapitre @sec-chap05]).
 
-**Partie 4. Autres approches de modélisation spatiale**. Dans cette dernière partie, nous abordons 
+**Partie 4. Autres modèles de régressions spatiales**. Cette quatrième et dernière partie comprend deux chapitres. Le [chapitre @sec-chap06] est consacré aux modèles généralisés additifs qui permettent d'introduire l’espace deux manières différentes : les modèles GAM avec une *spline* bivariée avec les coordonnées géographiques (x, y) pour capturer les variations continues dans l'espace; les modèles GAM avec un lissage par champ aléatoire de Markov (*random markov field* – RMF) pour modéliser la dépendance spatiale entre les unités spatiales voisines. Dans le [chapitre @sec-chap07], nous nous abordons les modèles linéaires généralisés avec des vecteurs spatiaux proposés par Daniel Griffith [-@fotheringham2003geographically; @griffith2019spatial].
 
-
-L'autocorrélation spatiale est une notion fondamentale en analyse spatiale permettant de vérifier si les entités proches ou voisines ont tendance à être (dis)semblables en fonction d'un phénomène donné. Dans le [chapitre @sec-chap02], nous décrivons une panoplie de méthodes permettant de définir des matrices de pondération spatiale qui sont utilisées pour évaluer la dépendance spatiale d'une ou de plusieurs variables, soit les mesures d'autocorrélation spatiale globale et locale. La compréhension de la notion de dépendance spatiale et des différentes mesures d'autocorrélation spatiale est primordiale puisqu'elles sont largement mobilisées dans d'autres méthodes d'analyses spatiales décrites dans les chapitres suivants, notamment les régressions spatiales ([chapitre @sec-chap02]) et les méthodes de classification spatiale ([chapitre @sec-chap03]).
-
-**Partie 4. Autres modèles de régressions spatiales**. Cette cinquième et dernière partie comprend deux chapitres. Le [chapitre @sec-chap07] est consacré à plusieurs méthodes de régression intégrant l'espace : modèles d'économétrie spatiale, modèles généralisés additifs (GAM) avec une *spline* bivariée sur les coordonnées géographiques, régressions géographiquement pondérées. Dans le [chapitre @sec-chap08], nous décrivons des méthodes permettant de regrouper des entités spatiales d'une région en plusieurs classes en fonction de leurs caractéristiques évaluées à partir de plusieurs variables. Nous distinguons deux types de méthodes de classification non supervisée spatiale : les méthodes de classification non supervisée avec contrainte spatiale visant à regrouper des entités spatiales en plusieurs régions avec une absence de mitage (algorithmes AZP, SKATER, REDCAP, etc.); les méthodes de classification non supervisée avec une dimension spatiale (méthode *ClustGeo* et classification floue c-moyennes spatiale).
-
-## Remerciements {#sect006 .unnumbered}
+## Remerciements {#sect007 .unnumbered}
 
 De nombreuses personnes ont contribué à l'élaboration de ce manuel.
 
 Ce projet a bénéficié du soutien pédagogique et financier de la [***fabriqueREL***](https://fabriquerel.org/) (ressources éducatives libres). Les différentes rencontres avec le comité de suivi nous ont permis de comprendre l'univers des ressources éducatives libres (REL) et notamment leurs [fameux 5R](https://fabriquerel.org/rel/) (Retenir --- Réutiliser --- Réviser --- Remixer --- Redistribuer), de mieux définir le besoin pédagogique visé par ce manuel, d'identifier des ressources pédagogiques et des outils pertinents pour son élaboration. Ainsi, nous remercions chaleureusement les membres de la *fabriqueREL* pour leur soutien inconditionnel :
 
--   Myriam Beaudet, bibliothécaire à l'Université de Sherbrooke.
+-   Marianne Demers-Desmarais, bibliothécaire, Université Laval.
 
--   Marianne Dubé, coordonnatrice de la fabriqueREL, Université de Sherbrooke.
+-   Julie-Christine Gagné, conseillère en pédagogie universitaire, Université Laval.
 
--   Serge Piché, conseiller pédagogique, Université de Sherbrooke.
+-   Claude Potvin, conseiller pédagogique à la fabriqueREL, Université Laval.
 
--   Claude Potvin, conseiller en formation, Service de soutien à l'enseignement, Université Laval.
+-   Nadia Villeuneuve, bibliothécaire, Université Laval.
 
-Nous remercions chaleureusement les personnes étudiantes du cours **GMQ405 - Modélisation et analyse spatiale** du [Baccalauréat en géomatique appliquée à l'environnement](https://www.usherbrooke.ca/admission/programme/271/baccalaureat-en-geomatiqueappliquee-a-lenvironnement/) et du [Microprogramme de 1er cycle en géomatique appliquée](https://www.usherbrooke.ca/admission/programme/429/microprogramme-de-1er-cycleen-geomatique-appliquee/) du [Département de géomatique appliquée](https://www.usherbrooke.ca/geomatique/) de l'[Université de Sherbrooke](https://www.usherbrooke.ca/) de la session d'été 2023 : Hermann B. Beaudin, Jérémie Durand, Marie-Hélène Gadbois Del Carpio, David Lapointe, Marc-Antoine Lecours-Toutloff, Rosemarie Légaré, Frédéric Malo, Anthony Mandeville, Gurwen Meret, Sarah Pion, Anne-Sophie Roy, William Scrive, Aldin Evrad Tampe et Kévin Therrien. Vos suggestions et commentaires nous ont permis d'améliorer grandement la version préliminaire de ce manuel qui a été utilisée dans le cadre de ce cours.
 
+À MODIFIER PLUS TARD.
 Nous remercions aussi les membres du comité de révision pour leurs commentaires et suggestions très constructifs. Ce comité est composé de quatre personnes étudiantes du [Département de géomatique appliquée](https://www.usherbrooke.ca/geomatique/) de l'[Université de Sherbrooke](https://www.usherbrooke.ca/) :
 
 -   Gaël Machemin et Loek Pascaud, étudiants à la [maîtrise en géomatique appliquée et télédétection (type recherche)](https://www.usherbrooke.ca/geomatique/etudes/programmes/2e-cycle/maitrise-en-geomatique-appliquee-et-teledetection-type-recherche).
 
--   Rosemarie Légaré, étudiante au [baccalauréat en géomatique appliquée à l'environnement](https://www.usherbrooke.ca/admission/programme/271/baccalaureat-en-geomatiqueappliquee-a-lenvironnement/).
+-   Rosemarie Légaré, étudiante à la maîtrise [en géomatique appliquée et télédétection](https://www.usherbrooke.ca/admission/programme/622/maitrise-en-geomatique-appliquee-et-teledetection/).
 
-Marie-Hélène Gadbois Del Carpio, étudiante de troisième année au [baccalauréat en géomatique appliquée à l'environnement](https://www.usherbrooke.ca/admission/programme/271/baccalaureat-en-geomatiqueappliquee-a-lenvironnement/) a participé activement à la mise en page du manuel; elle est désormais une grande spécialiste des feuilles de style en cascade (CSS) et de Quarto.
-
-Aussi, les discussions enrichissantes avec Geneviève Crevier et Amélie Fréchette ont largement contribué à définir et à bonifier la table des matières.
+-   Marie-Hélène Gadbois Del Carpio, étudiante à la maîtrise [en géomatique appliquée et télédétection](https://www.usherbrooke.ca/admission/programme/622/maitrise-en-geomatique-appliquee-et-teledetection/) a participé activement à la mise en page du manuel; elle est désormais une grande spécialiste des feuilles de style en cascade (CSS) et de Quarto.
 
 Finalement, nous remercions Denise Latreille, réviseure linguistique et chargée de cours à l'Université Sherbrooke, pour la révision du manuel.
 

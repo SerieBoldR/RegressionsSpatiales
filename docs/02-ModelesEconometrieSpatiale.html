@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.353">
+<meta name="generator" content="quarto-1.6.32">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Régressions spatiales : un grand bol d’R - 2&nbsp; Modèles d’économétrie spatiale</title>
+<title>1&nbsp; Modèles d’économétrie spatiale – Méthodes de régression spatiale : un grand bol d’R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,7 +19,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -30,7 +30,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -55,6 +55,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
+  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -80,23 +81,29 @@ div.csl-indent {
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./03-ModelesSpatiauxPanel.html" rel="next">
-<link href="./01-NotionsDeBase.html" rel="prev">
+<link href="./00-auteurs.html" rel="prev">
 <link href="./images/introduction/CouvertureP1.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-2486e1f0a3ee9ee1fc393803a1361cdb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap-9e975f8ad5abb1a75f6b80547d83af80.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "Pas de résultats",
     "search-matching-documents-text": "documents trouvés",
@@ -105,32 +112,60 @@ div.csl-indent {
     "search-more-match-text": "correspondance de plus dans ce document",
     "search-more-matches-text": "correspondances de plus dans ce document",
     "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Annuler",
-    "search-submit-button-title": "Envoyer"
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
   }
-}</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><link rel="stylesheet" href="css/quizlib.min.css">
+}</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script><link rel="stylesheet" href="css/quizlib.min.css">
 </head>
 <body class="nav-sidebar floating">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./02-ModelesEconometrieSpatiale.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles d'économétrie spatiale</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./02-ModelesEconometrieSpatiale.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Régressions spatiales : un grand bol d’R</a> 
+      <a href="./">Méthodes de régression spatiale : un grand bol d’R</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/SerieBoldR/RegressionsSpatiales" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/SerieBoldR/RegressionsSpatiales" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
+    <a href="./Méthodes-de-régression-spatiale---un-grand-bol-d’R.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
 </div>
     </div>
       </div>
@@ -157,12 +192,6 @@ div.csl-indent {
       <span class="sidebar-item-text sidebar-link text-start">
  <span class="menu-text">Partie 1. Notions de base</span></span>
   </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./01-NotionsDeBase.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Notions de base</span></span></a>
-  </div>
-</li>
         <li class="sidebar-item sidebar-item-section">
       <span class="sidebar-item-text sidebar-link text-start">
  <span class="menu-text">Partie 2. Économétrie spatiale</span></span>
@@ -170,19 +199,25 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./02-ModelesEconometrieSpatiale.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./03-ModelesSpatiauxPanel.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <span class="sidebar-item-text sidebar-link text-start">
  <span class="menu-text">Partie 3. Régressions géographiquement pondérées</span></span>
   </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-GWRClassique.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Régressions géographiquement pondérées classiques</span></span></a>
+  </div>
+</li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./05-GWRExtensions.html" class="sidebar-item-text sidebar-link">
@@ -223,26 +258,40 @@ div.csl-indent {
 </li>
     </ul>
 </div>
-</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table des matières</h2>
    
   <ul>
-<li>
-<a href="#sec-021" id="toc-sec-021" class="nav-link active" data-scroll-target="#sec-021"><span class="header-section-number">2.1</span> Pourquoi recourir à des modèles économétriques spatiaux?</a>
+<li><a href="#sec-021" id="toc-sec-021" class="nav-link active" data-scroll-target="#sec-021"><span class="header-section-number">1.1</span> Pourquoi recourir à des modèles économétriques spatiaux?</a></li>
+  <li>
+<a href="#sec-022" id="toc-sec-022" class="nav-link" data-scroll-target="#sec-022"><span class="header-section-number">1.2</span> Les différents modèles spatiaux autorégressifs</a>
   <ul class="collapse">
-<li><a href="#sec-0212" id="toc-sec-0212" class="nav-link" data-scroll-target="#sec-0212"><span class="header-section-number">2.1.1</span> Les différents modèles spatiaux autorégressifs</a></li>
-  <li><a href="#sec-0213" id="toc-sec-0213" class="nav-link" data-scroll-target="#sec-0213"><span class="header-section-number">2.1.2</span> Quel modèle choisir?</a></li>
+<li><a href="#sec-0221" id="toc-sec-0221" class="nav-link" data-scroll-target="#sec-0221"><span class="header-section-number">1.2.1</span> Modèle SLX&nbsp;: prise en compte des caractéristiques des voisins</a></li>
+  <li><a href="#sec-02211" id="toc-sec-02211" class="nav-link" data-scroll-target="#sec-02211"><span class="header-section-number">1.2.2</span> Description du Modèle SLX</a></li>
+  <li><a href="#sec-02212" id="toc-sec-02212" class="nav-link" data-scroll-target="#sec-02212"><span class="header-section-number">1.2.3</span> Mise en œuvre dans R</a></li>
+  <li><a href="#sec-0222" id="toc-sec-0222" class="nav-link" data-scroll-target="#sec-0222"><span class="header-section-number">1.2.4</span> Modèle SAR&nbsp;: autocorrélation spatiale sur la variable dépendante</a></li>
+  <li><a href="#sec-0223" id="toc-sec-0223" class="nav-link" data-scroll-target="#sec-0223"><span class="header-section-number">1.2.5</span> Modèle SEM&nbsp;: autocorrélation spatiale sur le terme d’erreur</a></li>
+  <li><a href="#sec-0224" id="toc-sec-0224" class="nav-link" data-scroll-target="#sec-0224"><span class="header-section-number">1.2.6</span> Modèle SDM&nbsp;: autocorrélation spatiale sur la variable dépendante et les variables indépendantes</a></li>
+  <li><a href="#sec-0225" id="toc-sec-0225" class="nav-link" data-scroll-target="#sec-0225"><span class="header-section-number">1.2.7</span> Modèle SDEM&nbsp;: autocorrélation spatiale sur les variables indépendantes et sur le terme d’erreur</a></li>
   </ul>
 </li>
-  <li><a href="#sec-024" id="toc-sec-024" class="nav-link" data-scroll-target="#sec-024"><span class="header-section-number">2.2</span> Quiz de révision</a></li>
-  <li><a href="#sec-025" id="toc-sec-025" class="nav-link" data-scroll-target="#sec-025"><span class="header-section-number">2.3</span> Exercices de révision</a></li>
-  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action">Signaler un problème ou<br>formuler une suggestion</a></p></div></div></nav>
+  <li>
+<a href="#sec-023" id="toc-sec-023" class="nav-link" data-scroll-target="#sec-023"><span class="header-section-number">1.3</span> Quel modèle choisir?</a>
+  <ul class="collapse">
+<li><a href="#sec-0231" id="toc-sec-0231" class="nav-link" data-scroll-target="#sec-0231"><span class="header-section-number">1.3.1</span> Tests du multiplicateur de Lagrange sur le modèle MCO</a></li>
+  <li><a href="#sec-0232" id="toc-sec-0232" class="nav-link" data-scroll-target="#sec-0232"><span class="header-section-number">1.3.2</span> Comparaison des modèles mixtes et non mixtes</a></li>
+  <li><a href="#sec-0233" id="toc-sec-0233" class="nav-link" data-scroll-target="#sec-0233"><span class="header-section-number">1.3.3</span> Mesures AIC et BIC et dépendance spatiale</a></li>
+  </ul>
+</li>
+  <li><a href="#sec-024" id="toc-sec-024" class="nav-link" data-scroll-target="#sec-024"><span class="header-section-number">1.4</span> Quiz de révision</a></li>
+  <li><a href="#sec-025" id="toc-sec-025" class="nav-link" data-scroll-target="#sec-025"><span class="header-section-number">1.5</span> Exercices de révision</a></li>
+  </ul><div class="toc-actions"><ul><li><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<h1 class="title"><span id="sec-chap02" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale</span></span></h1>
+<h1 class="title"><span id="sec-chap02" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale</span></span></h1>
 </div>
 
 
@@ -255,7 +304,8 @@ div.csl-indent {
   </div>
   
 
-</header><p>L’objectif de ce chapitre est de donner un aperçu des différents modèles économétriques spatiaux.</p>
+
+</header><p>Dans ce chapitre, nous décrivons uniquement les modèles économétriques spatiaux dont la variable dépendante est continue. Sommairement, ces modèles sont des extensions de la régression linéaire multiple, mais dans lequel une spécification explicite des relations spatiales entre les observations est introduite. Cette spécification vise ultimement à capter des effets spatiaux qui influencent le processus générateur de données (PGD), c’est-à-dire le modèle économétrique que l’on spécifie.</p>
 <div class="bloc_objectif">
 <div class="bloc_objectif-header">
 <div class="bloc_objectif-icon">
@@ -308,144 +358,6 @@ div.csl-indent {
 </ul>
 </div>
 </div>
-<p>Pour décrire les différents modèles, nous proposons d’utiliser le jeu de données spatiales <code>LyonIris</code> du <em>package</em> <code>geocmeans</code>. Ce jeu de données spatiales pour l’agglomération lyonnaise (France) comprend dix variables, dont quatre environnementales (EN) et six socioéconomiques (SE), pour les îlots regroupés pour l’information statistique (IRIS) de l’agglomération lyonnaise (<a href="#tbl-datageocmeans">tableau&nbsp;<span>2.1</span></a> et <a href="#fig-datacarto">figure&nbsp;<span>2.1</span></a>).</p>
-<div class="cell">
-<div class="cell-output-display">
-<div id="tbl-datageocmeans" class="anchored">
-<table class="table table-sm table-striped small">
-<caption>Tableau&nbsp;2.1: Statistiques descriptives du jeu de données LyonIris</caption>
-<colgroup>
-<col style="width: 11%">
-<col style="width: 11%">
-<col style="width: 46%">
-<col style="width: 6%">
-<col style="width: 5%">
-<col style="width: 6%">
-<col style="width: 5%">
-<col style="width: 6%">
-</colgroup>
-<thead><tr class="header">
-<th style="text-align: left;"></th>
-<th style="text-align: left;">Nom</th>
-<th style="text-align: left;">Intitulé</th>
-<th style="text-align: center;">Type</th>
-<th style="text-align: right;">Moy.</th>
-<th style="text-align: right;">E.-T.</th>
-<th style="text-align: right;">Min.</th>
-<th style="text-align: right;">Max.</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Lden</td>
-<td style="text-align: left;">Lden</td>
-<td style="text-align: left;">Bruit routier (Lden dB(A))</td>
-<td style="text-align: center;">EN</td>
-<td style="text-align: right;">55,6</td>
-<td style="text-align: right;">4,9</td>
-<td style="text-align: right;">33,9</td>
-<td style="text-align: right;">71,7</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">NO2</td>
-<td style="text-align: left;">NO2</td>
-<td style="text-align: left;">Dioxyde d’azote (ug/m<sup>3</sup>)</td>
-<td style="text-align: center;">EN</td>
-<td style="text-align: right;">28,7</td>
-<td style="text-align: right;">7,9</td>
-<td style="text-align: right;">12,0</td>
-<td style="text-align: right;">60,2</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">PM25</td>
-<td style="text-align: left;">PM25</td>
-<td style="text-align: left;">Particules fines (PM<span class="math inline">\(_{2,5}\)</span>)</td>
-<td style="text-align: center;">EN</td>
-<td style="text-align: right;">16,8</td>
-<td style="text-align: right;">2,1</td>
-<td style="text-align: right;">11,3</td>
-<td style="text-align: right;">21,9</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">VegHautPrt</td>
-<td style="text-align: left;">VegHautPrt</td>
-<td style="text-align: left;">Canopée (%)</td>
-<td style="text-align: center;">EN</td>
-<td style="text-align: right;">18,7</td>
-<td style="text-align: right;">10,1</td>
-<td style="text-align: right;">1,7</td>
-<td style="text-align: right;">53,8</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Pct0_14</td>
-<td style="text-align: left;">Pct0_14</td>
-<td style="text-align: left;">Moins de 15 ans (%)</td>
-<td style="text-align: center;">SE</td>
-<td style="text-align: right;">18,5</td>
-<td style="text-align: right;">5,7</td>
-<td style="text-align: right;">0,0</td>
-<td style="text-align: right;">54,0</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Pct_65</td>
-<td style="text-align: left;">Pct_65</td>
-<td style="text-align: left;">65 ans et plus (%)</td>
-<td style="text-align: center;">SE</td>
-<td style="text-align: right;">16,2</td>
-<td style="text-align: right;">5,9</td>
-<td style="text-align: right;">0,0</td>
-<td style="text-align: right;">45,1</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Pct_Img</td>
-<td style="text-align: left;">Pct_Img</td>
-<td style="text-align: left;">Immigrants (%)</td>
-<td style="text-align: center;">SE</td>
-<td style="text-align: right;">14,5</td>
-<td style="text-align: right;">9,1</td>
-<td style="text-align: right;">0,0</td>
-<td style="text-align: right;">59,8</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">TxChom1564</td>
-<td style="text-align: left;">TxChom1564</td>
-<td style="text-align: left;">Taux de chômage</td>
-<td style="text-align: center;">SE</td>
-<td style="text-align: right;">14,8</td>
-<td style="text-align: right;">8,1</td>
-<td style="text-align: right;">0,0</td>
-<td style="text-align: right;">98,8</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Pct_brevet</td>
-<td style="text-align: left;">Pct_brevet</td>
-<td style="text-align: left;">Personnes à faible scolarité (%)</td>
-<td style="text-align: center;">SE</td>
-<td style="text-align: right;">23,5</td>
-<td style="text-align: right;">12,6</td>
-<td style="text-align: right;">0,0</td>
-<td style="text-align: right;">100,0</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">NivVieMed</td>
-<td style="text-align: left;">NivVieMed</td>
-<td style="text-align: left;">Médiane du niveau de vie (milliers d’euros)</td>
-<td style="text-align: center;">SE</td>
-<td style="text-align: right;">21,8</td>
-<td style="text-align: right;">4,9</td>
-<td style="text-align: right;">11,3</td>
-<td style="text-align: right;">38,7</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div id="fig-datacarto" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure"><p><img src="images/chap02/FigureDataLyon.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;2.1: Cartographie des variables du jeu de données LyonIris</figcaption></figure>
-</div>
-<section id="sec-021" class="level2" data-number="2.1"><h2 data-number="2.1" class="anchored" data-anchor-id="sec-021">
-<span class="header-section-number">2.1</span> Pourquoi recourir à des modèles économétriques spatiaux?</h2>
 <div class="bloc_attention">
 <div class="bloc_attention-header">
 <div class="bloc_attention-icon">
@@ -454,65 +366,72 @@ div.csl-indent {
 <p><strong>Régression linéaire multiple et modèles économétriques spatiaux</strong></p>
 </div>
 <div class="bloc_attention-body">
-<p>Dans cette section, nous décrivons uniquement les modèles économétriques spatiaux dont la variable dépendante est continue. Sommairement, ces modèles sont des extensions de la régression linéaire multiple dans laquelle est intégrée l’autocorrélation spatiale. Avant de lire cette section, il faut donc bien maîtriser la régression linéaire multiple. Si ce n’est pas le cas, nous vous invitons vivement à lire le <a href="https://serieboldr.github.io/MethodesQuantitatives/07-regressionlineaire.html">chapitre suivant</a> <span class="citation" data-cites="RBoldAir">(<a href="references.html#ref-RBoldAir" role="doc-biblioref">Apparicio et Gelb 2022</a>)</span>.</p>
-<p>Ces deux dernières décennies, plusieurs ouvrages traitant des modèles économétriques spatiaux ont été publiés, surtout en anglais <span class="citation" data-cites="lesage2008introduction anselin2014modern bivand2008applied">(<a href="references.html#ref-lesage2008introduction" role="doc-biblioref">LeSage et Pace 2008</a>; <a href="references.html#ref-anselin2014modern" role="doc-biblioref">Anselin et Rey 2014</a>; <a href="references.html#ref-bivand2008applied" role="doc-biblioref">Bivand et al. 2008</a>)</span>. Ils méritent grandement d’être consultés, tout comme l’excellent livre en français de Jean Dubé et Diègo Legros <span class="citation" data-cites="dube2014econometrie">(<a href="references.html#ref-dube2014econometrie" role="doc-biblioref">2014</a>)</span>.</p>
+<p>Dans cette section, nous décrivons uniquement les modèles économétriques spatiaux dont la variable dépendante est continue. Sommairement, ces modèles sont des extensions de la régression linéaire multiple, mais dans lequel une spécification explicite des relations spatiales entre les observations est introduite. Cette spécification vise ultimement à capter des effets spatiaux qui influencent le processus générateur de données (PGD), c’est-à-dire le modèle économétrique que l’on spécifie.</p>
+<p>Par conséquent, avant de lire cette chapitre, il convient de bien maîtriser la régression linéaire multiple. Une brève récapitulation est proposée dans la <span class="quarto-unresolved-ref">?sec-015</span>.</p>
 </div>
 </div>
-<p>Dans un modèle, les résidus (<span class="math inline">\(\epsilon\)</span>) sont la différence entre les valeurs observées (<span class="math inline">\(y_i\)</span>) et les valeurs prédites par le modèle (<span class="math inline">\(\widehat{y_i}\)</span>). Une des hypothèses de la régression linéaire multiple est que les observations doivent être indépendantes les unes des autres (<em>indépendance du terme d’erreur</em>). Le non-respect de cette hypothèse produit des résultats biaisés, notamment pour les coefficients de régression.</p>
-<p>Lorsque les observations sont des entités spatiales (polygones, points par exemple), si les résidus du modèle sont autocorrélés spatialement, il y a un problème de dépendance spatiale du modèle. Autrement dit, les observations ne sont pas spatialement indépendantes les unes des autres. Pour vérifier la dépendance spatiale d’un modèle, il suffit de calculer le <em>I</em> de Moran sur les résidus du modèle, comme décrit au chapitre&nbsp;2 (<span class="quarto-unresolved-ref">?sec-023</span>).</p>
-<p>Autrement dit, un modèle de régression construit avec des données spatiales ne devrait pas avoir des résidus spatialement autocorrélés. Or, les modèles économétriques spatiaux permettent justement d’intégrer l’autocorrélation spatiale de différentes manières afin de s’assurer que l’hypothèse de l’indépendance du terme d’erreur est respectée.</p>
-<section id="sec-0212" class="level3" data-number="2.1.1"><h3 data-number="2.1.1" class="anchored" data-anchor-id="sec-0212">
-<span class="header-section-number">2.1.1</span> Les différents modèles spatiaux autorégressifs</h3>
-<p>Selon Jean Dubé et Diègo Legros, «&nbsp;cinq raisons peuvent motiver le choix d’un modèle autorégressif&nbsp;: la présence d’externalités, les effets d’entraînement, l’omission de variables importantes, la présence d’hétérogénéité spatiale des comportements, les effets mixtes&nbsp;» <span class="citation" data-cites="dube2014econometrie">(<a href="references.html#ref-dube2014econometrie" role="doc-biblioref">2014, 120</a>)</span>. Les effets mixtes peuvent être la combinaison d’externalités avec des effets d’entraînement ou encore d’externalités avec l’omission d’une ou de plusieurs variables importantes spatialement structurées.</p>
-<section id="sec-02121" class="level4" data-number="2.1.1.1"><h4 data-number="2.1.1.1" class="anchored" data-anchor-id="sec-02121">
-<span class="header-section-number">2.1.1.1</span> Modèle SLX&nbsp;: autocorrélation spatiale sur les variables indépendantes</h4>
+<section id="sec-021" class="level2" data-number="1.1"><h2 data-number="1.1" class="anchored" data-anchor-id="sec-021">
+<span class="header-section-number">1.1</span> Pourquoi recourir à des modèles économétriques spatiaux?</h2>
+<p>Dans un modèle, les résidus (<span class="math inline">\(\epsilon\)</span>) sont la différence entre les valeurs observées (<span class="math inline">\(y_i\)</span>) et les valeurs prédites par le modèle (<span class="math inline">\(\widehat{y_i}\)</span>). Une des hypothèses de la régression linéaire multiple est que les observations doivent être indépendantes les unes des autres (<em>indépendance du terme d’erreur</em>). Le non-respect de cette hypothèse produit des résultats biaisés, notamment pour les coefficients de régression. Un simple test de présence d’autocorrélation spatiale entre les résidus (<span class="quarto-unresolved-ref">?sec-01411</span>) permet de vérifier si cette hypothèse est respectée.</p>
+<p>Le rejet de cette hypothèse d’indépendance rend les coefficients estimés, selon la forme fonctionnelle postulée (ou processus générateur des données – PGD), par le modèle biaisés et/ou biaise le calcul des écarts-types, invalidant ainsi les tests de significativité usuels. La présence d’autocorrélation spatiale entre les résidus est donc un premier test nécessaire pour s’assurer de la qualité des résultats issus du modèle de régression linéaire.</p>
+<p>À noter qu’une autocorrélation spatiale entre certaines variables observables, dépendante ou indépendantes, est possible sans pour autant que les résidus soient autocorrélés. Dans ce cas, les relations entre les variables indépendantes permettent de capter l’effet spatial contenu dans la variable dépendante et les résultats d’estimations sont valides si les résidus sont homoscédastiques, c’est-à-dire de variance homogène (autrement, le problème peut facilement être réglé par un simple ajout d’option dans la commande du modèle de régression). Ce n’est donc pas sur les variables observables que le test de détection d’autocorrélation spatiale est important, mais bien sur les résidus du modèle.</p>
+<p>Pour être valides, les résultats d’un modèle de régression linéaire construit avec des données spatiales ne devraient pas avoir des résidus spatialement autocorrélés. Si c’est le cas, alors certaines options sont envisageables pour tenter de remédier à la situation. La plus simple étant l’ajout de variables indépendantes spatialement structurées, afin de capter l’autocorrélation résiduelle. Les méthodes plus avancées proposent d’intégrer formellement cette relation spatiale dans le PGD.</p>
+</section><section id="sec-022" class="level2" data-number="1.2"><h2 data-number="1.2" class="anchored" data-anchor-id="sec-022">
+<span class="header-section-number">1.2</span> Les différents modèles spatiaux autorégressifs</h2>
+<p>Selon Jean Dubé et Diègo Legros, quelques raisons expliquent « le choix d’un modèle autorégressif&nbsp;: la présence d’externalités, les effets d’entraînement, l’omission de variables importantes, la présence d’hétérogénéité spatiale des comportements, les effets mixtes » <span class="citation" data-cites="dube2014econometrie">(<a href="references.html#ref-dube2014econometrie" role="doc-biblioref">2014, 120</a>)</span>. Les effets mixtes représentent une combinaison d’effets spatiaux. Dans tous les cas, la prise en compte des effets spatiaux passe par la spécification d’une matrice de pondérations spatiales, notée <span class="math inline">\(W\)</span> et de dimension (<span class="math inline">\(N \times N\)</span>).</p>
+<p>FAIRE UN TABLEAU Modèles / Motivation / Intégration de l’autocorrélation spatiale SLX / Externalités : influence des caractéristiques d’un voisin sur le comportement d’intérêt d’une observation donnée / Variables indépendantes (WX)</p>
+<section id="sec-0221" class="level3" data-number="1.2.1"><h3 data-number="1.2.1" class="anchored" data-anchor-id="sec-0221">
+<span class="header-section-number">1.2.1</span> Modèle SLX&nbsp;: prise en compte des caractéristiques des voisins</h3>
+</section><section id="sec-02211" class="level3" data-number="1.2.2"><h3 data-number="1.2.2" class="anchored" data-anchor-id="sec-02211">
+<span class="header-section-number">1.2.2</span> Description du Modèle SLX</h3>
+<p>Dans un modèle SLX (<em>spatial lag of X model</em>), la dimension spatiale est intégrée par une possible influence des variables indépendantes des observations voisines, ou des caractéristiques des voisins. Cette spécification vise habituellement à intégrer ce que l’on identifie dans la littérature par les effets d’externalités spatiaux, c’est-à-dire capter l’influence des caractéristiques d’un voisin sur le comportement d’intérêt d’une observation donnée (voir Figure x).</p>
+<p>Plusieurs avantages sont liés à cette spécification. D’une part, cette approche peut se faire simplement en ajoutant des variables à l’équation de départ, soit la spécification du PGD original. La création de variable indépendantes, supposées exogènes, décalées spatialement peut être effectuée de manière simple (voir figure 2.29). D’autre part, ce modèle peut être estimé par moindres carrés ordinaires, ce qui n’est pas possible avec les autres spécifications.</p>
 <p>Dans un modèle SLX, l’autocorrélation spatiale est intégrée au niveau des variables indépendantes. Autrement dit, les variables indépendantes spatialement décalées (<span class="math inline">\(WX\)</span>) sont introduites aussi dans le modèle. Par conséquent, la valeur de chaque unité spatiale du modèle est ainsi expliquée à la fois par ses propres caractéristiques et celles dans le voisinage ou à proximité en fonction de la matrice de pondération spatiale (<span class="math inline">\(W\)</span>).</p>
-<div class="bloc_aller_loin">
-<div class="bloc_aller_loin-header">
-<div class="bloc_aller_loin-icon">
+<div class="bloc_notes">
+<div class="bloc_notes-header">
+<div class="bloc_notes-icon">
 
 </div>
 <p><strong>Rappel sur les variables spatialement décalées</strong></p>
 </div>
-<div class="bloc_aller_loin-body">
+<div class="bloc_notes-body">
 <p>Dans le chapitre 2 sur l’autocorrélation spatiale, nous avons vu comment calculer une variable spatialement décalée avec une matrice de pondération spatiale (<span class="quarto-unresolved-ref">?fig-Chap02FigureVariableSpatialementDecalee</span>). À titre de rappel, lorsque cette dernière est standardisée en ligne, elle correspond à la valeur moyenne dans le voisinage.</p>
 </div>
 </div>
-<p>L’idée est alors d’introduire des <strong>externalités</strong> puisque les caractéristiques des entités spatiales proches ou voisines peuvent avoir un effet sur la variable dépendante <span class="citation" data-cites="dube2014econometrie">(<a href="references.html#ref-dube2014econometrie" role="doc-biblioref">Dubé et Legros 2014</a>)</span>. L’équation du modèle SLX, qui est estimée selon la méthode des moindres carrés ordinaires (comme la régression linéaire multiple), s’écrit alors&nbsp;:</p>
-<p><span id="eq-SLX"><span class="math display">\[
-y = X\beta + WX\theta + \epsilon
-\tag{2.1}\]</span></span></p>
-<p>avec&nbsp;:</p>
+<p>Le modèle SLX prend la spécification suivante&nbsp;:</p>
+<p><span id="eq-SLX1"><span class="math display">\[
+y = \iota\alpha + X\beta + WX\theta + \varepsilon
+\tag{1.1}\]</span></span></p>
+<p>Où&nbsp;:</p>
 <ul>
-<li>
-<span class="math inline">\(y\)</span>, la variable dépendante.</li>
-<li>
-<span class="math inline">\(X\)</span>, les variables indépendantes.</li>
-<li>
-<span class="math inline">\(\beta\)</span>, les coefficients des variables indépendantes.</li>
-<li>
-<span class="math inline">\(W\)</span>, la matrice de pondération spatiale.</li>
-<li>
-<span class="math inline">\(WX\)</span>, les variables indépendantes spatiales décalées.</li>
-<li>
-<span class="math inline">\(\theta\)</span>, les coefficients des variables indépendantes spatiales décalées.</li>
-<li>
-<span class="math inline">\(\epsilon\)</span>, les résidus.</li>
+<li><p><span class="math inline">\(y\)</span>, est la variable dépendante, soit un vecteur de dimension <span class="math inline">\((N \times 1)\)</span> où N est le nombre total d’observations mobilisées dans l’analyse, avec <span class="math inline">\(i=1,2,\dots,N\)</span>.</p></li>
+<li><p><span class="math inline">\(\iota\)</span> est un vecteur de dimension <span class="math inline">\((N \times 1)\)</span> comportant uniquement des valeurs de 1.</p></li>
+<li><p><span class="math inline">\(X\)</span>, une matrice de dimension <span class="math inline">\((N \times K)\)</span> renfermant l’ensemble des <span class="math inline">\(K\)</span> vecteurs de variables explicatives en plus d’une colonne de 1, dans la première colonne de la matrice, pour la constante, d’où <span class="math inline">\((K+1)\)</span>.</p></li>
+<li><p><span class="math inline">\(\alpha\)</span> est un scalaire identifiant l’ordonnée à l’origine.</p></li>
+<li><p><span class="math inline">\(\beta\)</span>, est un vecteur de dimension <span class="math inline">\((K+1)\)</span> qui renferme l’ensemble des coefficients de régression, pour les <span class="math inline">\(K\)</span> variables indépendantes et la constante.</p></li>
+<li><p><span class="math inline">\(WX\)</span> est une matrice de variables indépendantes décalées spatialement, résultant d’une opération matricielle simple, soit <span class="math inline">\(WX = W \times X\)</span>, où <span class="math inline">\(W\)</span> est de dimension <span class="math inline">\((N×N)\)</span>, <span class="math inline">\(X\)</span> est de dimension <span class="math inline">\((N \times K)\)</span>, d’où <span class="math inline">\(WX\)</span> est de dimension <span class="math inline">\((N \times K)\)</span>, où chaque observations représente la moyenne des valeurs des variables indépendantes autour d’une observation donnée.</p></li>
+<li><p><span class="math inline">\(\theta\)</span> est un vecteur de coefficients associés aux valeurs décalées spatialement des variables indépendantes (excluant la constante) de dimension <span class="math inline">\((K \times 1)\)</span>.</p></li>
+<li><p><span class="math inline">\(\varepsilon\)</span>, un vecteur de dimension <span class="math inline">\((N \times 1)\)</span> des termes d’erreurs.</p></li>
 </ul>
-<p><strong>Construction du modèle SLX dans R</strong></p>
+<p>Le PGD suggère que la valeur de chaque unité spatiale du modèle est ainsi expliquée à la fois par ses propres caractéristiques et celles de ses voisins ou des observations à proximité en fonction de la matrice de pondération spatiale (<span class="math inline">\(W\)</span>).</p>
+<p>Une des particularités du modèle SLX est qu’il introduit une complexité dans l’interprétation des résultats et le calcul des effets marginaux puisque la variable <span class="math inline">\(x_k\)</span> apparaît à deux endroits dans le modèle&nbsp;: d’abord dans la matrice des variables indépendantes originales (<span class="math inline">\(X\)</span>) et ensuite dans la matrice de variables indépendantes décalées spatialement (<span class="math inline">\(WX\)</span>). Lorsque la matrice de pondérations est standardisée en ligne, le calcul des effets marginaux est alors donné par la dérivée partielle suivante&nbsp;:</p>
+<p><span id="eq-SLX2"><span class="math display">\[
+\frac{\partial y}{\partial x_k} = \mathbf{I} \beta_k + W \theta_k
+\tag{1.2}\]</span></span></p>
+<p>Pour une matrice de pondérations standardisées en ligne, cette expression se réduit à la valeur du coefficient associé à la variable indépendante originale, <span class="math inline">\(\beta_k\)</span>, en plus de la valeur du coefficient associé à la variable décalée spatialement, <span class="math inline">\(\theta_k\)</span>. L’expression synthétise l’effet marginal total, alors que le coefficient <span class="math inline">\(\beta_k\)</span> est habituellement désigné par l’effet direct et le coefficient <span class="math inline">\(\theta_k\)</span> synthétise l’effet indirect, puisque venant des voisins.</p>
+<p>C’est d’ailleurs la valeur du coefficient <span class="math inline">\(\theta_k\)</span> qui introduit ce que l’on qualifie d’externalité spatiale. Il permet d’exprimer comment la variable dépendante varie lorsque les caractéristiques des voisins changent. Les changements dans la variable d’intérêt peuvent venir d’une variation des caractéristiques des voisins.</p>
+<p>Ce modèle est aussi désigné sous le terme d’effet spatial local, par opposition à l’effet global (voir modèle SAR, <a href="#sec-0222" class="quarto-xref">section&nbsp;<span>1.2.4</span></a>). La variation des caractéristiques des voisins a une portée limitée sur le changement de valeurs de la variable dépendante. Seulement certaines observations sont affectées&nbsp;: celles dont les caractéristiques des voisins ont changé.</p>
+<p>Si le modèle SLX offre une solution intéressante pour régler le potentiel problème d’autocorrélation spatiale des résidus, rien n’assure pour autant qu’il permet de régler tous les problèmes, même si les coefficients associés aux variables décalées spatialement sont statistiquement significatifs. L’inclusion de variables indépendantes additionnelles peut ne pas suffire à capter ce qui, au départ dans la régression par MCO, se cache dans les résidus du modèle. Un test d’autocorrélation spatiale sur les résidus du modèle SLX est un réflexe nécessaire à avoir.</p>
+</section><section id="sec-02212" class="level3" data-number="1.2.3"><h3 data-number="1.2.3" class="anchored" data-anchor-id="sec-02212">
+<span class="header-section-number">1.2.3</span> Mise en œuvre dans R</h3>
 <p>Le modèle SLX est construit avec la fonction <code>lmSLX</code> du <em>package</em> <code>spatialreg</code> <span class="citation" data-cites="bivand2021review">(<a href="references.html#ref-bivand2021review" role="doc-biblioref">Bivand, Millo et Piras 2021</a>)</span>. Remarquez, dans le code ci-dessous, le paramètre <code>listw=W.Rook</code> qui est utilisé pour spécifier la matrice de pondération spatiale.</p>
 <div class="cell">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Chargemement des packages</span></span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Chargemement des packages et des données</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/">tmap</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/spdep/">spdep</a></span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: le package 'spdep' a été compilé avec la version R 4.4.1</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: le package 'spData' a été compilé avec la version R 4.4.1</code></pre>
-</div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/spatialreg/">spatialreg</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/spdep/">spdep</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/spatialreg/">spatialreg</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"data/Lyon.Rdata"</span><span class="op">)</span></span>
 <span><span class="co">## Matrice de contiguïté selon le partage d'un segment (Rook)</span></span>
 <span><span class="va">Rook</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/poly2nb.html">poly2nb</a></span><span class="op">(</span><span class="va">LyonIris</span>, queen<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">W.Rook</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">Rook</span>, zero.policy<span class="op">=</span><span class="cn">TRUE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
@@ -558,12 +477,13 @@ lag.NivVieMed   -1.805e-02   1.750e-01  -1.031e-01   9.179e-01</code></pre>
 <ul>
 <li><p>les <strong>effets directs</strong>, soit ceux des caractéristiques des entités spatiales. Ils correspondent aux coefficients <span class="math inline">\(\beta\)</span> des variables indépendantes (<span class="math inline">\(X\)</span>). Autrement dit, pour une observation <span class="math inline">\(i\)</span>, à chaque augmentation d’une unité d’une caractéristique <span class="math inline">\(X\)</span>, la valeur de <span class="math inline">\(y_i\)</span> va varier (augmenter ou diminuer) en fonction du coefficient <span class="math inline">\(\beta\)</span>.</p></li>
 <li><p>les <strong>effets indirects</strong>, soit ceux des caractéristiques des entités spatiales voisines ou proches définies selon la matrice de pondération spatiale. Ils correspondent aux coefficients <span class="math inline">\(\theta\)</span> des variables indépendantes spatialement décalées (<span class="math inline">\(WX\)</span>). Autrement dit, les valeurs de <span class="math inline">\(WX\)</span> des entités spatiales proches ou voisines <span class="math inline">\(j\)</span> de <span class="math inline">\(i\)</span> vont aussi être amenées à varier, impactant alors les valeurs <span class="math inline">\(y_j\)</span> selon les coefficients <span class="math inline">\(\theta\)</span>.</p></li>
+<li><p>Pour calculer l’impact total, il suffit de sommer son effet direct (<span class="math inline">\(\beta_k\)</span>) et son effet indirect (<span class="math inline">\(\theta_k\)</span>) pour obtenir son effet total.</p></li>
 </ul>
-<p>Prenons l’exemple d’un modèle visant à prédire le prix de vente des maisons dans une ville en fonction de leurs caractéristiques des maisons, dont la superficie du jardin. Il est probable que plus la superficie du jardin de la maison <span class="math inline">\(i\)</span> augmente, plus le prix de vente augmente également (<strong>effet direct</strong>, coefficient <span class="math inline">\(\beta\)</span>). Cette augmentation de la taille du jardin aura aussi un impact sur le prix des maisons voisines puisque leur prix est dépendant de la taille des jardins des maisons voisines. Ainsi, chaque maison <span class="math inline">\(j\)</span>, voisine de <span class="math inline">\(i\)</span> verra son prix augmenter à cause de l’augmentation de la taille du jardin de la maison <span class="math inline">\(i\)</span> (<strong>effet indirect</strong>).</p>
-<p>Pour capturer l’impact total sur le prix des maisons d’une augmentation de la superficie du jardin de la maison <span class="math inline">\(i\)</span>, il suffit de sommer son effet direct (augmentation du prix de la maison <span class="math inline">\(i\)</span>) et son effet indirect (augmentation du prix des maisons <span class="math inline">\(j\)</span>) pour obtenir son effet total.</p>
+</div>
+</div>
 <p>Le code suivant permet de calculer ces effets directs et indirects.</p>
 <div class="cell">
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Effets directs, indirects et totaux (uniquement les coefficients)</span></span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Effets directs, indirects et totaux (uniquement les coefficients)</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/impacts.html">impacts</a></span><span class="op">(</span><span class="va">Modele.SLX</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Impact measures (SlX, glht):
@@ -574,7 +494,7 @@ Pct_Img     0.10406359  0.64653923  0.7506028
 Pct_brevet -0.07363272 -0.30128171 -0.3749144
 NivVieMed  -0.18440960 -0.01804718 -0.2024568</code></pre>
 </div>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Effets directs, indirects et totaux (coefficients, valeurs de z et de p)</span></span>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Effets directs, indirects et totaux (coefficients, valeurs de z et de p)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/impacts.html">impacts</a></span><span class="op">(</span><span class="va">Modele.SLX</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Impact measures (SlX, glht, n-k):
@@ -610,13 +530,11 @@ Pct_brevet 0.0380546 9.9198e-07 3.5221e-10
 NivVieMed  0.0955397 0.91786    0.17454   </code></pre>
 </div>
 </div>
-<p>À la lecture des valeurs de <em>p</em>, nous constatons que seule la variable <code>Pct0_14</code> a un impact direct et indirect significatif au seuil 0,01. L’augmentation d’un point de pourcentage de la population de moins de 15 ans est associé localement à une réduction de 0,20 de la concentration annuelle du dioxyde d’azote. Chez les entités voisines, cette réduction est de 0,78 et l’effet total est donc une réduction de 0,98.</p>
-</div>
-</div>
+<p>VOIR AVEC JEAN!!! À la lecture des valeurs de <em>p</em>, nous constatons que seule la variable <code>Pct0_14</code> a un impact direct et indirect significatif au seuil 0,01. L’augmentation d’un point de pourcentage de la population de moins de 15 ans est associé localement à une réduction de 0,20 de la concentration annuelle du dioxyde d’azote. Chez les entités voisines, cette réduction est de 0,78. L’effet total est donc une réduction de 0,98.</p>
 <p><strong>Dépendance spatiale du modèle SLX?</strong></p>
-<p>Ce modèle a-t-il corrigé le problème de dépendance spatiale du modèle de régression linéaire classique? Avec une valeur du <em>I</em> de Moran de 0,605 (<em>p</em>&nbsp;&lt;&nbsp;0,001), les résidus sont toujours fortement autocorrélés spatialement (<a href="#fig-figCartoResSLX">figure&nbsp;<span>2.2</span></a>).</p>
+<p>Ce modèle a-t-il corrigé le problème de dépendance spatiale du modèle de régression linéaire classique? Avec une valeur du <em>I</em> de Moran de 0,605 (<em>p</em>&nbsp;&lt;&nbsp;0,001), les résidus sont toujours fortement autocorrélés spatialement (<a href="#fig-figCartoResSLX" class="quarto-xref">figure&nbsp;<span>1.1</span></a>).</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/lm.morantest.html">lm.morantest</a></span><span class="op">(</span><span class="va">Modele.SLX</span>, <span class="va">W.Rook</span>, alternative<span class="op">=</span><span class="st">"two.sided"</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/lm.morantest.html">lm.morantest</a></span><span class="op">(</span><span class="va">Modele.SLX</span>, <span class="va">W.Rook</span>, alternative<span class="op">=</span><span class="st">"two.sided"</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Global Moran I for regression residuals
@@ -632,7 +550,7 @@ sample estimates:
 Observed Moran I      Expectation         Variance 
     0.6046602748    -0.0072844321     0.0007771643 </code></pre>
 </div>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">LyonIris</span><span class="op">$</span><span class="va">SLX.Residus</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">Modele.SLX</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">LyonIris</span><span class="op">$</span><span class="va">SLX.Residus</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">Modele.SLX</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"SLX.Residus"</span>, n <span class="op">=</span> <span class="fl">5</span>, style <span class="op">=</span> <span class="st">"quantile"</span>, </span>
 <span>          legend.format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>text.separator <span class="op">=</span> <span class="st">"à"</span><span class="op">)</span>,</span>
@@ -640,18 +558,22 @@ Observed Moran I      Expectation         Variance
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_scale_bar.html">tm_scale_bar</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-figCartoResSLX" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure"><p><img src="02-ModelesEconometrieSpatiale_files/figure-html/fig-figCartoResSLX-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;2.2: Cartographie des résidus du modèle SLX</figcaption></figure>
+<div id="fig-figCartoResSLX" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-figCartoResSLX-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-ModelesEconometrieSpatiale_files/figure-html/fig-figCartoResSLX-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-figCartoResSLX-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1.1: Cartographie des résidus du modèle SLX
+</figcaption></figure>
 </div>
 </div>
 </div>
-</section><section id="sec-02122" class="level4" data-number="2.1.1.2"><h4 data-number="2.1.1.2" class="anchored" data-anchor-id="sec-02122">
-<span class="header-section-number">2.1.1.2</span> Modèle SAR&nbsp;: autocorrélation spatiale sur la variable dépendante</h4>
+</section><section id="sec-0222" class="level3" data-number="1.2.4"><h3 data-number="1.2.4" class="anchored" data-anchor-id="sec-0222">
+<span class="header-section-number">1.2.4</span> Modèle SAR&nbsp;: autocorrélation spatiale sur la variable dépendante</h3>
 <p>Dans le modèle SAR (aussi appelé SAR-LAG), l’autocorrélation spatiale est intégrée au niveau de la variable dépendante (<span class="math inline">\(Wy\)</span>), qui est ainsi spatialement décalée. L’idée générale est que la valeur de la variable dépendante pour une observation (<span class="math inline">\(y_i\)</span>) peut être influencée par les valeurs de <span class="math inline">\(y\)</span> des observations voisines et proches. L’exemple le plus classique est le prix de vente des maisons&nbsp;: il est influencé à la fois par les caractéristiques intrinsèques de la maison (<span class="math inline">\(X\)</span>, par exemple, la superficie habitable, le nombre de chambres à coucher, de salles de bains, etc.) et par le prix de vente des maisons voisines (<span class="math inline">\(Wy\)</span>). Jean Dubé et Diègo Legros <span class="citation" data-cites="dube2014econometrie">(<a href="references.html#ref-dube2014econometrie" role="doc-biblioref">2014</a>)</span> qualifient ce phénomène «&nbsp;<strong>d’effets d’entraînement ou d’effets de débordement</strong> (<em>spillover effects</em>)&nbsp;» <span class="citation" data-cites="dube2014econometrie">(<a href="references.html#ref-dube2014econometrie" role="doc-biblioref">2014, 123</a>)</span>. L’équation du modèle SAR s’écrit alors&nbsp;:</p>
 <p><span id="eq-SLM"><span class="math display">\[
 y = Wy\rho + X\beta + \epsilon
-\tag{2.2}\]</span></span></p>
+\tag{1.3}\]</span></span></p>
 <p>avec&nbsp;:</p>
 <ul>
 <li>
@@ -672,7 +594,7 @@ y = Wy\rho + X\beta + \epsilon
 <p><strong>Construction du modèle SAR dans R</strong></p>
 <p>Le modèle SAR est construit avec la fonction <code>lagsarlm</code> du <em>package</em> <code>spatialreg</code>.</p>
 <div class="cell">
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Construction du modèle</span></span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Construction du modèle</span></span>
 <span><span class="va">Modele.SAR</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">lagsarlm</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
 <span>                              listw<span class="op">=</span><span class="va">W.Rook</span>,    <span class="co"># matrice de pondération spatiale</span></span>
 <span>                              data <span class="op">=</span> <span class="va">LyonIris</span>, <span class="co"># dataframe</span></span>
@@ -733,7 +655,7 @@ test value: 0.6198, p-value: 0.43112</code></pre>
 <p>L’effet original de l’augmentation de la taille du jardin sur la maison <span class="math inline">\(i\)</span>, combiné à l’augmentation par rétroaction, est appelé l’effet direct. L’effet cumulé de l’augmentation de la taille du jardin sur toutes les autres maisons (<span class="math inline">\(\neq i\)</span>) est appelé l’effet indirect. La somme des effets indirects et des directs est appelée effets totaux.</p>
 <p>À nouveau, il est possible d’utiliser la fonction <code>impacts</code> pour calculer ces effets directs et indirects.</p>
 <div class="cell">
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Effets directs, indirects et totaux (uniquement les coefficients)</span></span>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Effets directs, indirects et totaux (uniquement les coefficients)</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/impacts.html">impacts</a></span><span class="op">(</span><span class="va">Modele.SAR</span>, listw <span class="op">=</span> <span class="va">W.Rook</span>, R <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Impact measures (lag, exact):
@@ -744,7 +666,7 @@ Pct_Img     0.04251743  0.2082131  0.2507306
 Pct_brevet -0.02704205 -0.1324283 -0.1594703
 NivVieMed  -0.13836534 -0.6775923 -0.8159576</code></pre>
 </div>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Effets directs, indirects et totaux (coefficients, valeurs de z et de p)</span></span>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Effets directs, indirects et totaux (coefficients, valeurs de z et de p)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/impacts.html">impacts</a></span><span class="op">(</span><span class="va">Modele.SAR</span>, listw <span class="op">=</span> <span class="va">W.Rook</span>, R <span class="op">=</span> <span class="fl">999</span><span class="op">)</span>, zstats <span class="op">=</span> <span class="cn">TRUE</span>, short <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Impact measures (lag, exact):
@@ -759,36 +681,36 @@ Simulation results ( variance matrix):
 ========================================================
 Simulated standard errors
                Direct  Indirect     Total
-Pct0_14    0.04232402 0.2387631 0.2764106
-Pct_65     0.03765749 0.1976269 0.2340098
-Pct_Img    0.03495773 0.1788812 0.2129360
-Pct_brevet 0.02514896 0.1294400 0.1540050
-NivVieMed  0.06983355 0.3672732 0.4336593
+Pct0_14    0.04251077 0.2400096 0.2780241
+Pct_65     0.03780191 0.1985817 0.2353588
+Pct_Img    0.03345781 0.1758424 0.2084354
+Pct_brevet 0.02512046 0.1291524 0.1537982
+NivVieMed  0.06688497 0.3513493 0.4153593
 
 Simulated z-values:
               Direct  Indirect     Total
-Pct0_14    -3.268727 -2.888134 -2.995273
-Pct_65     -1.370386 -1.299862 -1.318291
-Pct_Img     1.186492  1.149464  1.160417
-Pct_brevet -1.060366 -1.019037 -1.029650
-NivVieMed  -1.975716 -1.869384 -1.901368
+Pct0_14    -3.285779 -2.919456 -3.022681
+Pct_65     -1.327647 -1.269515 -1.284380
+Pct_Img     1.301331  1.245419  1.259561
+Pct_brevet -1.063305 -1.033526 -1.041580
+NivVieMed  -2.032567 -1.936680 -1.965525
 
 Simulated p-values:
-           Direct    Indirect  Total   
-Pct0_14    0.0010803 0.0038753 0.002742
-Pct_65     0.1705665 0.1936483 0.187406
-Pct_Img    0.2354279 0.2503646 0.245879
-Pct_brevet 0.2889783 0.3081853 0.303175
-NivVieMed  0.0481869 0.0615693 0.057254</code></pre>
+           Direct   Indirect  Total    
+Pct0_14    0.001017 0.0035064 0.0025055
+Pct_65     0.184295 0.2042575 0.1990091
+Pct_Img    0.193145 0.2129779 0.2078278
+Pct_brevet 0.287644 0.3013578 0.2976064
+NivVieMed  0.042096 0.0527845 0.0493535</code></pre>
 </div>
 </div>
 <p>L’interprétation des effets directs se rapproche de celle des coefficients classiques. Ainsi, selon ce modèle, l’augmentation du niveau de vie médian de 1000&nbsp;€ dans un IRIS est associée avec une diminution moyenne de la concentration de dioxyde d’azote de 0,14 dans cet IRIS. L’effet total est de -0.82, indiquant qu’en moyenne, l’augmentation de 1000&nbsp;€ du niveau de vie médian dans un IRIS est associée avec une diminution moyenne de 0,82 de la concentration de dioxyde d’azote dans l’ensemble des IRIS. Au final, l’effet indirect est simplement la différence entre l’effet total et l’effet direct. Nous pouvons constater ici que les effets indirects sont plus importants que les effets directs.</p>
 </div>
 </div>
 <p><strong>Dépendance spatiale du modèle SAR?</strong></p>
-<p>Ce modèle a-t-il corrigé le problème de dépendance spatiale du modèle de régression linéaire classique? Avec une valeur du <em>I</em> de Moran de -0,014 (<em>p</em>&nbsp;=&nbsp;0,654), les résidus ne sont plus spatialement autocorrélés (<a href="#fig-figCartoResSAR">figure&nbsp;<span>2.3</span></a>).</p>
+<p>Ce modèle a-t-il corrigé le problème de dépendance spatiale du modèle de régression linéaire classique? Avec une valeur du <em>I</em> de Moran de -0,014 (<em>p</em>&nbsp;=&nbsp;0,654), les résidus ne sont plus spatialement autocorrélés (<a href="#fig-figCartoResSAR" class="quarto-xref">figure&nbsp;<span>1.2</span></a>).</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Autocorrélation spatiale des résidus</span></span>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Autocorrélation spatiale des résidus</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">Modele.SAR</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -798,10 +720,10 @@ data:  resid(Modele.SAR)
 weights: W.Rook  
 number of simulations + 1: 1000 
 
-statistic = -0.014281, observed rank = 328, p-value = 0.672
+statistic = -0.014281, observed rank = 338, p-value = 0.662
 alternative hypothesis: greater</code></pre>
 </div>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Cartographie des résidus</span></span>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Cartographie des résidus</span></span>
 <span><span class="va">LyonIris</span><span class="op">$</span><span class="va">SAR.Residus</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">Modele.SAR</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"SAR.Residus"</span>, n <span class="op">=</span> <span class="fl">5</span>, style <span class="op">=</span> <span class="st">"quantile"</span>, </span>
@@ -810,18 +732,22 @@ alternative hypothesis: greater</code></pre>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_scale_bar.html">tm_scale_bar</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-figCartoResSAR" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure"><p><img src="02-ModelesEconometrieSpatiale_files/figure-html/fig-figCartoResSAR-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;2.3: Cartographie des résidus du modèle SAR</figcaption></figure>
+<div id="fig-figCartoResSAR" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-figCartoResSAR-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-ModelesEconometrieSpatiale_files/figure-html/fig-figCartoResSAR-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-figCartoResSAR-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1.2: Cartographie des résidus du modèle SAR
+</figcaption></figure>
 </div>
 </div>
 </div>
-</section><section id="sec-02123" class="level4" data-number="2.1.1.3"><h4 data-number="2.1.1.3" class="anchored" data-anchor-id="sec-02123">
-<span class="header-section-number">2.1.1.3</span> Modèle SEM&nbsp;: autocorrélation spatiale sur le terme d’erreur</h4>
+</section><section id="sec-0223" class="level3" data-number="1.2.5"><h3 data-number="1.2.5" class="anchored" data-anchor-id="sec-0223">
+<span class="header-section-number">1.2.5</span> Modèle SEM&nbsp;: autocorrélation spatiale sur le terme d’erreur</h3>
 <p>Dans le modèle SEM (<em>Spatial Error Model</em>, appelé aussi <em>SAR-ERROR</em>), l’intégration de l’autocorrélation spatiale est réalisée sur le terme d’erreur, ce qui pourrait se justifier par l’omission d’une variable dépendante spatialement structurée <span class="citation" data-cites="dube2014econometrie">(<a href="references.html#ref-dube2014econometrie" role="doc-biblioref">Dubé et Legros 2014, 126</a>)</span>. L’équation du modèle SEM s’écrit&nbsp;:</p>
 <p><span id="eq-SEM"><span class="math display">\[
 y = X\beta + u \textrm{, } u = \lambda Wu + \epsilon
-\tag{2.3}\]</span></span></p>
+\tag{1.4}\]</span></span></p>
 <p>avec&nbsp;:</p>
 <ul>
 <li>
@@ -840,7 +766,7 @@ y = X\beta + u \textrm{, } u = \lambda Wu + \epsilon
 <p><strong>Construction du modèle SAR dans R</strong></p>
 <p>Le modèle SEM est construit avec la fonction <code>errorsarlm</code> du <em>package</em> <code>spatialreg</code>.</p>
 <div class="cell">
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Construction du modèle</span></span>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Construction du modèle</span></span>
 <span><span class="va">Modele.SEM</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">errorsarlm</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
 <span>                         listw<span class="op">=</span><span class="va">W.Rook</span>,    <span class="co"># matrice de pondération spatiale</span></span>
 <span>                         data <span class="op">=</span> <span class="va">LyonIris</span><span class="op">)</span> <span class="co"># dataframe</span></span>
@@ -882,7 +808,7 @@ AIC: 2755.5, (AIC for lm: 3366.6)</code></pre>
 <p><strong>Dépendance spatiale du modèle SEM?</strong></p>
 <p>Ce modèle a-t-il corrigé le problème de dépendance spatiale du modèle de régression linéaire classique? Avec une valeur du <em>I</em> de Moran de -0,013 (<em>p</em>&nbsp;=&nbsp;0,614), les résidus ne sont plus spatialement autocorrélés.</p>
 <div class="cell">
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Autocorrélation spatiale des résidus</span></span>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Autocorrélation spatiale des résidus</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">Modele.SEM</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -892,16 +818,16 @@ data:  resid(Modele.SEM)
 weights: W.Rook  
 number of simulations + 1: 1000 
 
-statistic = -0.011827, observed rank = 374, p-value = 0.626
+statistic = -0.011827, observed rank = 368, p-value = 0.632
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
-</section><section id="sec-02124" class="level4" data-number="2.1.1.4"><h4 data-number="2.1.1.4" class="anchored" data-anchor-id="sec-02124">
-<span class="header-section-number">2.1.1.4</span> Modèle SDM&nbsp;: autocorrélation spatiale sur la variable dépendante et les variables indépendantes</h4>
+</section><section id="sec-0224" class="level3" data-number="1.2.6"><h3 data-number="1.2.6" class="anchored" data-anchor-id="sec-0224">
+<span class="header-section-number">1.2.6</span> Modèle SDM&nbsp;: autocorrélation spatiale sur la variable dépendante et les variables indépendantes</h3>
 <p>Le modèle SDM (<em>Spatial Durbin Model</em>) est un modèle mixte qui intègre à la fois l’autocorrélation spatiale sur la variable dépendante (<span class="math inline">\(Wy\)</span>, <strong>effets d’entraînement ou de débordement</strong>) et sur les variables indépendantes (<span class="math inline">\(WX\)</span>, <strong>externalités</strong>). Il s’écrit alors&nbsp;:</p>
 <p><span id="eq-SDM"><span class="math display">\[
 y = Wy\rho + X\beta + WX\theta + \epsilon
-\tag{2.4}\]</span></span></p>
+\tag{1.5}\]</span></span></p>
 <p>avec&nbsp;:</p>
 <ul>
 <li>
@@ -926,7 +852,7 @@ y = Wy\rho + X\beta + WX\theta + \epsilon
 <p><strong>Construction du modèle SDM dans R</strong></p>
 <p>Le modèle SDM est construit avec la fonction <code>lagsarlm</code> du <em>package</em> <code>spatialreg</code>. Notez que le paramètre <code>type = "mixed"</code> spécifie l’utilisation d’un modèle mixte.</p>
 <div class="cell">
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Construction du modèle</span></span>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Construction du modèle</span></span>
 <span><span class="va">Modele.DurbinSpatial</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">lagsarlm</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
 <span>                       listw <span class="op">=</span> <span class="va">W.Rook</span>,    <span class="co"># matrice de pondération spatiale</span></span>
 <span>                       data <span class="op">=</span> <span class="va">LyonIris</span>,   <span class="co"># dataframe</span></span>
@@ -974,7 +900,7 @@ test value: 0.0748, p-value: 0.78447</code></pre>
 </div>
 <p><strong>Effets directs, indirects et totaux</strong></p>
 <div class="cell">
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Effets directs, indirects et totaux (uniquement les coefficients)</span></span>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Effets directs, indirects et totaux (uniquement les coefficients)</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/impacts.html">impacts</a></span><span class="op">(</span><span class="va">Modele.DurbinSpatial</span>, listw <span class="op">=</span> <span class="va">W.Rook</span>, R <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Impact measures (mixed, exact):
@@ -985,7 +911,7 @@ Pct_Img     0.06632543  0.94692639  1.01325182
 Pct_brevet -0.01903815 -0.46681402 -0.48585217
 NivVieMed  -0.15403413 -0.11775603 -0.27179016</code></pre>
 </div>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Effets directs, indirects et totaux (coefficients, valeurs de z et de p)</span></span>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Effets directs, indirects et totaux (coefficients, valeurs de z et de p)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/impacts.html">impacts</a></span><span class="op">(</span><span class="va">Modele.DurbinSpatial</span>, listw <span class="op">=</span> <span class="va">W.Rook</span>, R <span class="op">=</span> <span class="fl">999</span><span class="op">)</span>, zstats <span class="op">=</span> <span class="cn">TRUE</span>, short <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Impact measures (mixed, exact):
@@ -1000,32 +926,32 @@ Simulation results ( variance matrix):
 ========================================================
 Simulated standard errors
                Direct  Indirect     Total
-Pct0_14    0.04327488 0.3360273 0.3646389
-Pct_65     0.03621012 0.2831102 0.3060171
-Pct_Img    0.03249959 0.2686861 0.2889084
-Pct_brevet 0.02422890 0.2010798 0.2164395
-NivVieMed  0.06647469 0.4919150 0.5248779
+Pct0_14    0.04445589 0.3304436 0.3596028
+Pct_65     0.03548008 0.2796274 0.3028404
+Pct_Img    0.03282146 0.2771509 0.2972612
+Pct_brevet 0.02512651 0.1923546 0.2087319
+NivVieMed  0.06779597 0.4900760 0.5242554
 
 Simulated z-values:
                Direct   Indirect       Total
-Pct0_14    -2.8905819 -3.0557742 -3.15905174
-Pct_65     -0.6069750  0.1675100  0.08314945
-Pct_Img     2.0322028  3.5630368  3.54224484
-Pct_brevet -0.8120021 -2.3874270 -2.30890139
-NivVieMed  -2.3720987 -0.2804918 -0.56329790
+Pct0_14    -2.8541196 -3.1494824 -3.24694035
+Pct_65     -0.6389025  0.1012673  0.01865269
+Pct_Img     1.9883721  3.4296371  3.41715662
+Pct_brevet -0.7429773 -2.4063510 -2.30698350
+NivVieMed  -2.3073556 -0.2458911 -0.52824393
 
 Simulated p-values:
            Direct    Indirect   Total     
-Pct0_14    0.0038453 0.00224480 0.00158283
-Pct_65     0.5438675 0.86696876 0.93373270
-Pct_Img    0.0421331 0.00036659 0.00039674
-Pct_brevet 0.4167904 0.01696677 0.02094905
-NivVieMed  0.0176874 0.77910025 0.57323205</code></pre>
+Pct0_14    0.0043156 0.00163560 0.00116653
+Pct_65     0.5228863 0.91933828 0.98511817
+Pct_Img    0.0467706 0.00060439 0.00063279
+Pct_brevet 0.4574954 0.01611278 0.02105574
+NivVieMed  0.0210350 0.80576653 0.59733004</code></pre>
 </div>
 </div>
 <p><strong>Dépendance spatiale du modèle SDM?</strong></p>
 <div class="cell">
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">Modele.DurbinSpatial</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">Modele.DurbinSpatial</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Monte-Carlo simulation of Moran I
@@ -1034,16 +960,16 @@ data:  resid(Modele.DurbinSpatial)
 weights: W.Rook  
 number of simulations + 1: 1000 
 
-statistic = -0.0046127, observed rank = 474, p-value = 0.526
+statistic = -0.0046127, observed rank = 473, p-value = 0.527
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
-</section><section id="sec-02125" class="level4" data-number="2.1.1.5"><h4 data-number="2.1.1.5" class="anchored" data-anchor-id="sec-02125">
-<span class="header-section-number">2.1.1.5</span> Modèle SDEM&nbsp;: autocorrélation spatiale sur les variables indépendantes et sur le terme d’erreur</h4>
+</section><section id="sec-0225" class="level3" data-number="1.2.7"><h3 data-number="1.2.7" class="anchored" data-anchor-id="sec-0225">
+<span class="header-section-number">1.2.7</span> Modèle SDEM&nbsp;: autocorrélation spatiale sur les variables indépendantes et sur le terme d’erreur</h3>
 <p>Le modèle SDEM (<em>Spatial Durbin Error Model</em> en anglais) est un autre modèle mixte qui intègre à la fois l’autocorrélation spatiale sur les valeurs indépendantes (<span class="math inline">\(WX\)</span>, <strong>externalités</strong>) et sur le terme d’erreur (<span class="math inline">\(u = \lambda Wu + \epsilon\)</span>). Il s’écrit alors&nbsp;:</p>
 <p><span id="eq-SDEM"><span class="math display">\[
 y = X\beta + WX\theta + u \textrm{, } u = \lambda Wu + \epsilon
-\tag{2.5}\]</span></span></p>
+\tag{1.6}\]</span></span></p>
 <p>avec&nbsp;:</p>
 <ul>
 <li>
@@ -1066,7 +992,7 @@ y = X\beta + WX\theta + u \textrm{, } u = \lambda Wu + \epsilon
 <p><strong>Construction du modèle SDEM dans R</strong></p>
 <p>Le modèle SDEM est construit avec la fonction <code>errorsarlm</code> du <em>package</em> <code>spatialreg</code>. Notez que le paramètre <code>etype = "mixed"</code> spécifie l’utilisation d’un modèle mixte.</p>
 <div class="cell">
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Construction du modèle</span></span>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Construction du modèle</span></span>
 <span><span class="va">Modele.DurbinErreur</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">errorsarlm</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
 <span>                                  listw<span class="op">=</span><span class="va">W.Rook</span>,    <span class="co"># matrice de pondération spatiale</span></span>
 <span>                                  data <span class="op">=</span> <span class="va">LyonIris</span>, <span class="co"># dataframe</span></span>
@@ -1112,7 +1038,7 @@ AIC: 2760.5, (AIC for lm: 3222.6)</code></pre>
 </div>
 <p><strong>Effets directs, indirects et totaux</strong></p>
 <div class="cell">
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Effets directs, indirects et totaux (uniquement les coefficients)</span></span>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Effets directs, indirects et totaux (uniquement les coefficients)</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/impacts.html">impacts</a></span><span class="op">(</span><span class="va">Modele.DurbinErreur</span>, listw <span class="op">=</span> <span class="va">W.Rook</span>, R <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Impact measures (SDEM, glht):
@@ -1123,7 +1049,7 @@ Pct_Img     0.004656039  0.09278511  0.09744115
 Pct_brevet  0.009784961 -0.03804813 -0.02826317
 NivVieMed  -0.167855498 -0.10253070 -0.27038620</code></pre>
 </div>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Effets directs, indirects et totaux (coefficients, valeurs de z et de p)</span></span>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Effets directs, indirects et totaux (coefficients, valeurs de z et de p)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/impacts.html">impacts</a></span><span class="op">(</span><span class="va">Modele.DurbinErreur</span>, listw <span class="op">=</span> <span class="va">W.Rook</span>, R <span class="op">=</span> <span class="fl">999</span><span class="op">)</span>, zstats <span class="op">=</span> <span class="cn">TRUE</span>, short <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Impact measures (SDEM, glht, n):
@@ -1162,7 +1088,7 @@ NivVieMed  0.013576 0.552040 0.201589</code></pre>
 <p><strong>Dépendance spatiale du modèle SDEM?</strong></p>
 <p>Avec une valeur du <em>I</em> de Moran de -0,010 (<em>p</em>&nbsp;=&nbsp;0,619), les résidus du modèle SDEM ne sont pas spatialement autocorrélés.</p>
 <div class="cell">
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">Modele.DurbinErreur</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">Modele.DurbinErreur</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Monte-Carlo simulation of Moran I
@@ -1171,14 +1097,14 @@ data:  resid(Modele.DurbinErreur)
 weights: W.Rook  
 number of simulations + 1: 1000 
 
-statistic = -0.010362, observed rank = 400, p-value = 0.6
+statistic = -0.010362, observed rank = 386, p-value = 0.614
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
-</section></section><section id="sec-0213" class="level3" data-number="2.1.2"><h3 data-number="2.1.2" class="anchored" data-anchor-id="sec-0213">
-<span class="header-section-number">2.1.2</span> Quel modèle choisir?</h3>
-<section id="sec-02131" class="level4" data-number="2.1.2.1"><h4 data-number="2.1.2.1" class="anchored" data-anchor-id="sec-02131">
-<span class="header-section-number">2.1.2.1</span> Tests du multiplicateur de Lagrange sur le modèle MCO</h4>
+</section></section><section id="sec-023" class="level2" data-number="1.3"><h2 data-number="1.3" class="anchored" data-anchor-id="sec-023">
+<span class="header-section-number">1.3</span> Quel modèle choisir?</h2>
+<section id="sec-0231" class="level3" data-number="1.3.1"><h3 data-number="1.3.1" class="anchored" data-anchor-id="sec-0231">
+<span class="header-section-number">1.3.1</span> Tests du multiplicateur de Lagrange sur le modèle MCO</h3>
 <p>L’utilisation des tests du multiplicateur de Lagrange (simple et robuste) a été largement popularisée par Anselin <em>et al.</em> <span class="citation" data-cites="anselin1996simple">(<a href="references.html#ref-anselin1996simple" role="doc-biblioref">1996</a>)</span> pour vérifier si le recours à un modèle autorégressif est nécessaire, comparativement à un modèle de régression classique (MCO). Les tests sont calculés sur le modèle MCO avec la fonction <code>lm.LMtests</code> et une matrice de pondération spatiale. Ces tests permettent aussi de choisir entre les modèles SAR et SEM. La démarche suivante peut être utilisée pour choisir un modèle&nbsp;:</p>
 <ol type="1">
 <li>Si toutes les valeurs des tests (simples et robustes) sont non significatives (<em>p</em>&nbsp;&gt;&nbsp;0,05), alors le recours à un modèle autorégressif n’est pas nécessaire. Nous pouvons conserver le modèle de régression classique (MCO).</li>
@@ -1188,7 +1114,7 @@ alternative hypothesis: greater</code></pre>
 </ol>
 <p>Dans les résultats ci-dessous, nous ne retenons pas le modèle SEM car la valeur de 0,740 pour le <code>RLMerr</code> n’est pas significative (<em>p</em>&nbsp;=&nbsp;0,3898). Par contre, les valeurs de <code>LMlag</code> et de <code>RLMlag</code> (555 et 123) sont significatives, ce qui justifie la sélection du modèle SAR.</p>
 <div class="cell">
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/lm.RStests.html">lm.LMtests</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">Modele.MCO</span>,</span>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/lm.RStests.html">lm.LMtests</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">Modele.MCO</span>,</span>
 <span>                   listw <span class="op">=</span> <span class="va">W.Rook</span>,</span>
 <span>                   test <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"LMlag"</span>,<span class="st">"LMerr"</span>,<span class="st">"RLMlag"</span>,<span class="st">"RLMerr"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1208,11 +1134,11 @@ adjRSerr   0.73955         1  0.3898
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-</section><section id="sec-02132" class="level4" data-number="2.1.2.2"><h4 data-number="2.1.2.2" class="anchored" data-anchor-id="sec-02132">
-<span class="header-section-number">2.1.2.2</span> Comparaison des modèles mixtes et non mixtes</h4>
+</section><section id="sec-0232" class="level3" data-number="1.3.2"><h3 data-number="1.3.2" class="anchored" data-anchor-id="sec-0232">
+<span class="header-section-number">1.3.2</span> Comparaison des modèles mixtes et non mixtes</h3>
 <p>Nous avons vu qu’il existe deux modèles mixtes (SDM et SDEM). Il convient alors de vérifier si le recours d’un modèle mixte est justifié comparativement à un modèle non mixte. Dans le code ci-dessous, nous vérifions si le modèle SDM est statistiquement différent du modèle SAR avec les fonctions <code>LR.Sarlm</code> et <code>anova</code>. Les résultats signalent un écart significatif des valeurs du log-vraisemblance (26,101, <em>p</em>&nbsp;&lt;&nbsp;0,001). Par conséquent, ce modèle mixte a un apport significatif.</p>
 <div class="cell">
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## SDM et SEM sont-ils significativement différents?</span></span>
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## SDM et SEM sont-ils significativement différents?</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/sarlm_tests.html">LR.Sarlm</a></span><span class="op">(</span><span class="va">Modele.DurbinSpatial</span>, <span class="va">Modele.SAR</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -1224,7 +1150,7 @@ sample estimates:
 Log likelihood of Modele.DurbinSpatial           Log likelihood of Modele.SAR 
                              -1353.106                              -1366.157 </code></pre>
 </div>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span><span class="op">(</span><span class="va">Modele.DurbinSpatial</span>, <span class="va">Modele.SAR</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span><span class="op">(</span><span class="va">Modele.DurbinSpatial</span>, <span class="va">Modele.SAR</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                     Model df    AIC  logLik Test L.Ratio    p-value
 Modele.DurbinSpatial     1 13 2732.2 -1353.1    1                   
@@ -1233,7 +1159,7 @@ Modele.SAR               2  8 2748.3 -1366.2    2  26.101 8.5283e-05</code></pre
 </div>
 <p>À l’inverse, la différence entre les valeurs du log-vraisemblance des modèles SDEM et SEM n’est pas significative (4,9728, <em>p</em>&nbsp;=&nbsp;0,42), signalant que l’utilisation d’un modèle SDEM comparativement à un modèle SEM n’est pas nécessaire.</p>
 <div class="cell">
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## SDEM et SEM sont-ils significativement différents?</span></span>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## SDEM et SEM sont-ils significativement différents?</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/sarlm_tests.html">LR.Sarlm</a></span><span class="op">(</span><span class="va">Modele.DurbinErreur</span>, <span class="va">Modele.SEM</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -1245,18 +1171,18 @@ sample estimates:
 Log likelihood of Modele.DurbinErreur          Log likelihood of Modele.SEM 
                             -1367.250                             -1369.737 </code></pre>
 </div>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span><span class="op">(</span><span class="va">Modele.DurbinErreur</span>, <span class="va">Modele.SEM</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span><span class="op">(</span><span class="va">Modele.DurbinErreur</span>, <span class="va">Modele.SEM</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                    Model df    AIC  logLik Test L.Ratio p-value
 Modele.DurbinErreur     1 13 2760.5 -1367.2    1                
 Modele.SEM              2  8 2755.5 -1369.7    2  4.9728  0.4192</code></pre>
 </div>
 </div>
-</section><section id="sec-02133" class="level4" data-number="2.1.2.3"><h4 data-number="2.1.2.3" class="anchored" data-anchor-id="sec-02133">
-<span class="header-section-number">2.1.2.3</span> Mesures AIC et BIC et dépendance spatiale</h4>
+</section><section id="sec-0233" class="level3" data-number="1.3.3"><h3 data-number="1.3.3" class="anchored" data-anchor-id="sec-0233">
+<span class="header-section-number">1.3.3</span> Mesures AIC et BIC et dépendance spatiale</h3>
 <p>Le critère d’information d’Akaike (AIC) et le critère d’information bayésien (BIC) sont largement utilisés pour évaluer la qualité d’ajustement du modèle. Plus leurs valeurs sont faibles, meilleur est le modèle. Il est donc possible de comparer leurs valeurs pour les différents modèles (MCO, SLX, SAR, SEM, SDM et SDEM). Nous pouvons aussi comparer l’autocorrélation spatiale des résidus des modèles avec le <em>I</em> de Moran.</p>
 <div class="cell">
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Valeurs d'AIC et de BIC</span></span>
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Valeurs d'AIC et de BIC</span></span>
 <span><span class="va">AICs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html">AIC</a></span><span class="op">(</span><span class="va">Modele.MCO</span>, <span class="va">Modele.SLX</span>, <span class="va">Modele.SAR</span>, <span class="va">Modele.SEM</span>, </span>
 <span>            <span class="va">Modele.DurbinSpatial</span>, <span class="va">Modele.DurbinErreur</span><span class="op">)</span></span>
 <span><span class="va">BICs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html">BIC</a></span><span class="op">(</span><span class="va">Modele.MCO</span>, <span class="va">Modele.SLX</span>, <span class="va">Modele.SAR</span>, <span class="va">Modele.SEM</span>, </span>
@@ -1286,19 +1212,19 @@ Modele.SEM              2  8 2755.5 -1369.7    2  4.9728  0.4192</code></pre>
 <pre><code>    Modele      AIC      BIC dl       MoranI MoranIp
 1      MCO 3366.626 3396.212  7  0.587312061   0.001
 2      SLX 3222.594 3273.313 12  0.604660275   0.001
-3      SAR 2748.314 2782.126  8 -0.014281059   0.660
-4      SEM 2755.474 2789.286  8 -0.011826605   0.614
-5 Durbin S 2732.212 2787.157 13 -0.004612686   0.514
-6 Durbin E 2760.501 2815.446 13 -0.010361653   0.628</code></pre>
+3      SAR 2748.314 2782.126  8 -0.014281059   0.678
+4      SEM 2755.474 2789.286  8 -0.011826605   0.630
+5 Durbin S 2732.212 2787.157 13 -0.004612686   0.524
+6 Durbin E 2760.501 2815.446 13 -0.010361653   0.612</code></pre>
 </div>
 </div>
-<p>Quelques lignes de code suffisent pour créer deux graphiques permettant de comparer visuellement les résultats des différents modèles (<a href="#fig-GraphComparaison">figure&nbsp;<span>2.4</span></a>). Les résultats démontrent que&nbsp;:</p>
+<p>Quelques lignes de code suffisent pour créer deux graphiques permettant de comparer visuellement les résultats des différents modèles (<a href="#fig-GraphComparaison" class="quarto-xref">figure&nbsp;<span>1.3</span></a>). Les résultats démontrent que&nbsp;:</p>
 <ul>
 <li>Les modèles MCO et SLX ont un problème de dépendance spatiale puisque leurs résidus sont significativement autocorrélés spatialement. Par conséquent, ils ne devraient pas être retenus.</li>
 <li>Les modèles SDM, SAR et SEM sont les plus performants avec les valeurs d’AIC les plus faibles.</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rpkgs.datanovia.com/ggpubr/">ggpubr</a></span><span class="op">)</span></span>
 <span><span class="co">## Graphique pour l'autocorrélation spatiale</span></span>
 <span><span class="va">g1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">Comparaison</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/reorder.factor.html">reorder</a></span><span class="op">(</span><span class="va">Modele</span>,<span class="va">MoranI</span><span class="op">)</span>, y<span class="op">=</span><span class="va">MoranI</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -1321,395 +1247,20 @@ Modele.SEM              2  8 2755.5 -1369.7    2  4.9728  0.4192</code></pre>
 <span><span class="co">## Figure avec les deux graphiques</span></span>
 <span><span class="fu"><a href="https://rpkgs.datanovia.com/ggpubr/reference/ggarrange.html">ggarrange</a></span><span class="op">(</span><span class="va">g1</span>, <span class="va">g2</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-GraphComparaison" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure"><p><img src="02-ModelesEconometrieSpatiale_files/figure-html/fig-GraphComparaison-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
-<figcaption class="figure-caption">Figure&nbsp;2.4: Comparaison des différents modèles</figcaption></figure>
+<div id="fig-GraphComparaison" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-GraphComparaison-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-ModelesEconometrieSpatiale_files/figure-html/fig-GraphComparaison-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-GraphComparaison-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1.3: Comparaison des différents modèles
+</figcaption></figure>
 </div>
 </div>
 </div>
-</section></section></section><section id="sec-024" class="level2" data-number="2.2"><h2 data-number="2.2" class="anchored" data-anchor-id="sec-024">
-<span class="header-section-number">2.2</span> Quiz de révision</h2>
-<div id="Chap02" class="card">
-<link type="text/javascript" src="libs/quizlib.1.0.1.min.js">
-<script>var Quiz=function(a,b){this.Classes=Object.freeze({QUESTION:"quizlib-question",QUESTION_TITLE:"quizlib-question-title",QUESTION_ANSWERS:"quizlib-question-answers",QUESTION_WARNING:"quizlib-question-warning",CORRECT:"quizlib-correct",INCORRECT:"quizlib-incorrect",TEMP:"quizlib-temp"}),this.unansweredQuestionText="Question sans réponse !",this.container=document.getElementById(a),this.questions=[],this.result=new QuizResult,this.answers=b;for(var c=0;c<this.container.children.length;c++)this.container.children[c].classList.contains(Quiz.Classes.QUESTION)&&this.questions.push(this.container.children[c]);if(this.answers.length!=this.questions.length)throw new Error("Number of answers does not match number of questions!")};Quiz.Classes=Object.freeze({QUESTION:"quizlib-question",QUESTION_TITLE:"quizlib-question-title",QUESTION_ANSWERS:"quizlib-question-answers",QUESTION_WARNING:"quizlib-question-warning",CORRECT:"quizlib-correct",INCORRECT:"quizlib-incorrect",TEMP:"quizlib-temp"}),Quiz.prototype.checkAnswers=function(a){void 0===a&&(a=!0);for(var b=[],c=[],d=0;d<this.questions.length;d++){var e=this.questions[d],f=this.answers[d],g=[];this.clearHighlights(e);for(var h,i=e.getElementsByClassName(Quiz.Classes.QUESTION_ANSWERS)[0].getElementsByTagName("input"),j=0;j<i.length;j++)h=i[j],"checkbox"===h.type||"radio"===h.type?h.checked&&g.push(h.value):""!==h.value&&g.push(h.value);1!=g.length||Array.isArray(f)?0===g.length&&b.push(e):g=g[0],c.push(Utils.compare(g,f))}if(0===b.length||!a)return this.result.setResults(c),!0;for(d=0;d<b.length;d++){var k=document.createElement("span");k.appendChild(document.createTextNode(this.unansweredQuestionText)),k.className=Quiz.Classes.QUESTION_WARNING,b[d].getElementsByClassName(Quiz.Classes.QUESTION_TITLE)[0].appendChild(k)}return!1},Quiz.prototype.clearHighlights=function(a){for(var b=a.getElementsByClassName(Quiz.Classes.QUESTION_WARNING);b.length>0;)b[0].parentNode.removeChild(b[0]);var c,d=[a.getElementsByClassName(Quiz.Classes.CORRECT),a.getElementsByClassName(this.Classes.INCORRECT)];for(i=0;i<d.length;i++)for(;d[i].length>0;)c=d[i][0],c.classList.remove(Quiz.Classes.CORRECT),c.classList.remove(Quiz.Classes.INCORRECT);for(var e=a.getElementsByClassName(Quiz.Classes.TEMP);e.length>0;)e[0].parentNode.removeChild(e[0])},Quiz.prototype.highlightResults=function(a){for(var b,c=0;c<this.questions.length;c++)b=this.questions[c],b.getElementsByClassName(Quiz.Classes.QUESTION_TITLE)[0].classList.add(this.result.results[c]?Quiz.Classes.CORRECT:Quiz.Classes.INCORRECT),void 0!==a&&a(this,b,c,this.result.results[c])};var QuizResult=function(){this.results=[],this.totalQuestions=0,this.score=0,this.scorePercent=0,this.scorePercentFormatted=0};QuizResult.prototype.setResults=function(a){this.results=a,this.totalQuestions=this.results.length,this.score=0;for(var b=0;b<this.results.length;b++)this.results[b]&&this.score++;this.scorePercent=this.score/this.totalQuestions,this.scorePercentFormatted=Math.floor(100*this.scorePercent)};var Utils=function(){};Utils.compare=function(a,b){if(a.length!=b.length)return!1;if(Array.isArray(a)&&Array.isArray(b)){for(var c=0;c<a.length;c++)if(a[c]!==b[c])return!1;return!0}return a===b};
-
-function showResults(quiz) {
-    // Check answers and continue if all questions have been answered
-    if (quiz.checkAnswers()) {
-        var quizScorePercent = quiz.result.scorePercentFormatted; // The unformatted percentage is a decimal in range 0 - 1
-        var quizResultElement = document.getElementById('quiz-result');
-        quizResultElement.style.display = 'block';
-        document.getElementById('quiz-percent').innerHTML = quizScorePercent.toString();
-
-        // Change background colour of results div according to score percent
-        if (quizScorePercent > 75) quizResultElement.style.backgroundColor = '#4caf50';
-        else if (quizScorePercent > 50) quizResultElement.style.backgroundColor = '#ffc107';
-        else if (quizScorePercent > 25) quizResultElement.style.backgroundColor = '#ff9800';
-        else if (quizScorePercent > 0) quizResultElement.style.backgroundColor = '#f44336';
-
-        // Highlight questions according to whether they were correctly answered. The callback allows us to highlight/show the correct answer
-        quiz.highlightResults(handleAnswers);
-    }
-}
-
-/** Callback for Quiz.highlightResults. Highlights the correct answers of incorrectly answered questions
- * Parameters are: the quiz object, the question element, question number, correctly answered flag
- */
-function handleAnswers(quiz, question, no, correct) {
-    if (!correct) {
-        var answers = question.getElementsByTagName('input');
-        for (var i = 0; i < answers.length; i++) {
-            if (answers[i].type === 'checkbox' || answers[i].type === 'radio'){
-                // If the current input element is part of the correct answer, highlight it
-                if (quiz.answers[no].indexOf(answers[i].value) > -1) {
-                    answers[i].parentNode.classList.add(Quiz.Classes.CORRECT);
-                }
-            } else {
-                // If the input is anything other than a checkbox or radio button, show the correct answer next to the element
-                var correctAnswer = document.createElement('span');
-                correctAnswer.classList.add(Quiz.Classes.CORRECT);
-                correctAnswer.classList.add(Quiz.Classes.TEMP); // quiz.checkAnswers will automatically remove elements with the temp class
-                correctAnswer.innerHTML = quiz.answers[no];
-                correctAnswer.style.marginLeft = '10px';
-                answers[i].parentNode.insertBefore(correctAnswer, answers[i].nextSibling);
-            }
-        }
-    }
-}
-
-  var quizz_Chap02;
-  window.onload = function() {
-    quizz_Chap02 = new Quiz('Chap02', [['1', '2', '3', '4'],'2','1',['1', '2', '3'],'1',['1', '2'],'3',['1', '3', '4']]);
-  };</script><link rel="stylesheet" type="text/css" src="css/quizlib.min.css">
-<div class="card quizlib-question">
-<div class="quizlib-question-title">
-Parmi les matrices de pondération spatiale ci-dessous, lesquelles sont des matrices de contiguïté?
-</div>
-<div>
-Relisez au besoin la <span class="quarto-unresolved-ref">?sec-022</span>.
-</div>
-<div class="quizlib-question-answers">
-
-<table class="table table-sm table-striped small">
-<tbody><tr>
-<td>
-<label>Partage d’un nœud</label>
-</td>
-<td>
-<input type="checkbox" name="q1" value="1">
-</td>
-</tr>
-<tr>
-<td>
-<label>Partage d’un segment</label>
-</td>
-<td>
-<input type="checkbox" name="q1" value="2">
-</td>
-</tr>
-<tr>
-<td>
-<label>Partage d’un nœud et ordre d’adjacence</label>
-</td>
-<td>
-<input type="checkbox" name="q1" value="3">
-</td>
-</tr>
-<tr>
-<td>
-<label>Partage d’un segment et ordre d’adjacence</label>
-</td>
-<td>
-<input type="checkbox" name="q1" value="4">
-</td>
-</tr>
-<tr>
-<td>
-<label>Connectivité selon la distance</label>
-</td>
-<td>
-<input type="checkbox" name="q1" value="5">
-</td>
-</tr>
-</tbody></table>
-</div>
-</div>
-<div class="card quizlib-question">
-<div class="quizlib-question-title">
-En anglais, comment est appelée une matrice selon le partage d’un nœud?
-</div>
-<div>
-Relisez au besoin le début de la <span class="quarto-unresolved-ref">?sec-022</span>.
-</div>
-<div class="quizlib-question-answers">
-
-<table class="table table-sm table-striped small">
-<tbody><tr>
-<td>
-<label>Rook</label>
-</td>
-<td>
-<input type="radio" name="q2" value="1">
-</td>
-</tr>
-<tr>
-<td>
-<label>Queen</label>
-</td>
-<td>
-<input type="radio" name="q2" value="2">
-</td>
-</tr>
-</tbody></table>
-</div>
-</div>
-<div class="card quizlib-question">
-<div class="quizlib-question-title">
-Comparativement à une matrice de l’inverse de la distance, une matrice de l’inverse de la distance au carré accorde un poids plus important aux entités proches.
-</div>
-<div>
-Relisez au besoin la <span class="quarto-unresolved-ref">?sec-02223</span>.
-</div>
-<div class="quizlib-question-answers">
-
-<table class="table table-sm table-striped small">
-<tbody><tr>
-<td>
-<label>Vrai</label>
-</td>
-<td>
-<input type="radio" name="q3" value="1">
-</td>
-</tr>
-<tr>
-<td>
-<label>Faux</label>
-</td>
-<td>
-<input type="radio" name="q3" value="2">
-</td>
-</tr>
-</tbody></table>
-</div>
-</div>
-<div class="card quizlib-question">
-<div class="quizlib-question-title">
-Quels sont les avantages de la standardisation en ligne des matrices de pondération spatiale?
-</div>
-<div>
-Relisez au besoin la <span class="quarto-unresolved-ref">?sec-0223</span>.
-</div>
-<div class="quizlib-question-answers">
-
-<table class="table table-sm table-striped small">
-<tbody><tr>
-<td>
-<label>La somme de chaque ligne est égale à 1.</label>
-</td>
-<td>
-<input type="checkbox" name="q4" value="1">
-</td>
-</tr>
-<tr>
-<td>
-<label>La somme de l’ensemble de la matrice est égale au nombre d’entités spatiales.</label>
-</td>
-<td>
-<input type="checkbox" name="q4" value="2">
-</td>
-</tr>
-<tr>
-<td>
-<label>La standardisation permet de comparer la dépendance spatiale selon différentes matrices.</label>
-</td>
-<td>
-<input type="checkbox" name="q4" value="3">
-</td>
-</tr>
-<tr>
-<td>
-<label>La standardisation augmente la vitesse des calculs.</label>
-</td>
-<td>
-<input type="checkbox" name="q4" value="4">
-</td>
-</tr>
-</tbody></table>
-</div>
-</div>
-<div class="card quizlib-question">
-<div class="quizlib-question-title">
-Quelle est la différence entre les deux mesures locales de Getis et Ord?
-</div>
-<div>
-Relisez au besoin la <span class="quarto-unresolved-ref">?sec-0241</span>.
-</div>
-<div class="quizlib-question-answers">
-
-<table class="table table-sm table-striped small">
-<tbody><tr>
-<td>
-<label>Gi* tient compte à la fois des valeurs des entités voisines ou proches, mais aussi de celle de i.</label>
-</td>
-<td>
-<input type="radio" name="q5" value="1">
-</td>
-</tr>
-<tr>
-<td>
-<label>Contrairement à Gi, Gi* a un z-score.</label>
-</td>
-<td>
-<input type="radio" name="q5" value="2">
-</td>
-</tr>
-</tbody></table>
-</div>
-</div>
-<div class="card quizlib-question">
-<div class="quizlib-question-title">
-Parmi les quatre catégories de la typologie basée sur le nuage de points du I de Moran, lesquelles renvoient à de l’autocorrélation spatiale locale positive?
-</div>
-<div>
-Relisez au besoin la <span class="quarto-unresolved-ref">?sec-0243</span>.
-</div>
-<div class="quizlib-question-answers">
-
-<table class="table table-sm table-striped small">
-<tbody><tr>
-<td>
-<label>HH</label>
-</td>
-<td>
-<input type="checkbox" name="q6" value="1">
-</td>
-</tr>
-<tr>
-<td>
-<label>LL</label>
-</td>
-<td>
-<input type="checkbox" name="q6" value="2">
-</td>
-</tr>
-<tr>
-<td>
-<label>HL</label>
-</td>
-<td>
-<input type="checkbox" name="q6" value="3">
-</td>
-</tr>
-<tr>
-<td>
-<label>LH</label>
-</td>
-<td>
-<input type="checkbox" name="q6" value="4">
-</td>
-</tr>
-</tbody></table>
-</div>
-</div>
-<div class="card quizlib-question">
-<div class="quizlib-question-title">
-Le village gaulois correspond à quelle catégorie?
-</div>
-<div>
-Relisez au besoin la <span class="quarto-unresolved-ref">?sec-0243</span>.
-</div>
-<div class="quizlib-question-answers">
-
-<table class="table table-sm table-striped small">
-<tbody><tr>
-<td>
-<label>HH</label>
-</td>
-<td>
-<input type="radio" name="q7" value="1">
-</td>
-</tr>
-<tr>
-<td>
-<label>LL</label>
-</td>
-<td>
-<input type="radio" name="q7" value="2">
-</td>
-</tr>
-<tr>
-<td>
-<label>HL</label>
-</td>
-<td>
-<input type="radio" name="q7" value="3">
-</td>
-</tr>
-<tr>
-<td>
-<label>LH</label>
-</td>
-<td>
-<input type="radio" name="q7" value="4">
-</td>
-</tr>
-</tbody></table>
-</div>
-</div>
-<div class="card quizlib-question">
-<div class="quizlib-question-title">
-Quelles sont les trois manières de tester la significativité des mesures d’autocorrélation globales?
-</div>
-<div>
-Relisez au besoin la <span class="quarto-unresolved-ref">?sec-02313</span>.
-</div>
-<div class="quizlib-question-answers">
-
-<table class="table table-sm table-striped small">
-<tbody><tr>
-<td>
-<label>Avec l’hypothèse de la normalité</label>
-</td>
-<td>
-<input type="checkbox" name="q8" value="1">
-</td>
-</tr>
-<tr>
-<td>
-<label>En relançant plusieurs fois les calculs</label>
-</td>
-<td>
-<input type="checkbox" name="q8" value="2">
-</td>
-</tr>
-<tr>
-<td>
-<label>Avec l’hypothèse de la randomisation</label>
-</td>
-<td>
-<input type="checkbox" name="q8" value="3">
-</td>
-</tr>
-<tr>
-<td>
-<label>Avec la méthode Monte-Carlo (habituellement avec 999 échantillons)</label>
-</td>
-<td>
-<input type="checkbox" name="q8" value="4">
-</td>
-</tr>
-</tbody></table>
-</div>
-</div>
-<button type="button" onclick="showResults(quizz_Chap02);" id="buttonID">
-Vérifier votre résultat
-</button>
-<div id="quiz-result" class="card">
-<p><span id="quiz-percent"></span></p>
-</div>
-</div>
-</section><section id="sec-025" class="level2" data-number="2.3"><h2 data-number="2.3" class="anchored" data-anchor-id="sec-025">
-<span class="header-section-number">2.3</span> Exercices de révision</h2>
+</section></section><section id="sec-024" class="level2" data-number="1.4"><h2 data-number="1.4" class="anchored" data-anchor-id="sec-024">
+<span class="header-section-number">1.4</span> Quiz de révision</h2>
+</section><section id="sec-025" class="level2" data-number="1.5"><h2 data-number="1.5" class="anchored" data-anchor-id="sec-025">
+<span class="header-section-number">1.5</span> Exercices de révision</h2>
 <div class="bloc_exercice">
 <div class="bloc_exercice-header">
 <div class="bloc_exercice-icon">
@@ -1719,20 +1270,20 @@ Vérifier votre résultat
 </div>
 <div class="bloc_exercice-body">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spatialreg)</span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Matrice de contiguïté selon le partage d'un segment (Rook)</span></span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/chap02/DonneesLyon.Rdata"</span>)</span>
-<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>Rook <span class="ot">&lt;-</span> <span class="fu">poly2nb</span>(LyonIris, <span class="at">queen=</span><span class="cn">FALSE</span>)</span>
-<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>Rook <span class="ot">&lt;-</span> <span class="fu">poly2nb</span>(LyonIris, <span class="at">queen=</span><span class="cn">FALSE</span>)</span>
-<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>W.Rook <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(Rook, <span class="at">zero.policy=</span><span class="cn">TRUE</span>, <span class="at">style =</span> <span class="st">"W"</span>)</span>
-<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Modèles</span></span>
-<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>formule <span class="ot">&lt;-</span> <span class="st">"PM25 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed"</span></span>
-<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>Modele.SLX <span class="ot">&lt;-</span> à compléter</span>
-<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>Modele.SAR <span class="ot">&lt;-</span> à compléter</span>
-<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a>Modele.SEM <span class="ot">&lt;-</span> à compléter</span>
-<span id="cb55-13"><a href="#cb55-13" aria-hidden="true" tabindex="-1"></a>Modele.DurbinSpatial <span class="ot">&lt;-</span> à compléter</span>
-<span id="cb55-14"><a href="#cb55-14" aria-hidden="true" tabindex="-1"></a>Modele.DurbinErreur <span class="ot">&lt;-</span> à compléter</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spatialreg)</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Matrice de contiguïté selon le partage d'un segment (Rook)</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/chap02/DonneesLyon.Rdata"</span>)</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>Rook <span class="ot">&lt;-</span> <span class="fu">poly2nb</span>(LyonIris, <span class="at">queen=</span><span class="cn">FALSE</span>)</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>Rook <span class="ot">&lt;-</span> <span class="fu">poly2nb</span>(LyonIris, <span class="at">queen=</span><span class="cn">FALSE</span>)</span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>W.Rook <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(Rook, <span class="at">zero.policy=</span><span class="cn">TRUE</span>, <span class="at">style =</span> <span class="st">"W"</span>)</span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Modèles</span></span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>formule <span class="ot">&lt;-</span> <span class="st">"PM25 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed"</span></span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>Modele.SLX <span class="ot">&lt;-</span> à compléter</span>
+<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a>Modele.SAR <span class="ot">&lt;-</span> à compléter</span>
+<span id="cb52-12"><a href="#cb52-12" aria-hidden="true" tabindex="-1"></a>Modele.SEM <span class="ot">&lt;-</span> à compléter</span>
+<span id="cb52-13"><a href="#cb52-13" aria-hidden="true" tabindex="-1"></a>Modele.DurbinSpatial <span class="ot">&lt;-</span> à compléter</span>
+<span id="cb52-14"><a href="#cb52-14" aria-hidden="true" tabindex="-1"></a>Modele.DurbinErreur <span class="ot">&lt;-</span> à compléter</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Correction à la <span class="quarto-unresolved-ref">?sec-06071</span>.</p>
 </div>
@@ -1746,19 +1297,19 @@ Vérifier votre résultat
 </div>
 <div class="bloc_exercice-body">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mgcv)</span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/chap02/DonneesLyon.Rdata"</span>)</span>
-<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajout des coordonnées x et y</span></span>
-<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>xy <span class="ot">&lt;-</span> à compléter</span>
-<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>LyonIris<span class="sc">$</span>X <span class="ot">&lt;-</span> à compléter</span>
-<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>LyonIris<span class="sc">$</span>Y <span class="ot">&lt;-</span> à compléter</span>
-<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Construction du modèle</span></span>
-<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a>formule <span class="ot">&lt;-</span> <span class="st">"PM25 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed"</span></span>
-<span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a>Modele.GAM2 <span class="ot">&lt;-</span> <span class="fu">gam</span>(NO2 <span class="sc">~</span>  à compléter</span>
-<span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a>                          à compléter,</span>
-<span id="cb56-12"><a href="#cb56-12" aria-hidden="true" tabindex="-1"></a>                          <span class="at">data =</span> LyonIris)</span>
-<span id="cb56-13"><a href="#cb56-13" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(Modele.GAM2)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mgcv)</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/chap02/DonneesLyon.Rdata"</span>)</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajout des coordonnées x et y</span></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>xy <span class="ot">&lt;-</span> à compléter</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>LyonIris<span class="sc">$</span>X <span class="ot">&lt;-</span> à compléter</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>LyonIris<span class="sc">$</span>Y <span class="ot">&lt;-</span> à compléter</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Construction du modèle</span></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>formule <span class="ot">&lt;-</span> <span class="st">"PM25 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed"</span></span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>Modele.GAM2 <span class="ot">&lt;-</span> <span class="fu">gam</span>(NO2 <span class="sc">~</span>  à compléter</span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>                          à compléter,</span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>                          <span class="at">data =</span> LyonIris)</span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(Modele.GAM2)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Correction à la <span class="quarto-unresolved-ref">?sec-06072</span>.</p>
 </div>
@@ -1772,49 +1323,37 @@ Vérifier votre résultat
 </div>
 <div class="bloc_exercice-body">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spgwr)</span>
-<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/chap02/DonneesLyon.Rdata"</span>)</span>
-<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajout des coordonnées x et y</span></span>
-<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>xy <span class="ot">&lt;-</span> à compléter</span>
-<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>LyonIris<span class="sc">$</span>X <span class="ot">&lt;-</span> à compléter</span>
-<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>LyonIris<span class="sc">$</span>Y <span class="ot">&lt;-</span> à compléter</span>
-<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Optimisation du nombre de voisins avec le CV</span></span>
-<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>formule <span class="ot">&lt;-</span> <span class="st">"PM25 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed"</span></span>
-<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a>bwaCV.voisins  <span class="ot">&lt;-</span> <span class="fu">gwr.sel</span>(à compléter)</span>
-<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Optimisation du nombre de voisins avec l'AIC</span></span>
-<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a>bwaCV.voisins  <span class="ot">&lt;-</span> <span class="fu">gwr.sel</span>(à compléter)</span>
-<span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Réalisation de la GWR</span></span>
-<span id="cb57-14"><a href="#cb57-14" aria-hidden="true" tabindex="-1"></a>Modele.GWR <span class="ot">&lt;-</span> <span class="fu">gwr</span>(à compléter)</span>
-<span id="cb57-15"><a href="#cb57-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Affichage des résultats</span></span>
-<span id="cb57-16"><a href="#cb57-16" aria-hidden="true" tabindex="-1"></a>Modele.GWR</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spgwr)</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/chap02/DonneesLyon.Rdata"</span>)</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajout des coordonnées x et y</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>xy <span class="ot">&lt;-</span> à compléter</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>LyonIris<span class="sc">$</span>X <span class="ot">&lt;-</span> à compléter</span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>LyonIris<span class="sc">$</span>Y <span class="ot">&lt;-</span> à compléter</span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Optimisation du nombre de voisins avec le CV</span></span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>formule <span class="ot">&lt;-</span> <span class="st">"PM25 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed"</span></span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>bwaCV.voisins  <span class="ot">&lt;-</span> <span class="fu">gwr.sel</span>(à compléter)</span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Optimisation du nombre de voisins avec l'AIC</span></span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>bwaCV.voisins  <span class="ot">&lt;-</span> <span class="fu">gwr.sel</span>(à compléter)</span>
+<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Réalisation de la GWR</span></span>
+<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a>Modele.GWR <span class="ot">&lt;-</span> <span class="fu">gwr</span>(à compléter)</span>
+<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Affichage des résultats</span></span>
+<span id="cb54-16"><a href="#cb54-16" aria-hidden="true" tabindex="-1"></a>Modele.GWR</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Correction à la <span class="quarto-unresolved-ref">?sec-06073</span>.</p>
 </div>
 </div>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-anselin1996simple" class="csl-entry" role="listitem">
 Anselin, Luc, Anil K Bera, Raymond Florax et Mann J Yoon. 1996. <span>«&nbsp;Simple diagnostic tests for spatial dependence.&nbsp;»</span> <em>Regional science and urban economics</em> 26 (1): 77‑104. <a href="https://doi.org/10.1016/0166-0462(95)02111-6">https://doi.org/10.1016/0166-0462(95)02111-6</a>.
-</div>
-<div id="ref-anselin2014modern" class="csl-entry" role="listitem">
-Anselin, Luc et Sergio J Rey. 2014. <em>Modern spatial econometrics in practice: A guide to GeoDa, GeoDaSpace and PySAL</em>. GeoDa Press LLC.
-</div>
-<div id="ref-RBoldAir" class="csl-entry" role="listitem">
-Apparicio, Philippe et Jérémy Gelb. 2022. <em>Méthodes quantitatives en sciences sociales : un grand bol d’R</em>. FabriqueREL, Licence CC BY-SA. <a href="https://serieboldr.github.io/MethodesQuantitatives/">https://serieboldr.github.io/MethodesQuantitatives/</a>.
 </div>
 <div id="ref-bivand2021review" class="csl-entry" role="listitem">
 Bivand, Roger, Giovanni Millo et Gianfranco Piras. 2021. <span>«&nbsp;A review of software for spatial econometrics in R.&nbsp;»</span> <em>Mathematics</em> 9 (11): 1276. <a href="https://doi.org/10.3390/math9111276">https://doi.org/10.3390/math9111276</a>.
 </div>
-<div id="ref-bivand2008applied" class="csl-entry" role="listitem">
-Bivand, Roger, Edzer J Pebesma, Virgilio Gómez-Rubio et Edzer Jan Pebesma. 2008. <em>Applied spatial data analysis with R</em>. Vol. 747248717. Springer.
-</div>
 <div id="ref-dube2014econometrie" class="csl-entry" role="listitem">
 Dubé, Jean et Diègo Legros. 2014. <em>Econom<span>é</span>trie spatiale appliqu<span>é</span>e des microdonn<span>é</span>es</em>. ISTE Group.
-</div>
-<div id="ref-lesage2008introduction" class="csl-entry" role="listitem">
-LeSage, James P et R. Kelly Pace. 2008. <em>An introduction to spatial econometrics</em>. 123. CRC Press.
 </div>
 </div>
 </section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
@@ -1852,18 +1391,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1895,11 +1423,50 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
-  function tippyHover(el, contentFn) {
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/serieboldr\.github\.io\/RegressionsSpatiales\/index\.html");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1909,8 +1476,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1922,7 +1498,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1966,6 +1665,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1991,6 +1691,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -2050,23 +1776,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="./01-NotionsDeBase.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Notions de base</span></span>
+      <a href="./00-auteurs.html" class="pagination-link" aria-label="À propos des auteurs">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">À propos des auteurs</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./03-ModelesSpatiauxPanel.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./03-ModelesSpatiauxPanel.html" class="pagination-link" aria-label="Modèles d'économétrie spatiale par panel">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
 <footer class="footer"><div class="nav-footer">
-    <div class="nav-footer-left">Régressions spatiales : un grand bol d’R.</div>   
+    <div class="nav-footer-left">
+<p>Méthodes de régression spatiale : un grand bol d’R.</p>
+</div>   
     <div class="nav-footer-center">
       &nbsp;
-    </div>
-    <div class="nav-footer-right">Ce livre a été réalisé avec <a href="https://quarto.org/">Quarto</a>.</div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Ce livre a été réalisé avec <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
   </div>
 </footer>
 

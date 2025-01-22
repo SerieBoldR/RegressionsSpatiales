@@ -1,7 +1,6 @@
 # Modèles d'économétrie spatiale {#sec-chap02}
 
-L'objectif de ce chapitre est de donner un aperçu des différents modèles économétriques spatiaux.
-
+Dans ce chapitre, nous décrivons uniquement les modèles économétriques spatiaux dont la variable dépendante est continue. Sommairement, ces modèles sont des extensions de la régression linéaire multiple, mais dans lequel une spécification explicite des relations spatiales entre les observations est introduite. Cette spécification vise ultimement à capter des effets spatiaux qui influencent le processus générateur de données (PGD), c’est-à-dire le modèle économétrique que l’on spécifie. 
 
 ::: bloc_objectif
 ::: bloc_objectif-header
@@ -40,53 +39,6 @@ L'objectif de ce chapitre est de donner un aperçu des différents modèles éco
 :::
 :::
 
-Pour décrire les différents modèles, nous proposons d'utiliser le jeu de données spatiales `LyonIris` du *package* `geocmeans`. Ce jeu de données spatiales pour l'agglomération lyonnaise (France) comprend dix variables, dont quatre environnementales (EN) et six socioéconomiques (SE), pour les îlots regroupés pour l'information statistique (IRIS) de l'agglomération lyonnaise (@tbl-datageocmeans et @fig-datacarto).
-
-```{r}
-#| label: tbl-datageocmeans
-#| tbl-cap: Statistiques descriptives du jeu de données LyonIris
-#| echo: false
-#| message: false
-#| warning: false
-library(sf)
-load("data/chap02/DonneesLyon.Rdata")
-Data <- st_drop_geometry(LyonIris)
-Data <-  Data[c("Lden","NO2","PM25","VegHautPrt",
-                        "Pct0_14","Pct_65","Pct_Img",
-                        "TxChom1564","Pct_brevet","NivVieMed")]
-
-intitule <- c("Bruit routier (Lden dB(A))",
-              "Dioxyde d'azote (ug/m^3^)",
-              "Particules fines (PM$_{2,5}$)",
-              "Canopée (%)",
-              "Moins de 15 ans (%)",
-              "65 ans et plus (%)",
-              "Immigrants (%)",
-              "Taux de chômage",
-              "Personnes à faible scolarité (%)",
-              "Médiane du niveau de vie (milliers d'euros)")
-
-stats <- data.frame(variable = names(Data),
-                    nom = intitule,
-                    type = c("EN","EN","EN","EN","SE","SE","SE","SE","SE","SE"),
-                    moy = round(sapply(Data, mean),2),
-                    et = round(sapply(Data, sd),2), 
-                    minimum =round(sapply(Data, min),2), 
-                    maximum =round(sapply(Data, max),2)
-                    )
-
-knitr::kable(stats,
-			digits = 1,
-			format.args = list(decimal.mark = ',', big.mark = " "),
-			col.names=c("Nom","Intitulé","Type","Moy.", "E.-T.", "Min.", "Max."),
-			align= c("l","l", "c","r", "r", "r", "r"),
-			format = "markdown")
-```
-
-![Cartographie des variables du jeu de données LyonIris](images/chap02/FigureDataLyon.png){#fig-datacarto width="100%" fig-align="center"}
-
-## Pourquoi recourir à des modèles économétriques spatiaux? {#sec-021}
-
 ::: bloc_attention
 ::: bloc_attention-header
 ::: bloc_attention-icon
@@ -96,56 +48,99 @@ knitr::kable(stats,
 :::
 
 ::: bloc_attention-body
-Dans cette section, nous décrivons uniquement les modèles économétriques spatiaux dont la variable dépendante est continue. Sommairement, ces modèles sont des extensions de la régression linéaire multiple dans laquelle est intégrée l'autocorrélation spatiale. Avant de lire cette section, il faut donc bien maîtriser la régression linéaire multiple. Si ce n'est pas le cas, nous vous invitons vivement à lire le [chapitre suivant](https://serieboldr.github.io/MethodesQuantitatives/07-regressionlineaire.html) [@RBoldAir].
+Dans cette section, nous décrivons uniquement les modèles économétriques spatiaux dont la variable dépendante est continue. Sommairement, ces modèles sont des extensions de la régression linéaire multiple, mais dans lequel une spécification explicite des relations spatiales entre les observations est introduite. Cette spécification vise ultimement à capter des effets spatiaux qui influencent le processus générateur de données (PGD), c’est-à-dire le modèle économétrique que l’on spécifie.
 
-Ces deux dernières décennies, plusieurs ouvrages traitant des modèles économétriques spatiaux ont été publiés, surtout en anglais [@lesage2008introduction; @anselin2014modern; @bivand2008applied]. Ils méritent grandement d'être consultés, tout comme l'excellent livre en français de Jean Dubé et Diègo Legros [-@dube2014econometrie].
+Par conséquent, avant de lire cette chapitre, il convient de bien maîtriser la régression linéaire multiple. Une brève récapitulation est proposée dans la [section @sec-015].
 :::
 :::
 
-Dans un modèle, les résidus ($\epsilon$) sont la différence entre les valeurs observées ($y_i$) et les valeurs prédites par le modèle ($\widehat{y_i}$). Une des hypothèses de la régression linéaire multiple est que les observations doivent être indépendantes les unes des autres (*indépendance du terme d'erreur*). Le non-respect de cette hypothèse produit des résultats biaisés, notamment pour les coefficients de régression.
+## Pourquoi recourir à des modèles économétriques spatiaux? {#sec-021}
 
-Lorsque les observations sont des entités spatiales (polygones, points par exemple), si les résidus du modèle sont autocorrélés spatialement, il y a un problème de dépendance spatiale du modèle. Autrement dit, les observations ne sont pas spatialement indépendantes les unes des autres. Pour vérifier la dépendance spatiale d'un modèle, il suffit de calculer le *I* de Moran sur les résidus du modèle, comme décrit au chapitre 2 ([section @sec-023]).
+Dans un modèle, les résidus ($\epsilon$) sont la différence entre les valeurs observées ($y_i$) et les valeurs prédites par le modèle ($\widehat{y_i}$). Une des hypothèses de la régression linéaire multiple est que les observations doivent être indépendantes les unes des autres (*indépendance du terme d'erreur*). Le non-respect de cette hypothèse produit des résultats biaisés, notamment pour les coefficients de régression. Un simple test de présence d’autocorrélation spatiale entre les résidus ([section @sec-01411]) permet de vérifier si cette hypothèse est respectée.
 
-Autrement dit, un modèle de régression construit avec des données spatiales ne devrait pas avoir des résidus spatialement autocorrélés. Or, les modèles économétriques spatiaux permettent justement d'intégrer l'autocorrélation spatiale de différentes manières afin de s'assurer que l'hypothèse de l'indépendance du terme d'erreur est respectée.
+Le rejet de cette hypothèse d’indépendance rend les coefficients estimés, selon la forme fonctionnelle postulée (ou processus générateur des données – PGD), par le modèle biaisés et/ou biaise le calcul des écarts-types, invalidant ainsi les tests de significativité usuels. La présence d’autocorrélation spatiale entre les résidus est donc un premier test nécessaire pour s’assurer de la qualité des résultats issus du modèle de régression linéaire.
 
-### Les différents modèles spatiaux autorégressifs {#sec-0212}
+À noter qu’une autocorrélation spatiale entre certaines variables observables, dépendante ou indépendantes, est possible sans pour autant que les résidus soient autocorrélés. Dans ce cas, les relations entre les variables indépendantes permettent de capter l’effet spatial contenu dans la variable dépendante et les résultats d’estimations sont valides si les résidus sont homoscédastiques, c’est-à-dire de variance homogène (autrement, le problème peut facilement être réglé par un simple ajout d’option dans la commande du modèle de régression). Ce n’est donc pas sur les variables observables que le test de détection d’autocorrélation spatiale est important, mais bien sur les résidus du modèle.
 
-Selon Jean Dubé et Diègo Legros, « cinq raisons peuvent motiver le choix d'un modèle autorégressif : la présence d'externalités, les effets d'entraînement, l'omission de variables importantes, la présence d'hétérogénéité spatiale des comportements, les effets mixtes » [-@dube2014econometrie, p. 120]. Les effets mixtes peuvent être la combinaison d'externalités avec des effets d'entraînement ou encore d'externalités avec l'omission d'une ou de plusieurs variables importantes spatialement structurées.
+Pour être valides, les résultats d’un modèle de régression linéaire construit avec des données spatiales ne devraient pas avoir des résidus spatialement autocorrélés. Si c’est le cas, alors certaines options sont envisageables pour tenter de remédier à la situation. La plus simple étant l’ajout de variables indépendantes spatialement structurées, afin de capter l’autocorrélation résiduelle. Les méthodes plus avancées proposent d’intégrer formellement cette relation spatiale dans le PGD. 
 
-#### Modèle SLX : autocorrélation spatiale sur les variables indépendantes {#sec-02121}
+## Les différents modèles spatiaux autorégressifs {#sec-022}
+
+Selon Jean Dubé et Diègo Legros, quelques raisons expliquent « le choix d’un modèle autorégressif : la présence d’externalités, les effets d’entraînement, l’omission de variables importantes, la présence d’hétérogénéité spatiale des comportements, les effets mixtes » [-@dube2014econometrie, p. 120]. Les effets mixtes représentent une combinaison d’effets spatiaux. Dans tous les cas, la prise en compte des effets spatiaux passe par la spécification d’une matrice de pondérations spatiales, notée $W$ et de dimension ($N \times N$).
+
+
+FAIRE UN TABLEAU
+Modèles / Motivation / Intégration de l'autocorrélation spatiale
+SLX  / Externalités : influence des caractéristiques d’un voisin sur le comportement d’intérêt d’une observation donnée / Variables indépendantes (WX)
+
+### Modèle SLX : prise en compte des caractéristiques des voisins {#sec-0221}
+
+### Description du Modèle SLX {#sec-02211}
+
+Dans un modèle SLX (*spatial lag of X model*), la dimension spatiale est intégrée par une possible influence des variables indépendantes des observations voisines, ou des caractéristiques des voisins. Cette spécification vise habituellement à intégrer ce que l’on identifie dans la littérature par les effets d’externalités spatiaux, c’est-à-dire capter l’influence des caractéristiques d’un voisin sur le comportement d’intérêt d’une observation donnée (voir Figure x).
+
+Plusieurs avantages sont liés à cette spécification. D’une part, cette approche peut se faire simplement en ajoutant des variables à l’équation de départ, soit la spécification du PGD original. La création de variable indépendantes, supposées exogènes, décalées spatialement peut être effectuée de manière simple (voir figure 2.29). D’autre part, ce modèle peut être estimé par moindres carrés ordinaires, ce qui n’est pas possible avec les autres spécifications.
 
 Dans un modèle SLX, l'autocorrélation spatiale est intégrée au niveau des variables indépendantes. Autrement dit, les variables indépendantes spatialement décalées ($WX$) sont introduites aussi dans le modèle. Par conséquent, la valeur de chaque unité spatiale du modèle est ainsi expliquée à la fois par ses propres caractéristiques et celles dans le voisinage ou à proximité en fonction de la matrice de pondération spatiale ($W$).
 
-::: bloc_aller_loin
-::: bloc_aller_loin-header
-::: bloc_aller_loin-icon
+::: bloc_notes
+::: bloc_notes-header
+::: bloc_notes-icon
 :::
 
 **Rappel sur les variables spatialement décalées**
 :::
 
-::: bloc_aller_loin-body
+::: bloc_notes-body
 Dans le chapitre 2 sur l'autocorrélation spatiale, nous avons vu comment calculer une variable spatialement décalée avec une matrice de pondération spatiale (@fig-Chap02FigureVariableSpatialementDecalee). À titre de rappel, lorsque cette dernière est standardisée en ligne, elle correspond à la valeur moyenne dans le voisinage.
 :::
 :::
 
-L'idée est alors d'introduire des **externalités** puisque les caractéristiques des entités spatiales proches ou voisines peuvent avoir un effet sur la variable dépendante [@dube2014econometrie]. L'équation du modèle SLX, qui est estimée selon la méthode des moindres carrés ordinaires (comme la régression linéaire multiple), s'écrit alors :
+Le modèle SLX prend la spécification suivante : 
 
 $$
-y = X\beta + WX\theta + \epsilon
-$$ {#eq-SLX}
+y = \iota\alpha + X\beta + WX\theta + \varepsilon
+$$ {#eq-SLX1}
 
-avec :
+Où :
 
--   $y$, la variable dépendante.
--   $X$, les variables indépendantes.
--   $\beta$, les coefficients des variables indépendantes.
--   $W$, la matrice de pondération spatiale.
--   $WX$, les variables indépendantes spatiales décalées.
--   $\theta$, les coefficients des variables indépendantes spatiales décalées.
--   $\epsilon$, les résidus.
 
-**Construction du modèle SLX dans R**
+-   $y$, est la variable dépendante, soit un vecteur de dimension $(N \times 1)$ où N est le nombre total d’observations mobilisées dans l’analyse, avec $i=1,2,\dots,N$.
+
+-   $\iota$ est un vecteur de dimension $(N \times 1)$ comportant uniquement des valeurs de 1.
+
+-   $X$, une matrice de dimension $(N \times K)$ renfermant l’ensemble des $K$ vecteurs de variables explicatives en plus d’une colonne de 1, dans la première colonne de la matrice, pour la constante, d’où $(K+1)$.
+
+-   $\alpha$ est un scalaire identifiant l’ordonnée à l’origine.
+
+-   $\beta$, est un vecteur de dimension $(K+1)$ qui renferme l’ensemble des coefficients de régression, pour les $K$ variables indépendantes et la constante.
+
+-   $WX$ est une matrice de variables indépendantes décalées spatialement, résultant d’une opération matricielle simple, soit $WX = W \times X$, où $W$ est de dimension $(N×N)$, $X$ est de dimension $(N \times K)$, d’où $WX$ est de dimension $(N \times K)$, où chaque observations représente la moyenne des valeurs des variables indépendantes autour d’une observation donnée.
+
+-   $\theta$ est un vecteur de coefficients associés aux valeurs décalées spatialement des variables indépendantes (excluant la constante) de dimension $(K \times 1)$.
+
+-   $\varepsilon$, un vecteur de dimension $(N \times 1)$ des termes d’erreurs.
+
+
+Le PGD suggère que la valeur de chaque unité spatiale du modèle est ainsi expliquée à la fois par ses propres caractéristiques et celles de ses voisins ou des observations à proximité en fonction de la matrice de pondération spatiale ($W$).
+
+Une des particularités du modèle SLX est qu’il introduit une complexité dans l’interprétation des résultats et le calcul des effets marginaux puisque la variable $x_k$ apparaît à deux endroits dans le modèle : d’abord dans la matrice des variables indépendantes originales ($X$) et ensuite dans la matrice de variables indépendantes décalées spatialement ($WX$). Lorsque la matrice de pondérations est standardisée en ligne,
+le calcul des effets marginaux est alors donné par la dérivée partielle suivante :
+
+$$
+\frac{\partial y}{\partial x_k} = \mathbf{I} \beta_k + W \theta_k
+$$ {#eq-SLX2}
+
+Pour une matrice de pondérations standardisées en ligne, cette expression se réduit à la valeur du coefficient associé à la variable indépendante originale, $\beta_k$, en plus de la valeur du coefficient associé à la variable décalée spatialement, $\theta_k$. L’expression synthétise l’effet marginal total, alors que le coefficient $\beta_k$ est habituellement désigné par l’effet direct et le coefficient $\theta_k$ synthétise l’effet indirect, puisque venant des voisins.
+
+C’est d’ailleurs la valeur du coefficient $\theta_k$ qui introduit ce que l’on qualifie d’externalité spatiale. Il permet d’exprimer comment la variable dépendante varie lorsque les caractéristiques des voisins changent. Les changements dans la variable d’intérêt peuvent venir d’une variation des caractéristiques des voisins.
+
+Ce modèle est aussi désigné sous le terme d’effet spatial local, par opposition à l’effet global (voir modèle SAR, [section @sec-0222]). La variation des caractéristiques des voisins a une portée limitée sur le changement de valeurs de la variable dépendante. Seulement certaines observations sont affectées : celles dont les caractéristiques des voisins ont changé.
+
+Si le modèle SLX offre une solution intéressante pour régler le potentiel problème d’autocorrélation spatiale des résidus, rien n’assure pour autant qu’il permet de régler tous les problèmes, même si les coefficients associés aux variables décalées spatialement sont statistiquement significatifs. L’inclusion de variables indépendantes additionnelles peut ne pas suffire à capter ce qui, au départ dans la régression par MCO, se cache dans les résidus du modèle. Un test d’autocorrélation spatiale sur les résidus du modèle SLX est un réflexe nécessaire à avoir.
+
+
+### Mise en œuvre dans R {#sec-02212}
 
 Le modèle SLX est construit avec la fonction `lmSLX` du *package* `spatialreg` [@bivand2021review]. Remarquez, dans le code ci-dessous, le paramètre `listw=W.Rook` qui est utilisé pour spécifier la matrice de pondération spatiale.
 
@@ -153,11 +148,13 @@ Le modèle SLX est construit avec la fonction `lmSLX` du *package* `spatialreg` 
 #| echo: true 
 #| message: false 
 #| eval: true
-## Chargemement des packages
+#| warning: false
+## Chargemement des packages et des données
 library(sf)
 library(tmap)
 library(spdep)
 library(spatialreg)
+load("data/Lyon.Rdata")
 ## Matrice de contiguïté selon le partage d'un segment (Rook)
 Rook <- poly2nb(LyonIris, queen=FALSE)
 W.Rook <- nb2listw(Rook, zero.policy=TRUE, style = "W")
@@ -188,11 +185,9 @@ La formulation d'un modèle SLX implique deux types d'effets pour les variables 
 
 -   les **effets indirects**, soit ceux des caractéristiques des entités spatiales voisines ou proches définies selon la matrice de pondération spatiale. Ils correspondent aux coefficients $\theta$ des variables indépendantes spatialement décalées ($WX$). Autrement dit, les valeurs de $WX$ des entités spatiales proches ou voisines $j$ de $i$ vont aussi être amenées à varier, impactant alors les valeurs $y_j$ selon les coefficients $\theta$.
 
-
-Prenons l'exemple d'un modèle visant à prédire le prix de vente des maisons dans une ville en fonction de leurs caractéristiques des maisons, dont la superficie du jardin. Il est probable que plus la superficie du jardin de la maison $i$ augmente, plus le prix de vente augmente également (**effet direct**, coefficient $\beta$). Cette augmentation de la taille du jardin aura aussi un impact sur le prix des maisons voisines puisque leur prix est dépendant de la taille des jardins des maisons voisines. Ainsi, chaque maison $j$, voisine de $i$ verra son prix augmenter à cause de l'augmentation de la taille du jardin de la maison $i$ (**effet indirect**).
-
-
-Pour capturer l'impact total sur le prix des maisons d'une augmentation de la superficie du jardin de la maison $i$, il suffit de sommer son effet direct (augmentation du prix de la maison $i$) et son effet indirect (augmentation du prix des maisons $j$) pour obtenir son effet total.
+- Pour calculer l'impact total, il suffit de sommer son effet direct ($\beta_k$) et son effet indirect ($\theta_k$) pour obtenir son effet total.
+:::
+:::
 
 Le code suivant permet de calculer ces effets directs et indirects.
 
@@ -206,11 +201,8 @@ impacts(Modele.SLX)
 summary(impacts(Modele.SLX))
 ```
 
-À la lecture des valeurs de *p*, nous constatons que seule la variable `Pct0_14` a un impact direct et indirect significatif au seuil 0,01. L'augmentation d'un point de pourcentage de la population de moins de 15 ans est associé localement à une réduction de 0,20 de la concentration annuelle du dioxyde d'azote. Chez les entités voisines, cette réduction est de 0,78 et l'effet total est donc une réduction de 0,98.
-
-:::
-:::
-
+VOIR AVEC JEAN!!!
+À la lecture des valeurs de *p*, nous constatons que seule la variable `Pct0_14` a un impact direct et indirect significatif au seuil 0,01. L'augmentation d'un point de pourcentage de la population de moins de 15 ans est associé localement à une réduction de 0,20 de la concentration annuelle du dioxyde d'azote. Chez les entités voisines, cette réduction est de 0,78. L'effet total est donc une réduction de 0,98.
 
 **Dépendance spatiale du modèle SLX?**
 
@@ -236,7 +228,7 @@ tm_shape(LyonIris)+
   tm_scale_bar(breaks = c(0,5))
 ```
 
-#### Modèle SAR : autocorrélation spatiale sur la variable dépendante {#sec-02122}
+### Modèle SAR : autocorrélation spatiale sur la variable dépendante {#sec-0222}
 
 Dans le modèle SAR (aussi appelé SAR-LAG), l'autocorrélation spatiale est intégrée au niveau de la variable dépendante ($Wy$), qui est ainsi spatialement décalée. L'idée générale est que la valeur de la variable dépendante pour une observation ($y_i$) peut être influencée par les valeurs de $y$ des observations voisines et proches. L'exemple le plus classique est le prix de vente des maisons : il est influencé à la fois par les caractéristiques intrinsèques de la maison ($X$, par exemple, la superficie habitable, le nombre de chambres à coucher, de salles de bains, etc.) et par le prix de vente des maisons voisines ($Wy$). Jean Dubé et Diègo Legros [-@dube2014econometrie] qualifient ce phénomène « **d'effets d'entraînement ou d'effets de débordement** (*spillover effects*) » [-@dube2014econometrie, p. 123]. L'équation du modèle SAR s'écrit alors :
 
@@ -337,7 +329,7 @@ tm_shape(LyonIris)+
   tm_scale_bar(breaks = c(0,5))
 ```
 
-#### Modèle SEM : autocorrélation spatiale sur le terme d'erreur {#sec-02123}
+### Modèle SEM : autocorrélation spatiale sur le terme d'erreur {#sec-0223}
 
 Dans le modèle SEM (*Spatial Error Model*, appelé aussi *SAR-ERROR*), l'intégration de l'autocorrélation spatiale est réalisée sur le terme d'erreur, ce qui pourrait se justifier par l'omission d'une variable dépendante spatialement structurée [@dube2014econometrie, p. 126]. L'équation du modèle SEM s'écrit :
 
@@ -384,7 +376,7 @@ Ce modèle a-t-il corrigé le problème de dépendance spatiale du modèle de r�
 moran.mc(resid(Modele.SEM), W.Rook, nsim=999)
 ```
 
-#### Modèle SDM : autocorrélation spatiale sur la variable dépendante et les variables indépendantes {#sec-02124}
+### Modèle SDM : autocorrélation spatiale sur la variable dépendante et les variables indépendantes {#sec-0224}
 
 Le modèle SDM (*Spatial Durbin Model*) est un modèle mixte qui intègre à la fois l'autocorrélation spatiale sur la variable dépendante ($Wy$, **effets d'entraînement ou de débordement**) et sur les variables indépendantes ($WX$, **externalités**). Il s'écrit alors :
 
@@ -442,7 +434,7 @@ summary(impacts(Modele.DurbinSpatial, listw = W.Rook, R = 999), zstats = TRUE, s
 moran.mc(resid(Modele.DurbinSpatial), W.Rook, nsim=999)
 ```
 
-#### Modèle SDEM : autocorrélation spatiale sur les variables indépendantes et sur le terme d'erreur {#sec-02125}
+### Modèle SDEM : autocorrélation spatiale sur les variables indépendantes et sur le terme d'erreur {#sec-0225}
 
 Le modèle SDEM (*Spatial Durbin Error Model* en anglais) est un autre modèle mixte qui intègre à la fois l'autocorrélation spatiale sur les valeurs indépendantes ($WX$, **externalités**) et sur le terme d'erreur ($u = \lambda Wu + \epsilon$). Il s'écrit alors :
 
@@ -501,9 +493,9 @@ Avec une valeur du *I* de Moran de -0,010 (*p* = 0,619), les résidus du modè
 moran.mc(resid(Modele.DurbinErreur), W.Rook, nsim=999)
 ```
 
-### Quel modèle choisir? {#sec-0213}
+## Quel modèle choisir? {#sec-023}
 
-#### Tests du multiplicateur de Lagrange sur le modèle MCO {#sec-02131}
+### Tests du multiplicateur de Lagrange sur le modèle MCO {#sec-0231}
 
 L'utilisation des tests du multiplicateur de Lagrange (simple et robuste) a été largement popularisée par Anselin *et al.* [-@anselin1996simple] pour vérifier si le recours à un modèle autorégressif est nécessaire, comparativement à un modèle de régression classique (MCO). Les tests sont calculés sur le modèle MCO avec la fonction `lm.LMtests` et une matrice de pondération spatiale. Ces tests permettent aussi de choisir entre les modèles SAR et SEM. La démarche suivante peut être utilisée pour choisir un modèle :
 
@@ -523,7 +515,7 @@ summary(lm.LMtests(model = Modele.MCO,
                    test = c("LMlag","LMerr","RLMlag","RLMerr")))
 ```
 
-#### Comparaison des modèles mixtes et non mixtes {#sec-02132}
+### Comparaison des modèles mixtes et non mixtes {#sec-0232}
 
 Nous avons vu qu'il existe deux modèles mixtes (SDM et SDEM). Il convient alors de vérifier si le recours d'un modèle mixte est justifié comparativement à un modèle non mixte. Dans le code ci-dessous, nous vérifions si le modèle SDM est statistiquement différent du modèle SAR avec les fonctions `LR.Sarlm` et `anova`. Les résultats signalent un écart significatif des valeurs du log-vraisemblance (26,101, *p* \< 0,001). Par conséquent, ce modèle mixte a un apport significatif.
 
@@ -547,7 +539,7 @@ LR.Sarlm(Modele.DurbinErreur, Modele.SEM)
 anova(Modele.DurbinErreur, Modele.SEM)
 ```
 
-#### Mesures AIC et BIC et dépendance spatiale {#sec-02133}
+### Mesures AIC et BIC et dépendance spatiale {#sec-0233}
 
 Le critère d'information d'Akaike (AIC) et le critère d'information bayésien (BIC) sont largement utilisés pour évaluer la qualité d'ajustement du modèle. Plus leurs valeurs sont faibles, meilleur est le modèle. Il est donc possible de comparer leurs valeurs pour les différents modèles (MCO, SLX, SAR, SEM, SDM et SDEM). Nous pouvons aussi comparer l'autocorrélation spatiale des résidus des modèles avec le *I* de Moran.
 
@@ -628,7 +620,7 @@ ggarrange(g1, g2)
 ```{r}
 #| label: quizChapitre02
 #| echo: false 
-#| eval: true 
+#| eval: false 
 #| message: false 
 #| warning: false 
 #| results: asis

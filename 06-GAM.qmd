@@ -1,6 +1,6 @@
 # Modèles généralisées additifs {#sec-chap06}
 
-Dans ce chapitre, nous abordons deux formes de modèles généralisées additifs (*Generalized additive model en anglais* -- GAM) qui permettent d'introduire l'espace de manière différente : les modèles GAM avec une *spline* bivariée avec les coordonnées géographiques (x, y) pour capturer les variations continues dans l'espace; les modèles GAM avec un lissage par champ aléatoire de Markov (*random markov field* – RMF) pour modéliser la dépendance spatiale entre les unités spatiales voisines.
+Dans ce chapitre, nous abordons deux formes de modèles généralisées additifs (*Generalized additive model en anglais* -- GAM) qui permettent d'introduire l'espace deux manières différentes : les modèles GAM avec une *spline* bivariée avec les coordonnées géographiques (x, y) pour capturer les variations continues dans l'espace; les modèles GAM avec un lissage par champ aléatoire de Markov (*random markov field* – RMF) pour modéliser la dépendance spatiale entre les unités spatiales voisines.
 
 
 ::: bloc_objectif
@@ -57,7 +57,7 @@ Les modèles généralisés additifs (*Generalized additive models* en anglais) 
 :::
 
 ::: bloc_attention-body
-Pour une description détaillée des modèles généralisés additifs, nous vous invitons vivement à lire le [chapitre suivant](https://serieboldr.github.io/MethodesQuantitatives/11-GAM.html) [@RBoldAir].
+Pour une description détaillée des modèles généralisés additifs, nous vous invitons vivement à lire le [chapitre suivant](https://serieboldr.github.io/MethodesQuantitatives/11-GAM.html) [@RBoldAirMethodesAnalysesSpatiales].
 :::
 :::
 
@@ -100,13 +100,11 @@ Pour construire des modèles GAM dans R, nous utilisons la fonction `gam` du *pa
 #| message: false 
 #| eval: true
 #| warning: false
-## Chargement des packages
+## Chargement des packages et des données
 library(sf)
 library(spdep)
 library(mgcv)
-
-## Chargement des données
-load("data/chap04/DonneesLyon.Rdata")
+load("data/Lyon.Rdata")
 ## Ajout des coordonnées X et Y dans LyonIris 
 xy <- st_coordinates(st_centroid(LyonIris))
 LyonIris$X <- xy[,1]
@@ -116,8 +114,9 @@ Modele.MCO <- lm(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
                  data = LyonIris)
 ## Construction du modèle GAM
 Modele.GAM1 <- gam(NO2 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed+
-                          s(X, Y),    # spline sur les coordonnées X, Y
-                    data = LyonIris)  # dataframe
+                          s(X, Y),           # spline sur les coordonnées X, Y
+                          family=gaussian(), # distribution
+                          data = LyonIris)   # dataframe
 ## Résultats du modèle
 summary(Modele.GAM1)
 ```
@@ -140,7 +139,9 @@ Nous pouvons aussi introduire une *spline* plus complexe en augmentant le nombre
 #| message: false 
 #| eval: true
 Modele.GAM2 <- gam(NO2 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed+
-                          s(X, Y, k= 40), data = LyonIris)
+                          s(X, Y, k= 40), 
+                          family=gaussian(),
+                          data = LyonIris)
 summary(Modele.GAM2)
 ```
 
@@ -242,12 +243,49 @@ moran.mc(resid(Modele.GAM2), W.Rook, nsim=999)
 https://fromthebottomoftheheap.net/2017/10/19/first-steps-with-mrf-smooths/
 
 
+
+::: bloc_aller_loin
+::: bloc_aller_loin-header
+::: bloc_aller_loin-icon
+:::
+
+**Modèles généralisées additifs avec d'autres distributions pour la variable dépendante**
+:::
+
+::: bloc_aller_loin-body
+Dans ce chapitre, nous avons créé des modèles GAM en introduisant l'espace de deux manières différentes, et ce, avec une distribution gaussienne. Or, il est aussi possible de construire ces deux types deux modèles avec des variables dépendantes qualitatives (modèles logistique, probit, multinomial, ordinal), de comptage (modèles Poisson, binomial négatif, avec excès fixe de zéros, avec excès ajusté de zéros), continues (gaussien, Student, Gamma, bêta).
+
+La fonction `gam` du *package* `mgcv` comprend un argument `family` dont la valeur par défaut est `gaussian()`. Cet argument permet de spécifier la famille de distribution et la fonction de lien en utilisant les familles de distribution disponibles dans la fonction de `glm` (*Generalized Linear Models* pour régressions linéaires généralisées) :
+
+-   `binomial(link = "logit")`
+-   `gaussian(link = "identity")`
+-   `Gamma(link = "inverse")`
+-   `inverse.gaussian(link = "1/mu^2")`
+-   `poisson(link = "log")`
+-   `quasi(link = "identity", variance = "constant")`
+-   `quasibinomial(link = "logit")`
+-   `quasipoisson(link = "log")`
+
+D'autres familles de distribution sont aussi spécifiques la fonction `gam` de `mgcv` :
+
+-   `betar(link="logit")`
+-   `cnorm(theta=NULL,link="identity")`
+-   `nb(theta = NULL, link = "log")`
+-   `ocat(theta=NULL,link="identity",R=NULL)`
+-   `scat(theta = NULL, link = "identity",min.df=3)`
+-   `tw(theta = NULL, link = "log",a=1.01,b=1.99)`
+-   `ziP(theta = NULL, link = "identity",b=0)`
+:::
+:::
+
+
+
 ## Quiz de révision {#sec-063}
 
 ```{r}
 #| label: quizChapitre06
 #| echo: false 
-#| eval: true 
+#| eval: false 
 #| message: false 
 #| warning: false 
 #| results: asis
