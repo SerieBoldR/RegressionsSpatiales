@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.6.32">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>2&nbsp; Modèles d’économétrie spatiale par panel – Méthodes de régression spatiale : un grand bol d’R</title>
+<title>3&nbsp; Modèles d’économétrie spatiale par panel – Méthodes de régression spatiale : un grand bol d’R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -106,7 +106,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-ModelesSpatiauxPanel.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-ModelesSpatiauxPanel.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
@@ -147,6 +147,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <span class="sidebar-item-text sidebar-link text-start">
  <span class="menu-text">Partie 1. Notions de base</span></span>
   </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-NotionsDeBase.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Notions de base</span></span></a>
+  </div>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <span class="sidebar-item-text sidebar-link text-start">
  <span class="menu-text">Partie 2. Économétrie spatiale</span></span>
@@ -154,13 +160,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./02-ModelesEconometrieSpatiale.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./03-ModelesSpatiauxPanel.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -170,13 +176,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./04-GWRClassique.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Régressions géographiquement pondérées classiques</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Régressions géographiquement pondérées classiques</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./05-GWRExtensions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -186,13 +192,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./06-GAM.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Modèles généralisées additifs</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Modèles généralisées additifs</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./07-SEM.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Modèles avec des vecteurs propres spatiaux</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modèles avec des vecteurs propres spatiaux</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -202,7 +208,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./08-Exercices.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Correction des exercices</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Correction des exercices</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -219,25 +225,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table des matières</h2>
    
   <ul>
-<li><a href="#sec-031" id="toc-sec-031" class="nav-link active" data-scroll-target="#sec-031"><span class="header-section-number">2.1</span> Bref retour sur les modèles en panel</a></li>
+<li><a href="#sec-031" id="toc-sec-031" class="nav-link active" data-scroll-target="#sec-031"><span class="header-section-number">3.1</span> Bref retour sur les modèles en panel</a></li>
   <li>
-<a href="#sec-032" id="toc-sec-032" class="nav-link" data-scroll-target="#sec-032"><span class="header-section-number">2.2</span> Formulation des différents modèles spatiaux par panel</a>
+<a href="#sec-032" id="toc-sec-032" class="nav-link" data-scroll-target="#sec-032"><span class="header-section-number">3.2</span> Formulation des différents modèles spatiaux par panel</a>
   <ul class="collapse">
-<li><a href="#sec-0321" id="toc-sec-0321" class="nav-link" data-scroll-target="#sec-0321"><span class="header-section-number">2.2.1</span> Description des différents modèles</a></li>
-  <li><a href="#sec-0322" id="toc-sec-0322" class="nav-link" data-scroll-target="#sec-0322"><span class="header-section-number">2.2.2</span> Modèle SLPDM : autocorrélation sur la variable dépendante</a></li>
-  <li><a href="#sec-0323" id="toc-sec-0323" class="nav-link" data-scroll-target="#sec-0323"><span class="header-section-number">2.2.3</span> Modèle SEPDM : autocorrélation sur le terme d’erreur</a></li>
-  <li><a href="#sec-0324" id="toc-sec-0324" class="nav-link" data-scroll-target="#sec-0324"><span class="header-section-number">2.2.4</span> Modèle SEPDM : autocorrélation sur la variable dépendante et les variables indépendantes</a></li>
+<li><a href="#sec-0321" id="toc-sec-0321" class="nav-link" data-scroll-target="#sec-0321"><span class="header-section-number">3.2.1</span> Description des différents modèles</a></li>
+  <li><a href="#sec-0322" id="toc-sec-0322" class="nav-link" data-scroll-target="#sec-0322"><span class="header-section-number">3.2.2</span> Modèle SLPDM : autocorrélation sur la variable dépendante</a></li>
+  <li><a href="#sec-0323" id="toc-sec-0323" class="nav-link" data-scroll-target="#sec-0323"><span class="header-section-number">3.2.3</span> Modèle SEPDM : autocorrélation sur le terme d’erreur</a></li>
+  <li><a href="#sec-0324" id="toc-sec-0324" class="nav-link" data-scroll-target="#sec-0324"><span class="header-section-number">3.2.4</span> Modèle SEPDM : autocorrélation sur la variable dépendante et les variables indépendantes</a></li>
   </ul>
 </li>
-  <li><a href="#sec-033" id="toc-sec-033" class="nav-link" data-scroll-target="#sec-033"><span class="header-section-number">2.3</span> Sélection du modèle spatial par panel le plus approprié</a></li>
-  <li><a href="#sec-034" id="toc-sec-034" class="nav-link" data-scroll-target="#sec-034"><span class="header-section-number">2.4</span> Mise en œuvre dans R</a></li>
-  <li><a href="#sec-035" id="toc-sec-035" class="nav-link" data-scroll-target="#sec-035"><span class="header-section-number">2.5</span> Quiz de révision</a></li>
-  <li><a href="#sec-036" id="toc-sec-036" class="nav-link" data-scroll-target="#sec-036"><span class="header-section-number">2.6</span> Exercices de révision</a></li>
+  <li><a href="#sec-033" id="toc-sec-033" class="nav-link" data-scroll-target="#sec-033"><span class="header-section-number">3.3</span> Sélection du modèle spatial par panel le plus approprié</a></li>
+  <li><a href="#sec-034" id="toc-sec-034" class="nav-link" data-scroll-target="#sec-034"><span class="header-section-number">3.4</span> Mise en œuvre dans R</a></li>
+  <li><a href="#sec-035" id="toc-sec-035" class="nav-link" data-scroll-target="#sec-035"><span class="header-section-number">3.5</span> Quiz de révision</a></li>
+  <li><a href="#sec-036" id="toc-sec-036" class="nav-link" data-scroll-target="#sec-036"><span class="header-section-number">3.6</span> Exercices de révision</a></li>
   </ul><div class="toc-actions"><ul><li><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<h1 class="title"><span id="sec-chap03" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel</span></span></h1>
+<h1 class="title"><span id="sec-chap03" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel</span></span></h1>
 </div>
 
 
@@ -306,26 +312,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 </div>
 </div>
-<section id="sec-031" class="level2" data-number="2.1"><h2 data-number="2.1" class="anchored" data-anchor-id="sec-031">
-<span class="header-section-number">2.1</span> Bref retour sur les modèles en panel</h2>
-</section><section id="sec-032" class="level2" data-number="2.2"><h2 data-number="2.2" class="anchored" data-anchor-id="sec-032">
-<span class="header-section-number">2.2</span> Formulation des différents modèles spatiaux par panel</h2>
-<section id="sec-0321" class="level3" data-number="2.2.1"><h3 data-number="2.2.1" class="anchored" data-anchor-id="sec-0321">
-<span class="header-section-number">2.2.1</span> Description des différents modèles</h3>
-</section><section id="sec-0322" class="level3" data-number="2.2.2"><h3 data-number="2.2.2" class="anchored" data-anchor-id="sec-0322">
-<span class="header-section-number">2.2.2</span> Modèle SLPDM : autocorrélation sur la variable dépendante</h3>
-</section><section id="sec-0323" class="level3" data-number="2.2.3"><h3 data-number="2.2.3" class="anchored" data-anchor-id="sec-0323">
-<span class="header-section-number">2.2.3</span> Modèle SEPDM : autocorrélation sur le terme d’erreur</h3>
-</section><section id="sec-0324" class="level3" data-number="2.2.4"><h3 data-number="2.2.4" class="anchored" data-anchor-id="sec-0324">
-<span class="header-section-number">2.2.4</span> Modèle SEPDM : autocorrélation sur la variable dépendante et les variables indépendantes</h3>
-</section></section><section id="sec-033" class="level2" data-number="2.3"><h2 data-number="2.3" class="anchored" data-anchor-id="sec-033">
-<span class="header-section-number">2.3</span> Sélection du modèle spatial par panel le plus approprié</h2>
-</section><section id="sec-034" class="level2" data-number="2.4"><h2 data-number="2.4" class="anchored" data-anchor-id="sec-034">
-<span class="header-section-number">2.4</span> Mise en œuvre dans R</h2>
-</section><section id="sec-035" class="level2" data-number="2.5"><h2 data-number="2.5" class="anchored" data-anchor-id="sec-035">
-<span class="header-section-number">2.5</span> Quiz de révision</h2>
-</section><section id="sec-036" class="level2" data-number="2.6"><h2 data-number="2.6" class="anchored" data-anchor-id="sec-036">
-<span class="header-section-number">2.6</span> Exercices de révision</h2>
+<section id="sec-031" class="level2" data-number="3.1"><h2 data-number="3.1" class="anchored" data-anchor-id="sec-031">
+<span class="header-section-number">3.1</span> Bref retour sur les modèles en panel</h2>
+</section><section id="sec-032" class="level2" data-number="3.2"><h2 data-number="3.2" class="anchored" data-anchor-id="sec-032">
+<span class="header-section-number">3.2</span> Formulation des différents modèles spatiaux par panel</h2>
+<section id="sec-0321" class="level3" data-number="3.2.1"><h3 data-number="3.2.1" class="anchored" data-anchor-id="sec-0321">
+<span class="header-section-number">3.2.1</span> Description des différents modèles</h3>
+</section><section id="sec-0322" class="level3" data-number="3.2.2"><h3 data-number="3.2.2" class="anchored" data-anchor-id="sec-0322">
+<span class="header-section-number">3.2.2</span> Modèle SLPDM : autocorrélation sur la variable dépendante</h3>
+</section><section id="sec-0323" class="level3" data-number="3.2.3"><h3 data-number="3.2.3" class="anchored" data-anchor-id="sec-0323">
+<span class="header-section-number">3.2.3</span> Modèle SEPDM : autocorrélation sur le terme d’erreur</h3>
+</section><section id="sec-0324" class="level3" data-number="3.2.4"><h3 data-number="3.2.4" class="anchored" data-anchor-id="sec-0324">
+<span class="header-section-number">3.2.4</span> Modèle SEPDM : autocorrélation sur la variable dépendante et les variables indépendantes</h3>
+</section></section><section id="sec-033" class="level2" data-number="3.3"><h2 data-number="3.3" class="anchored" data-anchor-id="sec-033">
+<span class="header-section-number">3.3</span> Sélection du modèle spatial par panel le plus approprié</h2>
+</section><section id="sec-034" class="level2" data-number="3.4"><h2 data-number="3.4" class="anchored" data-anchor-id="sec-034">
+<span class="header-section-number">3.4</span> Mise en œuvre dans R</h2>
+</section><section id="sec-035" class="level2" data-number="3.5"><h2 data-number="3.5" class="anchored" data-anchor-id="sec-035">
+<span class="header-section-number">3.5</span> Quiz de révision</h2>
+</section><section id="sec-036" class="level2" data-number="3.6"><h2 data-number="3.6" class="anchored" data-anchor-id="sec-036">
+<span class="header-section-number">3.6</span> Exercices de révision</h2>
 <div class="bloc_exercice">
 <div class="bloc_exercice-header">
 <div class="bloc_exercice-icon">
@@ -798,12 +804,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="./02-ModelesEconometrieSpatiale.html" class="pagination-link" aria-label="Modèles d'économétrie spatiale">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./04-GWRClassique.html" class="pagination-link" aria-label="Régressions géographiquement pondérées classiques">
-        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Régressions géographiquement pondérées classiques</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Régressions géographiquement pondérées classiques</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -43,6 +43,8 @@ Ce livre n'a pas pour objectif de traiter la phase préparatoire consistant à s
 
 Premièrement, nous utiliserons le jeu de données spatiales `LyonIris` du *package* `geocmeans`. Ce jeu de données spatiales pour l'agglomération lyonnaise (France) comprend dix variables, dont quatre environnementales (EN) et six socioéconomiques (SE), pour les îlots regroupés pour l'information statistique (IRIS) de l'agglomération lyonnaise (@tbl-datageocmeans et @fig-datacarto).
 
+![Cartographie des variables du jeu de données LyonIris](images/chap01/FigureDataLyon.png){#fig-datacarto width="100%" fig-align="center"}
+
 ```{r}
 #| label: tbl-datageocmeans
 #| tbl-cap: Statistiques descriptives du jeu de données LyonIris
@@ -77,14 +79,12 @@ stats <- data.frame(variable = names(Data),
                     )
 knitr::kable(stats,
 			digits = 1,
+			row.names = FALSE,
 			format.args = list(decimal.mark = ',', big.mark = " "),
 			col.names=c("Nom","Intitulé","Type","Moy.", "E.-T.", "Min.", "Max."),
 			align= c("l","l", "c","r", "r", "r", "r"),
 			format = "markdown")
 ```
-
-![Cartographie des variables du jeu de données LyonIris](images/chap01/FigureDataLyon.png){#fig-datacarto width="100%" fig-align="center"}
-
 
 ### Jeu de données sur Barcelone {#sec-0112}
 

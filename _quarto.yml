@@ -59,7 +59,7 @@ book:
   - index.qmd
   - 00-auteurs.qmd
   - part: Partie 1. Notions de base
-  # - 01-NotionsDeBase.qmd
+  - 01-NotionsDeBase.qmd
   - part: Partie 2. Économétrie spatiale
   - 02-ModelesEconometrieSpatiale.qmd
   - 03-ModelesSpatiauxPanel.qmd

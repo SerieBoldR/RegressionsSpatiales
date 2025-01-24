@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.6.32">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>3&nbsp; Régressions géographiquement pondérées classiques – Méthodes de régression spatiale : un grand bol d’R</title>
+<title>4&nbsp; Régressions géographiquement pondérées classiques – Méthodes de régression spatiale : un grand bol d’R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -117,7 +117,8 @@ div.csl-indent {
     "search-submit-button-title": "Envoyer",
     "search-label": "Recherche"
   }
-}</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+}</script><script src="site_libs/kePrint-0.0.1/kePrint.js"></script><link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
 const typesetMath = (el) => {
   if (window.MathJax) {
     // MathJax Typeset
@@ -151,7 +152,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-GWRClassique.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Régressions géographiquement pondérées classiques</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-GWRClassique.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Régressions géographiquement pondérées classiques</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
@@ -192,6 +193,12 @@ window.Quarto = {
       <span class="sidebar-item-text sidebar-link text-start">
  <span class="menu-text">Partie 1. Notions de base</span></span>
   </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-NotionsDeBase.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Notions de base</span></span></a>
+  </div>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <span class="sidebar-item-text sidebar-link text-start">
  <span class="menu-text">Partie 2. Économétrie spatiale</span></span>
@@ -199,13 +206,13 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./02-ModelesEconometrieSpatiale.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./03-ModelesSpatiauxPanel.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -215,13 +222,13 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./04-GWRClassique.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Régressions géographiquement pondérées classiques</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Régressions géographiquement pondérées classiques</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./05-GWRExtensions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -231,13 +238,13 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./06-GAM.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Modèles généralisées additifs</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Modèles généralisées additifs</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./07-SEM.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Modèles avec des vecteurs propres spatiaux</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modèles avec des vecteurs propres spatiaux</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -247,7 +254,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./08-Exercices.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Correction des exercices</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Correction des exercices</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -265,30 +272,29 @@ window.Quarto = {
    
   <ul>
 <li>
-<a href="#sec-041" id="toc-sec-041" class="nav-link active" data-scroll-target="#sec-041"><span class="header-section-number">3.1</span> Principe de base</a>
+<a href="#sec-041" id="toc-sec-041" class="nav-link active" data-scroll-target="#sec-041"><span class="header-section-number">4.1</span> Principe de base</a>
   <ul class="collapse">
-<li><a href="#sec-0411" id="toc-sec-0411" class="nav-link" data-scroll-target="#sec-0411"><span class="header-section-number">3.1.1</span> Pourquoi recourir à une régression géographiquement pondérée?</a></li>
-  <li><a href="#sec-0412" id="toc-sec-0412" class="nav-link" data-scroll-target="#sec-0412"><span class="header-section-number">3.1.2</span> Formulation de la GWR</a></li>
+<li><a href="#sec-0411" id="toc-sec-0411" class="nav-link" data-scroll-target="#sec-0411"><span class="header-section-number">4.1.1</span> Pourquoi recourir à une régression géographiquement pondérée?</a></li>
+  <li><a href="#sec-0412" id="toc-sec-0412" class="nav-link" data-scroll-target="#sec-0412"><span class="header-section-number">4.1.2</span> Formulation de la GWR</a></li>
+  <li><a href="#sec-0413" id="toc-sec-0413" class="nav-link" data-scroll-target="#sec-0413"><span class="header-section-number">4.1.3</span> Exemple applicatif de la GWR</a></li>
   </ul>
 </li>
   <li>
-<a href="#sec-042" id="toc-sec-042" class="nav-link" data-scroll-target="#sec-042"><span class="header-section-number">3.2</span> Mise en œuvre et analyse dans R</a>
+<a href="#sec-042" id="toc-sec-042" class="nav-link" data-scroll-target="#sec-042"><span class="header-section-number">4.2</span> Mise en œuvre et analyse dans R</a>
   <ul class="collapse">
-<li><a href="#sec-0421" id="toc-sec-0421" class="nav-link" data-scroll-target="#sec-0421"><span class="header-section-number">3.2.1</span> Définition de la taille de la zone d’influence</a></li>
-  <li><a href="#sec-0422" id="toc-sec-0422" class="nav-link" data-scroll-target="#sec-0422"><span class="header-section-number">3.2.2</span> Réalisation de la GWR</a></li>
-  <li><a href="#sec-0423" id="toc-sec-0423" class="nav-link" data-scroll-target="#sec-0423"><span class="header-section-number">3.2.3</span> Comparaison des modèles MCO et GWR</a></li>
-  <li><a href="#sec-0424" id="toc-sec-0424" class="nav-link" data-scroll-target="#sec-0424"><span class="header-section-number">3.2.4</span> Cartographie des résultats du modèle GWR</a></li>
+<li><a href="#sec-0421" id="toc-sec-0421" class="nav-link" data-scroll-target="#sec-0421"><span class="header-section-number">4.2.1</span> GWR avec le <em>package</em> <code>spgwr</code></a></li>
+  <li><a href="#sec-0422" id="toc-sec-0422" class="nav-link" data-scroll-target="#sec-0422"><span class="header-section-number">4.2.2</span> GWR avec le <em>package</em> <code>GWmodel</code></a></li>
   </ul>
 </li>
-  <li><a href="#sec-043" id="toc-sec-043" class="nav-link" data-scroll-target="#sec-043"><span class="header-section-number">3.3</span> GWR classiques pour d’autres distributions</a></li>
-  <li><a href="#sec-044" id="toc-sec-044" class="nav-link" data-scroll-target="#sec-044"><span class="header-section-number">3.4</span> Limites et critiques des GWR</a></li>
-  <li><a href="#sec-045" id="toc-sec-045" class="nav-link" data-scroll-target="#sec-045"><span class="header-section-number">3.5</span> Quiz de révision</a></li>
-  <li><a href="#sec-046" id="toc-sec-046" class="nav-link" data-scroll-target="#sec-046"><span class="header-section-number">3.6</span> Exercices de révision</a></li>
+  <li><a href="#sec-043" id="toc-sec-043" class="nav-link" data-scroll-target="#sec-043"><span class="header-section-number">4.3</span> GWR classiques pour d’autres distributions</a></li>
+  <li><a href="#sec-044" id="toc-sec-044" class="nav-link" data-scroll-target="#sec-044"><span class="header-section-number">4.4</span> Limites et critiques des GWR</a></li>
+  <li><a href="#sec-045" id="toc-sec-045" class="nav-link" data-scroll-target="#sec-045"><span class="header-section-number">4.5</span> Quiz de révision</a></li>
+  <li><a href="#sec-046" id="toc-sec-046" class="nav-link" data-scroll-target="#sec-046"><span class="header-section-number">4.6</span> Exercices de révision</a></li>
   </ul><div class="toc-actions"><ul><li><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<h1 class="title"><span id="sec-chap04" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Régressions géographiquement pondérées classiques</span></span></h1>
+<h1 class="title"><span id="sec-chap04" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Régressions géographiquement pondérées classiques</span></span></h1>
 </div>
 
 
@@ -316,6 +322,7 @@ window.Quarto = {
 <li>Comprendre pourquoi utiliser une GWR.</li>
 <li>Assimiler les principes fondamentaux d’une GWR classique (distribution gaussienne).</li>
 <li>Analyser les résultats produits par une GWR.</li>
+<li>Saisir que la GWR est un outil exploratoire intéressant, comprenant toutefois plusieurs limites et critiques importantes.</li>
 <li>Mettre en pratique une GWR dans R.</li>
 </ul>
 </div>
@@ -342,7 +349,7 @@ window.Quarto = {
 <li>
 <code>tmap</code> pour les cartes.</li>
 <li>
-<code>ggplot2</code> pour construire des graphiques.</li>
+<code>ggplot2</code> et <code>ggpubr</code> pour construire des graphiques.</li>
 <li>
 <code>corrplot</code> et <code>GGally</code> pour créer des graphiques de matrices de corrélation.</li>
 </ul>
@@ -358,18 +365,18 @@ window.Quarto = {
 </ul>
 </div>
 </div>
-<section id="sec-041" class="level2" data-number="3.1"><h2 data-number="3.1" class="anchored" data-anchor-id="sec-041">
-<span class="header-section-number">3.1</span> Principe de base</h2>
-<section id="sec-0411" class="level3" data-number="3.1.1"><h3 data-number="3.1.1" class="anchored" data-anchor-id="sec-0411">
-<span class="header-section-number">3.1.1</span> Pourquoi recourir à une régression géographiquement pondérée?</h3>
-<p>Dans le <a href="02-ModelesEconometrieSpatiale.html" class="quarto-xref">chapitre&nbsp;<span>1</span></a>, nous avons vu que les modèles d’économétrie spatiale visent à contrôler la <strong>dépendance spatiale</strong> d’un modèle de régression classique (MCO), afin d’améliorer l’estimation des coefficients de régression. L’objectif des modèles de régression géographiquement pondérée est différent&nbsp;: ils visent à analyser les variations spatiales de la relation entre la variable dépendante et les variables indépendantes. Autrement dit, les modèles GWR visent à explorer <strong>l’instabilité spatiale du modèle MCO</strong> afin d’analyser localement la relation entre la variable dépendante et les variables indépendantes. Pour une description détaillée en français de la GWR, consultez Apparicio <em>et al.</em> <span class="citation" data-cites="apparicio2007modelisation">(<a href="references.html#ref-apparicio2007modelisation" role="doc-biblioref">2007</a>)</span>.</p>
-</section><section id="sec-0412" class="level3" data-number="3.1.2"><h3 data-number="3.1.2" class="anchored" data-anchor-id="sec-0412">
-<span class="header-section-number">3.1.2</span> Formulation de la GWR</h3>
+<section id="sec-041" class="level2" data-number="4.1"><h2 data-number="4.1" class="anchored" data-anchor-id="sec-041">
+<span class="header-section-number">4.1</span> Principe de base</h2>
+<section id="sec-0411" class="level3" data-number="4.1.1"><h3 data-number="4.1.1" class="anchored" data-anchor-id="sec-0411">
+<span class="header-section-number">4.1.1</span> Pourquoi recourir à une régression géographiquement pondérée?</h3>
+<p>Dans le <a href="02-ModelesEconometrieSpatiale.html" class="quarto-xref">chapitre&nbsp;<span>2</span></a>, nous avons vu que les modèles d’économétrie spatiale visent à contrôler la <strong>dépendance spatiale</strong> d’un modèle de régression classique (MCO), afin d’améliorer l’estimation des coefficients de régression. L’objectif des modèles de régression géographiquement pondérée est différent&nbsp;: ils visent à analyser les variations spatiales de la relation entre la variable dépendante et les variables indépendantes. Autrement dit, les modèles GWR visent à explorer <strong>l’instabilité spatiale du modèle MCO</strong> afin d’analyser localement la relation entre la variable dépendante et les variables indépendantes. Pour une description détaillée en français de la GWR, consultez Apparicio <em>et al.</em> <span class="citation" data-cites="apparicio2007modelisation">(<a href="references.html#ref-apparicio2007modelisation" role="doc-biblioref">2007</a>)</span>.</p>
+</section><section id="sec-0412" class="level3" data-number="4.1.2"><h3 data-number="4.1.2" class="anchored" data-anchor-id="sec-0412">
+<span class="header-section-number">4.1.2</span> Formulation de la GWR</h3>
 <p>Contrairement à la régression linéaire classique et aux modèles spatiaux autorégressifs qui produisent une équation pour l’ensemble du tableau de données, la GWR produit une équation pour chaque unité spatiale <em>i</em> et ainsi, des valeurs locales de R<sup>2</sup>, <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_k\)</span>, <em>t</em> de Student, etc. La résolution de cette équation de régression locale est aussi basée sur la méthode des moindres carrés et sur une matrice de pondération W(i) dont les valeurs décroissent en fonction de la distance séparant les unités <em>i</em> et <em>j</em>. Autrement dit, plus <em>j</em> est proche de <em>i</em>, plus sa pondération est élevée et donc plus son «&nbsp;rôle&nbsp;» dans la détermination de l’équation de régression locale de <em>i</em> est important.</p>
-<p>De la sorte, la GWR est une extension de la régression linéaire multiple classique où <span class="math inline">\((u_i, v_i)\)</span> représente les coordonnées géographiques du centroïde de l’unité spatiale et où les paramètres <span class="math inline">\(\beta_0\)</span> et <span class="math inline">\(\beta_k\)</span> peuvent varier dans l’espace (<a href="#eq-GWR" class="quarto-xref">équation&nbsp;<span>3.1</span></a>).</p>
+<p>De la sorte, la GWR est une extension de la régression linéaire multiple classique où <span class="math inline">\((u_i, v_i)\)</span> représente les coordonnées géographiques du centroïde de l’unité spatiale et où les paramètres <span class="math inline">\(\beta_0\)</span> et <span class="math inline">\(\beta_k\)</span> peuvent varier dans l’espace (<a href="#eq-GWR" class="quarto-xref">équation&nbsp;<span>4.1</span></a>).</p>
 <p><span id="eq-GWR"><span class="math display">\[
 y_i = \beta_0(u_i, v_i)+ \sum_{j=1}^k \beta_j(u_i, v_i)x_{ij}+ \epsilon_i
-\tag{3.1}\]</span></span></p>
+\tag{4.1}\]</span></span></p>
 <p>avec&nbsp;:</p>
 <ul>
 <li>
@@ -385,13 +392,13 @@ y_i = \beta_0(u_i, v_i)+ \sum_{j=1}^k \beta_j(u_i, v_i)x_{ij}+ \epsilon_i
 <li>
 <span class="math inline">\(\epsilon_i\)</span>, le terme d’erreur pour l’unité spatiale <em>i</em>.</li>
 </ul>
-<p>Fotheringham <em>et al.</em> <span class="citation" data-cites="fotheringham2003geographically">(<a href="references.html#ref-fotheringham2003geographically" role="doc-biblioref">2003</a>)</span> proposent deux principales fonctions <em>kernel</em> pour définir la pondération W(i) dans le modèle GWR&nbsp;: une fonction gaussienne (<a href="#eq-kernelgaussien" class="quarto-xref">équation&nbsp;<span>3.2</span></a>) et une fonction bicarrée (<a href="#eq-kernelbicarree" class="quarto-xref">équation&nbsp;<span>3.3</span></a>) où <span class="math inline">\(d_{ij}\)</span> représente la distance euclidienne entre les points <em>i</em> et <em>j</em> et <em>b</em>, le rayon de zone d’influence autour du point <em>i</em> (<em>bandwidth</em>). Il existe une différence fondamentale entre les deux&nbsp;: la fonction gaussienne accorde un poids non nul à tous les points de l’espace d’étude aussi loin soient-ils, tandis que la fonction bicarrée ne tient pas compte des points distants à plus de <em>b</em> mètres de <em>i</em>, tel qu’illustré à la <a href="#fig-GWRKernels" class="quarto-xref">figure&nbsp;<span>3.1</span></a> avec une valeur fixée à 5000&nbsp;mètres en guise d’exemple.</p>
+<p>Fotheringham <em>et al.</em> <span class="citation" data-cites="fotheringham2003geographically">(<a href="references.html#ref-fotheringham2003geographically" role="doc-biblioref">2003</a>)</span> proposent deux principales fonctions <em>kernel</em> pour définir la pondération W(i) dans le modèle GWR&nbsp;: une fonction gaussienne (<a href="#eq-kernelgaussien" class="quarto-xref">équation&nbsp;<span>4.2</span></a>) et une fonction bicarrée (<a href="#eq-kernelbicarree" class="quarto-xref">équation&nbsp;<span>4.3</span></a>) où <span class="math inline">\(d_{ij}\)</span> représente la distance euclidienne entre les points <em>i</em> et <em>j</em> et <em>b</em>, le rayon de zone d’influence autour du point <em>i</em> (<em>bandwidth</em>). Il existe une différence fondamentale entre les deux&nbsp;: la fonction gaussienne accorde un poids non nul à tous les points de l’espace d’étude aussi loin soient-ils, tandis que la fonction bicarrée ne tient pas compte des points distants à plus de <em>b</em> mètres de <em>i</em>, tel qu’illustré à la <a href="#fig-GWRKernels" class="quarto-xref">figure&nbsp;<span>4.1</span></a> avec une valeur fixée à 5000&nbsp;mètres en guise d’exemple.</p>
 <p><span id="eq-kernelgaussien"><span class="math display">\[
-w_{ij} = exp[-.5(d_{ij}/b)^2]
-\tag{3.2}\]</span></span></p>
+w_{ij} = \exp\left(-\frac{1}{2}\left(\frac{d_{ij}}{b}\right)^2\right)
+\tag{4.2}\]</span></span></p>
 <p><span id="eq-kernelbicarree"><span class="math display">\[
-w_{ij} = [1-(d_{ij}/b)^2]^2 \text{ si } d_{ij}&lt; b \text{, sinon } w_{ij}=0
-\tag{3.3}\]</span></span></p>
+w_{ij} = \left(1 - \left(\frac{d_{ij}}{b}\right)^2\right)^2 \text{ si } d_{ij}&lt; b \text{, sinon } w_{ij}=0
+\tag{4.3}\]</span></span></p>
 <div class="bloc_aller_loin">
 <div class="bloc_aller_loin-header">
 <div class="bloc_aller_loin-icon">
@@ -400,13 +407,16 @@ w_{ij} = [1-(d_{ij}/b)^2]^2 \text{ si } d_{ij}&lt; b \text{, sinon } w_{ij}=0
 <p><strong>Autres fonctions Kernel pour la GWR</strong></p>
 </div>
 <div class="bloc_aller_loin-body">
-<p>Outre la fonction Kernel gaussienne et bicarrée, il est aussi possible d’utiliser des fonctions exponentielle (<a href="#eq-kernelexponentielle" class="quarto-xref">équation&nbsp;<span>3.4</span></a>) et tricube (<a href="#eq-kerneltricube" class="quarto-xref">équation&nbsp;<span>3.5</span></a>), implémentées dans les fonctions <code>bw.gw</code> et <code>gwr.basic</code> du <em>package</em> <code>GWmodel</code>.</p>
+<p>Outre les fonctions Kernel gaussienne et bicarrée, il est aussi possible d’utiliser des fonctions exponentielle (<a href="#eq-kernelexponentielle" class="quarto-xref">équation&nbsp;<span>4.4</span></a>) et tricube (<a href="#eq-kerneltricube" class="quarto-xref">équation&nbsp;<span>4.5</span></a>), et Boxcar (<a href="#eq-kernelboxcar" class="quarto-xref">équation&nbsp;<span>4.6</span></a>) implémentées dans les fonctions <code>bw.gw</code> et <code>gwr.basic</code> du <em>package</em> <code>GWmodel</code>.</p>
 <p><span id="eq-kernelexponentielle"><span class="math display">\[
-w_{ij} = exp[-d_{ij}/b)]
-\tag{3.4}\]</span></span></p>
+w_{ij} = \exp\left(-\frac{d_{ij}}{b}\right)
+\tag{4.4}\]</span></span></p>
 <p><span id="eq-kerneltricube"><span class="math display">\[
-w_{ij} = [1-(d_{ij}/b)^3]^3 \text{ si } d_{ij}&lt; b \text{, sinon } w_{ij}=0
-\tag{3.5}\]</span></span></p>
+w_{ij} = \left(1 - \left(\frac{d_{ij}}{b}\right)^3\right)^3 \text{ si } d_{ij}&lt; b \text{, sinon } w_{ij}=0
+\tag{4.5}\]</span></span></p>
+<p><span id="eq-kernelboxcar"><span class="math display">\[
+w_{ij} = 1 \text{ si } d_{ij}&lt; b \text{, sinon } w_{ij}=0
+\tag{4.6}\]</span></span></p>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
@@ -416,23 +426,197 @@ w_{ij} = [1-(d_{ij}/b)^3]^3 \text{ si } d_{ij}&lt; b \text{, sinon } w_{ij}=0
 <img src="04-GWRClassique_files/figure-html/fig-GWRKernels-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-GWRKernels-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3.1: Fonctions kernel pour définir la matrice de pondération W(i)
+Figure&nbsp;4.1: Fonctions kernel pour définir la matrice de pondération W(i)
 </figcaption></figure>
 </div>
 </div>
 </div>
 <p>Dans le modèle GWR, la valeur de <em>b</em> est soit fixée par la personne utilisatrice, soit optimisée avec la valeur de CV (<em>cross-validation</em>) ou celle de l’AIC. Notez qu’il est possible d’optimiser la taille de la zone d’influence à partir de la distance euclidienne ou du nombre de plus proches voisins.</p>
-</section></section><section id="sec-042" class="level2" data-number="3.2"><h2 data-number="3.2" class="anchored" data-anchor-id="sec-042">
-<span class="header-section-number">3.2</span> Mise en œuvre et analyse dans R</h2>
-<p>Il existe deux principaux <em>packages</em> pour mettre en œuvre des modèles GWR, soit <code>spgwr</code> <span class="citation" data-cites="packagesGWR">(<a href="references.html#ref-packagesGWR" role="doc-biblioref">Bivand et Yu 2023</a>)</span> et <code>GWmodel</code> <span class="citation" data-cites="GWModelPackage1 GWModelPackage2">(<a href="references.html#ref-GWModelPackage1" role="doc-biblioref">Isabella Gollini et al. 2015</a>; <a href="references.html#ref-GWModelPackage2" role="doc-biblioref">Binbin Lu et al. 2014</a>)</span>. Dans ce chapitre, nous utiliserons le <em>package</em> <code>spgwr</code> <span class="citation" data-cites="packagesGWR">(<a href="references.html#ref-packagesGWR" role="doc-biblioref">Bivand et Yu 2023</a>)</span>. La construction d’un modèle GWR comprend les étapes suivantes&nbsp;:</p>
+</section><section id="sec-0413" class="level3" data-number="4.1.3"><h3 data-number="4.1.3" class="anchored" data-anchor-id="sec-0413">
+<span class="header-section-number">4.1.3</span> Exemple applicatif de la GWR</h3>
+<p>Pour démontrer l’utilité de la GWR comme outil d’exploration de l’instabilité spatiale d’un modèle classique, nous utilisons le jeu de données sur Lyon (<a href="01-NotionsDeBase.html#sec-0111" class="quarto-xref">section&nbsp;<span>1.1.1</span></a>). Le modèle de régression est construit avec comme variable dépendante le dioxyde d’azote (NO<sub>2</sub>) et cinq variables sociodémographiques (<a href="01-NotionsDeBase.html#sec-0111" class="quarto-xref">section&nbsp;<span>1.1.1</span></a>).</p>
+<section id="sec-04131" class="level4" data-number="4.1.3.1"><h4 data-number="4.1.3.1" class="anchored" data-anchor-id="sec-04131">
+<span class="header-section-number">4.1.3.1</span> Résultats du modèle global</h4>
+<p>Les résultats de la régression linéaire multiple (modèle global) sont présentés au <a href="#tbl-regressionMCO" class="quarto-xref">tableau&nbsp;<span>4.1</span></a>. Les variables sociodémographiques (variables indépendantes) introduites dans le modèle expliquent 28,3&nbsp;% de la variance du dioxyde d’azote (variable dépendante). La constante et tous les coefficients de régression du modèle sont significatifs (p&nbsp;&lt;&nbsp;0,001). Toutes choses étant égales par ailleurs, le pourcentage d’immigrants est associé positivement avec le dioxyde d’azote (<span class="math inline">\(\beta\)</span>&nbsp;=&nbsp;0,283), ce qui traduit une certaine iniquité environnementale pour ce groupe de population. À l’inverse, toutes les autres variables sont associées négativement.</p>
+<div class="cell">
+<div id="tbl-regressionMCO" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-regressionMCO-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tableau&nbsp;4.1: Résultats du modèle global (régression linéaire multiple)
+</figcaption><div aria-describedby="tbl-regressionMCO-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table do-not-create-environment cell caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead><tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Variable</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Coef.</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Erreur type</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">t</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Constante</td>
+<td style="text-align: right;">49,433</td>
+<td style="text-align: right;">2,995</td>
+<td style="text-align: right;">16,502</td>
+<td style="text-align: right;">0,000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pct0_14</td>
+<td style="text-align: right;">-0,534</td>
+<td style="text-align: right;">0,063</td>
+<td style="text-align: right;">-8,461</td>
+<td style="text-align: right;">0,000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Pct_65</td>
+<td style="text-align: right;">-0,150</td>
+<td style="text-align: right;">0,056</td>
+<td style="text-align: right;">-2,674</td>
+<td style="text-align: right;">0,008</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pct_Img</td>
+<td style="text-align: right;">0,283</td>
+<td style="text-align: right;">0,051</td>
+<td style="text-align: right;">5,532</td>
+<td style="text-align: right;">0,000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Pct_brevet</td>
+<td style="text-align: right;">-0,240</td>
+<td style="text-align: right;">0,037</td>
+<td style="text-align: right;">-6,451</td>
+<td style="text-align: right;">0,000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">NivVieMed</td>
+<td style="text-align: right;">-0,316</td>
+<td style="text-align: right;">0,102</td>
+<td style="text-align: right;">-3,107</td>
+<td style="text-align: right;">0,002</td>
+</tr>
+</tbody>
+<tfoot><tr class="odd">
+<td style="text-align: left; padding: 0;">
+<sup></sup> Nombre d'observations = 506. R carré = 0,2832. R carré ajusté = 0,276.</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr></tfoot>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>L’objectif de la construction d’un modèle GWR est d’examiner l’instabilité spatiale de ce modèle, en analysant comment les associations observées dans le modèle global entre les cinq variables sociodémographiques et le dioxyde d’azote varient dans l’espace.</p>
+</section><section id="sec-04132" class="level4" data-number="4.1.3.2"><h4 data-number="4.1.3.2" class="anchored" data-anchor-id="sec-04132">
+<span class="header-section-number">4.1.3.2</span> Résultats du modèle GWR</h4>
+<p><strong>Définition de la zone d’influence</strong></p>
+<p>Puisque la superficie des 506&nbsp;IRIS varie considérablement (avec de petits IRIS au centre de l’agglomération et de très grands IRIS en périphérie, <a href="01-NotionsDeBase.html#fig-datacarto" class="quarto-xref">figure&nbsp;<span>1.1</span></a>), nous préférons optimiser la zone d’influence (<span class="math inline">\(b\)</span>) avec le nombre de plus proches voisins et non la distance euclidienne avec l’approche <em>cross-validation</em>. Le résultat final de l’optimisation du nombre de plus proches voisins est de 92.</p>
+<p><strong>Comparaison des modèle global et GWR</strong></p>
+<p>L’analyse de variance entre les résidus des deux modèles démontre que le modèle GWR améliore de façon significative la capacité prédictive du modèle de régression globale (<a href="#tbl-GWRAnova" class="quarto-xref">tableau&nbsp;<span>4.2</span></a>). Les valeurs de R<sup>2</sup> passent d’ailleurs de 0,283 pour le modèle global à 0,784 pour le modèle GWR.</p>
+<div class="cell">
+<div id="tbl-GWRAnova" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-GWRAnova-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tableau&nbsp;4.2: Analyse de variance entre les modèles global et GWR
+</figcaption><div aria-describedby="tbl-GWRAnova-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table do-not-create-environment cell caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead><tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">dl</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Somme des carrés</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Moyenne des carrés</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Valeur F</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Résidus du modèle global</td>
+<td style="text-align: right;">6,00</td>
+<td style="text-align: right;">22 346,02</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Modèle GWR</td>
+<td style="text-align: right;">101,13</td>
+<td style="text-align: right;">15 581,60</td>
+<td style="text-align: right;">154,08</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Résidus du modèle GWR</td>
+<td style="text-align: right;">398,87</td>
+<td style="text-align: right;">6 764,42</td>
+<td style="text-align: right;">16,96</td>
+<td style="text-align: right;">9,09</td>
+</tr>
+</tbody>
+<tfoot><tr class="odd">
+<td style="text-align: left; padding: 0;">
+<sup></sup> R carré du modèle global = 0,2832.R carré du modèle GWR = 0,7838.</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr></tfoot>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><strong>Cartographie des valeurs de <em>t</em></strong></p>
+<p>Afin de décrire les variations spatiales des associations entre les variables dépendantes et indépendantes, nous cartographions les valeurs de <em>t</em> pour chacune des cinq variables indépendantes (<a href="#fig-CartoR2ValT" class="quarto-xref">figure&nbsp;<span>4.2</span></a>). Pour ce faire, nous utilisons les seuils de ± 1,96, 2,58 et 3,29, indiquant des seuils de signification à 5 %, 1 % et 0,1 %. La cartographie des valeurs de <em>t</em> illustre clairement les variations spatiales de l’association entre les variables indépendantes et le dioxyde d’azote.</p>
+<p>Premièrement, le modèle global avait révélé que toutes les variables indépendantes étaient significativement associées au seuil de 0,1&nbsp;%, toutes choses étant égales par ailleurs. Or, localement certaines variables ne sont plus significatives au seuil de 5&nbsp;% (valeurs de <em>t</em> comprises entre -1,96 et 1,96), soit les IRIS en gris à la <a href="#fig-CartoR2ValT" class="quarto-xref">figure&nbsp;<span>4.2</span></a>. Par exemple, le pourcentage d’enfants de moins de 15&nbsp;ans est associé négativement au dioxyde d’azote uniquement dans la partie sud de l’agglomération.</p>
+<p>Deuxièmement, le sens de la relation, c’est-à-dire du coefficient et de sa valeur de <em>t</em> associé, change pour certaines variables indépendantes. Cela est particulièrement le cas de la variable <em>médiane du niveau de vie (milliers</em> d’euros) qui affiche des valeurs positives dans le centre-ville, mais des valeurs négatives en périphérie. Autrement dit, une hausse du niveau de vie des résidents est associée à une réduction du dioxyde d’azote dans les quartiers et municipalités périphériques de l’agglomération, mais à une augmentation dans les quartiers centraux.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-CartoR2ValT" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-CartoR2ValT-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-GWRClassique_files/figure-html/fig-CartoR2ValT-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-CartoR2ValT-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.2: Cartographie des valeurs de t : moins de 15 ans (%)
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p><strong>Cartographie du nombre de variables significative et de la variable plus significatives</strong></p>
+<p>Pour compléter l’exploration des résultats de la GWR, il est possible de répondre à deux dernières questions avec de nouvelles analyses cartographiques (<a href="#fig-CartoVISignif" class="quarto-xref">figure&nbsp;<span>4.3</span></a>)&nbsp;:</p>
+<ul>
+<li><p>Quelle est la variable indépendante la plus significative localement&nbsp;?</p></li>
+<li><p>Comment de variables indépendantes sont localement significatives (au seuil de 5&nbsp;%)&nbsp;?</p></li>
+</ul>
+<p>Les deux variables les plus significatives localement sont celles relatives au niveau de vie à la population de moins de 15&nbsp;ans (toutes deux 124&nbsp;IRIS). Aussi, 159 modèles locaux ne présentent aucune variable significative au seuil retenu.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-CartoVISignif" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-CartoVISignif-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-GWRClassique_files/figure-html/fig-CartoVISignif-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-CartoVISignif-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.3: Variables indépendantes significatives du modèle GWR
+</figcaption></figure>
+</div>
+</div>
+</div>
+</section></section></section><section id="sec-042" class="level2" data-number="4.2"><h2 data-number="4.2" class="anchored" data-anchor-id="sec-042">
+<span class="header-section-number">4.2</span> Mise en œuvre et analyse dans R</h2>
+<p>Il existe deux principaux <em>packages</em> pour mettre en œuvre des modèles GWR, soit <code>spgwr</code> <span class="citation" data-cites="packagesGWR">(<a href="references.html#ref-packagesGWR" role="doc-biblioref">Bivand et Yu 2023</a>)</span> et <code>GWmodel</code> <span class="citation" data-cites="GWModelPackage1 GWModelPackage2">(<a href="references.html#ref-GWModelPackage1" role="doc-biblioref">Isabella Gollini et al. 2015</a>; <a href="references.html#ref-GWModelPackage2" role="doc-biblioref">Binbin Lu et al. 2014</a>)</span>. La construction d’un modèle GWR comprend les étapes suivantes&nbsp;:</p>
 <ol type="1">
 <li><p>Sélection de la taille de la zone d’influence (<em>bandwidth</em>) optimale.</p></li>
 <li><p>Réalisation de la GWR avec la taille de la zone d’influence optimale.</p></li>
 <li><p>Comparaison des modèles MCO et GWR.</p></li>
 <li><p>Cartographie des résultats du modèle GWR (R<sup>2</sup>, coefficients, valeurs de <em>t</em>, etc.).</p></li>
 </ol>
-<section id="sec-0421" class="level3" data-number="3.2.1"><h3 data-number="3.2.1" class="anchored" data-anchor-id="sec-0421">
-<span class="header-section-number">3.2.1</span> Définition de la taille de la zone d’influence</h3>
+<section id="sec-0421" class="level3" data-number="4.2.1"><h3 data-number="4.2.1" class="anchored" data-anchor-id="sec-0421">
+<span class="header-section-number">4.2.1</span> GWR avec le <em>package</em> <code>spgwr</code>
+</h3>
+<section id="sec-04211" class="level4" data-number="4.2.1.1"><h4 data-number="4.2.1.1" class="anchored" data-anchor-id="sec-04211">
+<span class="header-section-number">4.2.1.1</span> Définition de la taille de la zone d’influence</h4>
 <p>La sélection de la taille de la zone d’influence optimale est réalisée avec la fonction <code>gwr.sel</code> pour laquelle&nbsp;:</p>
 <ul>
 <li><p>le paramètre <code>gweight</code> permet de spécifier une fonction <em>kernel</em> gaussienne (<code>gwr.gauss</code>) ou bicarrée (<code>gwr.gauss</code>).</p></li>
@@ -449,7 +633,7 @@ Figure&nbsp;3.1: Fonctions kernel pour définir la matrice de pondération W(i)
 <span><span class="va">LyonIris</span><span class="op">$</span><span class="va">X</span> <span class="op">&lt;-</span> <span class="va">xy</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span></span>
 <span><span class="va">LyonIris</span><span class="op">$</span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="va">xy</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span></span>
 <span><span class="co">## Optimisation du nombre de voisins avec le CV</span></span>
-<span><span class="va">bwaCV.voisins</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/gwr.cv.html">gwr.sel</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span>  <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
+<span><span class="va">bwCV.voisins</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/gwr.cv.html">gwr.sel</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
 <span>                          data <span class="op">=</span> <span class="va">LyonIris</span>,</span>
 <span>                          method <span class="op">=</span> <span class="st">"cv"</span>,          <span class="co"># Méthode cv ou AIC</span></span>
 <span>                          gweight<span class="op">=</span><span class="va">gwr.bisquare</span>,   <span class="co"># gwr.gauss ou gwr.bisquare</span></span>
@@ -459,7 +643,7 @@ Figure&nbsp;3.1: Fonctions kernel pour définir la matrice de pondération W(i)
 <span>                          longlat <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>                          coords<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">$</span><span class="va">X</span>,<span class="va">LyonIris</span><span class="op">$</span><span class="va">Y</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">## Optimisation du nombre de voisins avec l'AIC</span></span>
-<span><span class="va">bwaAIC.voisins</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/gwr.cv.html">gwr.sel</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span>  <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
+<span><span class="va">bwaAIC.voisins</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/gwr.cv.html">gwr.sel</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
 <span>                          data <span class="op">=</span> <span class="va">LyonIris</span>,</span>
 <span>                          method <span class="op">=</span> <span class="st">"AIC"</span>,          <span class="co"># Méthode cv ou AIC</span></span>
 <span>                          gweight<span class="op">=</span><span class="va">gwr.bisquare</span>,    <span class="co"># gwr.gauss ou gwr.bisquare</span></span>
@@ -469,7 +653,7 @@ Figure&nbsp;3.1: Fonctions kernel pour définir la matrice de pondération W(i)
 <span>                          longlat <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>                          coords<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">$</span><span class="va">X</span>,<span class="va">LyonIris</span><span class="op">$</span><span class="va">Y</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">## Optimisation de la distance avec le CV</span></span>
-<span><span class="va">bwnaCV.dist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/gwr.cv.html">gwr.sel</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span>  <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
+<span><span class="va">bwnaCV.dist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/gwr.cv.html">gwr.sel</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
 <span>                           data <span class="op">=</span> <span class="va">LyonIris</span>,</span>
 <span>                           method <span class="op">=</span> <span class="st">"cv"</span>,     <span class="co"># méthode cv ou AIC</span></span>
 <span>                           gweight<span class="op">=</span><span class="va">gwr.Gauss</span>, <span class="co"># gwr.gauss ou gwr.bisquare</span></span>
@@ -491,8 +675,8 @@ Figure&nbsp;3.1: Fonctions kernel pour définir la matrice de pondération W(i)
 <span><span class="co">## Affichage des résultats d'optimisation </span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Sélection de la taille de la zone optimale (bandwidth)"</span>,</span>
 <span>    <span class="st">"\n avec le nombre de plus proches voisins :"</span>,</span>
-<span>    <span class="st">"\n  CV ="</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">bwaCV.voisins</span>,<span class="fl">4</span><span class="op">)</span>, <span class="st">"nombre de voisins ="</span>, </span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">bwaCV.voisins</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    <span class="st">"\n  CV ="</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">bwCV.voisins</span>,<span class="fl">4</span><span class="op">)</span>, <span class="st">"nombre de voisins ="</span>, </span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">bwCV.voisins</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    <span class="st">"\n  AIC ="</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">bwaAIC.voisins</span>,<span class="fl">4</span><span class="op">)</span>, <span class="st">"nombre de voisins ="</span>, </span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">bwaAIC.voisins</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    <span class="st">"\nSélection de la taille de la zone optimale (bandwidth) avec la distance :"</span>,</span>
@@ -509,8 +693,8 @@ Sélection de la taille de la zone optimale (bandwidth) avec la distance :
 </div>
 </div>
 <p>Les résultats ci-dessus montrent que le nombre de plus proches voisins pourrait être de 92 selon l’approche <em>cross-validation</em> et de 54 selon la méthode basée sur l’AIC. Si la valeur de <em>b</em> est basée sur la distance, elle serait alors optimale à 1315 et 1662&nbsp;mètres selon les deux méthodes.</p>
-</section><section id="sec-0422" class="level3" data-number="3.2.2"><h3 data-number="3.2.2" class="anchored" data-anchor-id="sec-0422">
-<span class="header-section-number">3.2.2</span> Réalisation de la GWR</h3>
+</section><section id="sec-04212" class="level4" data-number="4.2.1.2"><h4 data-number="4.2.1.2" class="anchored" data-anchor-id="sec-04212">
+<span class="header-section-number">4.2.1.2</span> Réalisation de la GWR</h4>
 <p>Avec la fonction <code>gwr</code>, nous estimons un modèle GWR avec un <em>kernel</em> bicarré et un nombre optimisé de plus voisins selon la méthode CV, soit 92.</p>
 <div class="cell">
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Modèle global : régression linéaire multiple</span></span>
@@ -518,7 +702,7 @@ Sélection de la taille de la zone optimale (bandwidth) avec la distance :
 <span><span class="co"># Modèle GWR</span></span>
 <span><span class="va">Modele.GWR</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/gwr.html">gwr</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
 <span>              data <span class="op">=</span> <span class="va">LyonIris</span>,</span>
-<span>              adapt<span class="op">=</span><span class="va">bwaCV.voisins</span>,</span>
+<span>              adapt<span class="op">=</span><span class="va">bwCV.voisins</span>,</span>
 <span>              gweight<span class="op">=</span><span class="va">gwr.bisquare</span>,</span>
 <span>              hatmatrix<span class="op">=</span><span class="cn">TRUE</span>,</span>
 <span>              se.fit<span class="op">=</span><span class="cn">TRUE</span>,</span>
@@ -532,7 +716,7 @@ Sélection de la taille de la zone optimale (bandwidth) avec la distance :
 <pre><code>Call:
 gwr(formula = NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + 
     NivVieMed, data = LyonIris, coords = cbind(LyonIris$X, LyonIris$Y), 
-    gweight = gwr.bisquare, adapt = bwaCV.voisins, hatmatrix = TRUE, 
+    gweight = gwr.bisquare, adapt = bwCV.voisins, hatmatrix = TRUE, 
     longlat = FALSE, se.fit = TRUE)
 Kernel function: gwr.bisquare 
 Adaptive quantile: 0.1818192 (about 92 of 506 data points)
@@ -558,8 +742,8 @@ Residual sum of squares: 6764.424
 Quasi-global R2: 0.783008 </code></pre>
 </div>
 </div>
-</section><section id="sec-0423" class="level3" data-number="3.2.3"><h3 data-number="3.2.3" class="anchored" data-anchor-id="sec-0423">
-<span class="header-section-number">3.2.3</span> Comparaison des modèles MCO et GWR</h3>
+</section><section id="sec-04213" class="level4" data-number="4.2.1.3"><h4 data-number="4.2.1.3" class="anchored" data-anchor-id="sec-04213">
+<span class="header-section-number">4.2.1.3</span> Comparaison des modèles MCO et GWR</h4>
 <p>Le R<sup>2</sup> du modèle GWR est bien supérieur à celui du modèle classique MCO (0,783 contre 0,283).</p>
 <div class="cell">
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">R2.global</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">Modele.Global</span><span class="op">)</span><span class="op">$</span><span class="va">r.squared</span></span>
@@ -573,7 +757,7 @@ Quasi-global R2: 0.783008 </code></pre>
 R2 quasi-global (GWR) :  0.784</code></pre>
 </div>
 </div>
-<p>Fotheringham <em>et al.</em> <span class="citation" data-cites="fotheringham2003geographically">(<a href="references.html#ref-fotheringham2003geographically" role="doc-biblioref">2003</a>)</span> proposent plusieurs tests pour comparer les modèles GWR et classique qui sont implémentés dans le <em>package</em> <code>spgwr</code>&nbsp;: fonctions <code>anova(Modele.GWR)</code>, <code>anova(Modele.GWR, approx=TRUE)</code>, <code>BFC99.gwr.test(Modele.GWR)</code>, <code>BFC02.gwr.test(Modele.GWR)</code>, <code>LMZ.F1GWR.test(Modele.GWR)</code>, <code>LMZ.F2GWR.test(Modele.GWR)</code>. Si les valeurs de <em>p</em> de ces tests sont inférieures à 0,05, alors le modèle GWR améliore de façon significative la capacité prédictive du modèle de régression globale, ce que confirment les résultats ci-dessous.</p>
+<p>Fotheringham <em>et al.</em> <span class="citation" data-cites="fotheringham2003geographically">(<a href="references.html#ref-fotheringham2003geographically" role="doc-biblioref">2003</a>)</span> proposent plusieurs tests pour comparer les modèles GWR et classique qui sont implémentés dans le <em>package</em> <code>spgwr</code>&nbsp;: fonctions <code>BFC99.gwr.test(Modele.GWR)</code>, <code>BFC02.gwr.test(Modele.GWR)</code>, <code>LMZ.F1GWR.test(Modele.GWR)</code>, <code>LMZ.F2GWR.test(Modele.GWR)</code>. Si les valeurs de <em>p</em> de ces tests sont inférieures à 0,05, alors le modèle GWR améliore de façon significative la capacité prédictive du modèle de régression globale, ce que confirment les résultats ci-dessous.</p>
 <div class="cell">
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span><span class="op">(</span><span class="va">Modele.GWR</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -583,16 +767,31 @@ OLS Residuals     6.00 22346.0
 GWR Improvement 101.13 15581.6 154.078        
 GWR Residuals   398.87  6764.4  16.959  9.0854</code></pre>
 </div>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span><span class="op">(</span><span class="va">Modele.GWR</span>, approx <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/LMZ.F3GWR.test.html">BFC99.gwr.test</a></span><span class="op">(</span><span class="va">Modele.GWR</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Analysis of Variance Table 
-approximate degrees of freedom (only tr(S))
-                     Df  Sum Sq Mean Sq F value
-OLS Residuals     6.000 22346.0                
-GWR Improvement  75.533 15581.6 206.290        
-GWR Residuals   424.467  6764.4  15.936  12.945</code></pre>
+<pre><code>
+    Brunsdon, Fotheringham &amp; Charlton (1999) ANOVA
+
+data:  Modele.GWR
+F = 9.0854, df1 = 350.93, df2 = 430.81, p-value &lt; 2.2e-16
+alternative hypothesis: greater
+sample estimates:
+SS GWR improvement   SS GWR residuals 
+         15581.596           6764.424 </code></pre>
 </div>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/LMZ.F3GWR.test.html">LMZ.F1GWR.test</a></span><span class="op">(</span><span class="va">Modele.GWR</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/LMZ.F3GWR.test.html">BFC02.gwr.test</a></span><span class="op">(</span><span class="va">Modele.GWR</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Brunsdon, Fotheringham &amp; Charlton (2002, pp. 91-2) ANOVA
+
+data:  Modele.GWR
+F = 3.3035, df1 = 500.00, df2 = 398.87, p-value &lt; 2.2e-16
+alternative hypothesis: greater
+sample estimates:
+SS OLS residuals SS GWR residuals 
+       22346.021         6764.424 </code></pre>
+</div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/LMZ.F3GWR.test.html">LMZ.F1GWR.test</a></span><span class="op">(</span><span class="va">Modele.GWR</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Leung et al. (2000) F(1) test
@@ -604,7 +803,7 @@ sample estimates:
 SS OLS residuals SS GWR residuals 
        22346.021         6764.424 </code></pre>
 </div>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/LMZ.F3GWR.test.html">LMZ.F2GWR.test</a></span><span class="op">(</span><span class="va">Modele.GWR</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/LMZ.F3GWR.test.html">LMZ.F2GWR.test</a></span><span class="op">(</span><span class="va">Modele.GWR</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Leung et al. (2000) F(2) test
@@ -619,7 +818,7 @@ sample estimates:
 </div>
 <p>Un autre test (<code>LMZ.F3GWR.test</code>) permet de répondre à la question suivante&nbsp;: est-ce que les coefficients de régression du modèle GWR varient spatialement de façon significative? Les résultats ci-dessous démontrent que c’est le cas pour toutes les variables indépendantes et la constante (<em>p</em>&nbsp;&lt;&nbsp;0,001).</p>
 <div class="cell">
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/LMZ.F3GWR.test.html">LMZ.F3GWR.test</a></span><span class="op">(</span><span class="va">Modele.GWR</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/LMZ.F3GWR.test.html">LMZ.F3GWR.test</a></span><span class="op">(</span><span class="va">Modele.GWR</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Leung et al. (2000) F(3) test
@@ -635,9 +834,9 @@ NivVieMed        3.6926       138.8118           430.81 &lt; 2.2e-16 ***
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-<p>Pour comparer <strong>la dépendance spatiale</strong> des deux modèles (MCO versus GWR), nous calculons le <em>I</em> de Moran sur leurs résidus avec une matrice de contiguïté standardisée selon le partage d’un segment (<em>Rook</em>). Avec une valeur du <em>I</em> de Moran de 0,587 (<em>p</em>&nbsp;&lt;&nbsp;0,001), les résidus du modèle global (MCO) sont fortement autocorrélés spatialement, traduisant ainsi un problème de dépendance spatiale du modèle. Bien qu’elle soit toujours significative, l’autocorrélation spatiale des résidus du modèle GWR est bien plus faible (0,275, <em>p</em>&nbsp;&lt;&nbsp;0,001). La cartographie des résidus des deux modèles à la <a href="#fig-ResidusMCOGWR" class="quarto-xref">figure&nbsp;<span>3.2</span></a> corrobore ces résultats.</p>
+<p>Pour comparer <strong>la dépendance spatiale</strong> des deux modèles (MCO versus GWR), nous calculons le <em>I</em> de Moran sur leurs résidus avec une matrice de contiguïté standardisée selon le partage d’un segment (<em>Rook</em>). Avec une valeur du <em>I</em> de Moran de 0,587 (<em>p</em>&nbsp;&lt;&nbsp;0,001), les résidus du modèle global (MCO) sont fortement autocorrélés spatialement, traduisant ainsi un problème de dépendance spatiale du modèle. Bien qu’elle soit toujours significative, l’autocorrélation spatiale des résidus du modèle GWR est bien plus faible (0,275, <em>p</em>&nbsp;&lt;&nbsp;0,001). La cartographie des résidus des deux modèles à la <a href="#fig-ResidusMCOGWR" class="quarto-xref">figure&nbsp;<span>4.4</span></a> corrobore ces résultats.</p>
 <div class="cell">
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/spdep/">spdep</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/spdep/">spdep</a></span><span class="op">)</span></span>
 <span><span class="co">## Résidus des modèles global (MCO) et GWR</span></span>
 <span><span class="va">LyonIris</span><span class="op">$</span><span class="va">MCO.Residus</span> <span class="op">&lt;-</span> <span class="va">Modele.Global</span><span class="op">$</span><span class="va">residuals</span></span>
 <span><span class="va">LyonIris</span><span class="op">$</span><span class="va">GWR.Residus</span> <span class="op">&lt;-</span> <span class="va">Modele.GWR</span><span class="op">$</span><span class="va">SDF</span><span class="op">$</span><span class="va">pred</span> <span class="op">-</span> <span class="va">Modele.GWR</span><span class="op">$</span><span class="va">lm</span><span class="op">$</span><span class="va">y</span></span>
@@ -659,7 +858,7 @@ sample estimates:
 Moran I statistic       Expectation          Variance 
      0.5775768402     -0.0019801980      0.0007420591 </code></pre>
 </div>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># I de Moran sur les résidus du modèle GWR (MCO)</span></span>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># I de Moran sur les résidus du modèle GWR (MCO)</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.test.html">moran.test</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">$</span><span class="va">GWR.Residus</span>, <span class="va">W.Rook</span>, randomisation <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -676,7 +875,7 @@ Moran I statistic       Expectation          Variance
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Cartographie des résidus du modèle MCO</span></span>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Cartographie des résidus du modèle MCO</span></span>
 <span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tmap_mode.html">tmap_mode</a></span><span class="op">(</span><span class="st">"plot"</span><span class="op">)</span></span>
 <span><span class="va">Carte1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span><span class="op">+</span></span>
 <span>            <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_borders</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"gray25"</span>, lwd<span class="op">=</span><span class="fl">.5</span><span class="op">)</span><span class="op">+</span></span>
@@ -705,16 +904,16 @@ Moran I statistic       Expectation          Variance
 <img src="04-GWRClassique_files/figure-html/fig-ResidusMCOGWR-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ResidusMCOGWR-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3.2: Cartographie des résidus des modèles MCO et GWR
+Figure&nbsp;4.4: Cartographie des résidus des modèles MCO et GWR
 </figcaption></figure>
 </div>
 </div>
 </div>
-</section><section id="sec-0424" class="level3" data-number="3.2.4"><h3 data-number="3.2.4" class="anchored" data-anchor-id="sec-0424">
-<span class="header-section-number">3.2.4</span> Cartographie des résultats du modèle GWR</h3>
+</section><section id="sec-04214" class="level4" data-number="4.2.1.4"><h4 data-number="4.2.1.4" class="anchored" data-anchor-id="sec-04214">
+<span class="header-section-number">4.2.1.4</span> Cartographie des résultats du modèle GWR</h4>
 <p>Dans un premier temps, nous ajoutons les valeurs locales des R<sup>2</sup>, des coefficients de régression et des valeurs de <em>t</em> dans la couche <code>sf</code>. Notez que les résultats locaux de la GWR sont stockés dans l’objet <code>Modele.GWR$SDF</code>.</p>
 <div class="cell">
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Récupération du R carré local</span></span>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Récupération du R carré local</span></span>
 <span><span class="va">LyonIris</span><span class="op">$</span><span class="va">GWR.R2</span> <span class="op">&lt;-</span> <span class="va">Modele.GWR</span><span class="op">$</span><span class="va">SDF</span><span class="op">$</span><span class="va">localR2</span></span>
 <span><span class="co">## Récupération des coefficients de régression et calcul des valeurs de t locales</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">Modele.GWR</span><span class="op">$</span><span class="va">SDF</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -728,7 +927,7 @@ Figure&nbsp;3.2: Cartographie des résidus des modèles MCO et GWR
 [19] "Pct0_14_se_EDF"     "Pct_65_se_EDF"      "Pct_Img_se_EDF"    
 [22] "Pct_brevet_se_EDF"  "NivVieMed_se_EDF"   "pred.se"           </code></pre>
 </div>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">VarsIndep</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Pct0_14"</span>, <span class="st">"Pct_65"</span>, <span class="st">"Pct_Img"</span>, <span class="st">"Pct_brevet"</span>, <span class="st">"NivVieMed"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">VarsIndep</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Pct0_14"</span>, <span class="st">"Pct_65"</span>, <span class="st">"Pct_Img"</span>, <span class="st">"Pct_brevet"</span>, <span class="st">"NivVieMed"</span><span class="op">)</span></span>
 <span><span class="kw">for</span><span class="op">(</span><span class="va">e</span> <span class="kw">in</span> <span class="va">VarsIndep</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="co"># Nom des nouvelles variables</span></span>
 <span>  <span class="va">var.coef</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"GWR."</span>, <span class="st">"B_"</span>, <span class="va">e</span><span class="op">)</span></span>
@@ -739,24 +938,24 @@ Figure&nbsp;3.2: Cartographie des résidus des modèles MCO et GWR
 <span>  <span class="va">LyonIris</span><span class="op">[[</span><span class="va">var.t</span><span class="op">]</span><span class="op">]</span>    <span class="op">&lt;-</span> <span class="va">Modele.GWR</span><span class="op">$</span><span class="va">SDF</span><span class="op">[[</span><span class="va">e</span><span class="op">]</span><span class="op">]</span> <span class="op">/</span> <span class="va">Modele.GWR</span><span class="op">$</span><span class="va">SDF</span><span class="op">[[</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">e</span>, <span class="st">"_se"</span><span class="op">)</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="op">}</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="sec-04241" class="level4" data-number="3.2.4.1"><h4 data-number="3.2.4.1" class="anchored" data-anchor-id="sec-04241">
-<span class="header-section-number">3.2.4.1</span> Cartographie et analyse des R<sup>2</sup> locaux</h4>
+<section id="sec-042141" class="level5" data-number="4.2.1.4.1"><h5 data-number="4.2.1.4.1" class="anchored" data-anchor-id="sec-042141">
+<span class="header-section-number">4.2.1.4.1</span> Cartographie et analyse des R<sup>2</sup> locaux</h5>
 <p>Les deux lignes de code ci-dessous permettent d’obtenir un résumé sommaire des statistiques descriptives (minimum, quartiles 1 à 3, moyenne et maximum) des valeurs locales de R<sup>2</sup>, mais aussi de constater qu’elles varient de 0,19 à 0,74 pour 95&nbsp;% des 506&nbsp;observations (IRIS).</p>
 <div class="cell">
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">$</span><span class="va">GWR.R2</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">$</span><span class="va">GWR.R2</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
  0.0888  0.4205  0.5281  0.5081  0.6322  0.7774 </code></pre>
 </div>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">$</span><span class="va">GWR.R2</span>, probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.025</span>, <span class="fl">0.975</span><span class="op">)</span><span class="op">)</span>, <span class="fl">4</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">$</span><span class="va">GWR.R2</span>, probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.025</span>, <span class="fl">0.975</span><span class="op">)</span><span class="op">)</span>, <span class="fl">4</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  2.5%  97.5% 
 0.1876 0.7390 </code></pre>
 </div>
 </div>
-<p>Le code ci-dessous permet ensuite de cartographier les R<sup>2</sup> locaux de la GWR (<a href="#fig-GWRR2" class="quarto-xref">figure&nbsp;<span>3.3</span></a>).</p>
+<p>Le code ci-dessous permet ensuite de cartographier les R<sup>2</sup> locaux de la GWR (<a href="#fig-GWRR2" class="quarto-xref">figure&nbsp;<span>4.5</span></a>).</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/">tmap</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/">tmap</a></span><span class="op">)</span></span>
 <span><span class="co"># Paramètres pour la légende </span></span>
 <span><span class="va">legende.parametres</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>text.separator <span class="op">=</span> <span class="st">"à"</span>,</span>
 <span>                           decimal.mark <span class="op">=</span> <span class="st">","</span><span class="op">)</span></span>
@@ -776,16 +975,16 @@ Figure&nbsp;3.2: Cartographie des résidus des modèles MCO et GWR
 <img src="04-GWRClassique_files/figure-html/fig-GWRR2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-GWRR2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3.3: Cartographie des R carrés locaux de la GWR
+Figure&nbsp;4.5: Cartographie des R carrés locaux de la GWR
 </figcaption></figure>
 </div>
 </div>
 </div>
-</section><section id="sec-04242" class="level4" data-number="3.2.4.2"><h4 data-number="3.2.4.2" class="anchored" data-anchor-id="sec-04242">
-<span class="header-section-number">3.2.4.2</span> Cartographie des coefficients de régression locaux</h4>
-<p>Le code ci-dessous permet ensuite de cartographier les coefficients locaux de la GWR (<a href="#fig-GWRCoeffReg" class="quarto-xref">figure&nbsp;<span>3.4</span></a>).</p>
+</section><section id="sec-042142" class="level5" data-number="4.2.1.4.2"><h5 data-number="4.2.1.4.2" class="anchored" data-anchor-id="sec-042142">
+<span class="header-section-number">4.2.1.4.2</span> Cartographie des coefficients de régression locaux</h5>
+<p>Le code ci-dessous permet ensuite de cartographier les coefficients locaux de la GWR (<a href="#fig-GWRCoeffReg" class="quarto-xref">figure&nbsp;<span>4.6</span></a>).</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Paramètres pour la légende </span></span>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Paramètres pour la légende </span></span>
 <span><span class="va">legende.parametres</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>text.separator <span class="op">=</span> <span class="st">"à"</span>,</span>
 <span>                           decimal.mark <span class="op">=</span> <span class="st">","</span>,</span>
 <span>                           big.mark <span class="op">=</span> <span class="st">" "</span><span class="op">)</span></span>
@@ -828,16 +1027,16 @@ Figure&nbsp;3.3: Cartographie des R carrés locaux de la GWR
 <img src="04-GWRClassique_files/figure-html/fig-GWRCoeffReg-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-GWRCoeffReg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3.4: Cartographie des coefficients de régression de la GWR
+Figure&nbsp;4.6: Cartographie des coefficients de régression de la GWR
 </figcaption></figure>
 </div>
 </div>
 </div>
-</section><section id="sec-04243" class="level4" data-number="3.2.4.3"><h4 data-number="3.2.4.3" class="anchored" data-anchor-id="sec-04243">
-<span class="header-section-number">3.2.4.3</span> Cartographie des valeurs de <em>t</em> locales</h4>
-<p>Pour cartographier les valeurs de <em>t</em>, nous utilisons les seuils de ± 1,96, 2,58 et 3,29, indiquant des seuils de signification à 5&nbsp;%, 1&nbsp;% et 0,1&nbsp;% (<a href="#fig-GWRValT" class="quarto-xref">figure&nbsp;<span>3.5</span></a>).</p>
+</section><section id="sec-042143" class="level5" data-number="4.2.1.4.3"><h5 data-number="4.2.1.4.3" class="anchored" data-anchor-id="sec-042143">
+<span class="header-section-number">4.2.1.4.3</span> Cartographie des valeurs de <em>t</em> locales</h5>
+<p>Pour cartographier les valeurs de <em>t</em>, nous utilisons les seuils de ± 1,96, 2,58 et 3,29, indiquant des seuils de signification à 5&nbsp;%, 1&nbsp;% et 0,1&nbsp;% (<a href="#fig-GWRValT" class="quarto-xref">figure&nbsp;<span>4.7</span></a>).</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Paramètres pour la légende </span></span>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Paramètres pour la légende </span></span>
 <span><span class="va">legende.parametres</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>text.separator <span class="op">=</span> <span class="st">"à"</span>,</span>
 <span>                           text.less.than <span class="op">=</span> <span class="st">"Moins de"</span>,</span>
 <span>                           text.or.more <span class="op">=</span>  <span class="st">"et plus"</span>,</span>
@@ -870,7 +1069,7 @@ Figure&nbsp;3.4: Cartographie des coefficients de régression de la GWR
 <span>          <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span>, legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">Carte4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span><span class="op">+</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_borders</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"gray25"</span>, lwd<span class="op">=</span><span class="fl">.5</span><span class="op">)</span><span class="op">+</span></span>
-<span>          <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"GWR.B_Pct_brevet"</span>, palette<span class="op">=</span><span class="st">"-RdBu"</span>, </span>
+<span>          <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"GWR.T_Pct_brevet"</span>, palette<span class="op">=</span><span class="st">"-RdBu"</span>, </span>
 <span>                  midpoint <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>                  breaks <span class="op">=</span> <span class="va">classes.intervalles</span>,</span>
 <span>                  legend.format <span class="op">=</span> <span class="va">legende.parametres</span>,</span>
@@ -893,16 +1092,16 @@ Figure&nbsp;3.4: Cartographie des coefficients de régression de la GWR
 <img src="04-GWRClassique_files/figure-html/fig-GWRValT-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-GWRValT-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3.5: Cartographie des valeurs de <em>t</em> de la GWR
+Figure&nbsp;4.7: Cartographie des valeurs de <em>t</em> de la GWR
 </figcaption></figure>
 </div>
 </div>
 </div>
-</section><section id="sec-04244" class="level4" data-number="3.2.4.4"><h4 data-number="3.2.4.4" class="anchored" data-anchor-id="sec-04244">
-<span class="header-section-number">3.2.4.4</span> Cartographie du nombre de variables significatives</h4>
+</section><section id="sec-042144" class="level5" data-number="4.2.1.4.4"><h5 data-number="4.2.1.4.4" class="anchored" data-anchor-id="sec-042144">
+<span class="header-section-number">4.2.1.4.4</span> Cartographie du nombre de variables significatives</h5>
 <p>Nous pouvons aussi cartographier le nombre de variables localement significatives aux seuils de 5&nbsp;% et 1&nbsp;%.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Identifier la variable plus significative avec les valeurs de t</span></span>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Identifier la variable plus significative avec les valeurs de t</span></span>
 <span><span class="va">VarsT</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"GWR.T_"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Pct0_14"</span>, <span class="st">"Pct_65"</span>, <span class="st">"Pct_Img"</span>, <span class="st">"Pct_brevet"</span>, <span class="st">"NivVieMed"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">Lyon.df</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_drop_geometry</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span></span>
 <span><span class="va">Lyon.df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">Lyon.df</span><span class="op">[</span>,<span class="va">VarsT</span><span class="op">]</span><span class="op">)</span></span>
@@ -930,17 +1129,17 @@ Figure&nbsp;3.5: Cartographie des valeurs de <em>t</em> de la GWR
 <img src="04-GWRClassique_files/figure-html/fig-GWRNNsign-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-GWRNNsign-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3.6: Nombre de variables significatives aux seuils de 5% et 1%
+Figure&nbsp;4.8: Nombre de variables significatives aux seuils de 5% et 1%
 </figcaption></figure>
 </div>
 </div>
 </div>
-</section><section id="sec-04245" class="level4" data-number="3.2.4.5"><h4 data-number="3.2.4.5" class="anchored" data-anchor-id="sec-04245">
-<span class="header-section-number">3.2.4.5</span> Cartographie de la variable la plus significative avec la valeur de <em>t</em>
-</h4>
+</section><section id="sec-042145" class="level5" data-number="4.2.1.4.5"><h5 data-number="4.2.1.4.5" class="anchored" data-anchor-id="sec-042145">
+<span class="header-section-number">4.2.1.4.5</span> Cartographie de la variable la plus significative avec la valeur de <em>t</em>
+</h5>
 <p>Finalement, le code ci-dessous permet de repérer la variable la plus significative au seuil de 5&nbsp;%, c’est-à-dire avec la plus forte valeur absolue pour la valeur de <em>t</em>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span><span class="op">+</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_borders</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"gray25"</span>, lwd<span class="op">=</span><span class="fl">.5</span><span class="op">)</span><span class="op">+</span></span>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span><span class="op">+</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_borders</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"gray25"</span>, lwd<span class="op">=</span><span class="fl">.5</span><span class="op">)</span><span class="op">+</span></span>
 <span>          <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"PlusSign"</span>, palette<span class="op">=</span><span class="st">"Set1"</span>, </span>
 <span>                 title <span class="op">=</span> <span class="st">"Variable la plus significative"</span><span class="op">)</span><span class="op">+</span></span>
 <span>          <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span><span class="op">+</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_scale_bar.html">tm_scale_bar</a></span><span class="op">(</span>breaks<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -950,13 +1149,329 @@ Figure&nbsp;3.6: Nombre de variables significatives aux seuils de 5% et 1%
 <img src="04-GWRClassique_files/figure-html/fig-GWRPlussign-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-GWRPlussign-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3.7: Variable indépendante la plus significative au seuil de 5 %
+Figure&nbsp;4.9: Variable indépendante la plus significative au seuil de 5 %
 </figcaption></figure>
 </div>
 </div>
 </div>
-</section></section></section><section id="sec-043" class="level2" data-number="3.3"><h2 data-number="3.3" class="anchored" data-anchor-id="sec-043">
-<span class="header-section-number">3.3</span> GWR classiques pour d’autres distributions</h2>
+</section></section></section><section id="sec-0422" class="level3" data-number="4.2.2"><h3 data-number="4.2.2" class="anchored" data-anchor-id="sec-0422">
+<span class="header-section-number">4.2.2</span> GWR avec le <em>package</em> <code>GWmodel</code>
+</h3>
+<p>La construction d’une régression GWR est certainement plus simple (moins verbeuse) avec les fonctions <code>bw.gwr</code> et <code>gwr.basic</code> du <em>package</em> <code>GWmodel</code>.</p>
+<section id="sec-04221" class="level4" data-number="4.2.2.1"><h4 data-number="4.2.2.1" class="anchored" data-anchor-id="sec-04221">
+<span class="header-section-number">4.2.2.1</span> Définition de la taille de la zone d’influence</h4>
+<div class="cell">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://gwr.nuim.ie/">GWmodel</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"data/Lyon.Rdata"</span><span class="op">)</span></span>
+<span><span class="co"># Construction de la matrice de distance</span></span>
+<span><span class="va">xy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html">st_coordinates</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_centroid</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">MatriceDistance</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/GWmodel/man/gw.dist.html">gw.dist</a></span><span class="op">(</span>dp.locat<span class="op">=</span><span class="va">xy</span>, p <span class="op">=</span> <span class="fl">2</span>, longlat<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">## Optimisation du nombre de voisins avec le CV</span></span>
+<span><span class="va">bwCV.voisins</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/GWmodel/man/bw.gwr.html">bw.gwr</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span>  <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>, </span>
+<span>                         data <span class="op">=</span> <span class="va">LyonIris</span>,</span>
+<span>                         dMat <span class="op">=</span> <span class="va">MatriceDistance</span>,</span>
+<span>                         approach<span class="op">=</span><span class="st">"CV"</span>, </span>
+<span>                         kernel<span class="op">=</span><span class="st">"bisquare"</span>,</span>
+<span>                         adaptive<span class="op">=</span><span class="cn">TRUE</span>, </span>
+<span>                         longlat<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Adaptive bandwidth: 320 CV score: 17072.1 
+Adaptive bandwidth: 206 CV score: 14142.57 
+Adaptive bandwidth: 134 CV score: 12329.97 
+Adaptive bandwidth: 91 CV score: 11919.32 
+Adaptive bandwidth: 63 CV score: 12156.26 
+Adaptive bandwidth: 107 CV score: 11981.63 
+Adaptive bandwidth: 79 CV score: 12001.41 
+Adaptive bandwidth: 96 CV score: 11900.81 
+Adaptive bandwidth: 101 CV score: 11912.07 
+Adaptive bandwidth: 94 CV score: 11919.6 
+Adaptive bandwidth: 98 CV score: 11911.68 
+Adaptive bandwidth: 95 CV score: 11911.87 
+Adaptive bandwidth: 97 CV score: 11899.93 
+Adaptive bandwidth: 97 CV score: 11899.93 </code></pre>
+</div>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Optimisation du nombre de voisins avec l'AIC</span></span>
+<span><span class="va">bwAIC.voisins</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/GWmodel/man/bw.gwr.html">bw.gwr</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>, </span>
+<span>                        data <span class="op">=</span> <span class="va">LyonIris</span>,</span>
+<span>                        dMat <span class="op">=</span> <span class="va">MatriceDistance</span>,</span>
+<span>                        approach<span class="op">=</span><span class="st">"AIC"</span>, </span>
+<span>                        kernel<span class="op">=</span><span class="st">"bisquare"</span>,</span>
+<span>                        adaptive<span class="op">=</span><span class="cn">TRUE</span>, </span>
+<span>                        longlat<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Adaptive bandwidth (number of nearest neighbours): 320 AICc value: 3181.763 
+Adaptive bandwidth (number of nearest neighbours): 206 AICc value: 3072.458 
+Adaptive bandwidth (number of nearest neighbours): 134 AICc value: 2989.605 
+Adaptive bandwidth (number of nearest neighbours): 91 AICc value: 2943.187 
+Adaptive bandwidth (number of nearest neighbours): 63 AICc value: 2925.002 
+Adaptive bandwidth (number of nearest neighbours): 47 AICc value: 2927.612 
+Adaptive bandwidth (number of nearest neighbours): 74 AICc value: 2929.903 
+Adaptive bandwidth (number of nearest neighbours): 57 AICc value: 2922.621 
+Adaptive bandwidth (number of nearest neighbours): 52 AICc value: 2922.879 
+Adaptive bandwidth (number of nearest neighbours): 58 AICc value: 2923.89 
+Adaptive bandwidth (number of nearest neighbours): 54 AICc value: 2922.612 
+Adaptive bandwidth (number of nearest neighbours): 54 AICc value: 2922.612 </code></pre>
+</div>
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Optimisation de la distance avec le CV</span></span>
+<span><span class="va">bwnCV.dist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/GWmodel/man/bw.gwr.html">bw.gwr</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>, </span>
+<span>                     data <span class="op">=</span> <span class="va">LyonIris</span>,</span>
+<span>                     dMat <span class="op">=</span> <span class="va">MatriceDistance</span>,</span>
+<span>                     approach<span class="op">=</span><span class="st">"CV"</span>, </span>
+<span>                     kernel<span class="op">=</span><span class="st">"gaussian"</span>,</span>
+<span>                     adaptive<span class="op">=</span><span class="cn">FALSE</span>, </span>
+<span>                     longlat<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Fixed bandwidth: 22632.98 CV score: 23240.62 
+Fixed bandwidth: 13990.75 CV score: 22942.89 
+Fixed bandwidth: 8649.556 CV score: 21987.02 
+Fixed bandwidth: 5348.517 CV score: 19330.61 
+Fixed bandwidth: 3308.362 CV score: 15656.55 
+Fixed bandwidth: 2047.478 CV score: 13534 
+Fixed bandwidth: 1268.208 CV score: 12883.62 
+Fixed bandwidth: 786.5929 CV score: 69868.32 
+Fixed bandwidth: 1565.863 CV score: 13058.8 
+Fixed bandwidth: 1084.247 CV score: 13320.38 
+Fixed bandwidth: 1381.902 CV score: 12891.23 
+Fixed bandwidth: 1197.941 CV score: 12968.27 
+Fixed bandwidth: 1311.635 CV score: 12869.97 
+Fixed bandwidth: 1338.475 CV score: 12872.81 
+Fixed bandwidth: 1295.047 CV score: 12872.27 
+Fixed bandwidth: 1321.887 CV score: 12870.16 
+Fixed bandwidth: 1305.299 CV score: 12870.46 
+Fixed bandwidth: 1315.551 CV score: 12869.91 
+Fixed bandwidth: 1317.971 CV score: 12869.95 
+Fixed bandwidth: 1314.055 CV score: 12869.91 
+Fixed bandwidth: 1316.475 CV score: 12869.92 
+Fixed bandwidth: 1314.98 CV score: 12869.9 
+Fixed bandwidth: 1314.627 CV score: 12869.91 
+Fixed bandwidth: 1315.198 CV score: 12869.9 </code></pre>
+</div>
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Optimisation de la distance avec l'AIC</span></span>
+<span><span class="va">bwAIC.dist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/GWmodel/man/bw.gwr.html">bw.gwr</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span>  <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>, </span>
+<span>                     data <span class="op">=</span> <span class="va">LyonIris</span>,</span>
+<span>                     dMat <span class="op">=</span> <span class="va">MatriceDistance</span>,</span>
+<span>                     approach<span class="op">=</span><span class="st">"AIC"</span>, </span>
+<span>                     kernel<span class="op">=</span><span class="st">"gaussian"</span>,</span>
+<span>                     adaptive<span class="op">=</span><span class="cn">FALSE</span>, </span>
+<span>                     longlat<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Fixed bandwidth: 22632.98 AICc value: 3362.597 
+Fixed bandwidth: 13990.75 AICc value: 3354.75 
+Fixed bandwidth: 8649.556 AICc value: 3328.284 
+Fixed bandwidth: 5348.517 AICc value: 3241.508 
+Fixed bandwidth: 3308.362 AICc value: 3114.667 
+Fixed bandwidth: 2047.478 AICc value: 3043.093 
+Fixed bandwidth: 1268.208 AICc value: 3050.841 
+Fixed bandwidth: 2529.093 AICc value: 3065.054 
+Fixed bandwidth: 1749.823 AICc value: 3036.6 
+Fixed bandwidth: 1565.863 AICc value: 3036.749 
+Fixed bandwidth: 1863.517 AICc value: 3038.25 
+Fixed bandwidth: 1679.556 AICc value: 3036.195 
+Fixed bandwidth: 1636.129 AICc value: 3036.214 
+Fixed bandwidth: 1706.396 AICc value: 3036.289 
+Fixed bandwidth: 1662.969 AICc value: 3036.176 
+Fixed bandwidth: 1652.717 AICc value: 3036.181 
+Fixed bandwidth: 1669.305 AICc value: 3036.18 
+Fixed bandwidth: 1659.053 AICc value: 3036.177 
+Fixed bandwidth: 1665.389 AICc value: 3036.177 
+Fixed bandwidth: 1661.473 AICc value: 3036.176 
+Fixed bandwidth: 1660.549 AICc value: 3036.176 </code></pre>
+</div>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Affichage des résultats d'optimisation </span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Sélection de la taille de la zone optimale (bandwidth)"</span>,</span>
+<span>    <span class="st">"\n avec le nombre de plus proches voisins :"</span>,</span>
+<span>    <span class="st">"\n  CV ="</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">bwCV.voisins</span>,<span class="fl">4</span><span class="op">)</span>, <span class="st">"nombre de voisins ="</span>,  <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">bwCV.voisins</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    <span class="st">"\n  AIC ="</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">bwAIC.voisins</span>,<span class="fl">4</span><span class="op">)</span>, <span class="st">"nombre de voisins ="</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">bwAIC.voisins</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    <span class="st">"\nSélection de la taille de la zone optimale (bandwidth) avec la distance :"</span>,</span>
+<span>    <span class="st">"\n  CV ="</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">bwnCV.dist</span>, <span class="fl">0</span><span class="op">)</span>,  <span class="st">"mètres"</span>,</span>
+<span>    <span class="st">"\n  AIC ="</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">bwAIC.dist</span>, <span class="fl">0</span><span class="op">)</span>, <span class="st">"mètres"</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Sélection de la taille de la zone optimale (bandwidth) 
+ avec le nombre de plus proches voisins : 
+  CV = 97 nombre de voisins = 49082 
+  AIC = 54 nombre de voisins = 27324 
+Sélection de la taille de la zone optimale (bandwidth) avec la distance : 
+  CV = 1315 mètres 
+  AIC = 1661 mètres</code></pre>
+</div>
+</div>
+</section><section id="sec-04222" class="level4" data-number="4.2.2.2"><h4 data-number="4.2.2.2" class="anchored" data-anchor-id="sec-04222">
+<span class="header-section-number">4.2.2.2</span> Réalisation de la GWR</h4>
+<p>Comparativement à la fonction <code>gwr</code> du <em>package</em> <code>spgwr</code>, <code>gwr.basic</code> du <em>package</em> <code>GWmodel</code> offre l’avantage de fournir l’ensemble des résultats&nbsp;:</p>
+<ul>
+<li><p>Ceux de la régression linéaire multiple (modèle global).</p></li>
+<li><p>Un sommaire statistique des coefficients de régression de la GWR.</p></li>
+<li><p>Les statistiques de la qualité d’ajustement du modèle (AIC, AICc, R<sup>2</sup>, R<sup>2</sup> ajusté).</p></li>
+<li><p>Les tests pour comparer les modèles global et GWR (tests F1, F2).</p></li>
+<li><p>Le test F3 pour vérifier si les coefficients de régression varient ou non spatialement de façon significative.</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Calcul de la GWR</span></span>
+<span><span class="va">Modele.GWR</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/GWmodel/man/gwr.basic.html">gwr.basic</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
+<span>                        data <span class="op">=</span> <span class="va">LyonIris</span>,</span>
+<span>                        dMat <span class="op">=</span> <span class="va">MatriceDistance</span>,  <span class="co"># Matrice de distances</span></span>
+<span>                        bw <span class="op">=</span> <span class="va">bwCV.voisins</span>,       <span class="co"># Zone d'influence</span></span>
+<span>                        kernel <span class="op">=</span> <span class="st">"bisquare"</span>,     <span class="co"># Gaussien ou bicarrée</span></span>
+<span>                        adaptive<span class="op">=</span><span class="cn">TRUE</span>,           <span class="co"># Nombre de voisins (TRUE) ou distance (FALSE)</span></span>
+<span>                        F123.test <span class="op">=</span> <span class="cn">TRUE</span>,        <span class="co"># Tests F123</span></span>
+<span>                        longlat<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">Modele.GWR</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   ***********************************************************************
+   *                       Package   GWmodel                             *
+   ***********************************************************************
+   Program starts at: 2025-01-24 01:03:29.843063 
+   Call:
+   gwr.basic(formula = NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + 
+    NivVieMed, data = LyonIris, bw = bwCV.voisins, kernel = "bisquare", 
+    adaptive = TRUE, longlat = FALSE, dMat = MatriceDistance, 
+    F123.test = TRUE)
+
+   Dependent (y) variable:  NO2
+   Independent variables:  Pct0_14 Pct_65 Pct_Img Pct_brevet NivVieMed
+   Number of data points: 506
+   ***********************************************************************
+   *                    Results of Global Regression                     *
+   ***********************************************************************
+
+   Call:
+    lm(formula = formula, data = data)
+
+   Residuals:
+    Min      1Q  Median      3Q     Max 
+-27.733  -4.457  -0.499   3.507  29.160 
+
+   Coefficients:
+               Estimate Std. Error t value Pr(&gt;|t|)    
+   (Intercept) 49.43296    2.99550  16.502  &lt; 2e-16 ***
+   Pct0_14     -0.53352    0.06305  -8.461 2.94e-16 ***
+   Pct_65      -0.15047    0.05627  -2.674  0.00774 ** 
+   Pct_Img      0.28287    0.05113   5.532 5.12e-08 ***
+   Pct_brevet  -0.24004    0.03721  -6.451 2.63e-10 ***
+   NivVieMed   -0.31625    0.10180  -3.107  0.00200 ** 
+
+   ---Significance stars
+   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+   Residual standard error: 6.685 on 500 degrees of freedom
+   Multiple R-squared: 0.2832
+   Adjusted R-squared: 0.276 
+   F-statistic:  39.5 on 5 and 500 DF,  p-value: &lt; 2.2e-16 
+   ***Extra Diagnostic information
+   Residual sum of squares: 22346.02
+   Sigma(hat): 6.658629
+   AIC:  3366.626
+   AICc:  3366.851
+   BIC:  2933.798
+   ***********************************************************************
+   *          Results of Geographically Weighted Regression              *
+   ***********************************************************************
+
+   *********************Model calibration information*********************
+   Kernel function: bisquare 
+   Adaptive bandwidth: 97 (number of nearest neighbours)
+   Regression points: the same locations as observations are used.
+   Distance metric: A distance matrix is specified for this model calibration.
+
+   ****************Summary of GWR coefficient estimates:******************
+                   Min.   1st Qu.    Median   3rd Qu.    Max.
+   Intercept  13.249694 30.566393 38.903053 48.035033 59.6124
+   Pct0_14    -1.094930 -0.371546 -0.224906 -0.053956  0.3386
+   Pct_65     -0.711775 -0.157939 -0.033630  0.073991  0.4514
+   Pct_Img    -0.319353 -0.042105  0.078841  0.243274  0.6657
+   Pct_brevet -0.624419 -0.224105 -0.092008  0.041021  0.5844
+   NivVieMed  -1.108017 -0.555822 -0.213561  0.202347  1.2844
+   ************************Diagnostic information*************************
+   Number of data points: 506 
+   Effective number of parameters (2trace(S) - trace(S'S)): 103.4065 
+   Effective degrees of freedom (n-2trace(S) + trace(S'S)): 402.5935 
+   AICc (GWR book, Fotheringham, et al. 2002, p. 61, eq 2.33): 2949.788 
+   AIC (GWR book, Fotheringham, et al. 2002,GWR p. 96, eq. 4.22): 2839.039 
+   BIC (GWR book, Fotheringham, et al. 2002,GWR p. 61, eq. 2.34): 2743.804 
+   Residual sum of squares: 6933.276 
+   R-square value:  0.7775915 
+   Adjusted R-square value:  0.7203234 
+   ******************F test results of GWR calibration********************
+   ---F1 test (Leung et al. 2000)
+    F1 statistic Numerator DF Denominator DF     Pr(&gt;)    
+         0.38534          Inf            500 &lt; 2.2e-16 ***
+   ---F2 test (Leung et al. 2000)
+    F2 statistic Numerator DF Denominator DF Pr(&gt;)
+          3.5405     -31.0892            500   NaN
+   ---F3 test (Leung et al. 2000)
+              F3 statistic Numerator DF Denominator DF     Pr(&gt;)    
+   Intercept        2.3480     133.2095            Inf &lt; 2.2e-16 ***
+   Pct0_14          2.8529     141.2525            Inf &lt; 2.2e-16 ***
+   Pct_65           2.1479     168.6132            Inf 3.399e-16 ***
+   Pct_Img          1.9938     105.6136            Inf 5.756e-09 ***
+   Pct_brevet       2.4930     120.8152            Inf &lt; 2.2e-16 ***
+   NivVieMed        3.8747     138.4279            Inf &lt; 2.2e-16 ***
+   ---F4 test (GWR book p92)
+    F4 statistic Numerator DF Denominator DF     Pr(&gt;)    
+         0.31027    402.59351            500 &lt; 2.2e-16 ***
+
+   ---Significance stars
+   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+   ***********************************************************************
+   Program stops at: 2025-01-24 01:03:48.12102 </code></pre>
+</div>
+</div>
+</section><section id="sec-04223" class="level4" data-number="4.2.2.3"><h4 data-number="4.2.2.3" class="anchored" data-anchor-id="sec-04223">
+<span class="header-section-number">4.2.2.3</span> Cartographie des résultats du modèle GWR</h4>
+<p>Une fois le modèle obtenu, nous disposons de l’ensemble des résultats locaux (coefficients, valeur prédite, résidus, valeurs de t et R<sup>2</sup>) dans l’objet <code>Modele.GWR$SDF</code> qui sera une couche <code>sf</code> comme le jeu de données initial. Il est ainsi aisée de reproduire les cartes présentées à la <a href="#sec-04214" class="quarto-xref">section&nbsp;<span>4.2.1.4</span></a>. En guise d’exemple, dans le code ci-dessous, nous cartographions les valeurs locaux du R<sup>2</sup> et uniquement celles de <em>t</em> pour la variable relative au médiane du niveau de vie (<a href="#fig-CartoGWmodel" class="quarto-xref">figure&nbsp;<span>4.10</span></a>).</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">GWR.Resultats</span> <span class="op">&lt;-</span> <span class="va">Modele.GWR</span><span class="op">$</span><span class="va">SDF</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">GWR.Resultats</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Intercept"     "Pct0_14"       "Pct_65"        "Pct_Img"      
+ [5] "Pct_brevet"    "NivVieMed"     "y"             "yhat"         
+ [9] "residual"      "CV_Score"      "Stud_residual" "Intercept_SE" 
+[13] "Pct0_14_SE"    "Pct_65_SE"     "Pct_Img_SE"    "Pct_brevet_SE"
+[17] "NivVieMed_SE"  "Intercept_TV"  "Pct0_14_TV"    "Pct_65_TV"    
+[21] "Pct_Img_TV"    "Pct_brevet_TV" "NivVieMed_TV"  "Local_R2"     
+[25] "geometry"     </code></pre>
+</div>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">legende.parametres</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>text.separator <span class="op">=</span> <span class="st">"à"</span>,</span>
+<span>                           text.less.than <span class="op">=</span> <span class="st">"Moins de"</span>,</span>
+<span>                           text.or.more <span class="op">=</span>  <span class="st">"et plus"</span>,</span>
+<span>                           decimal.mark <span class="op">=</span> <span class="st">","</span>,</span>
+<span>                           big.mark <span class="op">=</span> <span class="st">" "</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">classes.intervalles</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="cn">Inf</span>, <span class="op">-</span><span class="fl">3.29</span>, <span class="op">-</span><span class="fl">2.58</span>, <span class="op">-</span><span class="fl">1.96</span>, <span class="fl">1.96</span>, <span class="fl">2.58</span>, <span class="fl">3.29</span>, <span class="cn">Inf</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Cartographie du R2</span></span>
+<span><span class="va">Carte1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">GWR.Resultats</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_borders</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"gray25"</span>, lwd<span class="op">=</span><span class="fl">.5</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"Local_R2"</span>, </span>
+<span>          palette<span class="op">=</span><span class="st">"YlOrBr"</span>, </span>
+<span>          n<span class="op">=</span><span class="fl">5</span>, style<span class="op">=</span><span class="st">"quantile"</span>,</span>
+<span>          legend.format <span class="op">=</span> <span class="va">legende.parametres</span>,</span>
+<span>          title <span class="op">=</span> <span class="st">"R2 locaux"</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span><span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_scale_bar.html">tm_scale_bar</a></span><span class="op">(</span>breaks<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Cartographie d'une valeur de t</span></span>
+<span><span class="va">Carte2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">GWR.Resultats</span><span class="op">)</span><span class="op">+</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_borders</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"gray25"</span>, lwd<span class="op">=</span><span class="fl">.5</span><span class="op">)</span><span class="op">+</span></span>
+<span>          <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"NivVieMed_TV"</span>, palette<span class="op">=</span><span class="st">"-RdBu"</span>, </span>
+<span>                 midpoint <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>                 breaks <span class="op">=</span> <span class="va">classes.intervalles</span>,</span>
+<span>                 legend.format <span class="op">=</span> <span class="va">legende.parametres</span>,</span>
+<span>                 title <span class="op">=</span> <span class="st">"Niveau de vie (€1000)"</span><span class="op">)</span><span class="op">+</span></span>
+<span>          <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tmap_arrange.html">tmap_arrange</a></span><span class="op">(</span><span class="va">Carte1</span>, <span class="va">Carte2</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-CartoGWmodel" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-CartoGWmodel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="04-GWRClassique_files/figure-html/fig-CartoGWmodel-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-CartoGWmodel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.10: Exemple de cartographie avec les résultats de la GWR obtenus avec le <em>package</em> <code>GWmodel</code>
+</figcaption></figure>
+</div>
+</div>
+</div>
+</section></section></section><section id="sec-043" class="level2" data-number="4.3"><h2 data-number="4.3" class="anchored" data-anchor-id="sec-043">
+<span class="header-section-number">4.3</span> GWR classiques pour d’autres distributions</h2>
 <div class="bloc_aller_loin">
 <div class="bloc_aller_loin-header">
 <div class="bloc_aller_loin-icon">
@@ -976,23 +1491,24 @@ Figure&nbsp;3.7: Variable indépendante la plus significative au seuil de 5 %
 <li><code>quasibinomial(link = "logit")</code></li>
 <li><code>quasipoisson(link = "log")</code></li>
 </ul>
+<p>Avec le <em>package</em> <code>GWmodel</code>, vous pourrez utilisez les fonctions <code>bw.ggwr</code> et <code>gwss</code> qui permettent de réaliser des régressions linéaires pondérées avec des distributions de Poisson et binomiale (avec l’argument <code>family = "poisson"</code> et <code>family = "binomial"</code>))</p>
 </div>
 </div>
-</section><section id="sec-044" class="level2" data-number="3.4"><h2 data-number="3.4" class="anchored" data-anchor-id="sec-044">
-<span class="header-section-number">3.4</span> Limites et critiques des GWR</h2>
-<p>Bien que la GWR classique représente un outil d’exploration de données spatiales particulièrement intéressant pour évaluer l’importance de l’instabilité spatiale d’un modèle de régression <span class="citation" data-cites="apparicio2007modelisation">(<a href="references.html#ref-apparicio2007modelisation" role="doc-biblioref">Apparicio, Séguin et Leloup 2007</a>)</span>, elle comprend plusieurs limites&nbsp;:</p>
+</section><section id="sec-044" class="level2" data-number="4.4"><h2 data-number="4.4" class="anchored" data-anchor-id="sec-044">
+<span class="header-section-number">4.4</span> Limites et critiques des GWR</h2>
+<p>Bien que la GWR classique représente un outil d’exploration de données spatiales particulièrement intéressant pour évaluer l’importance de l’instabilité spatiale d’un modèle de régression <span class="citation" data-cites="apparicio2007modelisation mennis2005distribution calvo2003local">(<a href="references.html#ref-apparicio2007modelisation" role="doc-biblioref">Apparicio, Séguin et Leloup 2007</a>; <a href="references.html#ref-mennis2005distribution" role="doc-biblioref">Mennis et Jordan 2005</a>; <a href="references.html#ref-calvo2003local" role="doc-biblioref">Calvo et Escolar 2003</a>)</span>, elle comprend plusieurs limites&nbsp;:</p>
 <ul>
-<li><p><strong>Le type de distance</strong>. Dans le cadre de ce chapitre, nous avons calculé la GWR avec la distance euclidienne qui n’est pas adapté à tous les phénomènes à l’étude. Par exemple, <span class="citation" data-cites="lu2011geographically">Lu, Charlton et Fotheringhama (<a href="references.html#ref-lu2011geographically" role="doc-biblioref">2011</a>)</span> préconisent utilisent des distances calculées sur un réseau de rues pour modéliser le prix de vente des maisons à Londres avec un modèle GWR. Pour ce faire, il est possible d’utiliser les fonctions <code>bw.gwr</code> <code>gwr.basic</code> du <em>package</em> <code>GWmodel</code> dont l’argument <code>dmat</code> permet de spécifier une matrice de distance prédéfinie.</p></li>
-<li><p><strong>Le choix du noyau (kernel) et la taille de la zone d’influence</strong> peuvent impacter grandement les résultats. En effet, la zone d’influence (défini avec une distance ou un nombre donné de plus proches voisins) peut entraîner localement un nombre insuffisant d’observations, compromettant ainsi la robustesse des équations de régression locales.</p></li>
-<li><p><strong>Prédicteurs locaux et globaux</strong>. Nous avons vu que la fonction <code>LMZ.F3GWR.test</code> permet de déterminer si les coefficients de régression présentent des variations significatives dans l’espace. Or, certains variables indépendantes peuvent être introduites globalement et non localement, comme nous le verrons dans le prochaine chapitre (<a href="05-GWRExtensions.html#sec-051" class="quarto-xref">section&nbsp;<span>4.1</span></a>).</p></li>
+<li><p><strong>Type de distance</strong>. Dans le cadre de ce chapitre, nous avons calculé la GWR avec la distance euclidienne qui n’est pas adapté à tous les phénomènes à l’étude. Par exemple, <span class="citation" data-cites="lu2011geographically">Lu, Charlton et Fotheringhama (<a href="references.html#ref-lu2011geographically" role="doc-biblioref">2011</a>)</span> utilisent des distances calculées sur un réseau de rues pour modéliser le prix de vente des maisons à Londres avec un modèle GWR. Pour ce faire, il est possible d’utiliser les fonctions <code>bw.gwr</code> <code>gwr.basic</code> du <em>package</em> <code>GWmodel</code> dont l’argument <code>dmat</code> permet de spécifier une matrice de distance prédéfinie.</p></li>
+<li><p><strong>Choix du noyau (kernel) et la taille de la zone d’influence</strong> peuvent impacter grandement les résultats. En effet, la zone d’influence (défini avec une distance ou un nombre donné de plus proches voisins) peut entraîner localement un nombre insuffisant d’observations, compromettant ainsi la robustesse des équations de régression locales.</p></li>
+<li><p><strong>Prédicteurs locaux et globaux</strong>. Nous avons vu que la fonction <code>LMZ.F3GWR.test</code> permet de déterminer si les coefficients de régression présentent des variations significatives dans l’espace. Or, certains variables indépendantes peuvent être introduites globalement et non localement, comme nous le verrons dans le prochain chapitre (<a href="05-GWRExtensions.html#sec-051" class="quarto-xref">section&nbsp;<span>5.1</span></a>).</p></li>
 </ul>
 <p>La GWR fait face aussi à d’importantes critiques&nbsp;:</p>
 <ul>
 <li><p><strong>Validité des modèles locaux</strong>. Pour une régression linéaire multiple, il est primordial de réaliser un diagnostic pour s’assurer du nombre suffisant d’observations, de l’absence de multicolinéarité excessive et de la normalité et l’homoscédasticité des résidus (lire par exemple la <a href="https://serieboldr.github.io/MethodesQuantitatives/07-regressionlineaire.html#sec-076">section suivante</a> <span class="citation" data-cites="RBoldAirMethodesQuanti">(<a href="references.html#ref-RBoldAirMethodesQuanti" role="doc-biblioref">Apparicio et Gelb 2022</a>)</span>). Or, ce diagnostic devrait être réalisé pour tous les modèles locaux obtenus pour les <em>n</em> observations du jeu de données. Par exemple, si le modèle global ne pose pas de problème de multicolinéarité excessive, rien ne garantit qu’elle ne soit pas présente dans plusieurs modèles locaux <span class="citation" data-cites="wheeler2005multicollinearity">(<a href="references.html#ref-wheeler2005multicollinearity" role="doc-biblioref">Wheeler et Tiefelsdorf 2005</a>)</span>.</p></li>
-<li><p><strong>Corrélation entre les coefficients locaux</strong>. Dans un article intitulé <em>Multicollinearity and correlation among local regression coefficients in geographically weighted regression</em>, <span class="citation" data-cites="wheeler2005multicollinearity">Wheeler et Tiefelsdorf (<a href="references.html#ref-wheeler2005multicollinearity" role="doc-biblioref">2005</a>)</span> signalent les coefficients de régression locaux peuvent être fortement corrélées entre eux, en raison d’un problème de multicolinéarité excessive des modèles locaux. En guise d’exemple, la <a href="#fig-CorrelationCoefs" class="quarto-xref">figure&nbsp;<span>3.8</span></a> montre bien que certaines paires de coefficients locaux sont corrélées fortement.</p></li>
+<li><p><strong>Corrélation entre les coefficients locaux</strong>. Dans un article intitulé <em>Multicollinearity and correlation among local regression coefficients in geographically weighted regression</em>, <span class="citation" data-cites="wheeler2005multicollinearity">Wheeler et Tiefelsdorf (<a href="references.html#ref-wheeler2005multicollinearity" role="doc-biblioref">2005</a>)</span> signalent les coefficients de régression locaux peuvent être fortement corrélées entre eux, en raison d’un problème de multicolinéarité excessive des modèles locaux. En guise d’exemple, la <a href="#fig-CorrelationCoefs" class="quarto-xref">figure&nbsp;<span>4.11</span></a> montre bien que certaines paires de coefficients locaux sont corrélées fortement.</p></li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://ggobi.github.io/ggally/">"GGally"</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://ggobi.github.io/ggally/">"GGally"</a></span><span class="op">)</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">Modele.GWR</span><span class="op">$</span><span class="va">SDF</span><span class="op">)</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">df</span><span class="op">[</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Constante"</span> , <span class="st">"Pct0_14"</span>, <span class="st">"Pct_65"</span>, <span class="st">"Pct_Img"</span>, <span class="st">"Pct_brevet"</span>, <span class="st">"NivVieMed"</span><span class="op">)</span></span>
@@ -1013,15 +1529,15 @@ Figure&nbsp;3.7: Variable indépendante la plus significative au seuil de 5 %
 <img src="04-GWRClassique_files/figure-html/fig-CorrelationCoefs-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-CorrelationCoefs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3.8: Corrélation de Pearson entre les coefficients de régression locaux de la GWR
+Figure&nbsp;4.11: Corrélation de Pearson entre les coefficients de régression locaux de la GWR
 </figcaption></figure>
 </div>
 </div>
 </div>
-</section><section id="sec-045" class="level2" data-number="3.5"><h2 data-number="3.5" class="anchored" data-anchor-id="sec-045">
-<span class="header-section-number">3.5</span> Quiz de révision</h2>
-</section><section id="sec-046" class="level2" data-number="3.6"><h2 data-number="3.6" class="anchored" data-anchor-id="sec-046">
-<span class="header-section-number">3.6</span> Exercices de révision</h2>
+</section><section id="sec-045" class="level2" data-number="4.5"><h2 data-number="4.5" class="anchored" data-anchor-id="sec-045">
+<span class="header-section-number">4.5</span> Quiz de révision</h2>
+</section><section id="sec-046" class="level2" data-number="4.6"><h2 data-number="4.6" class="anchored" data-anchor-id="sec-046">
+<span class="header-section-number">4.6</span> Exercices de révision</h2>
 <div class="bloc_exercice">
 <div class="bloc_exercice-header">
 <div class="bloc_exercice-icon">
@@ -1031,22 +1547,22 @@ Figure&nbsp;3.8: Corrélation de Pearson entre les coefficients de régression l
 </div>
 <div class="bloc_exercice-body">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spgwr)</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/Lyon.Rdata"</span>)</span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajout des coordonnées x et y</span></span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>xy <span class="ot">&lt;-</span> à compléter</span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>LyonIris<span class="sc">$</span>X <span class="ot">&lt;-</span> à compléter</span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>LyonIris<span class="sc">$</span>Y <span class="ot">&lt;-</span> à compléter</span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Optimisation du nombre de voisins avec le CV</span></span>
-<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>formule <span class="ot">&lt;-</span> <span class="st">"PM25 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed"</span></span>
-<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>bwaCV.voisins  <span class="ot">&lt;-</span> <span class="fu">gwr.sel</span>(à compléter)</span>
-<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Réalisation de la GWR</span></span>
-<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>Modele.GWR <span class="ot">&lt;-</span> <span class="fu">gwr</span>(à compléter)</span>
-<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Affichage des résultats</span></span>
-<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>Modele.GWR</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spgwr)</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/Lyon.Rdata"</span>)</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajout des coordonnées x et y</span></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>xy <span class="ot">&lt;-</span> à compléter</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>LyonIris<span class="sc">$</span>X <span class="ot">&lt;-</span> à compléter</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>LyonIris<span class="sc">$</span>Y <span class="ot">&lt;-</span> à compléter</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Optimisation du nombre de voisins avec le CV</span></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>formule <span class="ot">&lt;-</span> <span class="st">"PM25 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed"</span></span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>bwCV.voisins  <span class="ot">&lt;-</span> <span class="fu">gwr.sel</span>(à compléter)</span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Réalisation de la GWR</span></span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>Modele.GWR <span class="ot">&lt;-</span> <span class="fu">gwr</span>(à compléter)</span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Affichage des résultats</span></span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a>Modele.GWR</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Correction à la <a href="08-Exercices.html#sec-08041" class="quarto-xref">section&nbsp;<span>7.4.1</span></a>.</p>
+<p>Correction à la <a href="08-Exercices.html#sec-08041" class="quarto-xref">section&nbsp;<span>8.4.1</span></a>.</p>
 </div>
 </div>
 <div class="bloc_exercice">
@@ -1058,23 +1574,23 @@ Figure&nbsp;3.8: Corrélation de Pearson entre les coefficients de régression l
 </div>
 <div class="bloc_exercice-body">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spgwr)</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Modèle MCO</span></span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>Modele.Global <span class="ot">&lt;-</span> à compléter</span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparaison des R2</span></span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>R2.global <span class="ot">&lt;-</span> à compléter</span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>rss <span class="ot">&lt;-</span> à compléter</span>
-<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>tss <span class="ot">&lt;-</span> à compléter</span>
-<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>R2.GWRquasiglobal <span class="ot">&lt;-</span> à compléter</span>
-<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"R2 global (LM) = "</span>, <span class="fu">round</span>(R2.global, <span class="dv">3</span>),</span>
-<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span><span class="sc">\n</span><span class="st">R2 quasi-global (GWR) : "</span>, <span class="fu">round</span>(R2.GWRquasiglobal, <span class="dv">3</span>))</span>
-<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparaison des R2</span></span>
-<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>à compléter</span>
-<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Les coefficients du modèle GWR varient-ils significativement dans l'espace?</span></span>
-<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>à compléter</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spgwr)</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Modèle MCO</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>Modele.Global <span class="ot">&lt;-</span> à compléter</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparaison des R2</span></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>R2.global <span class="ot">&lt;-</span> à compléter</span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>rss <span class="ot">&lt;-</span> à compléter</span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>tss <span class="ot">&lt;-</span> à compléter</span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>R2.GWRquasiglobal <span class="ot">&lt;-</span> à compléter</span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"R2 global (LM) = "</span>, <span class="fu">round</span>(R2.global, <span class="dv">3</span>),</span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span><span class="sc">\n</span><span class="st">R2 quasi-global (GWR) : "</span>, <span class="fu">round</span>(R2.GWRquasiglobal, <span class="dv">3</span>))</span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparaison des R2</span></span>
+<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a>à compléter</span>
+<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Les coefficients du modèle GWR varient-ils significativement dans l'espace?</span></span>
+<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a>à compléter</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Correction à la <a href="08-Exercices.html#sec-08042" class="quarto-xref">section&nbsp;<span>7.4.2</span></a>.</p>
+<p>Correction à la <a href="08-Exercices.html#sec-08042" class="quarto-xref">section&nbsp;<span>8.4.2</span></a>.</p>
 </div>
 </div>
 <div class="bloc_exercice">
@@ -1086,23 +1602,23 @@ Figure&nbsp;3.8: Corrélation de Pearson entre les coefficients de régression l
 </div>
 <div class="bloc_exercice-body">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tmap)</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Récupération du R carré locaux et valeurs de t locales</span></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>à compléter</span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Cartographie des R2 locaux</span></span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>à compléter</span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Cartographie des valeurs de t locales</span></span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Paramètres pour la légende </span></span>
-<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>legende.parametres <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">text.separator =</span> <span class="st">"à"</span>,</span>
-<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>                           <span class="at">text.less.than =</span> <span class="st">"Moins de"</span>,</span>
-<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>                           <span class="at">text.or.more =</span>  <span class="st">"et plus"</span>,</span>
-<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>                           <span class="at">decimal.mark =</span> <span class="st">","</span>,</span>
-<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>                           <span class="at">big.mark =</span> <span class="st">" "</span>)</span>
-<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Cartographie</span></span>
-<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>à compléter</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tmap)</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Récupération du R carré locaux et valeurs de t locales</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>à compléter</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Cartographie des R2 locaux</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>à compléter</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Cartographie des valeurs de t locales</span></span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Paramètres pour la légende </span></span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>legende.parametres <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">text.separator =</span> <span class="st">"à"</span>,</span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>                           <span class="at">text.less.than =</span> <span class="st">"Moins de"</span>,</span>
+<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>                           <span class="at">text.or.more =</span>  <span class="st">"et plus"</span>,</span>
+<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a>                           <span class="at">decimal.mark =</span> <span class="st">","</span>,</span>
+<span id="cb55-13"><a href="#cb55-13" aria-hidden="true" tabindex="-1"></a>                           <span class="at">big.mark =</span> <span class="st">" "</span>)</span>
+<span id="cb55-14"><a href="#cb55-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Cartographie</span></span>
+<span id="cb55-15"><a href="#cb55-15" aria-hidden="true" tabindex="-1"></a>à compléter</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Correction à la <a href="08-Exercices.html#sec-08043" class="quarto-xref">section&nbsp;<span>7.4.3</span></a>.</p>
+<p>Correction à la <a href="08-Exercices.html#sec-08043" class="quarto-xref">section&nbsp;<span>8.4.3</span></a>.</p>
 </div>
 </div>
 
@@ -1123,6 +1639,9 @@ Bivand, Roger et Danlin Yu. 2023. <em>spgwr: Geographically Weighted Regression<
 <div id="ref-brunsdon1996geographically" class="csl-entry" role="listitem">
 Brunsdon, Chris, A Stewart Fotheringham et Martin E Charlton. 1996. <span>«&nbsp;Geographically weighted regression: a method for exploring spatial nonstationarity.&nbsp;»</span> <em>Geographical analysis</em> 28 (4). Wiley Online Library: 281‑298.
 </div>
+<div id="ref-calvo2003local" class="csl-entry" role="listitem">
+Calvo, Ernesto et Marcelo Escolar. 2003. <span>«&nbsp;The local voter: A geographically weighted approach to ecological inference.&nbsp;»</span> <em>American Journal of Political Science</em> 47 (1): 189‑204. <a href="https://doi.org/10.1111/1540-5907.00013">https://doi.org/10.1111/1540-5907.00013</a>.
+</div>
 <div id="ref-fotheringham2003geographically" class="csl-entry" role="listitem">
 Fotheringham, A Stewart, Chris Brunsdon et Martin Charlton. 2003. <em>Geographically weighted regression: the analysis of spatially varying relationships</em>. John Wiley &amp; Sons.
 </div>
@@ -1130,10 +1649,13 @@ Fotheringham, A Stewart, Chris Brunsdon et Martin Charlton. 2003. <em>Geographic
 Isabella Gollini, Binbin Lu, Martin Charlton, Christopher Brunsdon et Paul Harris. 2015. <span>«&nbsp;<span>GWmodel</span>: An <span>R</span> Package for Exploring Spatial Heterogeneity Using Geographically Weighted Models.&nbsp;»</span> <em>Journal of Statistical Software</em> 63 (17): 1‑50. <a href="https://10.18637/jss.v063.i17">10.18637/jss.v063.i17</a>.
 </div>
 <div id="ref-lu2011geographically" class="csl-entry" role="listitem">
-Lu, Binbin, Martin Charlton et A Stewart Fotheringhama. 2011. <span>«&nbsp;Geographically weighted regression using a non-Euclidean distance metric with a study on London house price data.&nbsp;»</span> <em>Procedia Environmental Sciences</em> 7. Elsevier: 92‑97.
+Lu, Binbin, Martin Charlton et A Stewart Fotheringhama. 2011. <span>«&nbsp;Geographically weighted regression using a non-Euclidean distance metric with a study on London house price data.&nbsp;»</span> <em>Procedia Environmental Sciences</em> 7: 92‑97. <a href="https://doi.org/10.1016/j.proenv.2011.07.017">https://doi.org/10.1016/j.proenv.2011.07.017</a>.
+</div>
+<div id="ref-mennis2005distribution" class="csl-entry" role="listitem">
+Mennis, Jeremy L et Lisa Jordan. 2005. <span>«&nbsp;The distribution of environmental equity: Exploring spatial nonstationarity in multivariate models of air toxic releases.&nbsp;»</span> <em>Annals of the Association of American Geographers</em> 95 (2): 249‑268. <a href="https://doi.org/10.1111/j.1467-8306.2005.00459.x">https://doi.org/10.1111/j.1467-8306.2005.00459.x</a>.
 </div>
 <div id="ref-wheeler2005multicollinearity" class="csl-entry" role="listitem">
-Wheeler, David et Michael Tiefelsdorf. 2005. <span>«&nbsp;Multicollinearity and correlation among local regression coefficients in geographically weighted regression.&nbsp;»</span> <em>Journal of Geographical Systems</em> 7 (2). Springer: 161‑187.
+Wheeler, David et Michael Tiefelsdorf. 2005. <span>«&nbsp;Multicollinearity and correlation among local regression coefficients in geographically weighted regression.&nbsp;»</span> <em>Journal of Geographical Systems</em> 7 (2): 161‑187. <a href="https://doi.org/10.1007/s10109-005-0155-6">https://doi.org/10.1007/s10109-005-0155-6</a>.
 </div>
 </div>
 </section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
@@ -1557,12 +2079,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="./03-ModelesSpatiauxPanel.html" class="pagination-link" aria-label="Modèles d'économétrie spatiale par panel">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./05-GWRExtensions.html" class="pagination-link" aria-label="Extensions de la régression géographiquement pondérée">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

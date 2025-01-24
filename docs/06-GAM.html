@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.6.32">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>5&nbsp; Modèles généralisées additifs – Méthodes de régression spatiale : un grand bol d’R</title>
+<title>6&nbsp; Modèles généralisées additifs – Méthodes de régression spatiale : un grand bol d’R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -151,7 +151,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06-GAM.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Modèles généralisées additifs</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06-GAM.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Modèles généralisées additifs</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
@@ -192,6 +192,12 @@ window.Quarto = {
       <span class="sidebar-item-text sidebar-link text-start">
  <span class="menu-text">Partie 1. Notions de base</span></span>
   </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-NotionsDeBase.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Notions de base</span></span></a>
+  </div>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <span class="sidebar-item-text sidebar-link text-start">
  <span class="menu-text">Partie 2. Économétrie spatiale</span></span>
@@ -199,13 +205,13 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./02-ModelesEconometrieSpatiale.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./03-ModelesSpatiauxPanel.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -215,13 +221,13 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./04-GWRClassique.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Régressions géographiquement pondérées classiques</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Régressions géographiquement pondérées classiques</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./05-GWRExtensions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -231,13 +237,13 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./06-GAM.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Modèles généralisées additifs</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Modèles généralisées additifs</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./07-SEM.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Modèles avec des vecteurs propres spatiaux</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modèles avec des vecteurs propres spatiaux</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -247,7 +253,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./08-Exercices.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Correction des exercices</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Correction des exercices</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -265,26 +271,26 @@ window.Quarto = {
    
   <ul>
 <li>
-<a href="#sec-061" id="toc-sec-061" class="nav-link active" data-scroll-target="#sec-061"><span class="header-section-number">5.1</span> Modèles généralisés additifs (GAM) avec une <em>spline</em> bivariée sur les coordonnées géographiques</a>
+<a href="#sec-061" id="toc-sec-061" class="nav-link active" data-scroll-target="#sec-061"><span class="header-section-number">6.1</span> Modèles généralisés additifs (GAM) avec une <em>spline</em> bivariée sur les coordonnées géographiques</a>
   <ul class="collapse">
-<li><a href="#sec-0611" id="toc-sec-0611" class="nav-link" data-scroll-target="#sec-0611"><span class="header-section-number">5.1.1</span> Principe de base d’un GAM intégrant l’espace</a></li>
-  <li><a href="#sec-0612" id="toc-sec-0612" class="nav-link" data-scroll-target="#sec-0612"><span class="header-section-number">5.1.2</span> Mise en oeuvre et analyse dans R</a></li>
+<li><a href="#sec-0611" id="toc-sec-0611" class="nav-link" data-scroll-target="#sec-0611"><span class="header-section-number">6.1.1</span> Principe de base d’un GAM intégrant l’espace</a></li>
+  <li><a href="#sec-0612" id="toc-sec-0612" class="nav-link" data-scroll-target="#sec-0612"><span class="header-section-number">6.1.2</span> Mise en oeuvre et analyse dans R</a></li>
   </ul>
 </li>
   <li>
-<a href="#sec-062" id="toc-sec-062" class="nav-link" data-scroll-target="#sec-062"><span class="header-section-number">5.2</span> GAM avec un lissage par champ aléatoire de Markov</a>
+<a href="#sec-062" id="toc-sec-062" class="nav-link" data-scroll-target="#sec-062"><span class="header-section-number">6.2</span> GAM avec un lissage par champ aléatoire de Markov</a>
   <ul class="collapse">
-<li><a href="#sec-0621" id="toc-sec-0621" class="nav-link" data-scroll-target="#sec-0621"><span class="header-section-number">5.2.1</span> Principe de base d’un avec un champ aléatoire de Markov</a></li>
-  <li><a href="#sec-0622" id="toc-sec-0622" class="nav-link" data-scroll-target="#sec-0622"><span class="header-section-number">5.2.2</span> Mise en oeuvre et analyse dans R</a></li>
+<li><a href="#sec-0621" id="toc-sec-0621" class="nav-link" data-scroll-target="#sec-0621"><span class="header-section-number">6.2.1</span> Principe de base d’un avec un champ aléatoire de Markov</a></li>
+  <li><a href="#sec-0622" id="toc-sec-0622" class="nav-link" data-scroll-target="#sec-0622"><span class="header-section-number">6.2.2</span> Mise en oeuvre et analyse dans R</a></li>
   </ul>
 </li>
-  <li><a href="#sec-063" id="toc-sec-063" class="nav-link" data-scroll-target="#sec-063"><span class="header-section-number">5.3</span> Quiz de révision</a></li>
-  <li><a href="#sec-064" id="toc-sec-064" class="nav-link" data-scroll-target="#sec-064"><span class="header-section-number">5.4</span> Exercices de révision</a></li>
+  <li><a href="#sec-063" id="toc-sec-063" class="nav-link" data-scroll-target="#sec-063"><span class="header-section-number">6.3</span> Quiz de révision</a></li>
+  <li><a href="#sec-064" id="toc-sec-064" class="nav-link" data-scroll-target="#sec-064"><span class="header-section-number">6.4</span> Exercices de révision</a></li>
   </ul><div class="toc-actions"><ul><li><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<h1 class="title"><span id="sec-chap06" class="quarto-section-identifier"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Modèles généralisées additifs</span></span></h1>
+<h1 class="title"><span id="sec-chap06" class="quarto-section-identifier"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Modèles généralisées additifs</span></span></h1>
 </div>
 
 
@@ -348,8 +354,8 @@ window.Quarto = {
 </ul>
 </div>
 </div>
-<section id="sec-061" class="level2" data-number="5.1"><h2 data-number="5.1" class="anchored" data-anchor-id="sec-061">
-<span class="header-section-number">5.1</span> Modèles généralisés additifs (GAM) avec une <em>spline</em> bivariée sur les coordonnées géographiques</h2>
+<section id="sec-061" class="level2" data-number="6.1"><h2 data-number="6.1" class="anchored" data-anchor-id="sec-061">
+<span class="header-section-number">6.1</span> Modèles généralisés additifs (GAM) avec une <em>spline</em> bivariée sur les coordonnées géographiques</h2>
 <p>Les modèles généralisés additifs (<em>Generalized additive models</em> en anglais) permettent d’intégrer à la fois des effets linéaires et des effets non linéaires avec des <em>splines</em>. Ils peuvent alors être utilisés en intégrant une <em>spline</em> bivariée sur les coordonnées géographiques des centroïdes des entités spatiales.</p>
 <div class="bloc_attention">
 <div class="bloc_attention-header">
@@ -362,14 +368,14 @@ window.Quarto = {
 <p>Pour une description détaillée des modèles généralisés additifs, nous vous invitons vivement à lire le <a href="https://serieboldr.github.io/MethodesQuantitatives/11-GAM.html">chapitre suivant</a> <span class="citation" data-cites="RBoldAirMethodesAnalysesSpatiales">(<a href="references.html#ref-RBoldAirMethodesAnalysesSpatiales" role="doc-biblioref">Apparicio et Gelb 2024</a>)</span>.</p>
 </div>
 </div>
-<section id="sec-0611" class="level3" data-number="5.1.1"><h3 data-number="5.1.1" class="anchored" data-anchor-id="sec-0611">
-<span class="header-section-number">5.1.1</span> Principe de base d’un GAM intégrant l’espace</h3>
-<section id="sec-06111" class="level4" data-number="5.1.1.1"><h4 data-number="5.1.1.1" class="anchored" data-anchor-id="sec-06111">
-<span class="header-section-number">5.1.1.1</span> Formulation d’un modèle GAM vec une spline bivariée sur les coordonnées géographiques</h4>
+<section id="sec-0611" class="level3" data-number="6.1.1"><h3 data-number="6.1.1" class="anchored" data-anchor-id="sec-0611">
+<span class="header-section-number">6.1.1</span> Principe de base d’un GAM intégrant l’espace</h3>
+<section id="sec-06111" class="level4" data-number="6.1.1.1"><h4 data-number="6.1.1.1" class="anchored" data-anchor-id="sec-06111">
+<span class="header-section-number">6.1.1.1</span> Formulation d’un modèle GAM vec une spline bivariée sur les coordonnées géographiques</h4>
 <p>Avec une <em>spline</em> bivariée sur les coordonnées géographiques, l’équation d’un modèle généralisé additif s’écrit&nbsp;:</p>
 <p><span id="eq-GAM"><span class="math display">\[
 g(Y) \ = \beta_{0} \ + X\beta + s(CoordX,CoordY) \ + \epsilon
-\tag{5.1}\]</span></span></p>
+\tag{6.1}\]</span></span></p>
 <p>avec&nbsp;:</p>
 <ul>
 <li>
@@ -384,16 +390,16 @@ g(Y) \ = \beta_{0} \ + X\beta + s(CoordX,CoordY) \ + \epsilon
 <span class="math inline">\(s(CoordX,CoordY)\)</span>, <em>spline</em> bivariée sur les coordonnées <em>x</em> et <em>y</em>.</li>
 <li>
 <span class="math inline">\(\epsilon\)</span>, les résidus.</li>
-</ul></section><section id="sec-06112" class="level4" data-number="5.1.1.2"><h4 data-number="5.1.1.2" class="anchored" data-anchor-id="sec-06112">
-<span class="header-section-number">5.1.1.2</span> Pourquoi recourir à un modèle GAM avec une spline bivariée sur les coordonnées géographiques</h4>
+</ul></section><section id="sec-06112" class="level4" data-number="6.1.1.2"><h4 data-number="6.1.1.2" class="anchored" data-anchor-id="sec-06112">
+<span class="header-section-number">6.1.1.2</span> Pourquoi recourir à un modèle GAM avec une spline bivariée sur les coordonnées géographiques</h4>
 <p>L’intérêt de recourir à une <em>spline</em> bivariée sur les coordonnées géographiques est double&nbsp;:</p>
 <ol type="1">
 <li><p>Contrôler l’effet de la localisation sur la variable dépendante (<span class="math inline">\(y\)</span>). Les coefficients des autres variables indépendantes sont ainsi obtenus une fois l’espace pris en compte.</p></li>
 <li><p>Évaluer l’effet de la localisation (patron spatial), une fois les autres variables indépendantes contrôlées. Autrement dit, toutes choses étant égales par ailleurs, quel est l’effet de la localisation sur la variable dépendante?</p></li>
-</ol></section></section><section id="sec-0612" class="level3" data-number="5.1.2"><h3 data-number="5.1.2" class="anchored" data-anchor-id="sec-0612">
-<span class="header-section-number">5.1.2</span> Mise en oeuvre et analyse dans R</h3>
-<section id="sec-06121" class="level4" data-number="5.1.2.1"><h4 data-number="5.1.2.1" class="anchored" data-anchor-id="sec-06121">
-<span class="header-section-number">5.1.2.1</span> Réalisation du modèle GAM</h4>
+</ol></section></section><section id="sec-0612" class="level3" data-number="6.1.2"><h3 data-number="6.1.2" class="anchored" data-anchor-id="sec-0612">
+<span class="header-section-number">6.1.2</span> Mise en oeuvre et analyse dans R</h3>
+<section id="sec-06121" class="level4" data-number="6.1.2.1"><h4 data-number="6.1.2.1" class="anchored" data-anchor-id="sec-06121">
+<span class="header-section-number">6.1.2.1</span> Réalisation du modèle GAM</h4>
 <p>Pour construire des modèles GAM dans R, nous utilisons la fonction <code>gam</code> du <em>package</em> <code>mgcv</code> <span class="citation" data-cites="wood2011fast">(<a href="references.html#ref-wood2011fast" role="doc-biblioref">Wood 2011</a>)</span>.</p>
 <div class="cell">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Chargement des packages et des données</span></span>
@@ -509,9 +515,9 @@ Modele.GAM1 33.50046 2920.682
 Modele.GAM2 42.67520 2868.355</code></pre>
 </div>
 </div>
-</section><section id="sec-06122" class="level4" data-number="5.1.2.2"><h4 data-number="5.1.2.2" class="anchored" data-anchor-id="sec-06122">
-<span class="header-section-number">5.1.2.2</span> Visualisation de l’effet de l’espace</h4>
-<p>Pour visualiser les prédictions du modèle dans l’espace, toutes choses étant égales par ailleurs, nous utilisons la fonction <code>vis.gam</code> (<a href="#fig-EffetLocalisation1" class="quarto-xref">figure&nbsp;<span>5.1</span></a>). Les contours signalent qu’au centre de Lyon, les valeurs de dioxyde d’azote sont les plus élevées et dépassent même 40&nbsp;<span class="math inline">\(\mu\)</span>g/m<sup>3</sup>.</p>
+</section><section id="sec-06122" class="level4" data-number="6.1.2.2"><h4 data-number="6.1.2.2" class="anchored" data-anchor-id="sec-06122">
+<span class="header-section-number">6.1.2.2</span> Visualisation de l’effet de l’espace</h4>
+<p>Pour visualiser les prédictions du modèle dans l’espace, toutes choses étant égales par ailleurs, nous utilisons la fonction <code>vis.gam</code> (<a href="#fig-EffetLocalisation1" class="quarto-xref">figure&nbsp;<span>6.1</span></a>). Les contours signalent qu’au centre de Lyon, les valeurs de dioxyde d’azote sont les plus élevées et dépassent même 40&nbsp;<span class="math inline">\(\mu\)</span>g/m<sup>3</sup>.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/vis.gam.html">vis.gam</a></span><span class="op">(</span><span class="va">Modele.GAM2</span>, view<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="st">"Y"</span><span class="op">)</span>, plot.type <span class="op">=</span> <span class="st">"contour"</span>, color<span class="op">=</span><span class="st">"terrain"</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -520,7 +526,7 @@ Modele.GAM2 42.67520 2868.355</code></pre>
 <img src="06-GAM_files/figure-html/fig-EffetLocalisation1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-EffetLocalisation1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5.1: Visualisation des prédictions dans l’espace avec la fonction <code>vis.gam</code>
+Figure&nbsp;6.1: Visualisation des prédictions dans l’espace avec la fonction <code>vis.gam</code>
 </figcaption></figure>
 </div>
 </div>
@@ -564,14 +570,14 @@ Figure&nbsp;5.1: Visualisation des prédictions dans l’espace avec la fonction
 <img src="06-GAM_files/figure-html/fig-EffetLocalisation2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-EffetLocalisation2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5.2: Visualisation de l’effet de la localisation centrée sur zéro
+Figure&nbsp;6.2: Visualisation de l’effet de la localisation centrée sur zéro
 </figcaption></figure>
 </div>
 </div>
 </div>
-<p>La <a href="#fig-EffetLocalisation2" class="quarto-xref">figure&nbsp;<span>5.2</span></a> signale que dans le centre de Lyon, le dioxyde d’azote est plus élevé de 10 à 20&nbsp;<span class="math inline">\(\mu\)</span>g/m<sup>3</sup>, toutes choses étant égales par ailleurs. À l’inverse, dans les zones périphériques, il est faible. Cela signale un net patron spatial décroissant du centre vers la périphérie.</p>
-</section><section id="sec-06123" class="level4" data-number="5.1.2.3"><h4 data-number="5.1.2.3" class="anchored" data-anchor-id="sec-06123">
-<span class="header-section-number">5.1.2.3</span> Dépendance spatiale du modèle GAM</h4>
+<p>La <a href="#fig-EffetLocalisation2" class="quarto-xref">figure&nbsp;<span>6.2</span></a> signale que dans le centre de Lyon, le dioxyde d’azote est plus élevé de 10 à 20&nbsp;<span class="math inline">\(\mu\)</span>g/m<sup>3</sup>, toutes choses étant égales par ailleurs. À l’inverse, dans les zones périphériques, il est faible. Cela signale un net patron spatial décroissant du centre vers la périphérie.</p>
+</section><section id="sec-06123" class="level4" data-number="6.1.2.3"><h4 data-number="6.1.2.3" class="anchored" data-anchor-id="sec-06123">
+<span class="header-section-number">6.1.2.3</span> Dépendance spatiale du modèle GAM</h4>
 <p>Par contre, bien que l’autocorrélation spatiale des résidus du modèle GAM soit plus faible que pour le modèle MCO (<em>I</em> de Moran de 0,337 contre 0,570 avec <em>p</em>&nbsp;&lt;&nbsp;0,001), il reste que le problème de la dépendance spatiale n’est pas corrigé.</p>
 <div class="cell">
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Matrice de contiguïté selon le partage d'un segment (Rook)</span></span>
@@ -591,12 +597,12 @@ statistic = 0.33664, observed rank = 1000, p-value = 0.001
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
-</section></section></section><section id="sec-062" class="level2" data-number="5.2"><h2 data-number="5.2" class="anchored" data-anchor-id="sec-062">
-<span class="header-section-number">5.2</span> GAM avec un lissage par champ aléatoire de Markov</h2>
-<section id="sec-0621" class="level3" data-number="5.2.1"><h3 data-number="5.2.1" class="anchored" data-anchor-id="sec-0621">
-<span class="header-section-number">5.2.1</span> Principe de base d’un avec un champ aléatoire de Markov</h3>
-</section><section id="sec-0622" class="level3" data-number="5.2.2"><h3 data-number="5.2.2" class="anchored" data-anchor-id="sec-0622">
-<span class="header-section-number">5.2.2</span> Mise en oeuvre et analyse dans R</h3>
+</section></section></section><section id="sec-062" class="level2" data-number="6.2"><h2 data-number="6.2" class="anchored" data-anchor-id="sec-062">
+<span class="header-section-number">6.2</span> GAM avec un lissage par champ aléatoire de Markov</h2>
+<section id="sec-0621" class="level3" data-number="6.2.1"><h3 data-number="6.2.1" class="anchored" data-anchor-id="sec-0621">
+<span class="header-section-number">6.2.1</span> Principe de base d’un avec un champ aléatoire de Markov</h3>
+</section><section id="sec-0622" class="level3" data-number="6.2.2"><h3 data-number="6.2.2" class="anchored" data-anchor-id="sec-0622">
+<span class="header-section-number">6.2.2</span> Mise en oeuvre et analyse dans R</h3>
 <p>https://fromthebottomoftheheap.net/2017/10/19/first-steps-with-mrf-smooths/</p>
 <div class="bloc_aller_loin">
 <div class="bloc_aller_loin-header">
@@ -630,10 +636,10 @@ alternative hypothesis: greater</code></pre>
 </ul>
 </div>
 </div>
-</section></section><section id="sec-063" class="level2" data-number="5.3"><h2 data-number="5.3" class="anchored" data-anchor-id="sec-063">
-<span class="header-section-number">5.3</span> Quiz de révision</h2>
-</section><section id="sec-064" class="level2" data-number="5.4"><h2 data-number="5.4" class="anchored" data-anchor-id="sec-064">
-<span class="header-section-number">5.4</span> Exercices de révision</h2>
+</section></section><section id="sec-063" class="level2" data-number="6.3"><h2 data-number="6.3" class="anchored" data-anchor-id="sec-063">
+<span class="header-section-number">6.3</span> Quiz de révision</h2>
+</section><section id="sec-064" class="level2" data-number="6.4"><h2 data-number="6.4" class="anchored" data-anchor-id="sec-064">
+<span class="header-section-number">6.4</span> Exercices de révision</h2>
 <div class="bloc_exercice">
 <div class="bloc_exercice-header">
 <div class="bloc_exercice-icon">
@@ -1091,12 +1097,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="./05-GWRExtensions.html" class="pagination-link" aria-label="Extensions de la régression géographiquement pondérée">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./07-SEM.html" class="pagination-link" aria-label="Modèles avec des vecteurs propres spatiaux">
-        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Modèles avec des vecteurs propres spatiaux</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modèles avec des vecteurs propres spatiaux</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
