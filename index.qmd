@@ -98,10 +98,8 @@ Habituellement localisé au début d'un chapitre, il comprend la liste des *pack
 ::: bloc_objectif-header
 ::: bloc_objectif-icon
 :::
-
 **Bloc objectif**
 :::
-
 ::: bloc_objectif-body
 Il comprend une description des objectifs d'un chapitre ou d'une section.
 :::

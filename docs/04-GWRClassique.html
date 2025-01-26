@@ -91,7 +91,7 @@ div.csl-indent {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-2486e1f0a3ee9ee1fc393803a1361cdb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-9e975f8ad5abb1a75f6b80547d83af80.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap-183e74061cd0fe4872fa4cf166543a55.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -431,10 +431,10 @@ Figure&nbsp;4.1: Fonctions kernel pour définir la matrice de pondération W(i)
 </div>
 </div>
 </div>
-<p>Dans le modèle GWR, la valeur de <em>b</em> est soit fixée par la personne utilisatrice, soit optimisée avec la valeur de CV (<em>cross-validation</em>) ou celle de l’AIC. Notez qu’il est possible d’optimiser la taille de la zone d’influence à partir de la distance euclidienne ou du nombre de plus proches voisins.</p>
+<p>Dans le modèle GWR, la valeur de <em>b</em> est soit fixée par la personne utilisatrice, soit optimisée avec la valeur de CV (<em>cross-validation</em>) ou celle de l’AIC. Notez qu’il est possible d’optimiser la taille de la zone d’influence à partir de la distance (euclidienne le plus souvent, mais d’autres types de distances peuvent être utilisées) ou du nombre de plus proches voisins.</p>
 </section><section id="sec-0413" class="level3" data-number="4.1.3"><h3 data-number="4.1.3" class="anchored" data-anchor-id="sec-0413">
 <span class="header-section-number">4.1.3</span> Exemple applicatif de la GWR</h3>
-<p>Pour démontrer l’utilité de la GWR comme outil d’exploration de l’instabilité spatiale d’un modèle classique, nous utilisons le jeu de données sur Lyon (<a href="01-NotionsDeBase.html#sec-0111" class="quarto-xref">section&nbsp;<span>1.1.1</span></a>). Le modèle de régression est construit avec comme variable dépendante le dioxyde d’azote (NO<sub>2</sub>) et cinq variables sociodémographiques (<a href="01-NotionsDeBase.html#sec-0111" class="quarto-xref">section&nbsp;<span>1.1.1</span></a>).</p>
+<p>Pour démontrer l’utilité de la GWR comme outil d’exploration de l’instabilité spatiale d’un modèle classique, nous utilisons le jeu de données sur Lyon (<a href="01-NotionsDeBase.html#sec-0111" class="quarto-xref">section&nbsp;<span>1.1.1</span></a>). Les modèles de régression (global et GWR) sont construits avec comme variable dépendante le dioxyde d’azote (NO<sub>2</sub>) et cinq variables sociodémographiques comme variables indépendantes (<a href="01-NotionsDeBase.html#sec-0111" class="quarto-xref">section&nbsp;<span>1.1.1</span></a>).</p>
 <section id="sec-04131" class="level4" data-number="4.1.3.1"><h4 data-number="4.1.3.1" class="anchored" data-anchor-id="sec-04131">
 <span class="header-section-number">4.1.3.1</span> Résultats du modèle global</h4>
 <p>Les résultats de la régression linéaire multiple (modèle global) sont présentés au <a href="#tbl-regressionMCO" class="quarto-xref">tableau&nbsp;<span>4.1</span></a>. Les variables sociodémographiques (variables indépendantes) introduites dans le modèle expliquent 28,3&nbsp;% de la variance du dioxyde d’azote (variable dépendante). La constante et tous les coefficients de régression du modèle sont significatifs (p&nbsp;&lt;&nbsp;0,001). Toutes choses étant égales par ailleurs, le pourcentage d’immigrants est associé positivement avec le dioxyde d’azote (<span class="math inline">\(\beta\)</span>&nbsp;=&nbsp;0,283), ce qui traduit une certaine iniquité environnementale pour ce groupe de population. À l’inverse, toutes les autres variables sont associées négativement.</p>
@@ -556,7 +556,7 @@ Tableau&nbsp;4.2: Analyse de variance entre les modèles global et GWR
 </tbody>
 <tfoot><tr class="odd">
 <td style="text-align: left; padding: 0;">
-<sup></sup> R carré du modèle global = 0,2832.R carré du modèle GWR = 0,7838.</td>
+<sup></sup> R carré du modèle global = 0,2832. R carré du modèle GWR = 0,7838.</td>
 <td style="text-align: right;"></td>
 <td style="text-align: right;"></td>
 <td style="text-align: right;"></td>
@@ -571,7 +571,7 @@ Tableau&nbsp;4.2: Analyse de variance entre les modèles global et GWR
 <p><strong>Cartographie des valeurs de <em>t</em></strong></p>
 <p>Afin de décrire les variations spatiales des associations entre les variables dépendantes et indépendantes, nous cartographions les valeurs de <em>t</em> pour chacune des cinq variables indépendantes (<a href="#fig-CartoR2ValT" class="quarto-xref">figure&nbsp;<span>4.2</span></a>). Pour ce faire, nous utilisons les seuils de ± 1,96, 2,58 et 3,29, indiquant des seuils de signification à 5 %, 1 % et 0,1 %. La cartographie des valeurs de <em>t</em> illustre clairement les variations spatiales de l’association entre les variables indépendantes et le dioxyde d’azote.</p>
 <p>Premièrement, le modèle global avait révélé que toutes les variables indépendantes étaient significativement associées au seuil de 0,1&nbsp;%, toutes choses étant égales par ailleurs. Or, localement certaines variables ne sont plus significatives au seuil de 5&nbsp;% (valeurs de <em>t</em> comprises entre -1,96 et 1,96), soit les IRIS en gris à la <a href="#fig-CartoR2ValT" class="quarto-xref">figure&nbsp;<span>4.2</span></a>. Par exemple, le pourcentage d’enfants de moins de 15&nbsp;ans est associé négativement au dioxyde d’azote uniquement dans la partie sud de l’agglomération.</p>
-<p>Deuxièmement, le sens de la relation, c’est-à-dire du coefficient et de sa valeur de <em>t</em> associé, change pour certaines variables indépendantes. Cela est particulièrement le cas de la variable <em>médiane du niveau de vie (milliers</em> d’euros) qui affiche des valeurs positives dans le centre-ville, mais des valeurs négatives en périphérie. Autrement dit, une hausse du niveau de vie des résidents est associée à une réduction du dioxyde d’azote dans les quartiers et municipalités périphériques de l’agglomération, mais à une augmentation dans les quartiers centraux.</p>
+<p>Deuxièmement, le sens de la relation, c’est-à-dire du coefficient et de sa valeur de <em>t</em> associé, change pour certaines variables indépendantes. Cela est particulièrement le cas de la variable <em>médiane du niveau de vie (milliers d’euros)</em> qui affiche des valeurs positives dans le centre-ville, mais des valeurs négatives en périphérie. Autrement dit, une hausse du niveau de vie des résidents est associée à une réduction du dioxyde d’azote dans les quartiers et municipalités périphériques de l’agglomération, mais à une augmentation dans les quartiers centraux.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-CartoR2ValT" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -840,7 +840,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <span><span class="co">## Résidus des modèles global (MCO) et GWR</span></span>
 <span><span class="va">LyonIris</span><span class="op">$</span><span class="va">MCO.Residus</span> <span class="op">&lt;-</span> <span class="va">Modele.Global</span><span class="op">$</span><span class="va">residuals</span></span>
 <span><span class="va">LyonIris</span><span class="op">$</span><span class="va">GWR.Residus</span> <span class="op">&lt;-</span> <span class="va">Modele.GWR</span><span class="op">$</span><span class="va">SDF</span><span class="op">$</span><span class="va">pred</span> <span class="op">-</span> <span class="va">Modele.GWR</span><span class="op">$</span><span class="va">lm</span><span class="op">$</span><span class="va">y</span></span>
-<span><span class="co">## Matrice de contiguïté selon le partage d'un nœud</span></span>
+<span><span class="co">## Matrice de contiguïté</span></span>
 <span><span class="va">Rook</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/poly2nb.html">poly2nb</a></span><span class="op">(</span><span class="va">LyonIris</span>, queen<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">W.Rook</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">Rook</span>, zero.policy<span class="op">=</span><span class="cn">TRUE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
 <span><span class="co"># I de Moran sur les résidus du modèle global (MCO)</span></span>
@@ -1160,6 +1160,7 @@ Figure&nbsp;4.9: Variable indépendante la plus significative au seuil de 5 %
 <p>La construction d’une régression GWR est certainement plus simple (moins verbeuse) avec les fonctions <code>bw.gwr</code> et <code>gwr.basic</code> du <em>package</em> <code>GWmodel</code>.</p>
 <section id="sec-04221" class="level4" data-number="4.2.2.1"><h4 data-number="4.2.2.1" class="anchored" data-anchor-id="sec-04221">
 <span class="header-section-number">4.2.2.1</span> Définition de la taille de la zone d’influence</h4>
+<p>La fonction <code>bw.gwr</code> permet de trouver la valeur de la zone d’influence (<span class="math inline">\(b\)</span>).</p>
 <div class="cell">
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://gwr.nuim.ie/">GWmodel</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"data/Lyon.Rdata"</span><span class="op">)</span></span>
@@ -1320,7 +1321,7 @@ Sélection de la taille de la zone optimale (bandwidth) avec la distance :
 <pre><code>   ***********************************************************************
    *                       Package   GWmodel                             *
    ***********************************************************************
-   Program starts at: 2025-01-24 01:03:29.843063 
+   Program starts at: 2025-01-26 15:26:42.381787 
    Call:
    gwr.basic(formula = NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + 
     NivVieMed, data = LyonIris, bw = bwCV.voisins, kernel = "bisquare", 
@@ -1412,12 +1413,12 @@ Sélection de la taille de la zone optimale (bandwidth) avec la distance :
    ---Significance stars
    Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
    ***********************************************************************
-   Program stops at: 2025-01-24 01:03:48.12102 </code></pre>
+   Program stops at: 2025-01-26 15:26:56.70761 </code></pre>
 </div>
 </div>
 </section><section id="sec-04223" class="level4" data-number="4.2.2.3"><h4 data-number="4.2.2.3" class="anchored" data-anchor-id="sec-04223">
 <span class="header-section-number">4.2.2.3</span> Cartographie des résultats du modèle GWR</h4>
-<p>Une fois le modèle obtenu, nous disposons de l’ensemble des résultats locaux (coefficients, valeur prédite, résidus, valeurs de t et R<sup>2</sup>) dans l’objet <code>Modele.GWR$SDF</code> qui sera une couche <code>sf</code> comme le jeu de données initial. Il est ainsi aisée de reproduire les cartes présentées à la <a href="#sec-04214" class="quarto-xref">section&nbsp;<span>4.2.1.4</span></a>. En guise d’exemple, dans le code ci-dessous, nous cartographions les valeurs locaux du R<sup>2</sup> et uniquement celles de <em>t</em> pour la variable relative au médiane du niveau de vie (<a href="#fig-CartoGWmodel" class="quarto-xref">figure&nbsp;<span>4.10</span></a>).</p>
+<p>Une fois le modèle obtenu, nous disposons de l’ensemble des résultats locaux (coefficients, valeur prédite, résidus, valeurs de t et R<sup>2</sup>) dans l’objet <code>Modele.GWR$SDF</code> qui sera une couche <code>sf</code> comme le jeu de données initial. Il est alors aisée de reproduire les cartes présentées à la <a href="#sec-04214" class="quarto-xref">section&nbsp;<span>4.2.1.4</span></a>. En guise d’exemple, dans le code ci-dessous, nous cartographions les valeurs locaux du R<sup>2</sup> et uniquement celles de <em>t</em> pour la variable relative au médiane du niveau de vie (<a href="#fig-CartoGWmodel" class="quarto-xref">figure&nbsp;<span>4.10</span></a>).</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb49"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">GWR.Resultats</span> <span class="op">&lt;-</span> <span class="va">Modele.GWR</span><span class="op">$</span><span class="va">SDF</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">GWR.Resultats</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1480,7 +1481,7 @@ Figure&nbsp;4.10: Exemple de cartographie avec les résultats de la GWR obtenus 
 <p><strong>Modèles GWR avec d’autres distributions</strong></p>
 </div>
 <div class="bloc_aller_loin-body">
-<p>Dans ce chapitre, nous avons décrit la GWR classique avec une distribution gaussienne qui est une extension de la régression linéaire multiple. Pour construire ce type de GWR classique, nous avons utilisé les fonctions <code>gwr.sel</code> et <code>gwr</code> du <em>package</em> <code>spgwr</code>. De la même manière, il est possible des construire des modèles GWR qui sont des extensions des modèles linéaires généralisés (GLM), notamment pour des variables dépendantes qualitatives (modèle logistique binomial), de comptage (Poisson, quasi-poisson), continues (gaussien, inverse gaussienne, Gamma). Pour ce faire, il faut utiliser les fonctions <code>bw.ggwr</code> et <code>ggwr</code> du <em>package</em> <code>spgwr</code> et spécifier le type de distribution avec l’argument <code>family</code> dont la valeur par défaut est <code><a href="https://rdrr.io/r/stats/family.html">gaussian()</a></code>. Cet argument permet de spécifier la famille de distribution et la fonction de lien en utilisant les familles de distribution disponibles dans la fonction de <code>glm</code> (<em>Generalized Linear Models</em> pour régressions linéaires généralisées)&nbsp;:</p>
+<p>Dans ce chapitre, nous avons décrit la GWR classique avec une distribution gaussienne qui est une extension de la régression linéaire multiple. Pour construire ce type de GWR classique, nous avons utilisé les fonctions des <em>packages</em> <code>spgwr</code> (<code>gwr.sel</code> et <code>gwr</code>) et <code>GWmodel</code> (<code>bw.gwr</code> et <code>gwr.basic</code>). De la même manière, il est possible des construire des modèles GWR qui sont des extensions des modèles linéaires généralisés (GLM), notamment pour des variables dépendantes qualitatives (modèle logistique binomial), de comptage (Poisson, quasi-poisson), continues (gaussien, inverse gaussienne, Gamma). Pour ce faire, il faut utiliser les fonctions <code>bw.ggwr</code> et <code>ggwr</code> du <em>package</em> <code>spgwr</code> et spécifier le type de distribution avec l’argument <code>family</code> dont la valeur par défaut est <code><a href="https://rdrr.io/r/stats/family.html">gaussian()</a></code>. Cet argument permet de spécifier la famille de distribution et la fonction de lien en utilisant les familles de distribution disponibles dans la fonction de <code>glm</code> (<em>Generalized Linear Models</em> pour régressions linéaires généralisées)&nbsp;:</p>
 <ul>
 <li><code>binomial(link = "logit")</code></li>
 <li><code>gaussian(link = "identity")</code></li>
@@ -1491,15 +1492,15 @@ Figure&nbsp;4.10: Exemple de cartographie avec les résultats de la GWR obtenus 
 <li><code>quasibinomial(link = "logit")</code></li>
 <li><code>quasipoisson(link = "log")</code></li>
 </ul>
-<p>Avec le <em>package</em> <code>GWmodel</code>, vous pourrez utilisez les fonctions <code>bw.ggwr</code> et <code>gwss</code> qui permettent de réaliser des régressions linéaires pondérées avec des distributions de Poisson et binomiale (avec l’argument <code>family = "poisson"</code> et <code>family = "binomial"</code>))</p>
+<p>Avec le <em>package</em> <code>GWmodel</code>, vous pourrez utilisez les fonctions <code>bw.ggwr</code> et <code>gwss</code> qui permettent de réaliser des régressions linéaires pondérées avec des distributions de Poisson et binomiale (avec l’argument <code>family = "poisson"</code> et <code>family = "binomial"</code>).</p>
 </div>
 </div>
 </section><section id="sec-044" class="level2" data-number="4.4"><h2 data-number="4.4" class="anchored" data-anchor-id="sec-044">
 <span class="header-section-number">4.4</span> Limites et critiques des GWR</h2>
 <p>Bien que la GWR classique représente un outil d’exploration de données spatiales particulièrement intéressant pour évaluer l’importance de l’instabilité spatiale d’un modèle de régression <span class="citation" data-cites="apparicio2007modelisation mennis2005distribution calvo2003local">(<a href="references.html#ref-apparicio2007modelisation" role="doc-biblioref">Apparicio, Séguin et Leloup 2007</a>; <a href="references.html#ref-mennis2005distribution" role="doc-biblioref">Mennis et Jordan 2005</a>; <a href="references.html#ref-calvo2003local" role="doc-biblioref">Calvo et Escolar 2003</a>)</span>, elle comprend plusieurs limites&nbsp;:</p>
 <ul>
-<li><p><strong>Type de distance</strong>. Dans le cadre de ce chapitre, nous avons calculé la GWR avec la distance euclidienne qui n’est pas adapté à tous les phénomènes à l’étude. Par exemple, <span class="citation" data-cites="lu2011geographically">Lu, Charlton et Fotheringhama (<a href="references.html#ref-lu2011geographically" role="doc-biblioref">2011</a>)</span> utilisent des distances calculées sur un réseau de rues pour modéliser le prix de vente des maisons à Londres avec un modèle GWR. Pour ce faire, il est possible d’utiliser les fonctions <code>bw.gwr</code> <code>gwr.basic</code> du <em>package</em> <code>GWmodel</code> dont l’argument <code>dmat</code> permet de spécifier une matrice de distance prédéfinie.</p></li>
-<li><p><strong>Choix du noyau (kernel) et la taille de la zone d’influence</strong> peuvent impacter grandement les résultats. En effet, la zone d’influence (défini avec une distance ou un nombre donné de plus proches voisins) peut entraîner localement un nombre insuffisant d’observations, compromettant ainsi la robustesse des équations de régression locales.</p></li>
+<li><p><strong>Type de distance</strong>. Dans le cadre de ce chapitre, nous avons calculé la GWR avec la distance euclidienne qui n’est pas adaptée à tous les phénomènes à l’étude. Par exemple, <span class="citation" data-cites="lu2011geographically">Lu, Charlton et Fotheringhama (<a href="references.html#ref-lu2011geographically" role="doc-biblioref">2011</a>)</span> utilisent des distances calculées sur un réseau de rues pour modéliser le prix de vente des maisons à Londres avec un modèle GWR. Pour ce faire, il est possible d’utiliser les fonctions <code>bw.gwr</code> <code>gwr.basic</code> du <em>package</em> <code>GWmodel</code> dont l’argument <code>dmat</code> permet de spécifier une matrice de distance prédéfinie.</p></li>
+<li><p><strong>Choix du noyau (kernel) et la taille de la zone d’influence</strong>. Ces deux paramètres de la GWR peuvent impactent grandement les résultats. En effet, la zone d’influence (défini avec une distance ou un nombre donné de plus proches voisins) peut entraîner localement un nombre insuffisant d’observations, compromettant ainsi la robustesse des équations de régression locales.</p></li>
 <li><p><strong>Prédicteurs locaux et globaux</strong>. Nous avons vu que la fonction <code>LMZ.F3GWR.test</code> permet de déterminer si les coefficients de régression présentent des variations significatives dans l’espace. Or, certains variables indépendantes peuvent être introduites globalement et non localement, comme nous le verrons dans le prochain chapitre (<a href="05-GWRExtensions.html#sec-051" class="quarto-xref">section&nbsp;<span>5.1</span></a>).</p></li>
 </ul>
 <p>La GWR fait face aussi à d’importantes critiques&nbsp;:</p>

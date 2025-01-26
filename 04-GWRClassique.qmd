@@ -150,11 +150,11 @@ ggplot(df, aes(x = dij)) +
                      breaks = c("gaussienne", "exponentielle", "bicarrée", "tricube", "boxcar"))
 ```
 
-Dans le modèle GWR, la valeur de *b* est soit fixée par la personne utilisatrice, soit optimisée avec la valeur de CV (*cross-validation*) ou celle de l'AIC. Notez qu'il est possible d'optimiser la taille de la zone d'influence à partir de la distance euclidienne ou du nombre de plus proches voisins.
+Dans le modèle GWR, la valeur de *b* est soit fixée par la personne utilisatrice, soit optimisée avec la valeur de CV (*cross-validation*) ou celle de l'AIC. Notez qu'il est possible d'optimiser la taille de la zone d'influence à partir de la distance (euclidienne le plus souvent, mais d'autres types de distances peuvent être utilisées) ou du nombre de plus proches voisins.
 
 ### Exemple applicatif de la GWR {#sec-0413}
 
-Pour démontrer l'utilité de la GWR comme outil d'exploration de l'instabilité spatiale d'un modèle classique, nous utilisons le jeu de données sur Lyon ([section @sec-0111]). Le modèle de régression est construit avec comme variable dépendante le dioxyde d'azote (NO~2~) et cinq variables sociodémographiques ([section @sec-0111]).
+Pour démontrer l'utilité de la GWR comme outil d'exploration de l'instabilité spatiale d'un modèle classique, nous utilisons le jeu de données sur Lyon ([section @sec-0111]). Les modèles de régression (global et GWR) sont construits avec comme variable dépendante le dioxyde d'azote (NO~2~) et cinq variables sociodémographiques comme variables indépendantes ([section @sec-0111]).
 
 #### Résultats du modèle global {#sec-04131}
 
@@ -216,11 +216,9 @@ L'analyse de variance entre les résidus des deux modèles démontre que le mod�
 #| echo: false
 #| message: false
 #| warning: false
-library(sf)
-library(tmap)
 library(spgwr)
+library(tmap)
 load("data/Lyon.Rdata")
-## Ajout des coordonnées X et Y dans LyonIris 
 xy <- st_coordinates(st_centroid(LyonIris))
 LyonIris$X <- xy[,1]
 LyonIris$Y <- xy[,2]
@@ -285,7 +283,7 @@ Afin de décrire les variations spatiales des associations entre les variables d
 
 Premièrement, le modèle global avait révélé que toutes les variables indépendantes étaient significativement associées au seuil de 0,1 %, toutes choses étant égales par ailleurs. Or, localement certaines variables ne sont plus significatives au seuil de 5 % (valeurs de *t* comprises entre -1,96 et 1,96), soit les IRIS en gris à la @fig-CartoR2ValT. Par exemple, le pourcentage d'enfants de moins de 15 ans est associé négativement au dioxyde d'azote uniquement dans la partie sud de l'agglomération.
 
-Deuxièmement, le sens de la relation, c'est-à-dire du coefficient et de sa valeur de *t* associé, change pour certaines variables indépendantes. Cela est particulièrement le cas de la variable *médiane du niveau de vie (milliers* d'euros) qui affiche des valeurs positives dans le centre-ville, mais des valeurs négatives en périphérie. Autrement dit, une hausse du niveau de vie des résidents est associée à une réduction du dioxyde d'azote dans les quartiers et municipalités périphériques de l'agglomération, mais à une augmentation dans les quartiers centraux.
+Deuxièmement, le sens de la relation, c'est-à-dire du coefficient et de sa valeur de *t* associé, change pour certaines variables indépendantes. Cela est particulièrement le cas de la variable *médiane du niveau de vie (milliers d'euros)* qui affiche des valeurs positives dans le centre-ville, mais des valeurs négatives en périphérie. Autrement dit, une hausse du niveau de vie des résidents est associée à une réduction du dioxyde d'azote dans les quartiers et municipalités périphériques de l'agglomération, mais à une augmentation dans les quartiers centraux.
 
 ```{r}
 #| label: fig-CartoR2ValT
@@ -296,6 +294,7 @@ Deuxièmement, le sens de la relation, c'est-à-dire du coefficient et de sa val
 #| message: false
 #| warning: false
 ## Récupération des coefficients de régression et calcul des valeurs de t locales
+library(tmap)
 LyonIris$GWR.R2 <- Modele.GWR$SDF$localR2
 VarsIndep <- c("Pct0_14", "Pct_65", "Pct_Img", "Pct_brevet", "NivVieMed")
 for(e in VarsIndep){
@@ -597,7 +596,7 @@ library(spdep)
 ## Résidus des modèles global (MCO) et GWR
 LyonIris$MCO.Residus <- Modele.Global$residuals
 LyonIris$GWR.Residus <- Modele.GWR$SDF$pred - Modele.GWR$lm$y
-## Matrice de contiguïté selon le partage d'un nœud
+## Matrice de contiguïté
 Rook <- poly2nb(LyonIris, queen=TRUE)
 W.Rook <- nb2listw(Rook, zero.policy=TRUE, style = "W")
 # I de Moran sur les résidus du modèle global (MCO)
@@ -890,6 +889,8 @@ La construction d'une régression GWR est certainement plus simple (moins verbeu
 
 #### Définition de la taille de la zone d'influence {#sec-04221}
 
+La fonction `bw.gwr` permet de trouver la valeur de la zone d'influence ($b$).
+
 ```{r}
 #| echo: true 
 #| message: false
@@ -978,7 +979,7 @@ Modele.GWR
 
 #### Cartographie des résultats du modèle GWR {#sec-04223}
 
-Une fois le modèle obtenu, nous disposons de l'ensemble des résultats locaux (coefficients, valeur prédite, résidus, valeurs de t et R^2^) dans l'objet `Modele.GWR$SDF` qui sera une couche `sf` comme le jeu de données initial. Il est ainsi aisée de reproduire les cartes présentées à la [section @sec-04214]. En guise d'exemple, dans le code ci-dessous, nous cartographions les valeurs locaux du R^2^ et uniquement celles de *t* pour la variable relative au médiane du niveau de vie (@fig-CartoGWmodel).
+Une fois le modèle obtenu, nous disposons de l'ensemble des résultats locaux (coefficients, valeur prédite, résidus, valeurs de t et R^2^) dans l'objet `Modele.GWR$SDF` qui sera une couche `sf` comme le jeu de données initial. Il est alors aisée de reproduire les cartes présentées à la [section @sec-04214]. En guise d'exemple, dans le code ci-dessous, nous cartographions les valeurs locaux du R^2^ et uniquement celles de *t* pour la variable relative au médiane du niveau de vie (@fig-CartoGWmodel).
 
 ```{r}
 #| echo: true 
@@ -1034,7 +1035,7 @@ tmap_arrange(Carte1, Carte2)
 :::
 
 ::: bloc_aller_loin-body
-Dans ce chapitre, nous avons décrit la GWR classique avec une distribution gaussienne qui est une extension de la régression linéaire multiple. Pour construire ce type de GWR classique, nous avons utilisé les fonctions `gwr.sel` et `gwr` du *package* `spgwr`. De la même manière, il est possible des construire des modèles GWR qui sont des extensions des modèles linéaires généralisés (GLM), notamment pour des variables dépendantes qualitatives (modèle logistique binomial), de comptage (Poisson, quasi-poisson), continues (gaussien, inverse gaussienne, Gamma). Pour ce faire, il faut utiliser les fonctions `bw.ggwr` et `ggwr` du *package* `spgwr` et spécifier le type de distribution avec l’argument `family` dont la valeur par défaut est `gaussian()`. Cet argument permet de spécifier la famille de distribution et la fonction de lien en utilisant les familles de distribution disponibles dans la fonction de `glm` (*Generalized Linear Models* pour régressions linéaires généralisées) :
+Dans ce chapitre, nous avons décrit la GWR classique avec une distribution gaussienne qui est une extension de la régression linéaire multiple. Pour construire ce type de GWR classique, nous avons utilisé les fonctions des *packages* `spgwr` (`gwr.sel` et `gwr`) et `GWmodel` (`bw.gwr` et  `gwr.basic`). De la même manière, il est possible des construire des modèles GWR qui sont des extensions des modèles linéaires généralisés (GLM), notamment pour des variables dépendantes qualitatives (modèle logistique binomial), de comptage (Poisson, quasi-poisson), continues (gaussien, inverse gaussienne, Gamma). Pour ce faire, il faut utiliser les fonctions `bw.ggwr` et `ggwr` du *package* `spgwr` et spécifier le type de distribution avec l’argument `family` dont la valeur par défaut est `gaussian()`. Cet argument permet de spécifier la famille de distribution et la fonction de lien en utilisant les familles de distribution disponibles dans la fonction de `glm` (*Generalized Linear Models* pour régressions linéaires généralisées) :
 
 -   `binomial(link = "logit")`
 -   `gaussian(link = "identity")`
@@ -1045,7 +1046,7 @@ Dans ce chapitre, nous avons décrit la GWR classique avec une distribution gaus
 -   `quasibinomial(link = "logit")`
 -   `quasipoisson(link = "log")`
 
-Avec le *package* `GWmodel`, vous pourrez utilisez les fonctions `bw.ggwr` et `gwss` qui permettent de réaliser des régressions linéaires pondérées avec des distributions de Poisson et binomiale (avec l’argument `family = "poisson"` et `family = "binomial"`))
+Avec le *package* `GWmodel`, vous pourrez utilisez les fonctions `bw.ggwr` et `gwss` qui permettent de réaliser des régressions linéaires pondérées avec des distributions de Poisson et binomiale (avec l’argument `family = "poisson"` et `family = "binomial"`).
 :::
 :::
 
@@ -1054,9 +1055,9 @@ Avec le *package* `GWmodel`, vous pourrez utilisez les fonctions `bw.ggwr` et `g
 
 Bien que la GWR classique représente un outil d’exploration de données spatiales particulièrement intéressant pour évaluer l’importance de l'instabilité spatiale d’un modèle de régression [@apparicio2007modelisation; @mennis2005distribution; @calvo2003local], elle comprend  plusieurs limites :
 
--   **Type de distance**. Dans le cadre de ce chapitre, nous avons calculé la GWR avec la distance euclidienne qui n'est pas adapté à tous les phénomènes à l'étude. Par exemple, @lu2011geographically utilisent des distances calculées sur un réseau de rues pour modéliser le prix de vente des maisons à Londres avec un modèle GWR. Pour ce faire, il est possible d'utiliser les fonctions `bw.gwr` `gwr.basic` du *package* `GWmodel` dont l'argument `dmat` permet de spécifier une matrice de distance prédéfinie.
+-   **Type de distance**. Dans le cadre de ce chapitre, nous avons calculé la GWR avec la distance euclidienne qui n'est pas adaptée à tous les phénomènes à l'étude. Par exemple, @lu2011geographically utilisent des distances calculées sur un réseau de rues pour modéliser le prix de vente des maisons à Londres avec un modèle GWR. Pour ce faire, il est possible d'utiliser les fonctions `bw.gwr` `gwr.basic` du *package* `GWmodel` dont l'argument `dmat` permet de spécifier une matrice de distance prédéfinie.
 
--   **Choix du noyau (kernel) et la taille de la zone d'influence** peuvent impacter grandement les résultats. En effet, la zone d'influence (défini avec une distance ou un nombre donné de plus proches voisins) peut entraîner localement un nombre insuffisant d'observations, compromettant ainsi la robustesse des équations de régression locales.
+-   **Choix du noyau (kernel) et la taille de la zone d'influence**. Ces deux paramètres de la GWR peuvent impactent grandement les résultats. En effet, la zone d'influence (défini avec une distance ou un nombre donné de plus proches voisins) peut entraîner localement un nombre insuffisant d'observations, compromettant ainsi la robustesse des équations de régression locales.
 
 -   **Prédicteurs locaux et globaux**. Nous avons vu que la fonction `LMZ.F3GWR.test` permet de déterminer si les coefficients de régression présentent des variations significatives dans l’espace. Or, certains variables indépendantes peuvent être introduites globalement et non localement, comme nous le verrons dans le prochain chapitre ([section @sec-051]).
 
