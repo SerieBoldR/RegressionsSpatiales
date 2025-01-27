@@ -1,6 +1,32 @@
 # Modèles avec des vecteurs propres spatiaux {#sec-chap07}
 
-Dans ce chapitre, nous abordons les modèles linéaires généralisés avec des vecteurs spatiaux proposés par Daniel Griffith [-@fotheringham2003geographically; @griffith2019spatial].
+Un autre technique utilisée pour ajouter l'espace dans un modèle a été proposée par par Daniel Griffith [-@fotheringham2003geographically; @griffith2019spatial] et est connue sous le nom du filtrage spatiale (*spatial filtering*).
+
+Cette technique est très flexible car elle peut s'appliquer à n'importe quel type de GLM et GLMM. L'approche est relativement simple, car elle consiste à ajouter dans le modèle un ensemble de variables supplémentaires dont le rôle est de capturer des tendances spatiales qui autrement se retrouveraient dans les résidus. Les variables supplémentaires en question sont appelée des vecteurs propres spatiaux (*spatial eigen vectors*) et sont obtenus à partir de la matrice de pondération spatiale décrivant l'espace de nos données. Plus exactement, les SEV sont obtenus en décomposant la matrice spatiale de la même manière que nous décomposons la variance d'un jeu de données lorsque l'on réalise une analyse en composantes principales (ACP). Pour un rappel sur l'ACP, vous pouvez vous référez au [chapitre sur les analyses factorielles](https://serieboldr.github.io/MethodesQuantitatives/12-AnalysesFactorielles.html#sec-122) [@RBoldAir]. Ces vecteurs propres sont aussi appelés *Moran eigen vectors*.
+
+
+## Les vecteurs propres de Moran {#sec-SEV_why}
+
+À partir d'une matrice spatiale *W* de taille *n x n*, il est possible de calculer *n-1* vecteurs propres de Moran qui représentent chacun un agencement spatial possible. Ces vecteurs propres sont orthogonaux, ce qui signifie qu'ils ne sont pas corrélés entre eux. Le premier vecteur propre issu de *W* représente l'agencement spatial avec la plus haute autocorrélation spatiale positive possible. À l'inverse, le dernier vecteur propre représente l'agencement spatial avec la plus forte autocorrélation spatiale négative possible.
+
+Prenons un exemple concret avec les données de secteurs de recensement de Montréal ci-dessous.
+
+
+```{r}
+#| label: fig-sevm1
+#| echo: false
+#| message: false
+#| warning: false
+
+library(spmoran)
+library(mgcv)
+library(ggplot2)
+library(ggpubr)
+
+
+
+```
+
 
 ::: bloc_objectif
 ::: bloc_objectif-header

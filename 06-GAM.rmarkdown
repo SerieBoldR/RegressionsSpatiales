@@ -25,6 +25,9 @@ Pour une explication plus en profondeur sur le fonctionnement des *splines*, vou
 
 .
 
+
+
+
 ```{r}
 #| label: fig-gam1
 #| echo: false
@@ -64,6 +67,9 @@ ggplot() +
   theme(legend.position = "none") 
 ```
 
+
+
+
 ::: bloc_objectif
 ::: bloc_objectif-header
 ::: bloc_objectif-icon
@@ -89,6 +95,9 @@ Nous venons de voir qu'une spline permet de représenter l'impact potentiellemen
 Une spline bivariée permet de capturer l'effet simultanée de deux variables indépendantes sur une variable dépendante. Dans un contexte spatial, celle permet par exemple de capturer comment un changement dans les coordonnées X et Y impacte la variable dépendante. De plus, compte tenu de la forme des fonctions de base utilisées, les splines permettent généralement de capturer des relations spatiales avec une forte autocorrélation spatiale positive.
 
 Prenons un exemple avec un jeu de données fictifs et admettons qu'il représente des mesures de pollutions effectuées à différentes localisation sur un territoire (@fig-gam2).
+
+
+
 
 ```{r}
 #| label: fig-gam2
@@ -122,7 +131,13 @@ plot1 <- ggplot(dataset) +
 plot1
 ```
 
+
+
+
 Nous pourrions créer des bases d'une spline qui varient à la fois dans les coordonnées spatiales X et Y. L'animation à la figure (@fig-gam3) illustre des bases obtenues (k = 25) pour les données ci-dessus.
+
+
+
 
 ```{r}
 #| eval: false
@@ -216,7 +231,13 @@ if(is_latex_output()) {
 }
 ```
 
+
+
+
 Si nous ajustons un coefficient pour chaque base et que nous combinons les effets de chaque base, nous obtenons un effet spatial permettant de prédire la variable de pollution. Nous le représentons ici à la figure (@fig-gam4). Nous constatons ainsi que le modèle a été capable de reproduire les tendances principales des niveaux de pollution en retrouvant les secteurs avec des valeurs fortes et faibles. Plus l'autocorrélation spatiale est élevée, plus ce type de modèle est efficace pour capturer l'effet spatial.
+
+
+
 
 ```{r}
 #| label: fig-gam4
@@ -247,6 +268,9 @@ plot2 <- ggplot(df_pred) +
 plot3 <- ggarrange(plot1, plot2, common.legend = T, ncol = 2)
 plot3
 ```
+
+
+
 
 
 d'un point de vue plus formel, un modèle GAM peut être décrit par l'équation suivante: 
@@ -383,6 +407,9 @@ Pour notre exemple, nous allons nous concentrer sur le ratio entre utilisateurs 
 
 Puisque la transformation *alr* implique une division, puis un log, il est important que ni le numérateur ni le dénominateur ne soit 0. Dans notre cas, nous avons quelques SR avec des parts modales TC à 0. Il semble peu probable que strictement personne dans un SR n'utilise le transport collectif, nous allons donc remplacer ces 0 par le plus petit pourcentage trouvés dans les SR dont la valeur est supérieure à 0.
 
+
+
+
 ```{r}
 #| echo: true 
 #| message: false 
@@ -436,7 +463,13 @@ ggarrange(plot1, plot2, nrow = 2)
 
 ```
 
+
+
+
 La figure @fig-gamhist illustre la distribution de la variable que nous souhaitons modéliser. Le simple ratio a des valeurs comprises entre 0 et 2,5. Si sa valeur est de 0, cela signifie que personne dans le secteur de recensement n'utiliser le transport collectif comme mode principale pour ses déplacements pendulaires. Une valeur de 1 indique que cette proportion est égale à celle des personnes utilisant la voiture. Une valeur plus grande que un indique une dominance du mode TC plutôt qu'automobile. Sans surprise, pour la majorité des secteurs de recensement, la valeur est inférieure à 1. Le log du ratio suit une distribution moins asymétrique qui sera probalement plus facile à modéliser.
+
+
+
 
 ```{r}
 #| echo: true 
@@ -472,6 +505,9 @@ tm_shape(data_mtl) +
   tm_xlab(paste0('I de Moran = ', as.numeric(round(moran_i$statistic,2))))
 ```
 
+
+
+
 Sans surprise, notre variable dépendante est fortement spatialement autocorrélée. Plus on s'éloigne du centre-ville, plus le transport collectif est délaissé au profis de la voiture. Les quelques secteurs dans lesquels la parts modales du TC est supérieure à la part modale automobiles sont situés directement à proximité du métro.
 
 Pour modéliser cette variable, nous allons utiliser deux ensembles de variables : 
@@ -487,6 +523,9 @@ Pour modéliser cette variable, nous allons utiliser deux ensembles de variables
   * le niveau d'accessibilité aux emplois à pied : `acs_idx_emp_pieton`
 
 Toutes ces variables sont produites par Statistique Canada pour l'année 2021. Les indicateurs d'accessibilités sont exprimés comme un score allant de 0 (pire accessibilité au Canada) à 1 (meilleure accessibilité au Canada). Ils servent à capturer dans quelle mesure le transport collectif ou la marche à pied permet d'atteindre des emplois (lieux d'activités et de consommation). Dans ce modèle relativement simple, nous nous attendons à ce que des secteurs avec des populations plus vulnérables sur les plans socio-démographique soient plus enclin à utiliser le transport collectif (dépendance au TC). Nous souhaitons cependant vérifier si cette relation tient toujours une fois que l'on tient compte de la performance du transport collectif et de la possibilité d'atteindre des activités à pied.
+
+
+
 
 ```{r}
 #| echo: true 
@@ -506,11 +545,17 @@ vif(lm(alr_val ~ prt_minorite_vis + prt_monoparental +
 
 ```
 
+
+
+
 Les valeurs de vif sont relativement faible, sauf pour le pourcentage de personne à faible revenu qui dépasse 5. Nous allons donc retirer cette variable du modèle.
 
 Nous commençons par ajuster un simple GLM utilisant assumant une distribution normale de notre variable dépendante une fois que sont contrôlées nos différentes variables indépendantes.
 
 Pour valider les résidus de ce modèle, nous utiliserons la méthode des résidus simulés. Vous trouverez plus d'information à leur sujet dans le chapitre sur les GLM du livre [*Méthodes quantitatives en sciences sociales : un grand bol d’R*](https://serieboldr.github.io/MethodesQuantitatives/09-GLMM.html) [@RBoldAir].
+
+
+
 
 ```{r}
 #| echo: true 
@@ -534,7 +579,13 @@ plot(res)
 
 ```
 
+
+
+
 La figure @fig-gamresidA ci-dessus indique que nos résidus simulés ne suivent pas vraiement une distribution uniforme et sont marqués par des valeurs extrèmes. Pour améliorer notre modèle, nous allons le réajuster mais ne utilisant une distribution de Student. Cette dernière ressemble beaucoup à la distribution normale, mais admet davantage de valeurs extrèmes. Elle permet donc de réduire l'impact des valeurs extrèmes dans le modèle.
+
+
+
 
 ```{r}
 #| echo: true 
@@ -554,7 +605,13 @@ res <- simulateResiduals(glm_base, plot = F)
 plot(res)
 ```
 
+
+
+
 Nous notons une nette amélioration à la figure @fig-gamresidB, bien que les quantiles des résidus tendent encore à dévier des valeurs attendues. Ceci peut s'expliquer de plusieurs façon, mais ici, il est tout à fait possible que le phénomène soit provoqué par de l'autocorrélation spatiale dans les résidus.
+
+
+
 
 ```{r}
 #| echo: true 
@@ -580,12 +637,18 @@ tm_shape(data_mtl) +
 
 ```
 
+
+
+
 La figure @fig-gamresid1 illustre clairement que la distribution des résidus n'est pas aléatoire spatialement. Les valeurs négatives indiquent des secteurs dans lesquels le modèle tend à prédire un log ratio trop favorable au transport collectif et inversement dans les secteurs avec des valeurs positives. 
 
 
 #### GAM avec spline spatiale bivariée sur les coordonnées
 
 Nous allons donc tenter d'ajuster un modèle GAM intégrant en premier une spline bivariée utilisant les coordonnées des centroids des secteurs de recensement. Le rôle de cette spline est de capturer une tendance spatiale à l'utilisation plus ou moins prononcé du transport collectif. Cet effet correspond à l'agrégat d'un ensemble de variables que nous n'avons pas pu mesurer comme par l'exemple la revendication écologique, la difficulté de stationner une voiture, la présence d'autres modes de déplacement durables connecté au transport en commun, la démographie ect. Notons ici que nous utilisons une spline de type processus gaussien (`bs = 'gp', m = 3`) avec une structure de covariance Matern qui est communément utiliser pour le krigeage.
+
+
+
 
 ```{r}
 #| echo: true 
@@ -607,7 +670,13 @@ plot(res)
 
 ```
 
+
+
+
 Les résidus simulés de ce nouveau modèle se comportent bien mieux que les résidus que nous avions obtenus pour le premier modèle n'intégrant pas l'espace. Nous pouvons maintenant nous pencher sur l'autocorrélation spatiale des résidus. Nous allons ici utiliser les résidus simulés qui devraient suivre une distribution uniforme et aléatoire spatialement.
+
+
+
 
 ```{r}
 #| echo: true 
@@ -630,7 +699,13 @@ tm_shape(data_mtl) +
   tm_scale_bar(breaks = c(0,10))
 ```
 
+
+
+
 Selon le I de Moran (I = `r round(as.numeric(test$statistic),2)`) calculé à partir de la matrice de voisinage Queen, nous observons toujours une autocorrélation spatiale non négligeable dans nos résidus. Cependant, le modèle GAM que nous avons ajusté ne connait pas les relations de voisinage entre les observations. En effet, il connait uniquement la localisation de leurs centroids et utilise les distances entre les observations pour estimer le terme spatial. Dans ce contexte, il serait plus juste d'évaluer l'autocorrélation des résidus du modèle en utilisant une matrice de pondération spatiale basée sur l'inverse des distances entre les observations.
+
+
+
 
 ```{r}
 #| echo: true 
@@ -646,9 +721,15 @@ moran.mc(data_mtl$sim_residual, listw = dist_w, nsim = 999)
 
 ```
 
+
+
+
 Nous voyons ainsi que le modèle est parvenu à retirer l'autocorrélation spatiale des résidus si on se refère bien à la façon dont l'espace est prise en compte dans le modèle.
 
 Nous pouvons maintenant interprêter les résultats du modèle avec la fonction `summary`.
+
+
+
 
 ```{r}
 #| echo: true 
@@ -661,9 +742,15 @@ print(results)
 
 ```
 
+
+
+
 Le R2 ajusté est très haut (`r round(results$r.sq,3)`), indiquant que le modèle est capable d'expliquer une part significative de la déviance de nos données. 
 
 Chacune de nos variables explicative a un impact significatif sur le ration entre part modale TC et part modale auto. Pour interprêter leurs effets, nous devons tenir compte de l'impact de la transformation *alr*. Pour rappel, notre modèle prédit la moyenne de notre log du ratio entre la part TC et la part automobile. Il est possible de passer de l'échelle log à l'échelle naturelle en utilisant la fonction exponentielle (`exp`). Si nous transformons les coefficients obtenus avec la fonction `exp`, alors ils expriment l'impact **multiplicatif** des variables indépendantes sur le ratio entre la part TC et la part automobile. Si ce ratio augmente, c'est que l'automobile est moins utilisée et/ou que le TC est plus utilisé et inversement.
+
+
+
 
 ```{r}
 #| echo: true 
@@ -687,6 +774,9 @@ knitr::kable(
 
 ```
 
+
+
+
 Voici une interprétation des effets obtenus: 
 
 * Comparativement à un SR avec 0% de personnes issues des minorités visible, un SR avec 25% de ce groupe de la population verrait augmenter la moyenne du log du ratio de `r paste0(round(tab_coeff$coeff[[2]],3), ' * 0.25 = ',round(tab_coeff$coeff[[2]],3)* 0.25)`, ce qui correspond à une multiplication par `r round(exp(tab_coeff$coeff[[2]] * 0.25),3)` du ratio, ou encore, une augmentation de `r paste0((round(exp(tab_coeff$coeff[[2]] * 0.25),3)-1)*100,'%')` du ratio. Il semblerait donc que toutes choses étant égales par ailleurs, la concentration des minorités visibles soit associée avec une plus grande proportion d'utilisation du TC et/ou une plus faible utilisation de la voiture.
@@ -703,6 +793,9 @@ Voici une interprétation des effets obtenus:
 Dans le résumé du modèle, nous pouvons observer que la spline utilisée pour capturer l'effet spatial à un effet significativement différent de 0 et comporte environ `r round(results$edf)` degrés de libertés. Pour pouvoir observer l'effet de cette spline, nous devons utiliser l'approche des effets marginaux. Cette approche consiste à effectuer une prédiction avec le modèle de la valeur attendue de la variable Y en conservant identiques toutes les variables indépendantes, sauf la localisation dans l'espace. En d'autres termes, nous essayons de voir comment le modèle s'ajuste quand on lui demande de prédire la valeur Y pour une observation spécifique, mais que celle-ci est déplacée dans l'espace. Ainsi, la variation de la prédiction est affectée uniquement par l'espace.
 
 Pour obtenir l'effet uniquement spatial, nous pouvons mettre arbitrairement toutes les valeurs à 0 des différentes variables indépendantes du modèle. Ainsi, même multipliées par leurs coefficients, leur contribution dans la prédiction restera 0. Il suffit ensuite de retirer l'intercept pour ne bien garder que l'effet de la spline.
+
+
+
 
 ```{r}
 #| echo: true 
@@ -756,6 +849,9 @@ map_spline <- tm_shape(sf_pred) +
 
 map_spline
 ```
+
+
+
 La figure @fig-gamspline1 permet de visualier l'effet multiplicatif de la spline spatiale sur le ratio prédit par le modèle. Ainsi, toute chose étant égale par ailleur, le ratio de part modale TC/auto est entre 30% et 70% plus fort dans les quartiers centraux de Montréal, allant Lachine à Anjou. L'extrémité Ouest de Longueuil fait aussi partie de cette zone avec le bonus spatial le plus important. On peut ensuite constater que l'effet spatial diminue avec la distance au Centre-Vile. Pour la majeur partie de Laval, le ratio est réduit de prêt de 50%.
 
 
@@ -766,6 +862,9 @@ Puisque nos observations sont des polygones, utiliser leur centroid pour représ
 L'enjeu avec ce type de modèle est de sélectionner son rang. Pour cela, nous allons tester plusieurs valeurs allant de 10 à 250 autorisant une complexité grandissante du terme spatial. Notons d'emblée que notre spline bivariée précédente avait nécessité seulement 25 degrés de libertés supplémentaires. La sélection de *k* (le nombre de degré de liberté accordé au MRF) reposera sur deux critères: l'autocorrélation spatiale encore présente dans les résidus (I de moran calculé sur les résidus de Pearson) et le AIC (pénalisant la complexité des modèles).
 
 Pour accélérer le calcul, nous allons ici effectuer cette opération en mode multiprocessing. 4 coeurs indépendants s'occuperont d'ajuster les différents modèles.
+
+
+
 
 ```{r}
 #| echo: false 
@@ -900,7 +999,13 @@ ggarrange(plot1, plot2)
 
 ```
 
+
+
+
 La figure @fig-gammrf1 permet de constater que le AIC et le I de Moran diminuent à mesure que k augmente. Pour le I de Moran, nous constatons qu'au delà de k = 100, nous passons à des valeurs inférieures à 0,05. Aussi le AIC semble se stabiliser  lorsque k > 150. Nous pourrions donc ajuter un modèle avec k = 150 pour avoir un bon compromis entre AIC et réduction du I de Moran des résidus.
+
+
+
 
 
 ```{r}
@@ -921,9 +1026,15 @@ summary(gam2)
 
 ```
 
+
+
+
 Il apparait que les résidus simulés de ce modèle suivent une distribution assez proche d'une distribution uniforme.
 
 Nous constatons aussi que toutes les variables indépendantes sont encore significatives et impactent notre variable dépendante dans la même direction.
+
+
+
 
 ```{r}
 #| echo: true 
@@ -934,7 +1045,13 @@ Nous constatons aussi que toutes les variables indépendantes sont encore signif
 moran.mc(residuals(res), listw = queen_w, nsim = 999)
 
 ```
+
+
+
 Nous avons bien résolu le problème de l'autocorrélation spatiale de résidus. Nous pouvons donc à présent visualiser l'effet spatial de notre *Markov Random Field*. Pour cela, nous allons une fois encore appliquer la méthode des effets marginaux
+
+
+
 
 
 ```{r}
@@ -977,11 +1094,17 @@ tmap_arrange(map_spline, map_mrf, nrow = 2)
 
 ```
 
+
+
+
 Ce terme spatial ressemble beaucoup à celui que nous avions obtenu avec la spline. Cependant, nous lui avons accordé un plus grand nombre de degrés de libertés et il est s'ajuste mieux à la géographie de nos SR. Il aurait été possible de donner plus de flexibilité à la spline bivariée en utilisant également le paramètre `k`, elle serait cependant restée moins adaptée que le MRF. Un avantage intéressant de l'approche par spline bivariée est qu'elle permet de prédire des valeurs à de nouvelles localisations, ce que ne permet par le MRF.
 
 
 
 ## Quiz de révision {#sec-063}
+
+
+
 
 ```{r}
 #| label: quizChapitre06
@@ -997,6 +1120,9 @@ render_quizz(Chap06Quiz)
 ```
 
 
+
+
+
 ## Exercices de révision {#sec-064}
 
 ::: bloc_exercice
@@ -1008,6 +1134,9 @@ render_quizz(Chap06Quiz)
 :::
 
 ::: bloc_exercice-body
+
+
+
 ```{r}
 #| echo: true 
 #| message: false 
@@ -1028,6 +1157,10 @@ Modele.GAM2 <- gam(NO2 ~  à compléter
 summary(Modele.GAM2)
 ```
 
+
+
+
 Correction à la [section @sec-12072].
 :::
 :::
+
