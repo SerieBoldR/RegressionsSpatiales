@@ -95,6 +95,7 @@ Prenons un exemple avec un jeu de données fictifs et admettons qu'il représent
 #| echo: false
 #| message: false
 #| warning: false
+#| fig-cap: Exemple de jeu de données avec une forte dépendance spatiale
 
 library(geoR)
 set.seed(666)
@@ -124,10 +125,11 @@ plot1
 Nous pourrions créer des bases d'une spline qui varient à la fois dans les coordonnées spatiales X et Y. L'animation à la figure (@fig-gam3) illustre des bases obtenues (k = 25) pour les données ci-dessus.
 
 ```{r}
-#| label: fig-gam3
+#| eval: false
 #| echo: false
 #| message: false
 #| warning: false
+#| include: false
 
 library(rgl)
 library(randomcoloR)
@@ -176,9 +178,42 @@ view3d(
 movie3d(spin3d(axis=c(0,0,1), rpm=10),
         duration=6,
         dir=getwd(),
-        movie='images/Chap06/spin_gam')
+        clean = FALSE,
+        movie='images/Chap06/spin_gam/anim')
 
+library(magick)
 
+imgs <- list.files('images/Chap06/spin_gam', full.names = TRUE)
+img_list <- lapply(imgs, image_read)
+img_joined <- image_join(img_list)
+img_animated <- image_animate(img_joined, fps = 4)
+image_write(image = img_animated,
+            path = "images/Chap06/spin_gam/anim.gif")
+
+for(i in 1:length(imgs)){
+  if(i > 2){
+    file.remove(imgs[[i]])
+  }
+}
+
+```
+
+```{r}
+#| eval: true
+#| echo: false
+#| message: false
+#| warning: false
+#| include: false
+#| label: fig-gam3
+#| fig-cap: Représentation des bases d'une spline bivariée
+
+library(knitr)
+
+if(is_latex_output()) {
+  knitr::include_graphics("images/Chap06/spin_gam/anim.gif")
+}else{
+  knitr::include_graphics("images/Chap06/spin_gam/anim000.png")
+}
 ```
 
 Si nous ajustons un coefficient pour chaque base et que nous combinons les effets de chaque base, nous obtenons un effet spatial permettant de prédire la variable de pollution. Nous le représentons ici à la figure (@fig-gam4). Nous constatons ainsi que le modèle a été capable de reproduire les tendances principales des niveaux de pollution en retrouvant les secteurs avec des valeurs fortes et faibles. Plus l'autocorrélation spatiale est élevée, plus ce type de modèle est efficace pour capturer l'effet spatial.
@@ -189,6 +224,7 @@ Si nous ajustons un coefficient pour chaque base et que nous combinons les effet
 #| message: false
 #| warning: false
 #| out-width: '100%'
+#| fig-cap: Captation de l'effet spatial par une spline bivariée
 
 library(ggpubr)
 
@@ -266,13 +302,13 @@ L'exposition mesurée pour un cycliste à un endroit *t* dépend donc des caract
 Dans cet exemple, intégrer la pollution d'arrière plan avec une spline spatiale est particulièrement pertinent car l'interprétation de l'effet produit par cette spline s'intègre directement dans le cadre théorique.
 
 
-## RMF ou spline bivariée? {#sec-gam_twotypes}
+## MRF ou spline bivariée? {#sec-gam_twotypes}
 
 Nous avons vu jusqu'ici qu'il est possible d'ajouter un effet spatial dans un modèle GAM en intégrant une spline bivariée sur les coordonnées spatiales des observations. Cette approche est cependant moins pertinente quand les observations sont des polygones de tailles variés. En effet, intégrer les centroids des polygones dans le modèle revient à nettement déformer l'espace de nos données puisque des polygones voisins peuvent avoir des centroids très éloignés.
 
 Lorsque les données ont une géométrie de type linéaire ou polygonale, il est recommandé d'utiliser un autre type de spline appelée un champ de Markov aléatoire (random Markov field - RMF an anglais).
 
-Mathématiquement parlant, un modèle de type CAR (conditionnal autoregressive model) est très proche d'un modèle GAM intégrant un RMF puisque la structure spatiale intégrée par un modèle CAR est un RMF : La valeur de la variable dépendante d'une entité est conditionnée par la valeur de ses voisins. Dans l'équation @eq-gam3, le terme $\eta$ représente l'effet spatial. Il est le plus souvent modélisé comme un effet provenant d'une distribution normale multivariée, centrée sur zéro et dont la matrice de covariance est calculée grâce à un terme $\lambda$ et une matrice de pondération spatiale $W$. Ce type de modèle est communément appelée un modèle à effet mixte car il combine des effets fixes (les coefficients $\beta$) et des effets **aléatoires** ($\lambda$). Les effets aléatoires ne sont pas estimés de la même façon que des effets fixes, ils sont en effet pénalisés. Pour une introduction sur les modèles à effets mixtes, vous pouvez consulter ce chapitre sur les GLMM du livre [*Méthodes quantitatives en sciences sociales : un grand bol d’R*]((https://serieboldr.github.io/MethodesQuantitatives/09-GLMM.html) [@RBoldAir].
+Mathématiquement parlant, un modèle de type CAR (conditionnal autoregressive model) est très proche d'un modèle GAM intégrant un RMF puisque la structure spatiale intégrée par un modèle CAR est un RMF : La valeur de la variable dépendante d'une entité est conditionnée par la valeur de ses voisins. Dans l'équation @eq-gam3, le terme $\eta$ représente l'effet spatial. Il est le plus souvent modélisé comme un effet provenant d'une distribution normale multivariée, centrée sur zéro et dont la matrice de covariance est calculée grâce à un terme $\lambda$ et une matrice de pondération spatiale $W$. Ce type de modèle est communément appelée un modèle à effet mixte car il combine des effets fixes (les coefficients $\beta$) et des effets **aléatoires** ($\lambda$). Les effets aléatoires ne sont pas estimés de la même façon que des effets fixes, ils sont en effet pénalisés. Pour une introduction sur les modèles à effets mixtes, vous pouvez consulter ce chapitre sur les GLMM du livre [*Méthodes quantitatives en sciences sociales : un grand bol d’R*](https://serieboldr.github.io/MethodesQuantitatives/09-GLMM.html) [@RBoldAir].
 
 
 
@@ -353,6 +389,7 @@ Puisque la transformation *alr* implique une division, puis un log, il est impor
 #| eval: true
 #| warning: false
 #| label: fig-gamhist
+#| fig-cap: Distributions du ratio et du log ratio entre les parts modales TC et automobile
 
 library(sf, quietly = TRUE)
 library(ggplot2, quietly = TRUE)
@@ -407,6 +444,7 @@ La figure @fig-gamhist illustre la distribution de la variable que nous souhaito
 #| eval: true
 #| warning: false
 #| label: fig-gammapy
+#| fig-cap: Distribution géographique de la variable dépendante
 
 library(spdep, quietly = TRUE)
 library(dplyr, quietly = TRUE)
@@ -472,7 +510,7 @@ Les valeurs de vif sont relativement faible, sauf pour le pourcentage de personn
 
 Nous commençons par ajuster un simple GLM utilisant assumant une distribution normale de notre variable dépendante une fois que sont contrôlées nos différentes variables indépendantes.
 
-Pour valider les résidus de ce modèle, nous utiliserons la méthode des résidus simulés. Vous trouverez plus d'information à leur sujet dans le chapitre sur les GLM du livre [*Méthodes quantitatives en sciences sociales : un grand bol d’R*]((https://serieboldr.github.io/MethodesQuantitatives/09-GLMM.html) [@RBoldAir].
+Pour valider les résidus de ce modèle, nous utiliserons la méthode des résidus simulés. Vous trouverez plus d'information à leur sujet dans le chapitre sur les GLM du livre [*Méthodes quantitatives en sciences sociales : un grand bol d’R*](https://serieboldr.github.io/MethodesQuantitatives/09-GLMM.html) [@RBoldAir].
 
 ```{r}
 #| echo: true 
@@ -480,6 +518,7 @@ Pour valider les résidus de ce modèle, nous utiliserons la méthode des résid
 #| eval: true
 #| warning: false
 #| label: fig-gamresidA
+#| fig-cap: Résidus du simple GLM
 
 library(DHARMa)
 library(mgcViz)
@@ -503,6 +542,7 @@ La figure @fig-gamresidA ci-dessus indique que nos résidus simulés ne suivent 
 #| eval: true
 #| warning: false
 #| label: fig-gamresidB
+#| fig-cap: Résidus du GLM avec distribution de Student
 
 glm_base <- gam(alr_val ~ prt_minorite_vis + prt_monoparental + revenu_median +
                   acs_idx_emp_tc_peak + acs_idx_emp_pieton,
@@ -522,6 +562,7 @@ Nous notons une nette amélioration à la figure @fig-gamresidB, bien que les qu
 #| eval: true
 #| warning: false
 #| label: fig-gamresid1
+#| fig-cap: Cartographie des résidus du modèle GLM
 
 moran.mc(residuals(glm_base, type = 'pearson'), listw = queen_w, nsim = 999)
 moran.mc(residuals(res), listw = queen_w, nsim = 999)
@@ -620,7 +661,7 @@ print(results)
 
 ```
 
-Le R2 ajusté est très haut (`r round(results$r.sq,3)$`), indiquant que le modèle est capable d'expliquer une part significative de la déviance de nos données. 
+Le R2 ajusté est très haut (`r round(results$r.sq,3)`), indiquant que le modèle est capable d'expliquer une part significative de la déviance de nos données. 
 
 Chacune de nos variables explicative a un impact significatif sur le ration entre part modale TC et part modale auto. Pour interprêter leurs effets, nous devons tenir compte de l'impact de la transformation *alr*. Pour rappel, notre modèle prédit la moyenne de notre log du ratio entre la part TC et la part automobile. Il est possible de passer de l'échelle log à l'échelle naturelle en utilisant la fonction exponentielle (`exp`). Si nous transformons les coefficients obtenus avec la fonction `exp`, alors ils expriment l'impact **multiplicatif** des variables indépendantes sur le ratio entre la part TC et la part automobile. Si ce ratio augmente, c'est que l'automobile est moins utilisée et/ou que le TC est plus utilisé et inversement.
 
@@ -669,6 +710,7 @@ Pour obtenir l'effet uniquement spatial, nous pouvons mettre arbitrairement tout
 #| eval: true
 #| warning: false
 #| label: fig-gamspline1
+#| fig-cap: Représentation de l'impact de la spline spatiale bivariée
 
 #' nous commençons par construire un dataframe de prédiction. Toutes les 
 #' variables indépendantes sont fixées à 0 et nous allons 
@@ -701,17 +743,18 @@ sf_pred <- df_pred %>%
   st_as_sf(coords = c('X', 'Y'), crs = st_crs(data_mtl)) %>% 
   subset(lengths(st_intersects(.,data_mtl)) > 0)
 
-tm_shape(sf_pred) +
+map_spline <- tm_shape(sf_pred) +
   tm_dots(col="pred_exp", n = 7,
-          style = "jenks",
+          style = "fisher",
           midpoint = 1,
           legend.format = list(text.separator = "à", digits = 2),
-          palette = "-RdBu", title = 'Effet spatial du modèle GAM') +
+          palette = "-RdBu", title = paste0('effet de la spline bivariée\n(edf = ', round(results$edf), ')')) +
   tm_shape(data_mtl) + 
   tm_borders('darkgrey', lwd = 0.01) + 
   tm_layout(frame=FALSE, legend.outside = TRUE) + 
   tm_scale_bar(breaks = c(0,10))
 
+map_spline
 ```
 La figure @fig-gamspline1 permet de visualier l'effet multiplicatif de la spline spatiale sur le ratio prédit par le modèle. Ainsi, toute chose étant égale par ailleur, le ratio de part modale TC/auto est entre 30% et 70% plus fort dans les quartiers centraux de Montréal, allant Lachine à Anjou. L'extrémité Ouest de Longueuil fait aussi partie de cette zone avec le bonus spatial le plus important. On peut ensuite constater que l'effet spatial diminue avec la distance au Centre-Vile. Pour la majeur partie de Laval, le ratio est réduit de prêt de 50%.
 
@@ -720,21 +763,30 @@ La figure @fig-gamspline1 permet de visualier l'effet multiplicatif de la spline
 
 Puisque nos observations sont des polygones, utiliser leur centroid pour représenter l'espace est une approximation maladroite. Nous allons donc opter pour un *markov random field*.
 
-L'enjeu avec ce type de modèle est de sélectionner son rang. Pour cela, nous allons tester plusieurs valeurs allant de 10 à 500 autorisant une complexité grandissante du terme spatial. Notons d'emblée que notre spline bivariée précédente avait nécessité seulement 25 degrés de libertés supplémentaires. La sélection de *k* (le nombre de degré de liberté accordé au MRF) reposera sur deux critères: l'autocorrélation spatiale encore présente dans les résidus (I de moran calculé sur les résidus de Pearson) et le AIC (pénalisant la complexité des modèles).
+L'enjeu avec ce type de modèle est de sélectionner son rang. Pour cela, nous allons tester plusieurs valeurs allant de 10 à 250 autorisant une complexité grandissante du terme spatial. Notons d'emblée que notre spline bivariée précédente avait nécessité seulement 25 degrés de libertés supplémentaires. La sélection de *k* (le nombre de degré de liberté accordé au MRF) reposera sur deux critères: l'autocorrélation spatiale encore présente dans les résidus (I de moran calculé sur les résidus de Pearson) et le AIC (pénalisant la complexité des modèles).
+
+Pour accélérer le calcul, nous allons ici effectuer cette opération en mode multiprocessing. 4 coeurs indépendants s'occuperont d'ajuster les différents modèles.
 
 ```{r}
-#| echo: true 
+#| echo: false 
 #| message: false 
-#| eval: true
+#| eval: false
 #| warning: false
-#| label: fig-gammrf1
+#| include: false
+
+# Ce code est invisbile dans le livre. Il est seulement utile pour reproduire
+# les résultats. Il est désactivé par défaut car il nécessite un temps de calcul 
+# un peu long
+
+library(future)
+library(future.apply)
 
 # nous préparons les informations de voisinage pour le terme MRF
 nb <- poly2nb(data_mtl)
 names(nb) <- as.integer(attr(nb, "region.id"))
 data_mtl$ID_LOC <- as.integer(attr(nb, "region.id"))
 
-ks <- seq(10,500,10)
+ks <- seq(10,250,20)
 
 # nous allons itérer sur les valeurs de ks et ajuster nos modèles
 # nous récupérons à chaque fois les informations pertinentes dans nos 
@@ -742,7 +794,9 @@ ks <- seq(10,500,10)
 
 S0 <- sum(sapply(queen_w$weights, sum))
 
-resultats <- sapply(ks, function(k){
+future::plan(future::multisession(workers = 4))
+
+resultats <- future_sapply(ks, function(k){
   
   model <- gam(alr_val ~ prt_minorite_vis + prt_monoparental + revenu_median +
                   acs_idx_emp_tc_peak + acs_idx_emp_pieton + 
@@ -757,6 +811,77 @@ resultats <- sapply(ks, function(k){
 
 df_plot <- data.frame(t(resultats))
 names(df_plot) <- c('moranI', 'aic', 'k')
+
+saveRDS(df_plot, file = 'data/chap06/results_mrf.rds')
+
+```
+
+```{r}
+#| echo: false 
+#| message: false 
+#| eval: true
+#| warning: false
+#| include: false
+
+# nous préparons les informations de voisinage pour le terme MRF
+nb <- poly2nb(data_mtl)
+names(nb) <- as.integer(attr(nb, "region.id"))
+data_mtl$ID_LOC <- as.integer(attr(nb, "region.id"))
+
+df_plot <- readRDS('data/chap06/results_mrf.rds')
+
+```
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: false
+#| warning: false
+#| include: true
+
+library(future)
+library(future.apply)
+
+# nous préparons les informations de voisinage pour le terme MRF
+nb <- poly2nb(data_mtl)
+names(nb) <- as.integer(attr(nb, "region.id"))
+data_mtl$ID_LOC <- as.integer(attr(nb, "region.id"))
+
+ks <- seq(10,250,20)
+
+# nous allons itérer sur les valeurs de ks et ajuster nos modèles
+# nous récupérons à chaque fois les informations pertinentes dans nos 
+# résidus
+
+S0 <- sum(sapply(queen_w$weights, sum))
+
+future::plan(future::multisession(workers = 4))
+
+resultats <- future_sapply(ks, function(k){
+  
+  model <- gam(alr_val ~ prt_minorite_vis + prt_monoparental + revenu_median +
+                  acs_idx_emp_tc_peak + acs_idx_emp_pieton + 
+              s(ID_LOC, bs = 'mrf', xt = list(nb = nb), k = k),
+         data = data_mtl, family = scat)
+  
+  resid <- residuals.gam(model, type = 'scaled.pearson')
+  I <- moran(resid, queen_w, n = length(resid), S0 = S0, zero.policy = TRUE)
+  aic_score <- AIC(model)
+  return(c(I[[1]],aic_score,k))
+})
+
+df_plot <- data.frame(t(resultats))
+names(df_plot) <- c('moranI', 'aic', 'k')
+```
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+#| warning: false
+#| label: fig-gammrf1
+#| include: true
+#| fig-cap: Critères de sélection de k
 
 plot1 <- ggplot(df_plot) + 
   geom_line(aes(x = k, y = moranI), color = 'black') +
@@ -775,7 +900,7 @@ ggarrange(plot1, plot2)
 
 ```
 
-La figure @fig-gammrf1 permet de constater que le AIC et le I de Moran diminuent à mesure que k augmente. Pour le I de Moran, nous constatons qu'au delà de k = 100, nous passons à des valeurs inférieures à 0,05. Aussile AIC semble se stabiliser entre k = 100 et k = 300. Nous pourrions donc ajuter un modèle avec k = 120 pour avoir un bon compromis entre AIC et réduction du I de Moran des résidus.
+La figure @fig-gammrf1 permet de constater que le AIC et le I de Moran diminuent à mesure que k augmente. Pour le I de Moran, nous constatons qu'au delà de k = 100, nous passons à des valeurs inférieures à 0,05. Aussi le AIC semble se stabiliser  lorsque k > 150. Nous pourrions donc ajuter un modèle avec k = 150 pour avoir un bon compromis entre AIC et réduction du I de Moran des résidus.
 
 
 ```{r}
@@ -783,179 +908,77 @@ La figure @fig-gammrf1 permet de constater que le AIC et le I de Moran diminuent
 #| message: false 
 #| eval: true
 #| warning: false
-#| label: fig-gammrf2
 
 gam2 <- gam(alr_val ~ prt_minorite_vis + prt_monoparental + revenu_median +
-                  acs_idx_emp_tc_peak + s(acs_idx_emp_pieton) + 
-              s(ID_LOC, bs = 'mrf', xt = list(nb = nb), k = 120),
+                  acs_idx_emp_tc_peak + acs_idx_emp_pieton + 
+              s(ID_LOC, bs = 'mrf', xt = list(nb = nb), k = 150),
          data = data_mtl, family = scat)
 
 res <- simulateResiduals(gam2, plot = F)
 plot(res)
 
+summary(gam2)
 
 ```
 
+Il apparait que les résidus simulés de ce modèle suivent une distribution assez proche d'une distribution uniforme.
 
-Il apparait que les résidus simukés de ce modèle ne suivent pas une distribution uniforme ce qui remet directement en cause la validité du modèle. 
-
-Il est intéressant de constater que dans ce nouveau modèle, la variable pourcentage de famille monoparentale n'est plus significative. Les autres variables restent quant à elles significatives et avec des effets comparables au premier modèle. Nous n'allons pas refaire l'interprétation de tous les termes du modèle, mais simplement représenter l'effet spatial de celui-ci en utilisant à nouveau la méthode des effets marginaux.
-
-Pour les résidus de Pearson ou les résidus simulés, nous observons une forte autocorrélation spatiale positive dans nos résidus.
-
-Pour construire des modèles GAM dans R, nous utilisons la fonction `gam` du *package* `mgcv` [@wood2011fast].
+Nous constatons aussi que toutes les variables indépendantes sont encore significatives et impactent notre variable dépendante dans la même direction.
 
 ```{r}
-
-dists <- 1/as.matrix(dist(XY))
-diag(dists) <- 0
-dist_w <- mat2listw(dists)
-
-
 #| echo: true 
 #| message: false 
 #| eval: true
 #| warning: false
-## Chargement des packages
-library(sf)
-library(spdep)
-library(mgcv)
 
-## Chargement des données
-load("data/chap04/DonneesLyon.Rdata")
-## Ajout des coordonnées X et Y dans LyonIris 
-xy <- st_coordinates(st_centroid(LyonIris))
-LyonIris$X <- xy[,1]
-LyonIris$Y <- xy[,2]
-## Construction du modèle MCO
-Modele.MCO <- lm(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
-                 data = LyonIris)
-## Construction du modèle GAM
-Modele.GAM1 <- gam(NO2 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed+
-                          s(X, Y),    # spline sur les coordonnées X, Y
-                    data = LyonIris)  # dataframe
-## Résultats du modèle
-summary(Modele.GAM1)
+moran.mc(residuals(res), listw = queen_w, nsim = 999)
+
 ```
+Nous avons bien résolu le problème de l'autocorrélation spatiale de résidus. Nous pouvons donc à présent visualiser l'effet spatial de notre *Markov Random Field*. Pour cela, nous allons une fois encore appliquer la méthode des effets marginaux
 
-Les résultats ci-dessus signalent que la localisation a un effet très significatif puisque (s(X,Y) = 26,5 avec *p* \< 0,001). Notez que la valeur de *p* permet de déterminer si la *spline* bivariée (et donc l'espace) a ou non un effet significatif. Si la valeur de *p* est supérieure à 0,05, alors il n'est pas nécessaire de conserver la *spline* bivariée sur les coordonnées géographiques.
-
-De plus, le code ci-dessous permet de constater que le modèle GAM est plus performant que le modèle linéaire multiple classique (MCO).
 
 ```{r}
 #| echo: true 
 #| message: false 
 #| eval: true
-anova(Modele.MCO, Modele.GAM1)
-```
-
-Nous pouvons aussi introduire une *spline* plus complexe en augmentant le nombre de nœuds à 40.
-
-```{r}
-#| echo: true 
-#| message: false 
-#| eval: true
-Modele.GAM2 <- gam(NO2 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed+
-                          s(X, Y, k= 40), data = LyonIris)
-summary(Modele.GAM2)
-```
-
-La valeur plus faible d'AIC pour le second modèle GAM signale qu'il est plus performant que le premier.
-
-```{r}
-#| echo: true 
-#| message: false 
-#| eval: true
-AIC(Modele.MCO, Modele.GAM1, Modele.GAM2)
-
-```
-
-#### Visualisation de l'effet de l'espace {#sec-06122}
-
-Pour visualiser les prédictions du modèle dans l'espace, toutes choses étant égales par ailleurs, nous utilisons la fonction `vis.gam` (@fig-EffetLocalisation1). Les contours signalent qu'au centre de Lyon, les valeurs de dioxyde d'azote sont les plus élevées et dépassent même 40 $\mu$g/m^3^.
-
-```{r}
-#| echo: true 
-#| eval: true 
-#| message: false 
 #| warning: false
-#| label: fig-EffetLocalisation1
-#| fig-align: center
-#| fig-cap: "Visualisation des prédictions dans l'espace avec la fonction `vis.gam`"
-#| out-width: 85%
+#| label: fig-gammrf3
+#| fig-cap: Comparaison de la spline bivariée et du MRF
 
-vis.gam(Modele.GAM2, view=c("X", "Y"), plot.type = "contour", color="terrain")
+# on extrait toutes les observations de notre jeu de données
+pred_df <- data_mtl[c('prt_minorite_vis', 'prt_monoparental', 'revenu_median',
+                      'acs_idx_emp_tc_peak', 'acs_idx_emp_pieton', 'ID_LOC')]
+
+# on met toutes les valeurs à 0 sauf l'identifiant des SR
+pred_df[c(1:5)] <- 0
+
+# on effectue la prédiction
+pred_df$log_ratio <- predict.gam(gam2, newdata = pred_df, type = 'link')
+
+# on retire l'effet de l'intercept
+pred_df$log_ratio <- pred_df$log_ratio - gam2$coefficients[[1]]
+
+# on bascule en exponentiel pour avoir l'effet sur le ratio
+pred_df$effet_sp <- exp(pred_df$log_ratio)
+
+results_mrf <- summary(gam2)
+
+# on peut maintenant cartographier cet effet
+map_mrf <- tm_shape(pred_df) +
+  tm_fill(col="effet_sp", n = 7,
+          style = "jenks",
+          midpoint = exp(0),
+          legend.format = list(text.separator = "à", digits = 2),
+          palette = "-RdBu", title = paste0('effet du MRF\n(edf = ', round(results_mrf$edf), ')')) +
+  tm_layout(frame=FALSE, legend.outside = TRUE) + 
+  tm_scale_bar(breaks = c(0,10))
+
+tmap_arrange(map_spline, map_mrf, nrow = 2)
+
 ```
 
-Toutefois, il est plus intéressant de la représenter dans un *raster*, une fois contrôlées les autres variables indépendantes. Pour ce faire, six étapes sont nécessaires :
+Ce terme spatial ressemble beaucoup à celui que nous avions obtenu avec la spline. Cependant, nous lui avons accordé un plus grand nombre de degrés de libertés et il est s'ajuste mieux à la géographie de nos SR. Il aurait été possible de donner plus de flexibilité à la spline bivariée en utilisant également le paramètre `k`, elle serait cependant restée moins adaptée que le MRF. Un avantage intéressant de l'approche par spline bivariée est qu'elle permet de prédire des valeurs à de nouvelles localisations, ce que ne permet par le MRF.
 
-1.  Créer une *grid*.
-2.  Fixer les autres paramètres à leur moyenne respective.
-3.  Calculer la prédiction pour la localisation.
-4.  Centrer la prédiction.
-5.  Construire le *raster* avec les prédictions.
-6.  Découper et cartographier le *raster*.
-
-```{r}
-#| echo: true 
-#| eval: true 
-#| message: false 
-#| warning: false
-#| label: fig-EffetLocalisation2
-#| fig-align: center
-#| fig-cap: "Visualisation de l'effet de la localisation centrée sur zéro"
-#| out-width: 85%
-
-library(raster)
-library(terra)
-## Étape 1 : création d'une grid pour la prédiction de 100 mètres de résolution spatiale
-Xcoords <- seq(min(LyonIris$X-100), max(LyonIris$X+100), by=100)
-Ycoords <- seq(min(LyonIris$Y-100), max(LyonIris$Y+100), by=100)
-PredDF <- expand.grid(Xcoords,Ycoords)
-names(PredDF) <- c("X","Y")
-## Étape 2 : fixation de tous les autres paramètres à leur moyenne
-for(Var in c("VegHautPrt","Pct0_14","Pct_65","Pct_Img","Pct_brevet", "NivVieMed")){
-  PredDF[[Var]] <- mean(LyonIris[[Var]])
-}
-## Étape 3 : calcul de la prédiction
-PredDF$PM25 <- predict(Modele.GAM2,newdata=PredDF)
-## Étape 4 : centrage de la prédiction (sans la constante)
-PredDF$CenterPredPM25 <- PredDF$PM25 - mean(PredDF$PM25)
-### Étape 5 : construction du raster
-rasterGAM <- rasterFromXYZ(PredDF[, c("X", "Y", "CenterPredPM25")])
-crs(rasterGAM) <- crs(as(LyonIris, "Spatial"))
-rasterGAM <- rast(rasterGAM)
-### Étape 6 : découpage et cartographie du raster
-LyonIris.SpatVector <- vect(LyonIris)
-rasterGAM <- terra::mask(rasterGAM, LyonIris.SpatVector)
-terra::plot(rasterGAM)
-```
-
-La @fig-EffetLocalisation2 signale que dans le centre de Lyon, le dioxyde d'azote est plus élevé de 10 à 20 $\mu$g/m^3^, toutes choses étant égales par ailleurs. À l'inverse, dans les zones périphériques, il est faible. Cela signale un net patron spatial décroissant du centre vers la périphérie.
-
-#### Dépendance spatiale du modèle GAM {#sec-06123}
-
-Par contre, bien que l'autocorrélation spatiale des résidus du modèle GAM soit plus faible que pour le modèle MCO (*I* de Moran de 0,337 contre 0,570 avec *p* \< 0,001), il reste que le problème de la dépendance spatiale n'est pas corrigé.
-
-```{r}
-#| echo: true 
-#| message: false 
-#| eval: true
-## Matrice de contiguïté selon le partage d'un segment (Rook)
-Rook <- poly2nb(LyonIris, queen=FALSE)
-W.Rook <- nb2listw(Rook, zero.policy=TRUE, style = "W")
-## Autocorrélation sur les résidus du modèle GAM
-moran.mc(resid(Modele.GAM2), W.Rook, nsim=999)
-```
-
-
-## GAM avec un lissage par champ aléatoire de Markov {#sec-062}
-
-### Principe de base d'un avec un champ aléatoire de Markov {#sec-0621}
-
-### Mise en oeuvre et analyse dans R {#sec-0622}
-
-https://fromthebottomoftheheap.net/2017/10/19/first-steps-with-mrf-smooths/
 
 
 ## Quiz de révision {#sec-063}
