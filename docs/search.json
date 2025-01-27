@@ -404,7 +404,7 @@
     "href": "06-GAM.html",
     "title": "6  Modèles généralisées additifs",
     "section": "",
-    "text": "6.1 Modèles généralisés additifs (GAM) avec une spline bivariée sur les coordonnées géographiques\nDans ce chapitre, nous abordons deux formes de modèles généralisées additifs (Generalized additive model en anglais – GAM) qui permettent d’introduire l’espace deux manières différentes : les modèles GAM avec une spline bivariée avec les coordonnées géographiques (x, y) pour capturer les variations continues dans l’espace; les modèles GAM avec un lissage par champ aléatoire de Markov (random markov field – RMF) pour modéliser la dépendance spatiale entre les unités spatiales voisines.\nLes modèles généralisés additifs (Generalized additive models en anglais) permettent d’intégrer à la fois des effets linéaires et des effets non linéaires avec des splines. Ils peuvent alors être utilisés en intégrant une spline bivariée sur les coordonnées géographiques des centroïdes des entités spatiales.",
+    "text": "6.1 Modèles généralisés additifs (GAM) avec une spline bivariée sur les coordonnées géographiques\nLes modèles généralisés additifs (Generalized additive models en anglais) permettent d’intégrer à la fois des effets linéaires et des effets non linéaires avec des splines. Ils peuvent alors être utilisés en intégrant une spline bivariée sur les coordonnées géographiques des centroïdes des entités spatiales.",
     "crumbs": [
       "<span class='chapter-number'>6</span>  <span class='chapter-title'>Modèles généralisées additifs</span>"
     ]
