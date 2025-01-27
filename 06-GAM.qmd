@@ -19,7 +19,7 @@ La figure (@fig-gam1) permet d'illustrer ce principe. Les lignes grises représe
 :::
 
 ::: bloc_attention-body
-Pour une explication plus en profondeur sur le fonctionnement des *splines*, vous pouvez vous référez au chapitre du les GAM du livre [*Méthodes quantitatives en sciences sociales : un grand bol d’R*](https://serieboldr.github.io/MethodesQuantitatives/11-GAM.html) [@RBoldAir].
+Pour une explication plus en profondeur sur le fonctionnement des *splines*, vous pouvez vous référez au chapitre du les GAM du livre [*Méthodes quantitatives en sciences sociales : un grand bol d’R*](https://serieboldr.github.io/MethodesQuantitatives/11-GAM.html) [@RBoldAirMethodesQuanti].
 :::
 :::
 
@@ -306,10 +306,9 @@ Dans cet exemple, intégrer la pollution d'arrière plan avec une spline spatial
 
 Nous avons vu jusqu'ici qu'il est possible d'ajouter un effet spatial dans un modèle GAM en intégrant une spline bivariée sur les coordonnées spatiales des observations. Cette approche est cependant moins pertinente quand les observations sont des polygones de tailles variés. En effet, intégrer les centroids des polygones dans le modèle revient à nettement déformer l'espace de nos données puisque des polygones voisins peuvent avoir des centroids très éloignés.
 
-Lorsque les données ont une géométrie de type linéaire ou polygonale, il est recommandé d'utiliser un autre type de spline appelée un champ de Markov aléatoire (random Markov field - RMF an anglais).
+Lorsque les données ont une géométrie irrégulière et que le voisinage est plus important que la distance, il est recommandé d'utiliser un autre type fonction appelée un champ de Markov aléatoire (random Markov field - RMF an anglais).
 
-Mathématiquement parlant, un modèle de type CAR (conditionnal autoregressive model) est très proche d'un modèle GAM intégrant un RMF puisque la structure spatiale intégrée par un modèle CAR est un RMF : La valeur de la variable dépendante d'une entité est conditionnée par la valeur de ses voisins. Dans l'équation @eq-gam3, le terme $\eta$ représente l'effet spatial. Il est le plus souvent modélisé comme un effet provenant d'une distribution normale multivariée, centrée sur zéro et dont la matrice de covariance est calculée grâce à un terme $\lambda$ et une matrice de pondération spatiale $W$. Ce type de modèle est communément appelée un modèle à effet mixte car il combine des effets fixes (les coefficients $\beta$) et des effets **aléatoires** ($\lambda$). Les effets aléatoires ne sont pas estimés de la même façon que des effets fixes, ils sont en effet pénalisés. Pour une introduction sur les modèles à effets mixtes, vous pouvez consulter ce chapitre sur les GLMM du livre [*Méthodes quantitatives en sciences sociales : un grand bol d’R*](https://serieboldr.github.io/MethodesQuantitatives/09-GLMM.html) [@RBoldAir].
-
+Mathématiquement parlant, un modèle de type CAR (conditionnal autoregressive model) est très proche d'un modèle GAM intégrant un MRF puisque la structure spatiale intégrée par un modèle CAR est un MRF : La valeur de la variable dépendante d'une entité est **conditionnée** par la valeur de ses voisins. Dans l'équation @eq-gam3, le terme $\eta$ représente l'effet spatial. Il est le plus souvent modélisé comme un effet provenant d'une distribution normale multivariée, centrée sur zéro et dont la matrice de covariance est calculée grâce à un terme $\lambda$ et une matrice de pondération spatiale $W$. Ce type de modèle est communément appelée un modèle à effet mixte car il combine des effets fixes (les coefficients $\beta$) et des effets **aléatoires** ($\lambda$). Les effets aléatoires ne sont pas estimés de la même façon que des effets fixes, ils sont en effet pénalisés. Pour une introduction sur les modèles à effets mixtes, vous pouvez consulter ce chapitre sur les GLMM du livre [*Méthodes quantitatives en sciences sociales : un grand bol d’R*](https://serieboldr.github.io/MethodesQuantitatives/09-GLMM.html) [@RBoldAirMethodesQuanti].
 
 
 $$
@@ -320,9 +319,9 @@ $$
 \end{aligned}
 $$ {#eq-gam3}
 
-Il existe un lien direct entre les GLMM et les GAM. En effet, il est possible de reformuler un GLMM comme un GAM et vice-versa ce qui signifie qu'une spline pénalisée peut être utilisée pour représenter un effet aléatoire [@wood2017generalized]. 
+Il existe un lien direct entre les modèles à effets mixtes et les GAM. En effet, il est possible de reformuler un GLMM comme un GAM et vice-versa ce qui signifie qu'une spline pénalisée peut être utilisée pour représenter un effet aléatoire [@wood2017generalized]. 
 
-Dans R, avec le package `mgcv`, il est possible d'utiliser une spline pénalisée par une matrice de pondération spatiale pour approximer l'effet aléatoire que nous aurions modélisé avec un modèle de type CAR. L'intéret d'utiliser un GAM plutôt qu'un CAR est que nous pouvons contrôler directement le degré de lissage (autocorrélation spatiale) du terme spatial dans le modèle grâce au nombre de degrés de libertés (*k*) de la spline. En utilisant un nombre de degré de liberté maximal ($k = n-1$), soit une base par observation, alors on obtient un *full rank MRF*, autorisant de facto la plus grande variance possible du terme spatial. En réduisant *k*, nous obtenons des modèles d'ordre inférieur (*low-rank MRF*) dont le terme spatial est plus lisse et moins complexe.
+Dans R, avec le package `mgcv`, il est possible d'utiliser une spline pénalisée par une matrice de pondération spatiale *W* pour approximer l'effet aléatoire que nous aurions modélisé avec un modèle de type CAR. L'intéret d'utiliser un GAM plutôt qu'un CAR est que nous pouvons contrôler directement le degré de lissage (autocorrélation spatiale) du terme spatial dans le modèle grâce au nombre de degrés de libertés (*k*) de la spline. En utilisant un nombre de degrés de liberté maximal ($k = n-1$), soit une base par observation, alors on obtient un *full rank MRF*, autorisant de facto la plus grande variance possible du terme spatial. En réduisant *k*, nous obtenons des modèles d'ordre inférieur (*lower rank MRF*) dont le terme spatial est plus lisse et moins complexe.
 
 $$
 \begin{aligned}
@@ -510,7 +509,7 @@ Les valeurs de vif sont relativement faible, sauf pour le pourcentage de personn
 
 Nous commençons par ajuster un simple GLM utilisant assumant une distribution normale de notre variable dépendante une fois que sont contrôlées nos différentes variables indépendantes.
 
-Pour valider les résidus de ce modèle, nous utiliserons la méthode des résidus simulés. Vous trouverez plus d'information à leur sujet dans le chapitre sur les GLM du livre [*Méthodes quantitatives en sciences sociales : un grand bol d’R*](https://serieboldr.github.io/MethodesQuantitatives/09-GLMM.html) [@RBoldAir].
+Pour valider les résidus de ce modèle, nous utiliserons la méthode des résidus simulés. Vous trouverez plus d'information à leur sujet dans le chapitre sur les GLM du livre [*Méthodes quantitatives en sciences sociales : un grand bol d’R*](https://serieboldr.github.io/MethodesQuantitatives/09-GLMM.html) [@RBoldAirMethodesQuanti].
 
 ```{r}
 #| echo: true 

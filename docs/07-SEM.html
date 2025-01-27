@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.5.57">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>6&nbsp; Modèles avec des vecteurs propres spatiaux – Régressions spatiales : un grand bol d’R</title>
+<title>7&nbsp; Modèles avec des vecteurs propres spatiaux – Méthodes de régression spatiale : un grand bol d’R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -92,7 +92,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-SEM.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Modèles avec des vecteurs propres spatiaux</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-SEM.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modèles avec des vecteurs propres spatiaux</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
@@ -103,9 +103,10 @@ div.csl-indent {
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Régressions spatiales : un grand bol d’R</a> 
+      <a href="./">Méthodes de régression spatiale : un grand bol d’R</a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/SerieBoldR/RegressionsSpatiales" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
+    <a href="./Méthodes-de-régression-spatiale---un-grand-bol-d’R.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
 </div>
     </div>
       </div>
@@ -160,8 +161,14 @@ div.csl-indent {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./04-GWRClassique.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Régressions géographiquement pondérées classiques</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./05-GWRExtensions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -171,13 +178,13 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./06-GAM.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Modèles généralisées additifs</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Modèles généralisées additifs</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./07-SEM.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Modèles avec des vecteurs propres spatiaux</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modèles avec des vecteurs propres spatiaux</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -187,7 +194,7 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./08-Exercices.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Correction des exercices</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Correction des exercices</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -204,12 +211,12 @@ div.csl-indent {
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table des matières</h2>
    
   <ul>
-<li><a href="#sec-SEV_why" id="toc-sec-SEV_why" class="nav-link active" data-scroll-target="#sec-SEV_why"><span class="header-section-number">6.1</span> Les vecteurs propres de Moran</a></li>
+<li><a href="#sec-SEV_why" id="toc-sec-SEV_why" class="nav-link active" data-scroll-target="#sec-SEV_why"><span class="header-section-number">7.1</span> Les vecteurs propres de Moran</a></li>
   </ul><div class="toc-actions"><ul><li><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<h1 class="title"><span id="sec-chap07" class="quarto-section-identifier"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Modèles avec des vecteurs propres spatiaux</span></span></h1>
+<h1 class="title"><span id="sec-chap07" class="quarto-section-identifier"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modèles avec des vecteurs propres spatiaux</span></span></h1>
 </div>
 
 
@@ -224,9 +231,9 @@ div.csl-indent {
 
 
 </header><p>Un autre technique utilisée pour ajouter l’espace dans un modèle a été proposée par par Daniel Griffith <span class="citation" data-cites="fotheringham2003geographically griffith2019spatial">(<a href="references.html#ref-fotheringham2003geographically" role="doc-biblioref">2003</a>; <a href="references.html#ref-griffith2019spatial" role="doc-biblioref">Griffith, Chun et Li 2019</a>)</span> et est connue sous le nom du filtrage spatiale (<em>spatial filtering</em>).</p>
-<p>Cette technique est très flexible car elle peut s’appliquer à n’importe quel type de GLM et GLMM. L’approche est relativement simple, car elle consiste à ajouter dans le modèle un ensemble de variables supplémentaires dont le rôle est de capturer des tendances spatiales qui autrement se retrouveraient dans les résidus. Les variables supplémentaires en question sont appelée des vecteurs propres spatiaux (<em>spatial eigen vectors</em>) et sont obtenus à partir de la matrice de pondération spatiale décrivant l’espace de nos données. Plus exactement, les SEV sont obtenus en décomposant la matrice spatiale de la même manière que nous décomposons la variance d’un jeu de données lorsque l’on réalise une analyse en composantes principales (ACP). Pour un rappel sur l’ACP, vous pouvez vous référez au <a href="https://serieboldr.github.io/MethodesQuantitatives/12-AnalysesFactorielles.html#sec-122">chapitre sur les analyses factorielles</a> <span class="citation" data-cites="RBoldAir">(<a href="references.html#ref-RBoldAir" role="doc-biblioref">Apparicio et Gelb 2022</a>)</span>. Ces vecteurs propres sont aussi appelés <em>Moran eigen vectors</em>.</p>
-<section id="sec-SEV_why" class="level2" data-number="6.1"><h2 data-number="6.1" class="anchored" data-anchor-id="sec-SEV_why">
-<span class="header-section-number">6.1</span> Les vecteurs propres de Moran</h2>
+<p>Cette technique est très flexible car elle peut s’appliquer à n’importe quel type de GLM et GLMM. L’approche est relativement simple, car elle consiste à ajouter dans le modèle un ensemble de variables supplémentaires dont le rôle est de capturer des tendances spatiales qui autrement se retrouveraient dans les résidus. Les variables supplémentaires en question sont appelée des vecteurs propres spatiaux (<em>spatial eigen vectors</em>) et sont obtenus à partir de la matrice de pondération spatiale décrivant l’espace de nos données. Plus exactement, les SEV sont obtenus en décomposant la matrice spatiale de la même manière que nous décomposons la variance d’un jeu de données lorsque l’on réalise une analyse en composantes principales (ACP). Pour un rappel sur l’ACP, vous pouvez vous référez au <a href="https://serieboldr.github.io/MethodesQuantitatives/12-AnalysesFactorielles.html#sec-122">chapitre sur les analyses factorielles</a> <span class="citation" data-cites="RBoldAir">(<a href="references.html#ref-RBoldAir" role="doc-biblioref"><strong>RBoldAir?</strong></a>)</span>. Ces vecteurs propres sont aussi appelés <em>Moran eigen vectors</em>.</p>
+<section id="sec-SEV_why" class="level2" data-number="7.1"><h2 data-number="7.1" class="anchored" data-anchor-id="sec-SEV_why">
+<span class="header-section-number">7.1</span> Les vecteurs propres de Moran</h2>
 <p>À partir d’une matrice spatiale <em>W</em> de taille <em>n x n</em>, il est possible de calculer <em>n-1</em> vecteurs propres de Moran qui représentent chacun un agencement spatial possible. Ces vecteurs propres sont orthogonaux, ce qui signifie qu’ils ne sont pas corrélés entre eux. Le premier vecteur propre issu de <em>W</em> représente l’agencement spatial avec la plus haute autocorrélation spatiale positive possible. À l’inverse, le dernier vecteur propre représente l’agencement spatial avec la plus forte autocorrélation spatiale négative possible.</p>
 <p>Prenons un exemple concret avec les données de secteurs de recensement de Montréal ci-dessous.</p>
 <div class="bloc_objectif">
@@ -281,14 +288,11 @@ div.csl-indent {
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
-<div id="ref-RBoldAir" class="csl-entry" role="listitem">
-Apparicio, Philippe et Jérémy Gelb. 2022. <em>Méthodes quantitatives en sciences sociales : un grand bol d’R</em>. FabriqueREL, Licence CC BY-SA. <a href="https://serieboldr.github.io/MethodesQuantitatives/">https://serieboldr.github.io/MethodesQuantitatives/</a>.
-</div>
 <div id="ref-fotheringham2003geographically" class="csl-entry" role="listitem">
 Fotheringham, A Stewart, Chris Brunsdon et Martin Charlton. 2003. <em>Geographically weighted regression: the analysis of spatially varying relationships</em>. John Wiley &amp; Sons.
 </div>
 <div id="ref-griffith2019spatial" class="csl-entry" role="listitem">
-Griffith, Daniel, Yongwan Chun et Bin Li. 2019. <em>Spatial regression analysis using eigenvector spatial filtering</em>. Academic Press.
+Griffith, Daniel A., Yongwan Chun et Bin Li. 2019. <em>Spatial regression analysis using eigenvector spatial filtering</em>. Academic Press.
 </div>
 </div>
 </section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
@@ -712,19 +716,19 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="./06-GAM.html" class="pagination-link" aria-label="Modèles généralisées additifs">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Modèles généralisées additifs</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Modèles généralisées additifs</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./08-Exercices.html" class="pagination-link" aria-label="Correction des exercices">
-        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Correction des exercices</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Correction des exercices</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
 <footer class="footer"><div class="nav-footer">
     <div class="nav-footer-left">
-<p>Régressions spatiales : un grand bol d’R.</p>
+<p>Méthodes de régression spatiale : un grand bol d’R.</p>
 </div>   
     <div class="nav-footer-center">
       &nbsp;
