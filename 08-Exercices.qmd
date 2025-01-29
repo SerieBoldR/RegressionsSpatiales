@@ -188,6 +188,77 @@ tmap_arrange(Carte1, Carte2, Carte3, Carte4, Carte5, ncol = 2, nrow=3)
 
 ### Exercice 1 {#sec-08051}
 
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+library(sf)
+library(mgcv)
+library(car)
+library(DHARMa)
+library(mgcViz)
+# Chargement du jeu de données sur l'agglomération Lyonnaise
+load("data/Lyon.Rdata")
+
+# Vérification de la multicolinéarité (VIF)
+vif(lm(PM25 ~ Lden+Pct_65+Pct_Img+Pct_brevet+NivVieMed, data = LyonIris))
+
+# Construction du modèle GLM gaussien
+Modele.GAM1 <- gam(PM25 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+                  family = gaussian, data = LyonIris)
+# Résidus simulés du modèle gaussien
+GAM1.res <- simulateResiduals(Modele.GAM, plot = FALSE)
+plot(GAM1.res)
+
+# Construction du modèle GLM avec une distribution de Student
+Modele.GAM2 <- gam(PM25 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+                  family = scat, data = LyonIris)
+# Résidus simulés avec une distribution de Student
+GAM2.res <- simulateResiduals(Modele.GAM, plot = FALSE)
+plot(GAM2.res)
+
+# Comparaison des deux modèles
+AIC(Modele.GAM1, Modele.GAM2)
+
+# Résultats du modèle gaussien
+summary(Modele.GAM2)
+
+# Matrice de contiguïté selon le partage d'un nœud 
+queen_nb <- poly2nb(LyonIris, queen = TRUE)
+queen_w <- nb2listw(queen_nb, style = 'W', zero.policy = TRUE)
+
+# I de Moran sur les résidus gaussiens
+moran.mc(residuals(Modele.GAM2, 
+                   type = 'pearson'), 
+                   listw = queen_w, nsim = 999,
+                   zero.policy = TRUE)
+
+# I de Moran sur les résidus simulés
+moran.mc(residuals(GAM2.res, 
+                   type = 'pearson'), 
+                   listw = queen_w, nsim = 999,
+                   zero.policy = TRUE)
+```
+
 ### Exercice 2 {#sec-08052}
 
 ### Exercice 3 {#sec-08053}
+
+## Exercices du chapitre 6 {#sec-0806}
+
+### Exercice 1 {#sec-08061}
+
+### Exercice 2 {#sec-08062}
+
+### Exercice 3 {#sec-08063}
+
+
+## Exercices du chapitre 7 {#sec-0706}
+
+### Exercice 1 {#sec-07061}
+
+### Exercice 2 {#sec-07062}
+
+### Exercice 3 {#sec-07063}
+

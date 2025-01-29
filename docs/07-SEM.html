@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.6.32">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>7&nbsp; Modèles avec des vecteurs propres spatiaux – Méthodes de régression spatiale : un grand bol d’R</title>
 <style>
@@ -54,10 +54,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-2486e1f0a3ee9ee1fc393803a1361cdb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap-183e74061cd0fe4872fa4cf166543a55.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -83,7 +83,32 @@ div.csl-indent {
     "search-submit-button-title": "Envoyer",
     "search-label": "Recherche"
   }
-}</script><link rel="stylesheet" href="css/quizlib.min.css">
+}</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script><link rel="stylesheet" href="css/quizlib.min.css">
 </head>
 <body class="nav-sidebar floating">
 
@@ -211,7 +236,7 @@ div.csl-indent {
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table des matières</h2>
    
   <ul>
-<li><a href="#sec-SEV_why" id="toc-sec-SEV_why" class="nav-link active" data-scroll-target="#sec-SEV_why"><span class="header-section-number">7.1</span> Les vecteurs propres de Moran</a></li>
+<li><a href="#sec-071" id="toc-sec-071" class="nav-link active" data-scroll-target="#sec-071"><span class="header-section-number">7.1</span> Les vecteurs propres de Moran</a></li>
   </ul><div class="toc-actions"><ul><li><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></nav>
     </div>
 <!-- main -->
@@ -230,12 +255,8 @@ div.csl-indent {
   
 
 
-</header><p>Un autre technique utilisée pour ajouter l’espace dans un modèle a été proposée par par Daniel Griffith <span class="citation" data-cites="fotheringham2003geographically griffith2019spatial">(<a href="references.html#ref-fotheringham2003geographically" role="doc-biblioref">2003</a>; <a href="references.html#ref-griffith2019spatial" role="doc-biblioref">Griffith, Chun et Li 2019</a>)</span> et est connue sous le nom du filtrage spatiale (<em>spatial filtering</em>).</p>
-<p>Cette technique est très flexible car elle peut s’appliquer à n’importe quel type de GLM et GLMM. L’approche est relativement simple, car elle consiste à ajouter dans le modèle un ensemble de variables supplémentaires dont le rôle est de capturer des tendances spatiales qui autrement se retrouveraient dans les résidus. Les variables supplémentaires en question sont appelée des vecteurs propres spatiaux (<em>spatial eigen vectors</em>) et sont obtenus à partir de la matrice de pondération spatiale décrivant l’espace de nos données. Plus exactement, les SEV sont obtenus en décomposant la matrice spatiale de la même manière que nous décomposons la variance d’un jeu de données lorsque l’on réalise une analyse en composantes principales (ACP). Pour un rappel sur l’ACP, vous pouvez vous référez au <a href="https://serieboldr.github.io/MethodesQuantitatives/12-AnalysesFactorielles.html#sec-122">chapitre sur les analyses factorielles</a> <span class="citation" data-cites="RBoldAir">(<a href="references.html#ref-RBoldAir" role="doc-biblioref"><strong>RBoldAir?</strong></a>)</span>. Ces vecteurs propres sont aussi appelés <em>Moran eigen vectors</em>.</p>
-<section id="sec-SEV_why" class="level2" data-number="7.1"><h2 data-number="7.1" class="anchored" data-anchor-id="sec-SEV_why">
-<span class="header-section-number">7.1</span> Les vecteurs propres de Moran</h2>
-<p>À partir d’une matrice spatiale <em>W</em> de taille <em>n x n</em>, il est possible de calculer <em>n-1</em> vecteurs propres de Moran qui représentent chacun un agencement spatial possible. Ces vecteurs propres sont orthogonaux, ce qui signifie qu’ils ne sont pas corrélés entre eux. Le premier vecteur propre issu de <em>W</em> représente l’agencement spatial avec la plus haute autocorrélation spatiale positive possible. À l’inverse, le dernier vecteur propre représente l’agencement spatial avec la plus forte autocorrélation spatiale négative possible.</p>
-<p>Prenons un exemple concret avec les données de secteurs de recensement de Montréal ci-dessous.</p>
+</header><p>Un autre technique utilisée pour ajouter l’espace dans un modèle a été proposée par Daniel Griffith <span class="citation" data-cites="griffith2019spatial">(<a href="references.html#ref-griffith2019spatial" role="doc-biblioref">2019</a>)</span> et est connue sous le nom du filtrage spatial (<em>spatial filtering</em>).</p>
+<p>Cette technique est très flexible car elle peut s’appliquer à n’importe quel type de GLM et GLMM. L’approche est relativement simple&nbsp;: elle consiste à ajouter dans le modèle un ensemble de variables supplémentaires dont le rôle est de capturer des tendances spatiales qui autrement se retrouveraient dans les résidus. Les variables supplémentaires en question sont appelée des <strong>vecteurs propres spatiaux</strong> (<em>spatial eigen vectors</em> – SEV) et sont obtenus à partir de la matrice de pondération spatiale <span class="math inline">\(W\)</span> décrivant l’espace de nos données. Plus exactement, les SEV sont obtenus en décomposant la matrice spatiale de la même manière que nous décomposons la variance d’un jeu de données lorsque l’on réalise une analyse en composantes principales (ACP). Pour un rappel sur l’ACP, vous pouvez vous référez au <a href="https://serieboldr.github.io/MethodesQuantitatives/12-AnalysesFactorielles.html#sec-122">chapitre sur les analyses factorielles</a> <span class="citation" data-cites="RBoldAirMethodesQuanti">(<a href="references.html#ref-RBoldAirMethodesQuanti" role="doc-biblioref">Apparicio et Gelb 2022</a>)</span>. Ces vecteurs propres sont aussi appelés <em>Moran eigenvectors</em>.</p>
 <div class="bloc_objectif">
 <div class="bloc_objectif-header">
 <div class="bloc_objectif-icon">
@@ -285,11 +306,15 @@ div.csl-indent {
 </ul>
 </div>
 </div>
+<section id="sec-071" class="level2" data-number="7.1"><h2 data-number="7.1" class="anchored" data-anchor-id="sec-071">
+<span class="header-section-number">7.1</span> Les vecteurs propres de Moran</h2>
+<p>À partir d’une matrice spatiale <em>W</em> de taille <em>n x n</em>, il est possible de calculer <em>n-1</em> vecteurs propres de Moran qui représentent chacun un agencement spatial possible. Ces vecteurs propres sont orthogonaux, ce qui signifie qu’ils ne sont pas corrélés entre eux. Le premier vecteur propre issu de <em>W</em> représente l’agencement spatial avec la plus haute autocorrélation spatiale positive possible. À l’inverse, le dernier vecteur propre représente l’agencement spatial avec la plus forte autocorrélation spatiale négative possible.</p>
+<p>Prenons un exemple concret avec les données de secteurs de recensement de Montréal ci-dessous.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
-<div id="ref-fotheringham2003geographically" class="csl-entry" role="listitem">
-Fotheringham, A Stewart, Chris Brunsdon et Martin Charlton. 2003. <em>Geographically weighted regression: the analysis of spatially varying relationships</em>. John Wiley &amp; Sons.
+<div id="ref-RBoldAirMethodesQuanti" class="csl-entry" role="listitem">
+Apparicio, Philippe et Jérémy Gelb. 2022. <em>Méthodes quantitatives en sciences sociales : un grand bol d’R</em>. FabriqueREL, Licence CC BY-SA. <a href="https://serieboldr.github.io/MethodesQuantitatives/">https://serieboldr.github.io/MethodesQuantitatives/</a>.
 </div>
 <div id="ref-griffith2019spatial" class="csl-entry" role="listitem">
 Griffith, Daniel A., Yongwan Chun et Bin Li. 2019. <em>Spatial regression analysis using eigenvector spatial filtering</em>. Academic Press.

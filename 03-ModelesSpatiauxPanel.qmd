@@ -93,7 +93,7 @@ library(sf)
 library(tmap)
 ```
 
-Correction à la [section @sec-06031].
+Correction à la [section @sec-08031].
 :::
 :::
 
@@ -117,7 +117,7 @@ library(sf)
 library(tmap)
 ```
 
-Correction à la [section @sec-06032].
+Correction à la [section @sec-08032].
 :::
 :::
 
@@ -142,6 +142,6 @@ library(spatstat)
 library(tmap)
 ```
 
-Correction à la [section @sec-06033].
+Correction à la [section @sec-08033].
 :::
 :::

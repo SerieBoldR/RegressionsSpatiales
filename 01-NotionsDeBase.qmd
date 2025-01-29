@@ -68,6 +68,7 @@ Premièrement, nous utiliserons le jeu de données spatiales `LyonIris` du *pack
 #| echo: false
 #| message: false
 #| warning: false
+#| eval: true
 library(sf)
 load("data/Lyon.Rdata")
 Data <- st_drop_geometry(LyonIris)
@@ -90,7 +91,7 @@ stats <- data.frame(variable = names(Data),
                     nom = intitule,
                     type = c("EN","EN","EN","EN","SE","SE","SE","SE","SE","SE"),
                     moy = round(sapply(Data, mean),2),
-                    et = round(sapply(Data, sd),2), 
+                    et = round(sapply(Data, sd),2),                    
                     minimum =round(sapply(Data, min),2), 
                     maximum =round(sapply(Data, max),2)
                     )
@@ -99,12 +100,116 @@ knitr::kable(stats,
 			row.names = FALSE,
 			format.args = list(decimal.mark = ',', big.mark = " "),
 			col.names=c("Nom","Intitulé","Type","Moy.", "E.-T.", "Min.", "Max."),
-			align= c("l","l", "c","r", "r", "r", "r"),
+			align= c("l","l", "c", "r", "r", "r", "r"),
 			format = "markdown")
 ```
 
 ### Jeu de données sur la région métropolitaine de Montraéal {#sec-0112}
 
+Deuxièmement, nous utiliserons un jeu de données spatiales sur les parts modales dans la région de Montréal extraites du recensement de 2021 de Statistique Canada pour la région métropolitaine de Montréal (@tbl-Mtl). En guise d'exemple, les proportions des navetteurs utilisant respectivement le transport en commun et l'automobile par secteur de recensement sont présentées à la @fig-datamtlCarto.
+
+```{r}
+#| label: tbl-Mtl
+#| tbl-cap: Statistiques descriptives du jeu de données sur Montréal
+#| echo: false
+#| message: false
+#| warning: false
+#| eval: true
+ 
+# data_mtl <- st_read('data/chap06/data_sr_access.gpkg', quiet = TRUE)
+# data_mtl <- data_mtl %>%
+#  mutate(
+#    prt_tc = mode_tc / total_commuters,
+#    prt_auto = mode_auto / total_commuters,
+#    revenu_median = revenu_median / 1000,
+#    prt_actif = (mode_pieton + mode_velo) / total_commuters,
+#  ) %>%
+#  filter(!is.na(prt_tc)) %>%
+#  st_transform(32188)
+# save(data_mtl, file="data/Mtl.Rdata")
+
+load("data/Mtl.Rdata")
+Data <- st_drop_geometry(data_mtl)
+Data[, c("GeoUID", "Households", "Dwellings", 
+         "Population", "acs_idx_emp_tc_offpeak")] <- list(NULL)
+intitule <- c("Proportion de familles monoparentales",
+              "Proportion de minorités visibles",
+              "Proportion de chômeurs",
+              "Proportion de personnes à faible revenu",
+              "Revenu médian à faible revenu",
+              "Habitants au km2",
+              "Transports en commun (effectifs)",
+              "Automobile (effectifs)",
+              "Marche (effectifs)",
+              "Vélo (effectifs)",
+              "Total navetteurs (effectifs)",
+              "Accessibilité aux emplois en heure de pointe à vélo",             
+              "Accessibilité aux emplois en heure de pointe en transport collectif",
+              "Accessibilité aux emplois en heure de pointe à la marche",             
+              "Proportion de navetteurs en transport en commun",
+              "Proportion de navetteurs en auto",
+              "Proportion de naveteurs en transport actif (vélo et marche)"
+              )
+
+stats <- data.frame(variable = names(Data),
+                    nom = intitule,
+                    moy = round(sapply(Data, mean),2),
+                    et = round(sapply(Data, sd),2)
+                    )
+knitr::kable(stats,
+			digits = 1,
+			row.names = FALSE,
+			format.args = list(decimal.mark = ',', big.mark = " "),
+			col.names=c("Nom","Intitulé","Moy.", "E.-T."),
+			align= c("l","l", "r", "r"),
+			format = "markdown")
+
+```
+
+```{r}
+#| echo: false 
+#| message: false 
+#| eval: true
+#| warning: false
+#| label: fig-datamtlCarto
+#| fig-cap: Parts modales de tranport en commun et de l'automobile (proportion)
+#| fig-align: center
+library(tmap, quietly = TRUE)
+legend_parameters <- list(text.separator = "à",
+                     decimal.mark = ",", 
+                     big.mark = " ",
+                     digits = 2)
+
+carte1 <- tm_shape(data_mtl) +
+          tm_fill(col="prt_tc", 
+                  n = 5, 
+                  palette = "Reds",
+                  style = "quantile",
+                  legend.format = legend_parameters,
+                  title = 'Transport en commun') +
+           tm_layout(frame=FALSE, legend.outside = TRUE)
+
+carte2 <- tm_shape(data_mtl) +
+          tm_fill(col="prt_auto", 
+                  n = 5, 
+                  palette = "Reds",
+                  style = "quantile",
+                  legend.format = legend_parameters,
+                  title = 'Automobile') +
+           tm_layout(frame=FALSE, legend.outside = TRUE)
+
+carte3 <- tm_shape(data_mtl) +
+          tm_fill(col="prt_actif", 
+                  n = 5, 
+                  palette = "Reds",
+                  style = "quantile",
+                  legend.format = legend_parameters,
+                  title = 'Transport actif') +
+           tm_layout(frame=FALSE, legend.outside = TRUE) + 
+           tm_scale_bar(breaks = c(0,10))
+          
+tmap_arrange(carte1, carte2, carte3, ncol=2, nrow=2)
+```
 
 ### Jeu de données sur Barcelone {#sec-0113}
 
@@ -113,7 +218,6 @@ knitr::kable(stats,
 #| message: false
 #| warning: false
 load("data/Bcn.RData")
-
 ```
 
 ### Jeu de données sur la région métropolitaine de Montraéal {#sec-0114}
@@ -1426,7 +1530,7 @@ tm_shape(LyonIris)+
 ::: bloc_aller_loin-body
 **Les modèles d'économétrie spatiale** ([chapitre @sec-chap02] et [chapitre @sec-chap03]) sont des solutions particulièrement intéressantes pour remédier au problème de dépendance spatiale d'un modèle et obtenir des coefficients de régression non biaisés.
 
-**Les modèles linéaires généralisés avec des vecteurs spatiaux** ([chapitre @sec-chap07) à compléter.
+**Les modèles linéaires généralisés avec des vecteurs spatiaux** ([chapitre @sec-chap07]) permettent de capturer les tendances spatiales en résumant la matrice de pondérations spatiales $W$.
 :::
 :::
 
@@ -1450,8 +1554,8 @@ Dans le chapitre 2, nous avons vu que les modèles d’économétrie spatiale vi
 **Hétérogénité ou non-stationnarité spatiale et méthodes de régression spatiale : quelles solutions?**
 :::
 ::: bloc_aller_loin-body
-**Les régressions géographiquement pondérées** ([chapitre @sec-chap04 et [chapitre @sec-chap05]), sont des outils d'exploration particulièrement adaptés pour explorer et cartographier l'instabilité des relations entre les variables dépendante et indépendantes d'un modèle de régression.
+**Les régressions géographiquement pondérées** ([chapitre @sec-chap04] et [chapitre @sec-chap05]), sont des outils d'exploration particulièrement adaptés pour explorer et cartographier l'instabilité des relations entre les variables dépendante et indépendantes d'un modèle de régression.
 
-**Les modèles généralisés additifs** ([chapitre @sec-chap06) permettent d'introduire des lissages spatiaux pour capturer les tendances spatiales, soit de manière continues (avec une *spline* bivariée sur les coordonnées géographiques), soit de manière discrète (avec un lissage par champ aléatoire de Markov).
+**Les modèles généralisés additifs** ([chapitre @sec-chap06]) permettent d'introduire des lissages spatiaux pour capturer les tendances spatiales, soit de manière continues (avec une *spline* bivariée sur les coordonnées géographiques), soit de manière discrète (avec un lissage par champ aléatoire de Markov).
 :::
 :::

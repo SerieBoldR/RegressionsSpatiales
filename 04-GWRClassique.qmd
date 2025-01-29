@@ -252,8 +252,7 @@ R2.GWR <- 1 - (rss / tss)
 R2.GWR <- as.character(round(R2.GWR,4))
 R2.GWR <- gsub("\\.", ",", R2.GWR) 
 
-note <- paste0("R carré du modèle global = ", R2.global, ". ",
-               "R carré du modèle GWR = ", R2.GWR, ".") 
+note <- paste0("R carré du modèle global = ", R2.global, ". R carré du modèle GWR = ", R2.GWR, ".") 
 ## Anova
 GWR.anova <- anova(Modele.GWR)
 tableauAnova <- data.frame(Modèle = c("Résidus du modèle global",
