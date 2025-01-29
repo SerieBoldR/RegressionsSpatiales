@@ -60,7 +60,7 @@ Ce livre n'a pas pour objectif de traiter la phase préparatoire consistant à s
 
 Premièrement, nous utiliserons le jeu de données spatiales `LyonIris` du *package* `geocmeans`. Ce jeu de données spatiales pour l'agglomération lyonnaise (France) comprend dix variables, dont quatre environnementales (EN) et six socioéconomiques (SE), pour les îlots regroupés pour l'information statistique (IRIS) de l'agglomération lyonnaise (@tbl-datageocmeans et @fig-datacarto).
 
-![Cartographie des variables du jeu de données LyonIris](images/chap01/FigureDataLyon.png){#fig-datacarto width="100%" fig-align="center"}
+![Cartographie des variables du jeu de données LyonIris](images/Chap01/FigureDataLyon.png){#fig-datacarto width="100%" fig-align="center"}
 
 ```{r}
 #| label: tbl-datageocmeans
