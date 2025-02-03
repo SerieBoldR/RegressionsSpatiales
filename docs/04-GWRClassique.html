@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.32">
+<meta name="generator" content="quarto-1.5.57">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>4&nbsp; Régressions géographiquement pondérées classiques – Méthodes de régression spatiale : un grand bol d’R</title>
 <style>
@@ -88,10 +88,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-2486e1f0a3ee9ee1fc393803a1361cdb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-183e74061cd0fe4872fa4cf166543a55.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -244,7 +244,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./07-SEM.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modèles avec des vecteurs propres spatiaux</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Filtrage spatial</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -554,7 +554,7 @@ Tableau&nbsp;4.2: Analyse de variance entre les modèles global et GWR
 <td style="text-align: right;">9,09</td>
 </tr>
 </tbody>
-<tfoot><tr class="odd">
+<tfoot><tr class="even">
 <td style="text-align: left; padding: 0;">
 <sup></sup> R carré du modèle global = 0,2832. R carré du modèle GWR = 0,7838.</td>
 <td style="text-align: right;"></td>
@@ -1321,7 +1321,7 @@ Sélection de la taille de la zone optimale (bandwidth) avec la distance :
 <pre><code>   ***********************************************************************
    *                       Package   GWmodel                             *
    ***********************************************************************
-   Program starts at: 2025-01-29 01:03:30.164522 
+   Program starts at: 2025-02-02 19:09:05.203814 
    Call:
    gwr.basic(formula = NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + 
     NivVieMed, data = LyonIris, bw = bwCV.voisins, kernel = "bisquare", 
@@ -1413,7 +1413,7 @@ Sélection de la taille de la zone optimale (bandwidth) avec la distance :
    ---Significance stars
    Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
    ***********************************************************************
-   Program stops at: 2025-01-29 01:03:45.319906 </code></pre>
+   Program stops at: 2025-02-02 19:09:17.754857 </code></pre>
 </div>
 </div>
 </section><section id="sec-04223" class="level4" data-number="4.2.2.3"><h4 data-number="4.2.2.3" class="anchored" data-anchor-id="sec-04223">
@@ -1501,7 +1501,7 @@ Figure&nbsp;4.10: Exemple de cartographie avec les résultats de la GWR obtenus 
 <ul>
 <li><p><strong>Type de distance</strong>. Dans le cadre de ce chapitre, nous avons calculé la GWR avec la distance euclidienne qui n’est pas adaptée à tous les phénomènes à l’étude. Par exemple, <span class="citation" data-cites="lu2011geographically">Lu, Charlton et Fotheringhama (<a href="references.html#ref-lu2011geographically" role="doc-biblioref">2011</a>)</span> utilisent des distances calculées sur un réseau de rues pour modéliser le prix de vente des maisons à Londres avec un modèle GWR. Pour ce faire, il est possible d’utiliser les fonctions <code>bw.gwr</code> <code>gwr.basic</code> du <em>package</em> <code>GWmodel</code> dont l’argument <code>dmat</code> permet de spécifier une matrice de distance prédéfinie.</p></li>
 <li><p><strong>Choix du noyau (kernel) et la taille de la zone d’influence</strong>. Ces deux paramètres de la GWR peuvent impactent grandement les résultats. En effet, la zone d’influence (défini avec une distance ou un nombre donné de plus proches voisins) peut entraîner localement un nombre insuffisant d’observations, compromettant ainsi la robustesse des équations de régression locales.</p></li>
-<li><p><strong>Prédicteurs locaux et globaux</strong>. Nous avons vu que la fonction <code>LMZ.F3GWR.test</code> permet de déterminer si les coefficients de régression présentent des variations significatives dans l’espace. Or, certains variables indépendantes peuvent être introduites globalement et non localement, comme nous le verrons dans le prochain chapitre (<a href="05-GWRExtensions.html#sec-051" class="quarto-xref">section&nbsp;<span>5.1</span></a>).</p></li>
+<li><p><strong>Prédicteurs locaux et globaux</strong>. Nous avons vu que la fonction <code>LMZ.F3GWR.test</code> permet de déterminer si les coefficients de régression présentent des variations significatives dans l’espace. Or, certains variables indépendantes peuvent être introduites globalement et non localement, comme nous le verrons dans le prochain chapitre (<span class="quarto-unresolved-ref">?sec-051</span>).</p></li>
 </ul>
 <p>La GWR fait face aussi à d’importantes critiques&nbsp;:</p>
 <ul>
@@ -1563,7 +1563,7 @@ Figure&nbsp;4.11: Corrélation de Pearson entre les coefficients de régression 
 <span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Affichage des résultats</span></span>
 <span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a>Modele.GWR</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Correction à la <a href="08-Exercices.html#sec-08041" class="quarto-xref">section&nbsp;<span>8.4.1</span></a>.</p>
+<p>Correction à la <span class="quarto-unresolved-ref">?sec-08041</span>.</p>
 </div>
 </div>
 <div class="bloc_exercice">
@@ -1591,7 +1591,7 @@ Figure&nbsp;4.11: Corrélation de Pearson entre les coefficients de régression 
 <span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Les coefficients du modèle GWR varient-ils significativement dans l'espace?</span></span>
 <span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a>à compléter</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Correction à la <a href="08-Exercices.html#sec-08042" class="quarto-xref">section&nbsp;<span>8.4.2</span></a>.</p>
+<p>Correction à la <span class="quarto-unresolved-ref">?sec-08042</span>.</p>
 </div>
 </div>
 <div class="bloc_exercice">
@@ -1619,7 +1619,7 @@ Figure&nbsp;4.11: Corrélation de Pearson entre les coefficients de régression 
 <span id="cb55-14"><a href="#cb55-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Cartographie</span></span>
 <span id="cb55-15"><a href="#cb55-15" aria-hidden="true" tabindex="-1"></a>à compléter</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Correction à la <a href="08-Exercices.html#sec-08043" class="quarto-xref">section&nbsp;<span>8.4.3</span></a>.</p>
+<p>Correction à la <span class="quarto-unresolved-ref">?sec-08043</span>.</p>
 </div>
 </div>
 

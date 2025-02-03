@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.32">
+<meta name="generator" content="quarto-1.5.57">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>2&nbsp; Modèles d’économétrie spatiale – Méthodes de régression spatiale : un grand bol d’R</title>
 <style>
@@ -88,10 +88,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-2486e1f0a3ee9ee1fc393803a1361cdb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-183e74061cd0fe4872fa4cf166543a55.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -243,7 +243,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./07-SEM.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modèles avec des vecteurs propres spatiaux</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Filtrage spatial</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -370,12 +370,12 @@ window.Quarto = {
 </div>
 <div class="bloc_attention-body">
 <p>Dans cette section, nous décrivons uniquement les modèles économétriques spatiaux dont la variable dépendante est continue. Sommairement, ces modèles sont des extensions de la régression linéaire multiple, mais dans lequel une spécification explicite des relations spatiales entre les observations est introduite. Cette spécification vise ultimement à capter des effets spatiaux qui influencent le processus générateur de données (PGD), c’est-à-dire le modèle économétrique que l’on spécifie.</p>
-<p>Par conséquent, avant de lire cette chapitre, il convient de bien maîtriser la régression linéaire multiple. Une brève récapitulation est proposée dans la <a href="01-NotionsDeBase.html#sec-015" class="quarto-xref">section&nbsp;<span>1.5</span></a>.</p>
+<p>Par conséquent, avant de lire cette chapitre, il convient de bien maîtriser la régression linéaire multiple. Une brève récapitulation est proposée dans la <a href="#sec-015" class="quarto-xref">section&nbsp;<span class="quarto-unresolved-ref ref-noprefix">sec-015</span></a>.</p>
 </div>
 </div>
 <section id="sec-021" class="level2" data-number="2.1"><h2 data-number="2.1" class="anchored" data-anchor-id="sec-021">
 <span class="header-section-number">2.1</span> Les différents modèles spatiaux autorégressifs</h2>
-<p>Selon Jean Dubé et Diègo Legros, quelques raisons expliquent « le choix d’un modèle autorégressif&nbsp;: la présence d’externalités, les effets d’entraînement, l’omission de variables importantes, la présence d’hétérogénéité spatiale des comportements, les effets mixtes » <span class="citation" data-cites="dube2014econometrie">(<a href="references.html#ref-dube2014econometrie" role="doc-biblioref">2014, 120</a>)</span>. Les effets mixtes représentent une combinaison d’effets spatiaux. Dans tous les cas, la prise en compte des effets spatiaux passe par la spécification d’une matrice de pondérations spatiales, notée <span class="math inline">\(W\)</span> et de dimension (<span class="math inline">\(N \times N\)</span>).</p>
+<p>Selon Jean Dubé et Diègo Legros, quelques raisons expliquent « le choix d’un modèle autorégressif&nbsp;: la présence d’externalités, les effets d’entraînement, l’omission de variables importantes, la présence d’hétérogénéité spatiale des comportements, les effets mixtes » <span class="citation" data-cites="dube2014econometrie">(<a href="#ref-dube2014econometrie" role="doc-biblioref">2014, 120</a>)</span>. Les effets mixtes représentent une combinaison d’effets spatiaux. Dans tous les cas, la prise en compte des effets spatiaux passe par la spécification d’une matrice de pondérations spatiales, notée <span class="math inline">\(W\)</span> et de dimension (<span class="math inline">\(N \times N\)</span>).</p>
 <p>FAIRE UN TABLEAU Modèles / Motivation / Intégration de l’autocorrélation spatiale SLX / Externalités : influence des caractéristiques d’un voisin sur le comportement d’intérêt d’une observation donnée / Variables indépendantes (WX)</p>
 <section id="sec-0211" class="level3" data-number="2.1.1"><h3 data-number="2.1.1" class="anchored" data-anchor-id="sec-0211">
 <span class="header-section-number">2.1.1</span> Modèle SLX&nbsp;: prise en compte des caractéristiques des voisins</h3>
@@ -392,7 +392,7 @@ window.Quarto = {
 <p><strong>Rappel sur les variables spatialement décalées</strong></p>
 </div>
 <div class="bloc_notes-body">
-<p>Dans le premier chapitre (<a href="01-NotionsDeBase.html#sec-013" class="quarto-xref">section&nbsp;<span>1.3</span></a>), nous avons vu comment calculer une variable spatialement décalée avec une matrice de pondérations spatiale spatiale (<a href="01-NotionsDeBase.html#fig-Chap01FigureVariableSpatialementDecalee" class="quarto-xref">figure&nbsp;<span>1.9</span></a>). À titre de rappel, lorsque cette dernière est standardisée en ligne, elle correspond à la valeur moyenne dans les unités voisines ou proches (dépendamment si la matrice est définie selon la contiguïté ou la proximité).</p>
+<p>Dans le premier chapitre (<a href="#sec-013" class="quarto-xref">section&nbsp;<span class="quarto-unresolved-ref ref-noprefix">sec-013</span></a>), nous avons vu comment calculer une variable spatialement décalée avec une matrice de pondérations spatiale spatiale (<a href="#fig-Chap01FigureVariableSpatialementDecalee" class="quarto-xref">figure&nbsp;<span class="quarto-unresolved-ref">fig-Chap01FigureVariableSpatialementDecalee</span></a>). À titre de rappel, lorsque cette dernière est standardisée en ligne, elle correspond à la valeur moyenne dans les unités voisines ou proches (dépendamment si la matrice est définie selon la contiguïté ou la proximité).</p>
 </div>
 </div>
 <p>Le modèle SLX prend la spécification suivante&nbsp;:</p>
@@ -417,11 +417,11 @@ y = \iota\alpha + X\beta + WX\theta + \varepsilon
 \tag{2.2}\]</span></span></p>
 <p>Pour une matrice de pondérations standardisées en ligne, cette expression se réduit à la valeur du coefficient associé à la variable indépendante originale, <span class="math inline">\(\beta_k\)</span>, en plus de la valeur du coefficient associé à la variable décalée spatialement, <span class="math inline">\(\theta_k\)</span>. L’expression synthétise l’effet marginal total, alors que le coefficient <span class="math inline">\(\beta_k\)</span> est habituellement désigné par l’effet direct et le coefficient <span class="math inline">\(\theta_k\)</span> synthétise l’effet indirect, puisque venant des voisins.</p>
 <p>C’est d’ailleurs la valeur du coefficient <span class="math inline">\(\theta_k\)</span> qui introduit ce que l’on qualifie d’externalité spatiale. Il permet d’exprimer comment la variable dépendante varie lorsque les caractéristiques des voisins changent. Les changements dans la variable d’intérêt peuvent venir d’une variation des caractéristiques des voisins.</p>
-<p>Ce modèle est aussi désigné sous le terme d’effet spatial local, par opposition à l’effet global (voir modèle SAR, <a href="#sec-0222" class="quarto-xref">section&nbsp;<span>2.2.2</span></a>). La variation des caractéristiques des voisins a une portée limitée sur le changement de valeurs de la variable dépendante. Seulement certaines observations sont affectées&nbsp;: celles dont les caractéristiques des voisins ont changé.</p>
+<p>Ce modèle est aussi désigné sous le terme d’effet spatial local, par opposition à l’effet global (voir modèle SAR, <a href="#sec-0222" class="quarto-xref">section&nbsp;<span class="quarto-unresolved-ref ref-noprefix">sec-0222</span></a>). La variation des caractéristiques des voisins a une portée limitée sur le changement de valeurs de la variable dépendante. Seulement certaines observations sont affectées&nbsp;: celles dont les caractéristiques des voisins ont changé.</p>
 <p>Si le modèle SLX offre une solution intéressante pour régler le potentiel problème d’autocorrélation spatiale des résidus, rien n’assure pour autant qu’il permet de régler tous les problèmes, même si les coefficients associés aux variables décalées spatialement sont statistiquement significatifs. L’inclusion de variables indépendantes additionnelles peut ne pas suffire à capter ce qui, au départ dans la régression par MCO, se cache dans les résidus du modèle. Un test d’autocorrélation spatiale sur les résidus du modèle SLX est un réflexe nécessaire à avoir.</p>
 </section><section id="sec-02212" class="level4" data-number="2.1.1.2"><h4 data-number="2.1.1.2" class="anchored" data-anchor-id="sec-02212">
 <span class="header-section-number">2.1.1.2</span> Mise en œuvre dans R</h4>
-<p>Le modèle SLX est construit avec la fonction <code>lmSLX</code> du <em>package</em> <code>spatialreg</code> <span class="citation" data-cites="bivand2021review">(<a href="references.html#ref-bivand2021review" role="doc-biblioref">Bivand, Millo et Piras 2021</a>)</span>. Remarquez, dans le code ci-dessous, le paramètre <code>listw=W.Rook</code> qui est utilisé pour spécifier la matrice de pondération spatiale.</p>
+<p>Le modèle SLX est construit avec la fonction <code>lmSLX</code> du <em>package</em> <code>spatialreg</code> <span class="citation" data-cites="bivand2021review">(<a href="#ref-bivand2021review" role="doc-biblioref">Bivand, Millo et Piras 2021</a>)</span>. Remarquez, dans le code ci-dessous, le paramètre <code>listw=W.Rook</code> qui est utilisé pour spécifier la matrice de pondération spatiale.</p>
 <div class="cell">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Chargemement des packages et des données</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
@@ -529,7 +529,7 @@ NivVieMed  0.0955397 0.91786    0.17454   </code></pre>
 </div>
 <p>VOIR AVEC JEAN!!! À la lecture des valeurs de <em>p</em>, nous constatons que seule la variable <code>Pct0_14</code> a un impact direct et indirect significatif au seuil 0,01. L’augmentation d’un point de pourcentage de la population de moins de 15 ans est associé localement à une réduction de 0,20 de la concentration annuelle du dioxyde d’azote. Chez les entités voisines, cette réduction est de 0,78. L’effet total est donc une réduction de 0,98.</p>
 <p><strong>Dépendance spatiale du modèle SLX?</strong></p>
-<p>Ce modèle a-t-il corrigé le problème de dépendance spatiale du modèle de régression linéaire classique? Avec une valeur du <em>I</em> de Moran de 0,605 (<em>p</em>&nbsp;&lt;&nbsp;0,001), les résidus sont toujours fortement autocorrélés spatialement (<a href="#fig-figCartoResSLX" class="quarto-xref">figure&nbsp;<span>2.1</span></a>).</p>
+<p>Ce modèle a-t-il corrigé le problème de dépendance spatiale du modèle de régression linéaire classique? Avec une valeur du <em>I</em> de Moran de 0,605 (<em>p</em>&nbsp;&lt;&nbsp;0,001), les résidus sont toujours fortement autocorrélés spatialement (<a href="#fig-figCartoResSLX" class="quarto-xref">figure&nbsp;<span class="quarto-unresolved-ref">fig-figCartoResSLX</span></a>).</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/lm.morantest.html">lm.morantest</a></span><span class="op">(</span><span class="va">Modele.SLX</span>, <span class="va">W.Rook</span>, alternative<span class="op">=</span><span class="st">"two.sided"</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -567,7 +567,7 @@ Figure&nbsp;2.1: Cartographie des résidus du modèle SLX
 </div>
 </section></section><section id="sec-0212" class="level3" data-number="2.1.2"><h3 data-number="2.1.2" class="anchored" data-anchor-id="sec-0212">
 <span class="header-section-number">2.1.2</span> Modèle SAR&nbsp;: autocorrélation spatiale sur la variable dépendante</h3>
-<p>Dans le modèle SAR (aussi appelé SAR-LAG), l’autocorrélation spatiale est intégrée au niveau de la variable dépendante (<span class="math inline">\(Wy\)</span>), qui est ainsi spatialement décalée. L’idée générale est que la valeur de la variable dépendante pour une observation (<span class="math inline">\(y_i\)</span>) peut être influencée par les valeurs de <span class="math inline">\(y\)</span> des observations voisines et proches. L’exemple le plus classique est le prix de vente des maisons&nbsp;: il est influencé à la fois par les caractéristiques intrinsèques de la maison (<span class="math inline">\(X\)</span>, par exemple, la superficie habitable, le nombre de chambres à coucher, de salles de bains, etc.) et par le prix de vente des maisons voisines (<span class="math inline">\(Wy\)</span>). Jean Dubé et Diègo Legros <span class="citation" data-cites="dube2014econometrie">(<a href="references.html#ref-dube2014econometrie" role="doc-biblioref">2014</a>)</span> qualifient ce phénomène «&nbsp;<strong>d’effets d’entraînement ou d’effets de débordement</strong> (<em>spillover effects</em>)&nbsp;» <span class="citation" data-cites="dube2014econometrie">(<a href="references.html#ref-dube2014econometrie" role="doc-biblioref">2014, 123</a>)</span>. L’équation du modèle SAR s’écrit alors&nbsp;:</p>
+<p>Dans le modèle SAR (aussi appelé SAR-LAG), l’autocorrélation spatiale est intégrée au niveau de la variable dépendante (<span class="math inline">\(Wy\)</span>), qui est ainsi spatialement décalée. L’idée générale est que la valeur de la variable dépendante pour une observation (<span class="math inline">\(y_i\)</span>) peut être influencée par les valeurs de <span class="math inline">\(y\)</span> des observations voisines et proches. L’exemple le plus classique est le prix de vente des maisons&nbsp;: il est influencé à la fois par les caractéristiques intrinsèques de la maison (<span class="math inline">\(X\)</span>, par exemple, la superficie habitable, le nombre de chambres à coucher, de salles de bains, etc.) et par le prix de vente des maisons voisines (<span class="math inline">\(Wy\)</span>). Jean Dubé et Diègo Legros <span class="citation" data-cites="dube2014econometrie">(<a href="#ref-dube2014econometrie" role="doc-biblioref">2014</a>)</span> qualifient ce phénomène «&nbsp;<strong>d’effets d’entraînement ou d’effets de débordement</strong> (<em>spillover effects</em>)&nbsp;» <span class="citation" data-cites="dube2014econometrie">(<a href="#ref-dube2014econometrie" role="doc-biblioref">2014, 123</a>)</span>. L’équation du modèle SAR s’écrit alors&nbsp;:</p>
 <p><span id="eq-SLM"><span class="math display">\[
 y = Wy\rho + X\beta + \epsilon
 \tag{2.3}\]</span></span></p>
@@ -678,34 +678,34 @@ Simulation results ( variance matrix):
 ========================================================
 Simulated standard errors
                Direct  Indirect     Total
-Pct0_14    0.04276657 0.2399910 0.2784246
-Pct_65     0.03759248 0.1929801 0.2296458
-Pct_Img    0.03517837 0.1841717 0.2185500
-Pct_brevet 0.02526574 0.1286189 0.1533337
-NivVieMed  0.06842282 0.3648858 0.4296984
+Pct0_14    0.03984340 0.2382664 0.2731163
+Pct_65     0.03937763 0.2137771 0.2519498
+Pct_Img    0.03502038 0.1852604 0.2194421
+Pct_brevet 0.02481864 0.1303344 0.1545581
+NivVieMed  0.07192107 0.3995739 0.4675163
 
 Simulated z-values:
               Direct  Indirect     Total
-Pct0_14    -3.207433 -2.857858 -2.956029
-Pct_65     -1.268506 -1.229851 -1.241142
-Pct_Img     1.185933  1.130395  1.143472
-Pct_brevet -1.078145 -1.050096 -1.058491
-NivVieMed  -2.012323 -1.886069 -1.922020
+Pct0_14    -3.468038 -2.929469 -3.061598
+Pct_65     -1.227504 -1.145015 -1.163383
+Pct_Img     1.179792  1.118916  1.132907
+Pct_brevet -1.101827 -1.056749 -1.068056
+NivVieMed  -1.959874 -1.783424 -1.825746
 
 Simulated p-values:
-           Direct    Indirect  Total    
-Pct0_14    0.0013393 0.0042651 0.0031163
-Pct_65     0.2046174 0.2187530 0.2145533
-Pct_Img    0.2356489 0.2583100 0.2528425
-Pct_brevet 0.2809690 0.2936740 0.2898319
-NivVieMed  0.0441859 0.0592856 0.0546033</code></pre>
+           Direct     Indirect  Total    
+Pct0_14    0.00052427 0.0033954 0.0022016
+Pct_65     0.21963322 0.2522030 0.2446742
+Pct_Img    0.23808305 0.2631762 0.2572531
+Pct_brevet 0.27053697 0.2906261 0.2854954
+NivVieMed  0.05001049 0.0745173 0.0678885</code></pre>
 </div>
 </div>
 <p>L’interprétation des effets directs se rapproche de celle des coefficients classiques. Ainsi, selon ce modèle, l’augmentation du niveau de vie médian de 1000&nbsp;€ dans un IRIS est associée avec une diminution moyenne de la concentration de dioxyde d’azote de 0,14 dans cet IRIS. L’effet total est de -0.82, indiquant qu’en moyenne, l’augmentation de 1000&nbsp;€ du niveau de vie médian dans un IRIS est associée avec une diminution moyenne de 0,82 de la concentration de dioxyde d’azote dans l’ensemble des IRIS. Au final, l’effet indirect est simplement la différence entre l’effet total et l’effet direct. Nous pouvons constater ici que les effets indirects sont plus importants que les effets directs.</p>
 </div>
 </div>
 <p><strong>Dépendance spatiale du modèle SAR?</strong></p>
-<p>Ce modèle a-t-il corrigé le problème de dépendance spatiale du modèle de régression linéaire classique? Avec une valeur du <em>I</em> de Moran de -0,014 (<em>p</em>&nbsp;=&nbsp;0,654), les résidus ne sont plus spatialement autocorrélés (<a href="#fig-figCartoResSAR" class="quarto-xref">figure&nbsp;<span>2.2</span></a>).</p>
+<p>Ce modèle a-t-il corrigé le problème de dépendance spatiale du modèle de régression linéaire classique? Avec une valeur du <em>I</em> de Moran de -0,014 (<em>p</em>&nbsp;=&nbsp;0,654), les résidus ne sont plus spatialement autocorrélés (<a href="#fig-figCartoResSAR" class="quarto-xref">figure&nbsp;<span class="quarto-unresolved-ref">fig-figCartoResSAR</span></a>).</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Autocorrélation spatiale des résidus</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">Modele.SAR</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -717,7 +717,7 @@ data:  resid(Modele.SAR)
 weights: W.Rook  
 number of simulations + 1: 1000 
 
-statistic = -0.014281, observed rank = 339, p-value = 0.661
+statistic = -0.014281, observed rank = 322, p-value = 0.678
 alternative hypothesis: greater</code></pre>
 </div>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Cartographie des résidus</span></span>
@@ -741,7 +741,7 @@ Figure&nbsp;2.2: Cartographie des résidus du modèle SAR
 </div>
 </section><section id="sec-0213" class="level3" data-number="2.1.3"><h3 data-number="2.1.3" class="anchored" data-anchor-id="sec-0213">
 <span class="header-section-number">2.1.3</span> Modèle SEM&nbsp;: autocorrélation spatiale sur le terme d’erreur</h3>
-<p>Dans le modèle SEM (<em>Spatial Error Model</em>, appelé aussi <em>SAR-ERROR</em>), l’intégration de l’autocorrélation spatiale est réalisée sur le terme d’erreur, ce qui pourrait se justifier par l’omission d’une variable dépendante spatialement structurée <span class="citation" data-cites="dube2014econometrie">(<a href="references.html#ref-dube2014econometrie" role="doc-biblioref">Dubé et Legros 2014, 126</a>)</span>. L’équation du modèle SEM s’écrit&nbsp;:</p>
+<p>Dans le modèle SEM (<em>Spatial Error Model</em>, appelé aussi <em>SAR-ERROR</em>), l’intégration de l’autocorrélation spatiale est réalisée sur le terme d’erreur, ce qui pourrait se justifier par l’omission d’une variable dépendante spatialement structurée <span class="citation" data-cites="dube2014econometrie">(<a href="#ref-dube2014econometrie" role="doc-biblioref">Dubé et Legros 2014, 126</a>)</span>. L’équation du modèle SEM s’écrit&nbsp;:</p>
 <p><span id="eq-SEM"><span class="math display">\[
 y = X\beta + u \textrm{, } u = \lambda Wu + \epsilon
 \tag{2.4}\]</span></span></p>
@@ -815,7 +815,7 @@ data:  resid(Modele.SEM)
 weights: W.Rook  
 number of simulations + 1: 1000 
 
-statistic = -0.011827, observed rank = 359, p-value = 0.641
+statistic = -0.011827, observed rank = 384, p-value = 0.616
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
@@ -923,27 +923,27 @@ Simulation results ( variance matrix):
 ========================================================
 Simulated standard errors
                Direct  Indirect     Total
-Pct0_14    0.04194776 0.3222053 0.3471143
-Pct_65     0.03571694 0.2810802 0.3033278
-Pct_Img    0.03282826 0.2778688 0.2987105
-Pct_brevet 0.02344133 0.2000035 0.2152156
-NivVieMed  0.06917323 0.4938031 0.5298454
+Pct0_14    0.04291453 0.3339968 0.3604791
+Pct_65     0.03556364 0.2929988 0.3153515
+Pct_Img    0.03165522 0.2774290 0.2955411
+Pct_brevet 0.02461528 0.1984772 0.2145662
+NivVieMed  0.06782356 0.5087469 0.5409381
 
 Simulated z-values:
                Direct   Indirect       Total
-Pct0_14    -2.9317102 -3.1758994 -3.30228396
-Pct_65     -0.5899224  0.1442183  0.06417702
-Pct_Img     1.9783885  3.3919487  3.37270977
-Pct_brevet -0.8791229 -2.4211111 -2.34573338
-NivVieMed  -2.2896222 -0.3105051 -0.58830172
+Pct0_14    -2.8352324 -3.0732904 -3.18504393
+Pct_65     -0.6175472  0.1021584  0.02527354
+Pct_Img     2.0489405  3.4132454  3.42352706
+Pct_brevet -0.7757362 -2.3762766 -2.28708791
+NivVieMed  -2.2564096 -0.2611403 -0.52851164
 
 Simulated p-values:
-           Direct   Indirect   Total     
-Pct0_14    0.003371 0.00149373 0.00095901
-Pct_65     0.555243 0.88532811 0.94882927
-Pct_Img    0.047885 0.00069397 0.00074432
-Pct_brevet 0.379335 0.01547315 0.01898969
-NivVieMed  0.022043 0.75617689 0.55632979</code></pre>
+           Direct    Indirect   Total     
+Pct0_14    0.0045792 0.00211712 0.00144732
+Pct_65     0.5368738 0.91863097 0.97983678
+Pct_Img    0.0404679 0.00064194 0.00061814
+Pct_brevet 0.4379048 0.01748835 0.02219069
+NivVieMed  0.0240450 0.79398431 0.59714427</code></pre>
 </div>
 </div>
 <p><strong>Dépendance spatiale du modèle SDM?</strong></p>
@@ -957,7 +957,7 @@ data:  resid(Modele.DurbinSpatial)
 weights: W.Rook  
 number of simulations + 1: 1000 
 
-statistic = -0.0046127, observed rank = 463, p-value = 0.537
+statistic = -0.0046127, observed rank = 468, p-value = 0.532
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
@@ -1094,7 +1094,7 @@ data:  resid(Modele.DurbinErreur)
 weights: W.Rook  
 number of simulations + 1: 1000 
 
-statistic = -0.010362, observed rank = 379, p-value = 0.621
+statistic = -0.010362, observed rank = 390, p-value = 0.61
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
@@ -1102,7 +1102,7 @@ alternative hypothesis: greater</code></pre>
 <span class="header-section-number">2.2</span> Quel modèle choisir?</h2>
 <section id="sec-0221" class="level3" data-number="2.2.1"><h3 data-number="2.2.1" class="anchored" data-anchor-id="sec-0221">
 <span class="header-section-number">2.2.1</span> Tests du multiplicateur de Lagrange sur le modèle MCO</h3>
-<p>L’utilisation des tests du multiplicateur de Lagrange (simple et robuste) a été largement popularisée par Anselin <em>et al.</em> <span class="citation" data-cites="anselin1996simple">(<a href="references.html#ref-anselin1996simple" role="doc-biblioref">1996</a>)</span> pour vérifier si le recours à un modèle autorégressif est nécessaire, comparativement à un modèle de régression classique (MCO). Les tests sont calculés sur le modèle MCO avec la fonction <code>lm.LMtests</code> et une matrice de pondération spatiale. Ces tests permettent aussi de choisir entre les modèles SAR et SEM. La démarche suivante peut être utilisée pour choisir un modèle&nbsp;:</p>
+<p>L’utilisation des tests du multiplicateur de Lagrange (simple et robuste) a été largement popularisée par Anselin <em>et al.</em> <span class="citation" data-cites="anselin1996simple">(<a href="#ref-anselin1996simple" role="doc-biblioref">1996</a>)</span> pour vérifier si le recours à un modèle autorégressif est nécessaire, comparativement à un modèle de régression classique (MCO). Les tests sont calculés sur le modèle MCO avec la fonction <code>lm.LMtests</code> et une matrice de pondération spatiale. Ces tests permettent aussi de choisir entre les modèles SAR et SEM. La démarche suivante peut être utilisée pour choisir un modèle&nbsp;:</p>
 <ol type="1">
 <li>Si toutes les valeurs des tests (simples et robustes) sont non significatives (<em>p</em>&nbsp;&gt;&nbsp;0,05), alors le recours à un modèle autorégressif n’est pas nécessaire. Nous pouvons conserver le modèle de régression classique (MCO).</li>
 <li>Si les valeurs de <code>LMlag</code> ou <code>RLMlag</code> sont non significatives (<em>p</em>&nbsp;&gt;&nbsp;0,05), alors le recours au modèle SAR n’est pas nécessaire.</li>
@@ -1123,10 +1123,10 @@ NivVieMed, data = LyonIris)
 test weights: listw
  
          statistic parameter p.value    
-RSlag    554.65778         1  &lt;2e-16 ***
 RSerr    432.83282         1  &lt;2e-16 ***
-adjRSlag 122.56452         1  &lt;2e-16 ***
+RSlag    554.65778         1  &lt;2e-16 ***
 adjRSerr   0.73955         1  0.3898    
+adjRSlag 122.56452         1  &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
@@ -1209,13 +1209,13 @@ Modele.SEM              2  8 2755.5 -1369.7    2  4.9728  0.4192</code></pre>
 <pre><code>    Modele      AIC      BIC dl       MoranI MoranIp
 1      MCO 3366.626 3396.212  7  0.587312061   0.001
 2      SLX 3222.594 3273.313 12  0.604660275   0.001
-3      SAR 2748.314 2782.126  8 -0.014281059   0.684
-4      SEM 2755.474 2789.286  8 -0.011826605   0.641
-5 Durbin S 2732.212 2787.157 13 -0.004612686   0.526
-6 Durbin E 2760.501 2815.446 13 -0.010361653   0.634</code></pre>
+3      SAR 2748.314 2782.126  8 -0.014281059   0.656
+4      SEM 2755.474 2789.286  8 -0.011826605   0.642
+5 Durbin S 2732.212 2787.157 13 -0.004612686   0.519
+6 Durbin E 2760.501 2815.446 13 -0.010361653   0.589</code></pre>
 </div>
 </div>
-<p>Quelques lignes de code suffisent pour créer deux graphiques permettant de comparer visuellement les résultats des différents modèles (<a href="#fig-GraphComparaison" class="quarto-xref">figure&nbsp;<span>2.3</span></a>). Les résultats démontrent que&nbsp;:</p>
+<p>Quelques lignes de code suffisent pour créer deux graphiques permettant de comparer visuellement les résultats des différents modèles (<a href="#fig-GraphComparaison" class="quarto-xref">figure&nbsp;<span class="quarto-unresolved-ref">fig-GraphComparaison</span></a>). Les résultats démontrent que&nbsp;:</p>
 <ul>
 <li>Les modèles MCO et SLX ont un problème de dépendance spatiale puisque leurs résidus sont significativement autocorrélés spatialement. Par conséquent, ils ne devraient pas être retenus.</li>
 <li>Les modèles SDM, SAR et SEM sont les plus performants avec les valeurs d’AIC les plus faibles.</li>
@@ -1282,7 +1282,7 @@ Figure&nbsp;2.3: Comparaison des différents modèles
 <span id="cb52-13"><a href="#cb52-13" aria-hidden="true" tabindex="-1"></a>Modele.DurbinSpatial <span class="ot">&lt;-</span> à compléter</span>
 <span id="cb52-14"><a href="#cb52-14" aria-hidden="true" tabindex="-1"></a>Modele.DurbinErreur <span class="ot">&lt;-</span> à compléter</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Correction à la <a href="08-Exercices.html#sec-08021" class="quarto-xref">section&nbsp;<span>8.2.1</span></a>.</p>
+<p>Correction à la <a href="#sec-08021" class="quarto-xref">section&nbsp;<span class="quarto-unresolved-ref ref-noprefix">sec-08021</span></a>.</p>
 </div>
 </div>
 <div class="bloc_exercice">
@@ -1308,7 +1308,7 @@ Figure&nbsp;2.3: Comparaison des différents modèles
 <span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>                          <span class="at">data =</span> LyonIris)</span>
 <span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(Modele.GAM2)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Correction à la <a href="08-Exercices.html#sec-08022" class="quarto-xref">section&nbsp;<span>8.2.2</span></a>.</p>
+<p>Correction à la <a href="#sec-08022" class="quarto-xref">section&nbsp;<span class="quarto-unresolved-ref ref-noprefix">sec-08022</span></a>.</p>
 </div>
 </div>
 <div class="bloc_exercice">
@@ -1337,12 +1337,12 @@ Figure&nbsp;2.3: Comparaison des différents modèles
 <span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Affichage des résultats</span></span>
 <span id="cb54-16"><a href="#cb54-16" aria-hidden="true" tabindex="-1"></a>Modele.GWR</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Correction à la <a href="08-Exercices.html#sec-08023" class="quarto-xref">section&nbsp;<span>8.2.3</span></a>.</p>
+<p>Correction à la <a href="#sec-08023" class="quarto-xref">section&nbsp;<span class="quarto-unresolved-ref ref-noprefix">sec-08023</span></a>.</p>
 </div>
 </div>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-anselin1996simple" class="csl-entry" role="listitem">
 Anselin, Luc, Anil K Bera, Raymond Florax et Mann J Yoon. 1996. <span>«&nbsp;Simple diagnostic tests for spatial dependence.&nbsp;»</span> <em>Regional science and urban economics</em> 26 (1): 77‑104. <a href="https://doi.org/10.1016/0166-0462(95)02111-6">https://doi.org/10.1016/0166-0462(95)02111-6</a>.
 </div>

@@ -48,7 +48,8 @@ library(sf, quietly = TRUE)
 library(tmap, quietly = TRUE)
 
 # chargement des SR de la RMR de Montréal
-data_mtl <- st_read('data/chap06/data_sr_access.gpkg') %>% st_transform(2950)
+data_mtl <- st_read('data/chap06/data_sr_access.gpkg', quiet = TRUE) %>%
+  st_transform(2950)
 
 # réalisation d'une matrice de contiguité Queen
 nbs <- poly2nb(data_mtl, queen = TRUE)
@@ -179,8 +180,11 @@ avec :
 :::
 
 **Filtrage spatial et GAM**
+:::
 
+::: bloc_notes-body
 Il existe une forte similarité dans la formulation d'un modèle GAM et d'un modèle utilisant du filtrage spatial. Pour rappel, un modèle GAM introduit l'espace avec une spline. Une spline est une combinaison d'un ensemble de fonctions de bases (obtenues sur les coordonnées spatiales ou la matrice de contiguité) multipliées par des coefficients. Dans un modèle avec filtrage spatial, la logique est similaire, mais les fonctions de bases sont cette fois-ci les vecteurs propres spatiaux.
+:::
 :::
 
 L'enjeu principal avec la méthode du filtrage spatial est de sélectionner adéquatement les vecteurs propres à intégrer dans le modèle. En effet, il n'est pas possible de tous les sélectionner car nous aurions alors plus de coefficients à estimer que d'observations dans les données. Le choix des vecteurs propres doit valider les critères suivants :
@@ -238,7 +242,7 @@ La méthode par *lasso* a été proposée comme alternative à la méthode de ty
 
 ## Mise en oeuvre et analyse dans R {#sec-SEV_applied}
 
-Pour illustrer l'utilisation des modèles SEVM, nous allons utiliser le même exemple que pour la section sur les modèles GAM @sec-0612. Nous avons mentionné un peu plus haut que ces deux types de modèles se ressemblaient beaucoup dans leur façon d'intégrer l'espace dans leur formulation. 
+Pour illustrer l'utilisation des modèles SEVM, nous allons utiliser le même exemple que pour la section sur les modèles GAM @sec-065. Nous avons mentionné un peu plus haut que ces deux types de modèles se ressemblaient beaucoup dans leur façon d'intégrer l'espace dans leur formulation. 
 
 Nous modélisons donc une fois encore le log du ratio entre la part modale du transport collectif et de la voiture pour les déplacements pendulaires à l'échelle des secteurs de recensement de la région métropolitaine de Montréal.
 
@@ -351,7 +355,7 @@ La fonction ME a sélectionné `r ncol(moran_ev_sel $vectors)` vecteurs propres.
 #| message: false 
 #| eval: true
 #| warning: false
-#| label: fig-sevm1
+#| label: fig-ressev1
 #| fig-cap: Résidus simulé du modèle SEVM par sélection
 
 model_sel <- glm(alr_val ~ prt_minorite_vis + prt_monoparental + revenu_median +
@@ -367,7 +371,7 @@ plot(res)
 
 ```
 
-La figure @fig-sevm1 montre assez clairement que les résidus simulés ne suivent pas une distribution uniforme. Nous avions rencontré un enjeu similaire lorsque nous avions ajusté les modèles GAM dans la section @sec-0612. Nous avions notamment déterminé qu'une distribution de Student était plus adaptée qu'une simple distribution normale pour notre GLM. La fonction `ME` permet de sélectionner les vecteurs propres spatiaux pour un nombre limité de GLM. Pour pouvoir appliquer l'approche de sélection à d'autres types de modèles, il est nécessaire de faire l'implémentation manuellement. Nous allons ici répliquer l'approche décrite à la section @#sec-sevmsel.
+La figure @fig-ressev1 montre assez clairement que les résidus simulés ne suivent pas une distribution uniforme. Nous avions rencontré un enjeu similaire lorsque nous avions ajusté les modèles GAM dans la section @sec-065. Nous avions notamment déterminé qu'une distribution de Student était plus adaptée qu'une simple distribution normale pour notre GLM. La fonction `ME` permet de sélectionner les vecteurs propres spatiaux pour un nombre limité de GLM. Pour pouvoir appliquer l'approche de sélection à d'autres types de modèles, il est nécessaire de faire l'implémentation manuellement. Nous allons ici répliquer l'approche décrite à la section @#sec-sevmsel.
 
 ```{r}
 #| echo: true 
@@ -498,7 +502,7 @@ La procédure que nous avons appliquée a retenu `r nrow(retenu)` vecteurs propr
 #| message: false 
 #| eval: true
 #| warning: false
-#| label: fig-sevm2
+#| label: fig-ressev2
 #| fig-cap: Résidus simulé du modèle SEVM avec distribution de Student par sélection
 
 # validation brève des résidus
@@ -507,7 +511,7 @@ moran.mc(residuals(res), listw = listw, nsim = 999)
 plot(res)
 
 ```
-Nous notons une nette amélioration dans la distribution des résidus (@fig-sevm2). 
+Nous notons une nette amélioration dans la distribution des résidus (@fig-ressev2). 
 
 Nous effectuerons l'interprétation des résultats de ce modèle en comparaison avec ceux obtenus par les deux autres versions.
 
@@ -559,7 +563,7 @@ model_ridge <- gam(alr_val ~ prt_minorite_vis +
 #| message: false 
 #| eval: true
 #| warning: false
-#| label: fig-sevm4
+#| label: fig-ressev3
 #| fig-cap: Résidus du modèle RE-SEVM
 
 # validation brève des résidus
@@ -569,7 +573,7 @@ plot(res)
 
 ```
 
-Les résidus du modèle SEVM avec effets aléatoires sont assez proches d'une distribution uniforme et n'ont plus d'autocorrélation spatiale.
+Les résidus du modèle SEVM (@fig-ressev3) avec effets aléatoires sont assez proches d'une distribution uniforme et n'ont plus d'autocorrélation spatiale.
 
 ### Modèle SEVM avec pénalisation par Lasso
 
@@ -862,6 +866,20 @@ tmap_arrange(map1, map2, map3, map4, nrow = 2, ncol = 2)
 ```
 
 
-Les effet spatiaux capturés par les trois modèles sont très similaires. La corrélation est cependant beaucoup plus élevée entre le terme spatial du modèle RE-SEVM et LASSO-SEVM (`r round(cor(pred_ridge, pred_lasso),2)`) qu'avec le modèle SEL-SEVM (`r round(cor(pred_ridge, pred_sel),2)`). Une différence assez importante peut être notée pour le quartier du Plateau. Les modèles RE-SEVM et LASSO-SEVM ont des termes spatiaux avec des valeurs bien plus élevées pour ce ce quartier dans lequel la part modale active (marche + vélo) est très élevée. Ceci expliquement probablement la réduction de l'effet de la variance indépendante d'accessibilité à pied aux emplois dans ces modèles.
+Les effet spatiaux capturés par les trois modèles sont très similaires (@fig-sevm6). La corrélation est cependant beaucoup plus élevée entre le terme spatial du modèle RE-SEVM et LASSO-SEVM (`r round(cor(pred_ridge, pred_lasso),2)`) qu'avec le modèle SEL-SEVM (`r round(cor(pred_ridge, pred_sel),2)`). Une différence assez importante peut être notée pour le quartier du Plateau. Les modèles RE-SEVM et LASSO-SEVM ont des termes spatiaux avec des valeurs bien plus élevées pour ce ce quartier dans lequel la part modale active (marche + vélo) est très élevée. Ceci expliquement probablement la réduction de l'effet de la variance indépendante d'accessibilité à pied aux emplois dans ces modèles.
 
 Les conclusions que nous pouvons tirer des trois modèles sont donc similaires mais avec tout de même des différences non négligeables. Ces différences s'expliquent par la façon dont les vecteurs propres spatiaux ont été intégrés dans le modèle. Notons que les approches par effets aléatoires et pénalisation lasso ont tendance à être plus rapide à estimer et repose sur un fondement théorique plus défendable. En effet, leurs pénalisations respectives peuvent être interprètées commes des à priori bayésiens utilisés pour réguler le modèle. La méthode par sélection correspond plus à une démarche ad-hoc, mais qui a été utilisée à de nombreuses reprises et est relativement facile à implémenter avec n'importe quel type de modèle puisque les vecteurs propres spatiaux sont introduits comme de simples effets fixes.
+
+## Quiz de révision {#sec-066}
+
+```{r}
+#| label: quizChapitre07
+#| echo: false 
+#| eval: true 
+#| message: false 
+#| warning: false 
+#| results: asis
+source("code_complementaire/QuizzFunctions.R")
+Chap07Quiz <- quizz("quiz/Chap07.yml", "Chap07")
+render_quizz(Chap07Quiz)
+```
