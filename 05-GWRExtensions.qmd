@@ -114,7 +114,7 @@ library(sf)
 library(spgwr)
 ```
 
-Correction à la [section @sec-06041].
+Correction à la [section @sec-08041].
 :::
 :::
 
@@ -136,7 +136,7 @@ library(sf)
 library(spgwr)
 ```
 
-Correction à la [section @sec-06042].
+Correction à la [section @sec-08042].
 :::
 :::
 
@@ -158,6 +158,6 @@ library(sf)
 library(spgwr)
 ```
 
-Correction à la [section @sec-06043].
+Correction à la [section @sec-08043].
 :::
 :::
