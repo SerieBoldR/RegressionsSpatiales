@@ -122,7 +122,7 @@ plot1 <- ggplot(dataset) +
 plot1
 ```
 
-Nous pourrions créer des bases d'une spline qui varient à la fois dans les coordonnées spatiales X et Y. L'animation à la figure (@fig-gam3) illustre des bases obtenues (k = 25) pour les données ci-dessus. La hauteur dans la figure est utilisée pour représenter la variation originale des bases qui sera ensuite ajustée aux données grâce aux coefficients du modèle de régression .
+Nous pourrions créer des bases d'une spline qui varient à la fois dans les coordonnées spatiales X et Y. L'animation à la figure (@fig-gam3) illustre des bases obtenues (k = 25) pour les données ci-dessus. La hauteur dans la figure est utilisée pour représenter la variation originale des bases qui sera ensuite ajustée aux données grâce aux coefficients du modèle de régression.
 
 ```{r}
 #| eval: false

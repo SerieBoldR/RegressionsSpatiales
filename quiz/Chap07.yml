@@ -1,78 +1,44 @@
-- label: "Qu'est-ce que la dépendance spatiale d'un modèle de régression?"
-  type: uc
-  response: 2
-  answers:
-     - "Lorsque les variables indépendantes sont fortement corrélées entre elles."
-     - "Lorsque les résidus du modèle sont fortement autocorrélés spatialement."
-  help: "Relisez au besoin la [section @sec-0711]."
-  
-- label: "Dans un modèle SLX, l'autocorrélation est introduite au niveau de :"
-  type: uc
-  response: 2
-  answers:
-     - "Variable dépendante"
-     - "Variables indépendantes"
-     - "Terme d'erreur"
-     - "Variable dépendante et variables indépendantes"
-     - "Variable dépendante et terme d'erreur"
-  help: "Relisez au besoin la [section @sec-07121]."
-  
-- label: "Dans un modèle SAR, l'autocorrélation est introduite au niveau de :"
-  type: uc
-  response: 1
-  answers:
-     - "Variable dépendante"
-     - "Variables indépendantes"
-     - "Terme d'erreur"
-  help: "Relisez au besoin la [section @sec-07122]."
-  
-- label: "Dans un modèle SEM, l'autocorrélation est introduite au niveau de :"
+- label: "Comment un modèle SEVM intègre-t-il les effets spatiaux?"
   type: uc
   response: 3
   answers:
-     - "Variable dépendante"
-     - "Variables indépendantes"
-     - "Terme d'erreur"
-  help: "Relisez au besoin la [section @sec-07123]."
-
-- label: "Dans un modèle mixte SDM, l'autocorrélation est introduite au niveau de :"
+     - "En ajustant la distribution conditionnelle supposée de la variable dépendante pour intégrer la dépendance spatiale."
+     - "En ajoutant au modèle des variables spatialement décalée."
+     - "En ajoutant au modèle des vecteurs propres spatiaux."
+  help: "Relisez au besoin la [section @sec-SEV_why]."
+  
+- label: "Qu'est ce qu'un vecteur propre spatial?"
   type: mc
   response: [1,2]
   answers:
-     - "Variable dépendante"
-     - "Variables indépendantes"
-     - "Terme d'erreur"
-  help: "Relisez au besoin la [section @sec-07124]."
-
-- label: "Dans un modèle SDEM, l'autocorrélation est introduite au niveau de :"
-  type: mc
-  response: [2,3]
+     - "Une variable quantitative continue"
+     - "Une variable construite à partir d'une matrice de pondération spatiale"
+     - "Une variable avec une autocorrélation spatiale positive"
+  help: "Relisez au besoin la [section @sec-SEV_vectors]."
+  
+- label: "L'approche classique de construction d'un modèle SEVM consiste à :"
+  type: uc
+  response: 1
   answers:
-     - "Variable dépendante"
-     - "Variables indépendantes"
-     - "Terme d'erreur"
-  help: "Relisez au besoin la [section @sec-07125]."    
-
-- label: "Comment est intégré l'espace dans un modèle généralisé additif?"
+     - "Appliquer un processus itératif de sélection des vecteurs propres à ajouter dans le modèle"
+     - "Sélectionner uniquement les vecteurs propres améliorant le R2 du modèle"
+     - "Sélectionner uniquement les vecteurs propres avec une autocorrélation spatiale positive"
+  help: "Relisez au besoin la [section @sec-sevmsel]."
+  
+- label: "L'approche LASSO et l'approche par effet aléatoire ont un point commun:"
   type: uc
   response: 2
   answers:
-     - "Avec une variable spatialement décalée"
-     - "Avec une spline bivariée sur les coordonnées x et y"
-  help: "Relisez au besoin la [section @sec-0721]."
+     - "Elles sont plus lentes à calculer que la méthode par sélection"
+     - "Elles retiennent les vecteurs propres pertinent en incluant une pénalisation"
+     - "Elles sont moins efficaces pour capturer la corrélation spatiale dans les résidus"
+  help: "Relisez au besoin la [section @sec-sevmre] et la section [@sec-svem_lasso]."
 
-- label: "Un modèle de régression géographiquement pondérée permet d'explorer"
+- label: "Comment peut-on interprèter les effets spatiaux dans un modèle SEVM ?"
   type: uc
-  response: 1
+  response: 3
   answers:
-     - "L'instabilité spatiale du modèle"
-     - "La dépendance du modèle" 
-  help: "Relisez le deuxième encadré à la [section @sec-0731]."
-
-- label: "Un modèle de régression géographiquement pondérée produit autant de régressions que d'entités spatiales dans le jeu de données à l'étude."
-  type: uc
-  response: 1
-  answers:
-     - "Vrai"
-     - "Faux" 
-  help: "Relisez le deuxième encadré à la [section @sec-0731]."
+     - "En analysant les coefficients des vecteurs spatiaux intégrés au modèle"
+     - "En analyse le degré de pénalisation sélectionné par la méthode GAIC"
+     - "En cartographiant les effets spatiaux par la méthode des effets marginaux"
+  help: "Relisez au besoin la [section @sec-sevm_result]."
