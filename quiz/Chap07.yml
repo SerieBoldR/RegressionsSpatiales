@@ -3,18 +3,18 @@
   response: 3
   answers:
      - "En ajustant la distribution conditionnelle supposée de la variable dépendante pour intégrer la dépendance spatiale."
-     - "En ajoutant au modèle des variables spatialement décalée."
+     - "En ajoutant au modèle des variables spatialement décalées."
      - "En ajoutant au modèle des vecteurs propres spatiaux."
-  help: "Relisez au besoin la [section @sec-SEV_why]."
+  help: "Relisez au besoin la [section @sec-072]."
   
-- label: "Qu'est ce qu'un vecteur propre spatial?"
+- label: "Qu’est-ce qu’un vecteur propre spatial?"
   type: mc
   response: [1,2]
   answers:
      - "Une variable quantitative continue"
      - "Une variable construite à partir d'une matrice de pondération spatiale"
      - "Une variable avec une autocorrélation spatiale positive"
-  help: "Relisez au besoin la [section @sec-SEV_vectors]."
+  help: "Relisez au besoin la [section @sec-071]."
   
 - label: "L'approche classique de construction d'un modèle SEVM consiste à :"
   type: uc
@@ -23,22 +23,22 @@
      - "Appliquer un processus itératif de sélection des vecteurs propres à ajouter dans le modèle"
      - "Sélectionner uniquement les vecteurs propres améliorant le R2 du modèle"
      - "Sélectionner uniquement les vecteurs propres avec une autocorrélation spatiale positive"
-  help: "Relisez au besoin la [section @sec-sevmsel]."
+  help: "Relisez au besoin la [section @sec-0721]."
   
 - label: "L'approche LASSO et l'approche par effet aléatoire ont un point commun:"
   type: uc
   response: 2
   answers:
      - "Elles sont plus lentes à calculer que la méthode par sélection"
-     - "Elles retiennent les vecteurs propres pertinent en incluant une pénalisation"
+     - "Elles retiennent les vecteurs propres pertinents en incluant une pénalisation"
      - "Elles sont moins efficaces pour capturer la corrélation spatiale dans les résidus"
-  help: "Relisez au besoin la [section @sec-sevmre] et la section [@sec-svem_lasso]."
+  help: "Relisez au besoin la [section @sec-0722] et la section [@sec-0723]."
 
-- label: "Comment peut-on interprèter les effets spatiaux dans un modèle SEVM ?"
+- label: "Comment peut-on interpréter les effets spatiaux dans un modèle SEVM?"
   type: uc
   response: 3
   answers:
      - "En analysant les coefficients des vecteurs spatiaux intégrés au modèle"
      - "En analyse le degré de pénalisation sélectionné par la méthode GAIC"
      - "En cartographiant les effets spatiaux par la méthode des effets marginaux"
-  help: "Relisez au besoin la [section @sec-sevm_result]."
+  help: "Relisez au besoin la [section @sec-0734]."

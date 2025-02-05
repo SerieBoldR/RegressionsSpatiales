@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.6.32">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>6&nbsp; Modèles généralisées additifs – Méthodes de régression spatiale : un grand bol d’R</title>
 <style>
@@ -88,10 +88,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-2486e1f0a3ee9ee1fc393803a1361cdb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap-183e74061cd0fe4872fa4cf166543a55.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -196,7 +196,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./01-NotionsDeBase.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Notions de base</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Autocorrélation spatiale, dépendance spatiale et hétérogénéité spatiale d’un modèle de régression</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -352,9 +352,9 @@ window.Quarto = {
 <li>Pour construire des modèles GAM&nbsp;:
 <ul>
 <li>
-<code>mcgv</code> le package de référence pour ajuster des modèles GAM. De nombreux autres packages proposent des extensions pour ce type de modèle et se basent principalement sur les outils mis à disposition par <code>mgcv</code> pour créer des bases et leurs matrices de pénalisation (<code>gamm4</code>, <code>brms</code>, <code>gamlss</code>, <code>qgam</code>, etc.)</li>
+<code>mcgv</code> le <em>package</em> de référence pour ajuster des modèles GAM. De nombreux autres <em>packages</em> proposent des extensions pour ce type de modèle et se basent principalement sur les outils mis à disposition par <code>mgcv</code> pour créer des bases et leurs matrices de pénalisation (<code>gamm4</code>, <code>brms</code>, <code>gamlss</code>, <code>qgam</code>, etc.).</li>
 <li>
-<code>DHARMa</code> un package permettant d’effectuer des diagnostics sur des résidus de modèles GLM</li>
+<code>DHARMa</code> un <em>package</em> permettant d’effectuer des diagnostics sur des résidus de modèles GLM</li>
 </ul>
 </li>
 </ul>
@@ -366,7 +366,7 @@ window.Quarto = {
 <p>Dans un modèle de régression classique, nous partons du principe que les variables <em>X</em> (indépendantes) ont un impact linéaire sur la variable <em>Y</em> (dépendante). Cette hypothèse simplifie grandement les relations entre les variables observées et permet d’interpréter les résultats plus facilement (analyse des coefficients de régression). Or, cette hypothèse peut être fausse et les relations non linéaires ont plus tendance à être la norme que l’exception.</p>
 <p>Dans un GAM, plutôt que modéliser une relation linéaire, nous partons du principe que la relation modélisée peut être non linéaire et suivre une fonction <em>f</em>. On parle alors de relations non paramétriques, car la forme de cette fonction s’ajuste aux données et ne suit pas une forme prédéterminée.</p>
 <p>Ces fonctions <em>f</em> sont le plus souvent estimées avec des <em>splines</em>. Le fonctionnement de base est assez simple. Pour chaque variable <em>X</em> devant suivre une relation non linéaire, la variable est remplacée par <em>k</em> sous-variable (<em>x1</em>, <em>x2</em>, …, <em>xk</em>). <em>k</em> représente le niveau de complexité attendu de la relation, plus <em>k</em> est grand, plus la fonction à ajuster pourra être complexe. Le modèle va estimer un coefficient pour chacune de ces sous-variables, et la somme des effets de ces sous-variables permet de reconstruire la relation non inéaire.</p>
-<p>La <a href="#fig-gam1" class="quarto-xref">figure&nbsp;<span class="quarto-unresolved-ref">fig-gam1</span></a> permet d’illustrer ce principe. Les lignes grises représentent les sous-variables, aussi appelées bases, qui sont ensuite multiplées par leur coefficient respectif pour obtenir leurs effets (en couleur), puis la ligne bleue représente leur somme. La ligne bleue capture très efficacement la relation entre la variable X et Y.</p>
+<p>La <a href="#fig-gam1" class="quarto-xref">figure&nbsp;<span>6.1</span></a> permet d’illustrer ce principe. Les lignes grises représentent les sous-variables, aussi appelées bases, qui sont ensuite multiplées par leur coefficient respectif pour obtenir leurs effets (en couleur), puis la ligne bleue représente leur somme. La ligne bleue capture très efficacement la relation entre la variable X et Y.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-gam1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -387,14 +387,14 @@ Figure&nbsp;6.1: Exemple de spline
 <p><strong>Modèles généralisés additifs</strong></p>
 </div>
 <div class="bloc_attention-body">
-<p>Pour une explication détaillée du fonctionnement des <em>splines</em>, vous pouvez consulter le <a href="https://serieboldr.github.io/MethodesQuantitatives/11-GAM.html">chapitre sur les GAM</a> du livre <em>Méthodes quantitatives en sciences sociales : un grand bol d’R</em> <span class="citation" data-cites="RBoldAirMethodesQuanti">(<a href="#ref-RBoldAirMethodesQuanti" role="doc-biblioref">Apparicio et Gelb 2022</a>)</span>.</p>
+<p>Pour une explication détaillée du fonctionnement des <em>splines</em>, vous pouvez consulter le <a href="https://serieboldr.github.io/MethodesQuantitatives/11-GAM.html">chapitre sur les GAM</a> du livre <em>Méthodes quantitatives en sciences sociales : un grand bol d’R</em> <span class="citation" data-cites="RBoldAirMethodesQuanti">(<a href="references.html#ref-RBoldAirMethodesQuanti" role="doc-biblioref">Apparicio et Gelb 2022</a>)</span>.</p>
 </div>
 </div>
 </section><section id="sec-062" class="level2" data-number="6.2"><h2 data-number="6.2" class="anchored" data-anchor-id="sec-062">
 <span class="header-section-number">6.2</span> Comment utiliser une spline pour ajouter l’espace dans un modèle GAM?</h2>
 <p>Nous avons vu qu’une spline permet de modéliser l’impact potentiellement non linéaire d’une variable indépendante sur une variable dépendante. Or, il est possible d’utiliser des splines pour intégrer un effet spatial dans un modèle, et ce, en utilisant un type de spline particulier&nbsp;: les splines bivariées qui capturent l’effet simultané de deux variables indépendantes sur une variable dépendante.</p>
 <p>Dans un contexte spatial, une spline bivariée capture comment un changement dans les coordonnées <em>X</em> et <em>Y</em> impacte la variable dépendante. De plus, compte tenu de la forme des fonctions de base utilisées, les splines sont particulièrement adaptées pour capturer des relations spatiales avec une forte autocorrélation spatiale positive.</p>
-<p>Prenons un exemple avec un jeu de données fictif représentant des mesures de pollution relevées à différentes localisations sur un territoire (<a href="#fig-gam2" class="quarto-xref">figure&nbsp;<span class="quarto-unresolved-ref">fig-gam2</span></a>).</p>
+<p>Prenons un exemple avec un jeu de données fictif représentant des mesures de pollution relevées à différentes localisations sur un territoire (<a href="#fig-gam2" class="quarto-xref">figure&nbsp;<span>6.2</span></a>).</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-gam2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -407,7 +407,7 @@ Figure&nbsp;6.2: Exemple d’un jeu de données fictif avec une forte dépendanc
 </div>
 </div>
 </div>
-<p>Nous pourrions créer des bases d’une spline qui varient à la fois dans les coordonnées spatiales <em>X</em> et <em>Y</em>. L’animation à la <a href="#fig-gam3" class="quarto-xref">figure&nbsp;<span class="quarto-unresolved-ref">fig-gam3</span></a> illustre des bases obtenues (k&nbsp;=&nbsp;25) pour les données ci-dessus. La hauteur dans la figure est utilisée pour représenter la variation originale des bases qui sera ensuite ajustée aux données grâce aux coefficients du modèle de régression.</p>
+<p>Nous pourrions créer des bases d’une spline qui varient à la fois dans les coordonnées spatiales <em>X</em> et <em>Y</em>. L’animation à la <a href="#fig-gam3" class="quarto-xref">figure&nbsp;<span>6.3</span></a> illustre des bases obtenues (k&nbsp;=&nbsp;25) pour les données ci-dessus. La hauteur dans la figure est utilisée pour représenter la variation originale des bases qui sera ensuite ajustée aux données grâce aux coefficients du modèle de régression.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-gam3" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -420,7 +420,7 @@ Figure&nbsp;6.3: Représentation des bases d’une spline bivariée
 </div>
 </div>
 </div>
-<p>En ajustant un coefficient pour chaque base et en combinant leur effets, nous obtenons un effet spatial permettant de prédire la variable de pollution, cartographié à la <a href="#fig-gam4" class="quarto-xref">figure&nbsp;<span class="quarto-unresolved-ref">fig-gam4</span></a>. Nous constatons ainsi que le modèle a été capable de reproduire les tendances principales des niveaux de pollution en retrouvant les secteurs avec des valeurs fortes et faibles. Plus l’autocorrélation spatiale est élevée, plus ce type de modèle sera efficace pour capturer l’effet spatial.</p>
+<p>En ajustant un coefficient pour chaque base et en combinant leur effets, nous obtenons un effet spatial permettant de prédire la variable de pollution, cartographié à la <a href="#fig-gam4" class="quarto-xref">figure&nbsp;<span>6.4</span></a>. Nous constatons ainsi que le modèle a été capable de reproduire les tendances principales des niveaux de pollution en retrouvant les secteurs avec des valeurs fortes et faibles. Plus l’autocorrélation spatiale est élevée, plus ce type de modèle sera efficace pour capturer l’effet spatial.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-gam4" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -470,8 +470,8 @@ Figure&nbsp;6.4: Captation de l’effet spatial par une spline bivariée
 <p>Les modèles GAM sont très flexibles puisqu’ils sont une extension directe des modèles linéaires généralisés (GLM). Ils peuvent donc être appliqués à des variables dépendantes suivant de nombreuses distributions (normale, gamma, binomiale, poisson, tweedie, log-normal, etc.). Cependant, ils imposent une conceptualisation particulière de l’espace. En effet, un modèle GAM n’inclut pas directement la notion de dépendance spatiale dans sa formulation. L’hypothèse d’indépendance des observations est conservée (contrairement à un modèle des moindres carrés généralisés, GLS). Le modèle intègre simplement un terme flexible correspondant à l’ajout d’un ensemble de nouvelles variables <em>X</em> structurées afin de capturer un effet spatialement positivement autocorrélé.</p>
 <p>Si nous reprenons notre exemple avec la pollution atmosphérique, le modèle est un simple GLM dans lequel on suppose que les niveau de pollution suivent une distribution normale et que les observations sont indépendantes. Cependant la moyenne de cette distribution peut être prédite avec une spline calculée à partir des coordonnées spatiales des observations. Le modèle ne part donc pas du principe que deux observations proches sont plus similaires, mais seulement qu’il existe un effet spatial permettant de prédire les niveaux moyens de pollution attendus. Un modèle GAM ne vise donc pas explicitement à corriger l’effet de la dépendance spatiale, mais plutôt à capturer un effet spatialement structuré et non capturé par les variables indépendantes X. Sans l’ajout de la spline, cet effet se serait retrouvé dans les résidus du modèle.</p>
 <p>La cartographie de l’effet spatial dans un modèle GAM permet de visualiser les secteurs de l’espace d’étude dans lesquels, <strong>toutes choses étant égales par ailleurs</strong>, la variable dépendante est plus forte ou plus faible que la moyenne régionale. Il peut être vu comme un ajustement local de la prédiction. Une forme de malus ou de bonus que le modèle ajoute à sa prédiction pour tenir compte de la variation spatiale de la variable dépendante qui n’a pas été expliquée par les variables indépendantes.</p>
-<p>Puisqu’un modèle GAM ne prend pas directement en compte l’autocorrélation spatiale, il est tout à fait possible qu’il échoue à réduire suffisamment la dépendance spatiale des résidus d’un modèle global (non spatial). Il faudra alors privilégier d’autres formes de modèles. De même, si notre cadre théorique nous amène à penser que nos observations s’influencent mutuellement dans l’espace, il sera beaucoup plus cohérent d’utiliser un modèle économétrique (<a href="#sec-chap02" class="quarto-xref"><span class="quarto-unresolved-ref">sec-chap02</span></a>).</p>
-<p>Prenons un exemple concret pour lequel l’utilisation d’un modèle GAM serait particulièrement pertinente. Dans une étude récente <span class="citation" data-cites="gelb2022cyclists">(<a href="#ref-gelb2022cyclists" role="doc-biblioref">Gelb et Apparicio 2022</a>)</span>, les auteurs cherchent à modéliser les niveaux d’expositions de cyclistes aux pollutions atmosphériques et sonores. Les données utilisées ont été collectées par des cyclistes qui parcouraient différents environnements urbains équipés de capteurs de bruit et de pollution. Plus spécifiquement, l’objectif de l’étude était de déterminer quelles caractéristiques de l’environnement urbain réduisent ou augmentent significativement les niveaux d’exposition des cyclistes. Dans leur cadre théorique (<a href="#fig-cadretheorique" class="quarto-xref">figure&nbsp;<span class="quarto-unresolved-ref">fig-cadretheorique</span></a>), les auteurs distinguent&nbsp;:</p>
+<p>Puisqu’un modèle GAM ne prend pas directement en compte l’autocorrélation spatiale, il est tout à fait possible qu’il échoue à réduire suffisamment la dépendance spatiale des résidus d’un modèle global (non spatial). Il faudra alors privilégier d’autres formes de modèles. De même, si notre cadre théorique nous amène à penser que nos observations s’influencent mutuellement dans l’espace, il sera beaucoup plus cohérent d’utiliser un modèle économétrique (<a href="02-ModelesEconometrieSpatiale.html" class="quarto-xref"><span>Chapitre 2</span></a>).</p>
+<p>Prenons un exemple concret pour lequel l’utilisation d’un modèle GAM serait particulièrement pertinente. Dans une étude récente <span class="citation" data-cites="gelb2022cyclists">(<a href="references.html#ref-gelb2022cyclists" role="doc-biblioref">Gelb et Apparicio 2022</a>)</span>, les auteurs cherchent à modéliser les niveaux d’expositions de cyclistes aux pollutions atmosphériques et sonores. Les données utilisées ont été collectées par des cyclistes qui parcouraient différents environnements urbains équipés de capteurs de bruit et de pollution. Plus spécifiquement, l’objectif de l’étude était de déterminer quelles caractéristiques de l’environnement urbain réduisent ou augmentent significativement les niveaux d’exposition des cyclistes. Dans leur cadre théorique (<a href="#fig-cadretheorique" class="quarto-xref">figure&nbsp;<span>6.5</span></a>), les auteurs distinguent&nbsp;:</p>
 <ol type="1">
 <li><p>les effets du micro-environnement, causés par les caractéristiques locales comme le type de rue utilisé, la densité bâtie, la présence de végétation, etc.</p></li>
 <li><p>la pollution d’arrière-plan, causée par des phénomènes géographiques régionaux comme la localisation des industries, des autoroutes, la topographie, etc.</p></li>
@@ -500,7 +500,7 @@ Figure&nbsp;6.5: Cadre théorique de l’exposition des cyclistes
 <p>Mathématiquement parlant, un modèle de type CAR (<em>conditionnal autoregressive model</em>) est très proche d’un modèle GAM intégrant un MRF puisque la structure spatiale intégrée par un modèle CAR est un MRF&nbsp;: la valeur de la variable dépendante d’une entité est <strong>conditionnée</strong> par la valeur de ses voisins.</p>
 </div>
 </div>
-<p>Dans l’<a href="#eq-gam3" class="quarto-xref">équation&nbsp;<span class="quarto-unresolved-ref">eq-gam3</span></a>, le terme <span class="math inline">\(\eta\)</span> représente l’effet spatial. Il est le plus souvent modélisé comme un effet provenant d’une distribution normale multivariée, centrée sur zéro et dont la matrice de covariance est calculée grâce à un terme <span class="math inline">\(\lambda\)</span> et une matrice de pondération spatiale <span class="math inline">\(W\)</span>. Ce type de modèle est communément appelé un modèle à effet mixte, car il combine des effets fixes (les coefficients <span class="math inline">\(\beta\)</span>) et des effets <strong>aléatoires</strong> (<span class="math inline">\(\lambda\)</span>). Les effets aléatoires ne sont pas estimés de la même façon que les effets fixes&nbsp;: ils sont en effet pénalisés. Pour une introduction sur les modèles à effets mixtes, vous pouvez consulter <a href="https://serieboldr.github.io/MethodesQuantitatives/09-GLMM.html">ce chapitre sur les GLMM</a> du livre <em>Méthodes quantitatives en sciences sociales : un grand bol d’R</em> <span class="citation" data-cites="RBoldAirMethodesQuanti">(<a href="#ref-RBoldAirMethodesQuanti" role="doc-biblioref">Apparicio et Gelb 2022</a>)</span>.</p>
+<p>Dans l’<a href="#eq-gam3" class="quarto-xref">équation&nbsp;<span>6.3</span></a>, le terme <span class="math inline">\(\eta\)</span> représente l’effet spatial. Il est le plus souvent modélisé comme un effet provenant d’une distribution normale multivariée, centrée sur zéro et dont la matrice de covariance est calculée grâce à un terme <span class="math inline">\(\lambda\)</span> et une matrice de pondération spatiale <span class="math inline">\(W\)</span>. Ce type de modèle est communément appelé un modèle à effet mixte, car il combine des effets fixes (les coefficients <span class="math inline">\(\beta\)</span>) et des effets <strong>aléatoires</strong> (<span class="math inline">\(\lambda\)</span>). Les effets aléatoires ne sont pas estimés de la même façon que les effets fixes&nbsp;: ils sont en effet pénalisés. Pour une introduction sur les modèles à effets mixtes, vous pouvez consulter <a href="https://serieboldr.github.io/MethodesQuantitatives/09-GLMM.html">ce chapitre sur les GLMM</a> du livre <em>Méthodes quantitatives en sciences sociales : un grand bol d’R</em> <span class="citation" data-cites="RBoldAirMethodesQuanti">(<a href="references.html#ref-RBoldAirMethodesQuanti" role="doc-biblioref">Apparicio et Gelb 2022</a>)</span>.</p>
 <p><span id="eq-gam3"><span class="math display">\[
 \begin{aligned}
 &amp;y \sim D(\mu,\theta)\\
@@ -508,7 +508,7 @@ Figure&nbsp;6.5: Cadre théorique de l’exposition des cyclistes
 &amp;\eta \sim Normal(0,(I - \lambda W)\sigma^2)
 \end{aligned}
 \tag{6.3}\]</span></span></p>
-<p>Il existe un lien direct entre les modèles à effets mixtes et les GAM. En effet, il est possible de reformuler un GLMM comme un GAM et vice-versa, ce qui signifie qu’une spline pénalisée peut être utilisée pour représenter un effet aléatoire <span class="citation" data-cites="wood2017generalized">(<a href="#ref-wood2017generalized" role="doc-biblioref">Wood 2017</a>)</span>.</p>
+<p>Il existe un lien direct entre les modèles à effets mixtes et les GAM. En effet, il est possible de reformuler un GLMM comme un GAM et vice-versa, ce qui signifie qu’une spline pénalisée peut être utilisée pour représenter un effet aléatoire <span class="citation" data-cites="wood2017generalized">(<a href="references.html#ref-wood2017generalized" role="doc-biblioref">Wood 2017</a>)</span>.</p>
 <p>Dans R, avec le package <code>mgcv</code>, il est possible d’utiliser une spline pénalisée par une matrice de pondération spatiale <em>W</em> pour approximer l’effet aléatoire que nous aurions modélisé avec un modèle de type CAR. L’intérêt d’utiliser un GAM plutôt qu’un CAR est que nous pouvons contrôler directement le degré de lissage (autocorrélation spatiale) du terme spatial dans le modèle grâce au nombre de degrés de liberté (<em>k</em>) de la spline. En utilisant un nombre de degrés de liberté maximal (<span class="math inline">\(k = n-1\)</span>), soit une base par observation, alors on obtient un <em>full rank MRF</em>, autorisant de facto la plus grande variance possible du terme spatial. En réduisant <em>k</em>, nous obtenons des modèles d’ordre inférieur (<em>lower rank MRF</em>) dont le terme spatial est plus lisse et moins complexe.</p>
 <p><span id="eq-gam4"><span class="math display">\[
 \begin{aligned}
@@ -518,10 +518,10 @@ Figure&nbsp;6.5: Cadre théorique de l’exposition des cyclistes
 \tag{6.4}\]</span></span></p>
 </section><section id="sec-065" class="level2" data-number="6.5"><h2 data-number="6.5" class="anchored" data-anchor-id="sec-065">
 <span class="header-section-number">6.5</span> Mise en oeuvre et analyse dans R</h2>
-<p>Pour illustrer la réalisation des différentes modèles GAM (non spatiale, avec une spline bivariée sur les coordonnées géographiques et avec une spline spatiale de type RMF), nous utilisons le jeu de données sur les parts modales dans la région métropolitaine de Montréal (<a href="#sec-0112" class="quarto-xref">section&nbsp;<span class="quarto-unresolved-ref ref-noprefix">sec-0112</span></a>). Ce jeu de données comprend trois variables mesurant respectivement la proportion des individus utilisant la voiture, le transport collectif ou un mode actif (marche ou vélo) comme mode de transport principal pour ses déplacements domicile-travail en 2021 pour les secteurs de recensement (<a href="#fig-datamtlCarto" class="quarto-xref">figure&nbsp;<span class="quarto-unresolved-ref">fig-datamtlCarto</span></a>).</p>
+<p>Pour illustrer la réalisation des différentes modèles GAM (non spatiale, avec une spline bivariée sur les coordonnées géographiques et avec une spline spatiale de type RMF), nous utilisons le jeu de données sur les parts modales dans la région métropolitaine de Montréal (<a href="01-NotionsDeBase.html#sec-0112" class="quarto-xref">section&nbsp;<span>1.1.2</span></a>). Ce jeu de données comprend trois variables mesurant respectivement la proportion des individus utilisant la voiture, le transport collectif ou un mode actif (marche ou vélo) comme mode de transport principal pour ses déplacements domicile-travail en 2021 pour les secteurs de recensement (<a href="01-NotionsDeBase.html#fig-datamtlCarto" class="quarto-xref">figure&nbsp;<span>1.2</span></a>).</p>
 <p>Lorsqu’un ensemble de variables sont des proportions d’un total (leur somme donne 1 ou 100), alors on désigne l’ensemble de ces variables comme des données compositionnelles. Ces données doivent être analysées avec des méthodes spécifiques, car elles ont un comportement particulier. La diminution de l’une d’entre elle provoque nécessairement l’augmentation d’une autre. Elles ne sont donc pas indépendantes et certaines catégories ont même tendance à exister simultanément ou au contraire se repousser.</p>
-<p>L’analyse de données compositionnelles est un domaine en soit et sort du matériel que nous souhaitons couvrir dans ce livre. Il existe d’excellentes ressources et packages R sur le sujet <span class="citation" data-cites="van2013analyzing comp_pkg2024 comp_pkg2025">(<a href="#ref-van2013analyzing" role="doc-biblioref">Van den Boogaart et Tolosana-Delgado 2013</a>; <a href="#ref-comp_pkg2024" role="doc-biblioref">van den Boogaart, Tolosana-Delgado et Bren 2024</a>; <a href="#ref-comp_pkg2025" role="doc-biblioref">Tsagris et Athineou 2025</a>)</span>.</p>
-<p>Nous utilisons ici l’approche du log des ratios (<em>alr</em>). Il s’agit d’une transformation que l’on peut appliquer aux données compositionnelles pour pouvoir les analyser avec des méthodes classiques de statistiques. On lui préfère généralement une autre méthode de transformation, soit celle isométrique des log ratios (<em>ilr</em>), mais cette dernière produit des résultats plus difficiles à interpréter <span class="citation" data-cites="greenacre2021compositional">(<a href="#ref-greenacre2021compositional" role="doc-biblioref">Greenacre, Martinez-Alvaro et Blasco 2021</a>)</span>. Nous utiliserons donc l’approche <em>alr</em> dans cet exemple. La transformation <em>alr</em> est décrite par la formule suivante&nbsp;:</p>
+<p>L’analyse de données compositionnelles est un domaine en soit et sort du matériel que nous souhaitons couvrir dans ce livre. Il existe d’excellentes ressources et packages R sur le sujet <span class="citation" data-cites="van2013analyzing comp_pkg2024 comp_pkg2025">(<a href="references.html#ref-van2013analyzing" role="doc-biblioref">Van den Boogaart et Tolosana-Delgado 2013</a>; <a href="references.html#ref-comp_pkg2024" role="doc-biblioref">van den Boogaart, Tolosana-Delgado et Bren 2024</a>; <a href="references.html#ref-comp_pkg2025" role="doc-biblioref">Tsagris et Athineou 2025</a>)</span>.</p>
+<p>Nous utilisons ici l’approche du log des ratios (<em>alr</em>). Il s’agit d’une transformation que l’on peut appliquer aux données compositionnelles pour pouvoir les analyser avec des méthodes classiques de statistiques. On lui préfère généralement une autre méthode de transformation, soit celle isométrique des log ratios (<em>ilr</em>), mais cette dernière produit des résultats plus difficiles à interpréter <span class="citation" data-cites="greenacre2021compositional">(<a href="references.html#ref-greenacre2021compositional" role="doc-biblioref">Greenacre, Martinez-Alvaro et Blasco 2021</a>)</span>. Nous utiliserons donc l’approche <em>alr</em> dans cet exemple. La transformation <em>alr</em> est décrite par la formule suivante&nbsp;:</p>
 <p><span id="eq-ALR"><span class="math display">\[
 \operatorname{alr}(x)=\left[\log \frac{x_1}{x_D}, \cdots, \log \frac{x_{D-1}}{x_D}\right]
 \tag{6.5}\]</span></span></p>
@@ -572,7 +572,7 @@ Figure&nbsp;6.6: Distributions du ratio et du log ratio entre les parts modales 
 </div>
 </div>
 </div>
-<p>La <a href="#fig-gamhist" class="quarto-xref">figure&nbsp;<span class="quarto-unresolved-ref">fig-gamhist</span></a> illustre la distribution de la variable que nous souhaitons modéliser. Le simple ratio a des valeurs comprises entre 0 et 2,5. Si sa valeur est de 0, cela signifie que personne dans le secteur de recensement n’utilise le transport collectif comme mode principale pour ses déplacements pendulaires. Une valeur de 1 indique que cette proportion est égale à celle des personnes utilisant la voiture. Une valeur plus grande que 1 indique une dominance du mode TC plutôt qu’automobile. Sans surprise, pour la majorité des secteurs de recensement, la valeur est inférieure à 1. Le log du ratio suit une distribution moins asymétrique qui sera probablement plus facile à modéliser.</p>
+<p>La <a href="#fig-gamhist" class="quarto-xref">figure&nbsp;<span>6.6</span></a> illustre la distribution de la variable que nous souhaitons modéliser. Le simple ratio a des valeurs comprises entre 0 et 2,5. Si sa valeur est de 0, cela signifie que personne dans le secteur de recensement n’utilise le transport collectif comme mode principale pour ses déplacements pendulaires. Une valeur de 1 indique que cette proportion est égale à celle des personnes utilisant la voiture. Une valeur plus grande que 1 indique une dominance du mode TC plutôt qu’automobile. Sans surprise, pour la majorité des secteurs de recensement, la valeur est inférieure à 1. Le log du ratio suit une distribution moins asymétrique qui sera probablement plus facile à modéliser.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/spdep/">spdep</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -661,7 +661,7 @@ prt_personnes_faibles_revenu          acs_idx_emp_tc_peak
 <p><strong>Les résidus simulés</strong></p>
 </div>
 <div class="bloc_aller_loin-body">
-<p>Pour une description des résidus simulés, vous pourrez consulter <a href="https://serieboldr.github.io/MethodesQuantitatives/09-GLMM.html">ce chapitre sur les GLM du livre</a> du livre <em>Méthodes quantitatives en sciences sociales&nbsp;: un grand bol d’R</em> <span class="citation" data-cites="RBoldAirMethodesQuanti">(<a href="#ref-RBoldAirMethodesQuanti" role="doc-biblioref">Apparicio et Gelb 2022</a>)</span>.</p>
+<p>Pour une description des résidus simulés, vous pourrez consulter <a href="https://serieboldr.github.io/MethodesQuantitatives/09-GLMM.html">ce chapitre sur les GLM du livre</a> du livre <em>Méthodes quantitatives en sciences sociales&nbsp;: un grand bol d’R</em> <span class="citation" data-cites="RBoldAirMethodesQuanti">(<a href="references.html#ref-RBoldAirMethodesQuanti" role="doc-biblioref">Apparicio et Gelb 2022</a>)</span>.</p>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
@@ -685,7 +685,7 @@ Figure&nbsp;6.8: Résidus du simple GLM avec une distribution noramle
 </div>
 </div>
 </div>
-<p>La <a href="#fig-gamresidA" class="quarto-xref">figure&nbsp;<span class="quarto-unresolved-ref">fig-gamresidA</span></a> indique que les résidus simulés ne suivent pas vraiment une distribution uniforme et sont marqués par des valeurs extrêmes. Pour améliorer ce premier modèle, nous utilisons une distribution de Student (<code>family = scat</code>). Cette dernière ressemble beaucoup à la distribution normale, mais admet davantage de valeurs extrêmes. Autrement dit, elle permet donc de réduire l’impact des valeurs extrêmes dans le modèle.</p>
+<p>La <a href="#fig-gamresidA" class="quarto-xref">figure&nbsp;<span>6.8</span></a> indique que les résidus simulés ne suivent pas vraiment une distribution uniforme et sont marqués par des valeurs extrêmes. Pour améliorer ce premier modèle, nous utilisons une distribution de Student (<code>family = scat</code>). Cette dernière ressemble beaucoup à la distribution normale, mais admet davantage de valeurs extrêmes. Autrement dit, elle permet donc de réduire l’impact des valeurs extrêmes dans le modèle.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Modèle GLM avec une distribution normale de Student</span></span>
 <span><span class="va">glm_base</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/gam.html">gam</a></span><span class="op">(</span><span class="va">alr_val</span> <span class="op">~</span> <span class="va">prt_minorite_vis</span> <span class="op">+</span> <span class="va">prt_monoparental</span> <span class="op">+</span> <span class="va">revenu_median</span> <span class="op">+</span></span>
@@ -705,7 +705,7 @@ Figure&nbsp;6.9: Résidus du GLM avec une distribution de Student
 </div>
 </div>
 </div>
-<p>Une nette amélioration est observable à la <a href="#fig-gamresidB" class="quarto-xref">figure&nbsp;<span class="quarto-unresolved-ref">fig-gamresidB</span></a>, bien que les quantiles des résidus tendent encore à dévier des valeurs attendues. Plusieurs raisons pourraient expliquer cette situation, mais il est fort probable qu’elle soit provoquée par l’autocorrélation spatiale dans les résidus.</p>
+<p>Une nette amélioration est observable à la <a href="#fig-gamresidB" class="quarto-xref">figure&nbsp;<span>6.9</span></a>, bien que les quantiles des résidus tendent encore à dévier des valeurs attendues. Plusieurs raisons pourraient expliquer cette situation, mais il est fort probable qu’elle soit provoquée par l’autocorrélation spatiale dans les résidus.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># I de Moran des résidus des deux modèles (gaussien et Student)</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">glm_base</span>, type <span class="op">=</span> <span class="st">'pearson'</span><span class="op">)</span>, </span>
@@ -766,7 +766,7 @@ Figure&nbsp;6.10: Cartographie des résidus du modèle GLM
 </div>
 </div>
 </div>
-<p>En effet, la <a href="#fig-gamresid1" class="quarto-xref">figure&nbsp;<span class="quarto-unresolved-ref">fig-gamresid1</span></a> démontre clairement que la distribution des résidus du modèle GLM (avec une distribution de Student) n’est pas aléatoire spatialement. Les valeurs négatives indiquent des secteurs dans lesquels le modèle tend à prédire un log ratio trop favorable au transport collectif et inversement dans les secteurs avec des valeurs positives.</p>
+<p>En effet, la <a href="#fig-gamresid1" class="quarto-xref">figure&nbsp;<span>6.10</span></a> démontre clairement que la distribution des résidus du modèle GLM (avec une distribution de Student) n’est pas aléatoire spatialement. Les valeurs négatives indiquent des secteurs dans lesquels le modèle tend à prédire un log ratio trop favorable au transport collectif et inversement dans les secteurs avec des valeurs positives.</p>
 </section><section id="sec-0652" class="level3" data-number="6.5.2"><h3 data-number="6.5.2" class="anchored" data-anchor-id="sec-0652">
 <span class="header-section-number">6.5.2</span> GAM avec spline spatiale bivariée sur les coordonnées géographiques</h3>
 <p>Nous ajustons ici un modèle GAM intégrant une spline bivariée sur les coordonnées des centroïdes des secteurs de recensement. Le rôle de cette spline est de capturer une tendance spatiale à l’utilisation plus ou moins prononcé du transport collectif. Cet effet correspond à l’agrégat d’un ensemble de variables que nous n’avons pas pu mesurer comme par l’exemple la revendication écologique, la difficulté de stationner une voiture, la présence d’autres modes de déplacement durables connecté au transport en commun, la démographie, etc. Notons ici que nous utilisons une spline de type processus gaussien (<code>bs = 'gp', m = 3</code>) avec une structure de covariance Matérn qui est communément utilisée en géostatistique pour le krigeage.</p>
@@ -793,7 +793,7 @@ Figure&nbsp;6.11: Résidus du modèle GAM avec une spline bivariée sur les coor
 </div>
 </div>
 </div>
-<p>Les résidus simulés de ce nouveau modèle se comportent bien mieux que les résidus que nous avions obtenus pour les deux modèle GLM n’intégrant pas l’espace (<a href="#fig-gamxy" class="quarto-xref">figure&nbsp;<span class="quarto-unresolved-ref">fig-gamxy</span></a>). Nous pouvons maintenant nous pencher sur l’autocorrélation spatiale des résidus simulés qui devraient suivre une distribution uniforme et aléatoire spatialement.</p>
+<p>Les résidus simulés de ce nouveau modèle se comportent bien mieux que les résidus que nous avions obtenus pour les deux modèle GLM n’intégrant pas l’espace (<a href="#fig-gamxy" class="quarto-xref">figure&nbsp;<span>6.11</span></a>). Nous pouvons maintenant nous pencher sur l’autocorrélation spatiale des résidus simulés qui devraient suivre une distribution uniforme et aléatoire spatialement.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">data_mtl</span><span class="op">$</span><span class="va">sim_residual</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
 <span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="va">data_mtl</span><span class="op">$</span><span class="va">sim_residual</span>, listw <span class="op">=</span> <span class="va">queen_w</span>, nsim <span class="op">=</span> <span class="fl">999</span>,</span>
@@ -838,7 +838,7 @@ Figure&nbsp;6.12: Cartographie des résidus du modèle GAM avec une spline bivar
 </div>
 </div>
 </div>
-<p>La valeur du I de Moran (I = 0,305), calculé à partir de la matrice de contiguïté selon le partage d’un nœud (<em>Queen</em>), indique toujours une autocorrélation spatiale non négligeable des résidus (<a href="#fig-gamxycarto" class="quarto-xref">figure&nbsp;<span class="quarto-unresolved-ref">fig-gamxycarto</span></a>).</p>
+<p>La valeur du I de Moran (I = 0,305), calculé à partir de la matrice de contiguïté selon le partage d’un nœud (<em>Queen</em>), indique toujours une autocorrélation spatiale non négligeable des résidus (<a href="#fig-gamxycarto" class="quarto-xref">figure&nbsp;<span>6.12</span></a>).</p>
 <p>Toutefois, le modèle GAM n’a pas basé sur les relations de voisinage entre les observations (contiguïté), mais sur la localisation de leurs centroïdes (proximité) pour estimer le terme spatial. Dans ce contexte, il serait plus judicieux d’évaluer l’autocorrélation des résidus du modèle en utilisant une matrice de pondération spatiale basée sur l’inverse des distances.</p>
 <div class="cell">
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dists</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html">dist</a></span><span class="op">(</span><span class="va">XY</span><span class="op">)</span><span class="op">)</span></span>
@@ -957,7 +957,7 @@ Tableau&nbsp;6.1: Résultats du modèle GLM avec une spline bivariée sur les co
 </figure>
 </div>
 </div>
-<p>Voici une interprétation des effets obtenus (<a href="#tbl-GamSpatialSpline" class="quarto-xref">tableau&nbsp;<span class="quarto-unresolved-ref">tbl-GamSpatialSpline</span></a>)&nbsp;:</p>
+<p>Voici une interprétation des effets obtenus (<a href="#tbl-GamSpatialSpline" class="quarto-xref">tableau&nbsp;<span>6.1</span></a>)&nbsp;:</p>
 <ul>
 <li><p>Comparativement à un SR avec 0&nbsp;% de personnes issues des minorités visible, un SR avec 25&nbsp;% de ce groupe de la population verrait augmenter la moyenne du log du ratio de <span class="math inline">\(0,876 \times 0,25 = 0,219\)</span>, ce qui correspond à une multiplication par 1,245 du ratio, ou encore, une augmentation de 24,5&nbsp;% du ratio. Il semblerait donc que toutes choses étant égales par ailleurs, la concentration des minorités visibles soit associée avec une plus grande proportion d’utilisation du TC et inversement, à une plus faible utilisation de la voiture.</p></li>
 <li><p>Comparativement à un SR avec 0&nbsp;% de ménages monoparentaux, un SR avec 25&nbsp;% de ce groupe de la population verrait augmenter la moyenne du log du ratio de <span class="math inline">\(1,398 \times 0,25 = 0,3495\)</span>, ce qui correspond à une multiplication par 1,418 du ratio, ou encore, une augmentation de 41,8&nbsp;% du ratio. Il semblerait donc que toutes choses étant égales par ailleurs, la concentration des ménages monoparentaux soit associée avec une plus grande proportion d’utilisation du TC et inversement, à une plus faible utilisation de la voiture.</p></li>
@@ -1026,7 +1026,7 @@ Figure&nbsp;6.13: Représentation de l’impact de la spline spatiale bivariée
 </div>
 </div>
 </div>
-<p>La <a href="#fig-gamspline1" class="quarto-xref">figure&nbsp;<span class="quarto-unresolved-ref">fig-gamspline1</span></a> permet de visualiser l’effet multiplicatif de la spline spatiale sur le ratio prédit par le modèle. Ainsi, toute chose étant égale par ailleurs, le ratio de part modale TC/auto est entre 30&nbsp;% et 70&nbsp;% plus fort dans les quartiers centraux de Montréal, allant de Lachine à Anjou. L’extrémité Ouest de Longueuil fait aussi partie de cette zone avec le bonus spatial le plus important. Aussi, on constate que l’effet spatial diminue avec la distance au Centre-Vile. Pour la majeure partie de Laval, le ratio est réduit de prêt de 50&nbsp;%.</p>
+<p>La <a href="#fig-gamspline1" class="quarto-xref">figure&nbsp;<span>6.13</span></a> permet de visualiser l’effet multiplicatif de la spline spatiale sur le ratio prédit par le modèle. Ainsi, toute chose étant égale par ailleurs, le ratio de part modale TC/auto est entre 30&nbsp;% et 70&nbsp;% plus fort dans les quartiers centraux de Montréal, allant de Lachine à Anjou. L’extrémité Ouest de Longueuil fait aussi partie de cette zone avec le bonus spatial le plus important. Aussi, on constate que l’effet spatial diminue avec la distance au Centre-Vile. Pour la majeure partie de Laval, le ratio est réduit de prêt de 50&nbsp;%.</p>
 </section><section id="sec-0653" class="level3" data-number="6.5.3"><h3 data-number="6.5.3" class="anchored" data-anchor-id="sec-0653">
 <span class="header-section-number">6.5.3</span> GAM avec spline spatiale de type RMF</h3>
 <p>Puisque nos observations sont des polygones, utiliser leurs centroïdes pour représenter l’espace est une approximation maladroite. Nous allons donc opter pour un <em>markov random field</em> afin de modéliser les variations spatiales en fonction du voisinage.</p>
@@ -1090,7 +1090,7 @@ Figure&nbsp;6.14: Critères de sélection de k
 </div>
 </div>
 </div>
-<p>La <a href="#fig-gammrf1" class="quarto-xref">figure&nbsp;<span class="quarto-unresolved-ref">fig-gammrf1</span></a> permet de constater que le AIC et le <em>I</em> de Moran diminuent à mesure que <em>k</em> augmente. Pour le <em>I</em> de Moran, nous constatons qu’au delà de k&nbsp;=&nbsp;100, nous passons à des valeurs inférieures à 0,05. Aussi le AIC semble se stabiliser lorsque k&nbsp;=&nbsp;150. Nous pourrions donc ajuster un modèle avec k&nbsp;=&nbsp;150 pour avoir un bon compromis entre AIC et réduction du <em>I</em> de Moran des résidus.</p>
+<p>La <a href="#fig-gammrf1" class="quarto-xref">figure&nbsp;<span>6.14</span></a> permet de constater que le AIC et le <em>I</em> de Moran diminuent à mesure que <em>k</em> augmente. Pour le <em>I</em> de Moran, nous constatons qu’au delà de k&nbsp;=&nbsp;100, nous passons à des valeurs inférieures à 0,05. Aussi le AIC semble se stabiliser lorsque k&nbsp;=&nbsp;150. Nous pourrions donc ajuster un modèle avec k&nbsp;=&nbsp;150 pour avoir un bon compromis entre AIC et réduction du <em>I</em> de Moran des résidus.</p>
 <div class="cell">
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">gam2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/gam.html">gam</a></span><span class="op">(</span><span class="va">alr_val</span> <span class="op">~</span> <span class="va">prt_minorite_vis</span> <span class="op">+</span> <span class="va">prt_monoparental</span> <span class="op">+</span> <span class="va">revenu_median</span> <span class="op">+</span></span>
 <span>                  <span class="va">acs_idx_emp_tc_peak</span> <span class="op">+</span> <span class="va">acs_idx_emp_pieton</span> <span class="op">+</span> </span>
@@ -1200,7 +1200,7 @@ Tableau&nbsp;6.2: Résultats du modèle GLM avec spatiale de type RMK
 </figure>
 </div>
 </div>
-<p>Il apparaît que les résidus simulés de ce modèle suivent une distribution assez proche d’une distribution uniforme. Nous constatons aussi que toutes les variables indépendantes sont encore significatives et impactent notre variable dépendante dans la même direction (<a href="#tbl-GamSpatialRMK" class="quarto-xref">tableau&nbsp;<span class="quarto-unresolved-ref">tbl-GamSpatialRMK</span></a>).</p>
+<p>Il apparaît que les résidus simulés de ce modèle suivent une distribution assez proche d’une distribution uniforme. Nous constatons aussi que toutes les variables indépendantes sont encore significatives et impactent notre variable dépendante dans la même direction (<a href="#tbl-GamSpatialRMK" class="quarto-xref">tableau&nbsp;<span>6.2</span></a>).</p>
 <div class="cell">
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span>, listw <span class="op">=</span> <span class="va">queen_w</span>, nsim <span class="op">=</span> <span class="fl">999</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1313,7 +1313,7 @@ function handleAnswers(quiz, question, no, correct) {
 Quelle est l’hypothèse clé des modèles de régression linéaire classique qui est assouplie dans les GAM?
 </div>
 <div>
-Relisez au besoin la <a href="#sec-063" class="quarto-xref">section&nbsp;<span class="quarto-unresolved-ref ref-noprefix">sec-063</span></a>.
+Relisez au besoin la <a href="#sec-063" class="quarto-xref">section&nbsp;<span>6.3</span></a>.
 </div>
 <div class="quizlib-question-answers">
 <table class="table table-sm table-striped small">
@@ -1349,7 +1349,7 @@ Relisez au besoin la <a href="#sec-063" class="quarto-xref">section&nbsp;<span c
 Dans un GAM, que représente la fonction f ?
 </div>
 <div>
-Relisez au besoin le début de la <a href="#sec-063" class="quarto-xref">section&nbsp;<span class="quarto-unresolved-ref ref-noprefix">sec-063</span></a>.
+Relisez au besoin le début de la <a href="#sec-063" class="quarto-xref">section&nbsp;<span>6.3</span></a>.
 </div>
 <div class="quizlib-question-answers">
 <table class="table table-sm table-striped small">
@@ -1393,7 +1393,7 @@ Relisez au besoin le début de la <a href="#sec-063" class="quarto-xref">section
 Comment un modèle GAM peut-il être utilisé pour intégrer l’espace?
 </div>
 <div>
-Relisez au besoin la <a href="#sec-063" class="quarto-xref">section&nbsp;<span class="quarto-unresolved-ref ref-noprefix">sec-063</span></a>.
+Relisez au besoin la <a href="#sec-063" class="quarto-xref">section&nbsp;<span>6.3</span></a>.
 </div>
 <div class="quizlib-question-answers">
 <table class="table table-sm table-striped small">
@@ -1437,7 +1437,7 @@ Relisez au besoin la <a href="#sec-063" class="quarto-xref">section&nbsp;<span c
 Dans quel cas préfère-t-on utiliser un MRF plutôt qu’une spline bivariée sur les coordonnées géographiques?
 </div>
 <div>
-Relisez au besoin la <a href="#sec-064" class="quarto-xref">section&nbsp;<span class="quarto-unresolved-ref ref-noprefix">sec-064</span></a>.
+Relisez au besoin la <a href="#sec-064" class="quarto-xref">section&nbsp;<span>6.4</span></a>.
 </div>
 <div class="quizlib-question-answers">
 <table class="table table-sm table-striped small">
@@ -1473,7 +1473,7 @@ Relisez au besoin la <a href="#sec-064" class="quarto-xref">section&nbsp;<span c
 Pour analyser l’effet spatial modélisé avec une spline, on peut :
 </div>
 <div>
-Relisez au besoin la <a href="#sec-0651" class="quarto-xref">section&nbsp;<span class="quarto-unresolved-ref ref-noprefix">sec-0651</span></a>.
+Relisez au besoin la <a href="#sec-0651" class="quarto-xref">section&nbsp;<span>6.5.1</span></a>.
 </div>
 <div class="quizlib-question-answers">
 <table class="table table-sm table-striped small">
@@ -1569,7 +1569,7 @@ Vérifier votre résultat
 <span id="cb29-37"><a href="#cb29-37" aria-hidden="true" tabindex="-1"></a><span class="co"># I de Moran sur les résidus simulés</span></span>
 <span id="cb29-38"><a href="#cb29-38" aria-hidden="true" tabindex="-1"></a><span class="fu">moran.mc</span>(à compléter)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Correction à la <a href="#sec-08051" class="quarto-xref">section&nbsp;<span class="quarto-unresolved-ref ref-noprefix">sec-08051</span></a>.</p>
+<p>Correction à la <a href="08-Exercices.html#sec-08051" class="quarto-xref">section&nbsp;<span>8.5.1</span></a>.</p>
 </div>
 </div>
 <div class="bloc_exercice">
@@ -1593,7 +1593,7 @@ Vérifier votre résultat
 <span>                        data <span class="op">=</span> <span class="va">LyonIris</span>, family <span class="op">=</span> <span class="va">scat</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">Modele.GAMSpline</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Correction à la <a href="#sec-08052" class="quarto-xref">section&nbsp;<span class="quarto-unresolved-ref ref-noprefix">sec-08052</span></a>.</p>
+<p>Correction à la <a href="08-Exercices.html#sec-08052" class="quarto-xref">section&nbsp;<span>8.5.2</span></a>.</p>
 </div>
 </div>
 <div class="bloc_exercice">
@@ -1604,12 +1604,12 @@ Vérifier votre résultat
 <p><strong>Exercice 3.</strong> Réalisation d’un modèle GAM avec une spline de type RMF</p>
 </div>
 <div class="bloc_exercice-body">
-<p>Correction à la <a href="#sec-08053" class="quarto-xref">section&nbsp;<span class="quarto-unresolved-ref ref-noprefix">sec-08053</span></a>.</p>
+<p>Correction à la <a href="08-Exercices.html#sec-08053" class="quarto-xref">section&nbsp;<span>8.5.3</span></a>.</p>
 </div>
 </div>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-RBoldAirMethodesQuanti" class="csl-entry" role="listitem">
 Apparicio, Philippe et Jérémy Gelb. 2022. <em>Méthodes quantitatives en sciences sociales : un grand bol d’R</em>. FabriqueREL, Licence CC BY-SA. <a href="https://serieboldr.github.io/MethodesQuantitatives/">https://serieboldr.github.io/MethodesQuantitatives/</a>.
 </div>

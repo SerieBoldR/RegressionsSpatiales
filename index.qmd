@@ -189,8 +189,11 @@ Dans ce livre, nous utilisons de nombreux *packages* R que vous pouvez installer
 #| warning: false
 
 # Liste des packages
-ListePackages <- c("dplyr", "mgwrsar", "plm", "RColorBrewer", "rgeoda", "sf", "spatialreg", 
-                   "spfilteR", "splm", "spdep", "spgwr")
+ListePackages <- c("adespatial",  "car", "corrplot", "DHARMa", "dplyr", 
+                   "future", "future.apply",  "GGally", "ggplot2",  "ggpubr", 
+                   "GWmodel", "mcgv", "mgcViz", "mgwrsar", "plm", 
+                   "RColorBrewer", "sf", "spatialreg", "spdep", "spgwr", 
+                  "splm", "spmoran", "tmap") 
 # Packages non installés dans la liste
 PackagesNonInstalles <- ListePackages[!(ListePackages %in% installed.packages()[,"Package"])]
 # Installation des packages manquants
@@ -200,12 +203,13 @@ if(length(new.packages)) install.packages(PackagesNonInstalles)
 
 ## Bref historique sur les modèles de régressions spatiales en économie et en géographie {#sect005 .unnumbered}
 
-Depuis une cinquantaine d’années, les économistes et les géographes conçoivent et utilisent largement des méthodes de régression prenant en compte la dimension spatiale : modèles d'économétrie spatiale, régressions géographiquement pondérées, modèles généralisés additifs intégrant une dimension spatiale, modèles avec des vecteurs propres spatiaux, etc.
+Depuis une cinquantaine d’années, les économistes et les géographes conçoivent et utilisent largement des méthodes de régression prenant en compte la dimension spatiale : modèles d'économétrie spatiale, régressions géographiquement pondérées, modèles généralisés additifs intégrant une dimension spatiale, modèles avec des vecteurs propres spatiaux, etc.
 
 La notion d’autocorrélation spatiale, étroitement liée aux régressions spatiales, remonte à une période encore plus ancienne. Elle a été introduite notamment par les travaux de Patrick Moran, d’abord en 1948 puis en 1950, suivis par ceux de Robert Geary en 1954 et de Nathan Mantel en 1967 [@moran1948interpretation; @moran1950test; @geary1954contiguity; @mantel1967detection]. La formalisation des relations spatiales trouve son origine, plus précisément, dans la première loi de la géographie énoncée par Waldo Tobler en 1970 qui stipule que « tout interagit avec tout, mais les objets proches ont plus de chance de le faire que les objets éloignés \[*Everything is related to everything else, but near things are more related than distant things*\] » [-@tobler1970computer].
 
 
-En économie, le terme « économétrie spatiale » a été utilisé pour la première fois par Jean Paelinck [-@paelinck1978spatial] à la fin des années 1970. Cependant, il est resté relativement peu exploité jusqu'aux travaux de Luc Anselin, qui publie en 1988 un ouvrage de référence sur le sujet intitulé *Spatial econometrics: methods and models* [@anselin1988]. Il faut néanmoins attendre le développement des outils informatiques avant de voir les applications affluées. Ainsi, au début des années 1990, l’économétrie spatiale a véritablement pris son essor (voir Anselin [-@anselin2010thirty] pour un historique détaillé). Depuis, ce domaine a gagné en importance, s’établissant presque comme un incontournable pour la prise en compte des effets spatiaux, mais aussi, et surtout, des fameux efforts de débordements (nous y reviendrons).
+En économie, le terme « économétrie spatiale » a été utilisé pour la première fois par Jean Paelinck [-@paelinck1978spatial] à la fin des années 1970. Cependant, il est resté relativement peu exploité jusqu'aux travaux de Luc Anselin, qui publie en 1988 un ouvrage de référence sur le sujet intitulé *Spatial econometrics: methods and models* [@anselin1988]. Il faut néanmoins attendre le développement des outils informatiques avant de voir les applications affluées. Ainsi, au début des années 1990, l’économétrie spatiale a véritablement pris son essor (voir Anselin [-@anselin2010thirty] pour un historique détaillé). Depuis, ce domaine a gagné en importance, s’établissant presque comme un incontournable pour la prise en compte des effets spatiaux, mais aussi, et surtout, des fameux efforts de débordements (nous y reviendrons). Ces dernières décennies, plusieurs ouvrages traitant des modèles économétriques spatiaux ont été publiés, principalement en anglais [@anselin1995new; @anselin2013advances; @lesage2008introduction; @bivand2008applied; @anselin2014modern]. Ils méritent grandement d’être consultés, surtout celui de LeSage et Pace [-@lesage2008introduction]. Peu de références sont disponibles en français. Le livre de référence de Dubé et Legros [-@dube2014econometrie] constitue vraisemblablement une référence intéressante, notamment par la présentation vulgarisée des modèles et des concepts. 
+
 
 En géographie, Daniel Griffith est certainement l’un des géographes les plus actifs dans le domaine des régressions spatiales, y allant de plusieurs propositions dans le but de contrôler pour la présence d’autocorrélation spatiale résiduelle. Ses premiers travaux remontent aux années 1980, et il a publié depuis un grand nombre d’ouvrages [notamment, @Griffith1988; @griffith2003spatial; @griffith2019spatial]. Puis, dans les années 1990, trois géographes – Stewart Fotheringham, Chris Brunsdon et Martin Charlton – ont introduit la régression géographiquement pondérée, une méthode permettant d’analyser localement les relations entre la variable dépendante et les variables indépendantes d'un modèle de régression [@stewart1996geography; @brunsdon1996geographically; @brunsdon1998spatial]. En 2003, la parution de leur ouvrage intitulé *Geographically weighted regression: the analysis of spatially varying relationships* [@fotheringham2003geographically] a largement contribué à la popularisation de cette méthode.
 

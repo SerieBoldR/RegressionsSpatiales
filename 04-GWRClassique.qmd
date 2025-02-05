@@ -38,7 +38,7 @@ La régression géographiquement pondérée (*geographically weighted regression
     -   `ggplot2` et `ggpubr` pour construire des graphiques.
     -   `corrplot` et `GGally` pour créer des graphiques de matrices de corrélation.
 -   Pour construire des modèles de régressions :
-    -   `spgwr` pour construire des GWR gaussienne, logistique et Poisson.
+    -   `spgwr` et `GWmodel` pour construire des GWR gaussienne, logistique et Poisson.
     -   `spdep` pour calculer le *I* de Moran sur les résidus des modèles.
 :::
 :::

@@ -36,8 +36,8 @@ Dans ce chapitre, nous abordons deux formes de modèles généralisées additifs
     -   `tmap` est certainement le meilleur *package* pour la cartographie.
     -   `ggplot2` pour construire des graphiques.
 -   Pour construire des modèles GAM :
-    -   `mcgv` le package de référence pour ajuster des modèles GAM. De nombreux autres packages proposent des extensions pour ce type de modèle et se basent principalement sur les outils mis à disposition par `mgcv` pour créer des bases et leurs matrices de pénalisation (`gamm4`, `brms`, `gamlss`, `qgam`, etc.)
-    -   `DHARMa` un package permettant d'effectuer des diagnostics sur des résidus de modèles GLM
+    -   `mcgv` le *package* de référence pour ajuster des modèles GAM. De nombreux autres *packages* proposent des extensions pour ce type de modèle et se basent principalement sur les outils mis à disposition par `mgcv` pour créer des bases et leurs matrices de pénalisation (`gamm4`, `brms`, `gamlss`, `qgam`, etc.).
+    -   `DHARMa` un *package* permettant d'effectuer des diagnostics sur des résidus de modèles GLM
 :::
 :::
 

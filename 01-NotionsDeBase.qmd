@@ -1,4 +1,4 @@
-# Notions de base {#sec-chap01}
+# Autocorrélation spatiale, dépendance spatiale et hétérogénéité spatiale d'un modèle de régression {#sec-chap01}
 
 Avant d'explorer les différents types de régressions spatiales dans les chapitres suivants, il est primordial de comprendre plusieurs notions clés, comme l'autocorrélation spatiale, la dépendance spatiale et l'hétérogénéité spatiale. Aussi, de nombreuses méthodes de régression spatiale s'appuient sur l'utilisation de matrices de pondération spatiale. Nous proposons également un bref rappel sur la régression linéaire multiple.
 
@@ -36,6 +36,8 @@ Avant d'explorer les différents types de régressions spatiales dans les chapit
     -   `ggplot2` et `ggpubr` pour construire des graphiques.
     -   `tmap` pour construire des cartes thématiques.
     -   `RColorBrewer` pour construire une palette de couleur.
+ -   Pour les mesures d'autocorrélation spatiale :
+    -   `spdep` pour construire des matrices de pondération spatiales et calculer le *I* de Moran.
 :::
 :::
 
@@ -762,7 +764,7 @@ La syntaxe ci-dessous permet ainsi de construire des matrices de pondération (i
 coords <- st_coordinates(IRIS.centroides)
 ## Trouver le plus proche voisin
 k1 <- knn2nb(knearneigh(coords))
-## Affichage des distances pour les 506 IRUS au le plus proche
+## Affichage de la distance la plus proche pour les 506 IRIS
 round(unlist(nbdists(k1,coords)),0)
 ## Trouver la distance maximale       
 plusprochevoisin.max <- max(unlist(nbdists(k1,coords)))
@@ -1331,7 +1333,7 @@ library(ggplot2)
 	xlab("Variable continue") + ylab("I de Moran")+ 
 	coord_flip()
 ```
-## Retour sur la régression linéaire multiple {#sec-015}
+## Bref retour sur la régression linéaire multiple {#sec-015}
 
 À titre de rappel, la régression linéaire multiple permet d'exprimer une variable d'intérêt, habituellement notée par le terme variable dépendante ($y$) en fonction de plusieurs variables que l'on pense liées, théoriquement, à la variable d'intérêt. Celles-ci sont habituellement désignées comme des variables explicatives ou indépendantes (notés $x_k$).
 
@@ -1372,7 +1374,7 @@ $$ {#eq-regmultiple4}
 Une autre approche, plus pratique et compacte, consiste à utiliser la notation matricielle :
 
 $$
-y = \iota \alpha + X \beta + \varepsilon
+y = \iota \alpha + \mathbf{X} \beta + \varepsilon
 $$ {#eq-regmultiple5}
 
 Où :
@@ -1381,7 +1383,7 @@ Où :
 
 -   $\iota$ est un vecteur de dimension $(N \times 1)$ comportant uniquement des valeurs de 1.
 
--   $X$, une matrice de dimension $(N \times K)$ renfermant l'ensemble des $K$ vecteurs de variables explicatives en plus d'une colonne de 1, dans la première colonne de la matrice, pour la constante, d'où $(K+1)$.
+-   $\mathbf{X}$, une matrice de dimension $(N \times K)$ renfermant l'ensemble des $K$ vecteurs de variables explicatives en plus d'une colonne de 1, dans la première colonne de la matrice, pour la constante, d'où $(K+1)$.
 
 -   $\alpha$ est un scalaire identifiant l'ordonnée à l'origine.
 
@@ -1414,7 +1416,7 @@ $$
 $$ {#eq-regmultiple7}
 
 $$
-X = 
+\mathbf{X} = 
 \begin{bmatrix}
 x_{11} & x_{12} & x_{13} & \cdots & x_{1k} & \cdots & x_{1K} \\
 x_{21} & x_{22} & x_{23} & \cdots & x_{2k} & \cdots & x_{2K} \\
@@ -1444,7 +1446,7 @@ $$
 \frac{\partial y}{\partial x_k}=\beta_k
 $$ {#eq-DP}
 
-Ces effets sont habituellement l'essence de l'intérêt des modèles de régression. Par exemple, une variation de deux unités de la variable $x_k$ devrait entraîner une variation dans $y$ de $2\beta_k$ unités. Cette analyse est souvent le centre d'intérêt des modèles de régression, bien que l'interprétation causale ne soit pas nécessairement directe [@dube2014econometrie].
+Ces effets sont habituellement l'essence de l'intérêt des modèles de régression. Par exemple, une variation de deux unités de la variable $x_k$ devrait entraîner une variation dans $y$ de $2\beta_k$ unités. Cette analyse est souvent le centre d'intérêt des modèles de régression, bien que l'interprétation causale ne soit pas nécessairement directe [@dube2024integrated].
 
 ::: bloc_aller_loin
 ::: bloc_aller_loin-header
@@ -1455,17 +1457,16 @@ Ces effets sont habituellement l'essence de l'intérêt des modèles de régress
 :::
 
 ::: bloc_aller_loin-body
-Afin de bien maîtriser les principes de base et les hypothèses de la régression linéaire multiple, mesurer la qualité d'ajustement du modèle, introduire des variables explicatives particulières (variable qualitative dichotomique ou polytomique, variable d'interaction, etc.), interpréter les résultats d'un modèle de régression la mettre en œuvre dans R, nous vous invitons vivement à lire le [chapitre suivant](https://serieboldr.github.io/MethodesQuantitatives/07-regressionlineaire.html) [@RBoldAirMethodesQuanti].
+Afin de bien maîtriser les principes de base et les hypothèses de la régression linéaire multiple, mesurer la qualité d'ajustement du modèle, introduire des variables explicatives particulières (variable qualitative dichotomique ou polytomique, variable d'interaction, etc.), interpréter les résultats d'un modèle de régression la mettre en œuvre dans R, nous vous invitons à lire le [chapitre suivant](https://serieboldr.github.io/MethodesQuantitatives/07-regressionlineaire.html) [@RBoldAirMethodesQuanti].
 :::
 :::
 
 ## Pourquoi recourir à des régressions spatiales? {#sec-017}
 
-Deux motivations principales peuvent conduire à réaliser des régressions spatiales: la **dépendance spatiale** ou l'**hétérogénéité** du modèle de régression aspatiale [@chi2019spatial, pp. 41-43].
-
+Deux motivations principales peuvent conduire à réaliser des régressions spatiales : la **dépendance spatiale** ou l'**hétérogénéité** du modèle de régression classique appliquées à des données spatiales [@chi2019spatial, pp. 41-43].
 
 ### Dépendance spatiale {#sec-0171}
-Dans un modèle, les résidus ($\epsilon$) sont la différence entre les valeurs observées ($y_i$) et les valeurs prédites par le modèle ($\widehat{y_i}$). Une des hypothèses de la régression linéaire multiple est que les observations doivent être indépendantes les unes des autres (*indépendance du terme d'erreur*). Le non-respect de cette hypothèse produit des résultats biaisés, notamment pour les coefficients de régression. Un simple test de présence d’autocorrélation spatiale entre les résidus permet de vérifier si cette hypothèse est respectée.
+Dans un modèle, les résidus ($\epsilon$) sont la différence entre les valeurs observées ($y_i$) et les valeurs prédites par le modèle ($\widehat{y_i}$). Une des hypothèses de la régression linéaire multiple est que les observations doivent être indépendantes les unes des autres (*indépendance du terme d'erreur*). Le non-respect de cette hypothèse produit des résultats biaisés, notamment pour les coefficients de régression. Un simple test de présence d’autocorrélation spatiale entre les résidus permet de vérifier si cette hypothèse est respectée ([section @sec-014]).
 
 Le rejet de cette hypothèse d’indépendance rend les coefficients estimés, selon la forme fonctionnelle postulée (ou processus générateur des données – PGD), par le modèle biaisés et/ou biaise le calcul des écarts-types, invalidant ainsi les tests de significativité usuels. La présence d’autocorrélation spatiale entre les résidus est donc un premier test nécessaire pour s’assurer de la qualité des résultats issus du modèle de régression linéaire.
 
@@ -1536,26 +1537,17 @@ tm_shape(LyonIris)+
 
 ### Hétérogénité spatiale {#sec-0172}
 
-L'hétérogénité ou la non-stationnarité (***Spatial heterogeneity*** ou ***nonstationarity***) se manifeste quand les relations entre la variables dépendante et indépendantes varient dans l'espace (en d'autres termes à travers les entités spatiales du jeu de données). Cela contrevient ainsi à l'hypothèse de l'homogénité spatiale ou stationnarité spatiale selon laquelle les coefficients du modèles doivent être constant dans l'espace.
-
-
-Ceci viole l'hypothèse de stationnarité spatiale, qui suppose que les paramètres du modèle (par exemple, les coefficients) sont constants dans l'espace.
-
-
-Dans le chapitre 2, nous avons vu que les modèles d’économétrie spatiale visent à contrôler la dépendance spatiale d’un modèle de régression classique (MCO), afin d’améliorer l’estimation des coefficients de régression. L’objectif des modèles de régression géographiquement pondérée est différent : ils visent à analyser les variations spatiales de la relation entre la variable dépendante et les variables indépendantes. Autrement dit, les modèles GWR visent à explorer l’instabilité spatiale du modèle MCO afin d’analyser localement la relation entre la variable dépendante et les variables indépendantes. Pour une description détaillée en français de la GWR, consultez Apparicio et al. (2007).
-
-**Les modèles linéaires généralisés avec des vecteurs propres** ([chapitre @sec-chap06) à compléter plus tard.
-
+L'hétérogénité ou la non-stationnarité (***spatial heterogeneity*** ou ***nonstationarity***) se manifeste quand les relations entre la variables dépendante et indépendantes varient dans l'espace (en d'autres termes à travers les entités spatiales du jeu de données). Cela contrevient ainsi à l'hypothèse de l’homogénéité spatiale ou de stationnarité spatiale selon laquelle les coefficients du modèles doivent être constant dans l'espace.
 
 ::: bloc_aller_loin
 ::: bloc_aller_loin-header
 ::: bloc_aller_loin-icon
 :::
-**Hétérogénité ou non-stationnarité spatiale et méthodes de régression spatiale : quelles solutions?**
+**Hétérogénéité ou non-stationnarité spatiale et méthodes de régression spatiale : quelles solutions?**
 :::
 ::: bloc_aller_loin-body
 **Les régressions géographiquement pondérées** ([chapitre @sec-chap04] et [chapitre @sec-chap05]), sont des outils d'exploration particulièrement adaptés pour explorer et cartographier l'instabilité des relations entre les variables dépendante et indépendantes d'un modèle de régression.
 
-**Les modèles généralisés additifs** ([chapitre @sec-chap06]) permettent d'introduire des lissages spatiaux pour capturer les tendances spatiales, soit de manière continues (avec une *spline* bivariée sur les coordonnées géographiques), soit de manière discrète (avec un lissage par champ aléatoire de Markov).
+**Les modèles généralisés additifs** ([chapitre @sec-chap06]) permettent d'introduire des lissages spatiaux pour capturer les tendances spatiales, soit de manière continues (avec une spline bivariée sur les coordonnées géographiques), soit de manière discrète (avec un lissage par champ aléatoire de Markov).
 :::
 :::

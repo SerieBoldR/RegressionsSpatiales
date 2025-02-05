@@ -12,9 +12,74 @@
 
 ### Exercice 1 {#sec-08021}
 
+```{r}
+#| echo: true 
+#| message: false
+#| eval: false
+library(sf)
+library(spatialreg)
+# Matrice de contiguïté selon le partage d'un segment (Rook)
+load("data/Lyon.Rdata")
+Rook <- poly2nb(LyonIris, queen=FALSE)
+W.Rook <- nb2listw(Rook, zero.policy=TRUE, style = "W")
+# Modèles
+formule <- "PM25 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed"
+# Modèles MOC, SLX, SDM, SDEM, SAR, SEM, Manski
+MCO     <- lm(formule, data = LyonIris)
+SLX     <- lmSLX(formule, listw = W.Rook, data = LyonIris)
+Manski  <- sacsarlm(formule, listw=W.Rook, data = LyonIris, type="sacmixed")
+SDM     <- lagsarlm(formule, listw = W.Rook, data = LyonIris, type = "mixed")
+SDEM    <- errorsarlm(formule, listw=W.Rook, data = LyonIris, etype = 'emixed')
+SAR     <- lagsarlm(formule,listw=W.Rook, data = LyonIris, type = 'lag') 
+SEM     <- errorsarlm(formule, listw=W.Rook, data = LyonIris)
+```
+
 ### Exercice 2 {#sec-08022}
 
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+summary(lm.LMtests(model = MCO,
+                   listw = W.Rook,
+                   test = c("LMlag","LMerr","RLMlag","RLMerr")))
+```
+
 ### Exercice 3 {#sec-08023}
+
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+## Valeurs d'AIC et de BIC
+AICs <- AIC(MCO, SLX, SDM, SDEM, SAR, SEM)
+BICs <- BIC(MCO, SLX, SDM, SDEM, SAR, SEM)
+## Autocorrélation spatiale des résidus
+IMoran.MCO  <- moran.mc(resid(MCO), W.Rook, nsim=999)
+IMoran.SLX  <- moran.mc(resid(SLX), W.Rook, nsim=999)
+IMoran.SAR  <- moran.mc(resid(SAR), W.Rook, nsim=999)
+IMoran.SEM  <- moran.mc(resid(SEM), W.Rook, nsim=999)
+IMoran.SDM  <- moran.mc(resid(SDM), W.Rook, nsim=999)
+IMoran.SDEM <- moran.mc(resid(SDEM), W.Rook, nsim=999)
+
+MoranI.s <- c(IMoran.MCO$statistic, IMoran.SLX$statistic,
+             IMoran.SAR$statistic, IMoran.SEM$statistic,
+             IMoran.SDM$statistic, IMoran.SDEM$statistic)
+
+MoranI.p <- c(IMoran.MCO$p.value, IMoran.SLX$p.value,
+             IMoran.SAR$p.value, IMoran.SEM$p.value,
+             IMoran.SDM$p.value, IMoran.SDEM$p.value)
+## Tableau
+Comparaison <- data.frame(Modele = c("MCO", "SLX", "SAR", "SEM", "SDM", "SDEM"),
+                          AIC = round(AICs$AIC,2),
+                          BIC = round(BICs$BIC,2),
+                          dl = AICs$df,
+                          MoranI = round(MoranI.s,3),
+                          MoranIp = round(MoranI.p,3))
+Comparaison
+```
 
 ## Exercices du chapitre 3 {#sec-0803}
 

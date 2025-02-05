@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.6.32">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -56,10 +56,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-2486e1f0a3ee9ee1fc393803a1361cdb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-183e74061cd0fe4872fa4cf166543a55.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -149,7 +149,7 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./01-NotionsDeBase.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Notions de base</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Autocorrélation spatiale, dépendance spatiale et hétérogénéité spatiale d’un modèle de régression</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -255,10 +255,31 @@ Kluwer Academic Publishers.
 ———. 2010. <span>«&nbsp;Thirty years of spatial econometrics.&nbsp;»</span>
 <em>Papers in regional science</em> 89 (1): 3‑26. <a href="https://doi.org/10.1111/j.1435-5957.2010.00279.x">https://doi.org/10.1111/j.1435-5957.2010.00279.x</a>.
 </div>
+<div id="ref-AnselinBera1998" class="csl-entry" role="listitem">
+Anselin, Luc et AK Bera. 1998. <span>«&nbsp;Spatial dependence in linear
+regression models with an introduction to spatial econometrics, A. Ullah
+and DEA Giles (eds.), Handbook of Applied Economics Statistics.&nbsp;»</span>
+In <em>Spatial Dependence in linear Regression Models with an
+Introduction to Spatial Econometrics</em>, sous la dir. de Aman Ullah,
+237‑289. CRC Press. <a href="https://doi.org/10.1201/9781482269901-36">https://doi.org/10.1201/9781482269901-36</a>.
+</div>
 <div id="ref-anselin1996simple" class="csl-entry" role="listitem">
 Anselin, Luc, Anil K Bera, Raymond Florax et Mann J Yoon. 1996.
 <span>«&nbsp;Simple diagnostic tests for spatial dependence.&nbsp;»</span>
 <em>Regional science and urban economics</em> 26 (1): 77‑104. <a href="https://doi.org/10.1016/0166-0462(95)02111-6">https://doi.org/10.1016/0166-0462(95)02111-6</a>.
+</div>
+<div id="ref-anselin1995new" class="csl-entry" role="listitem">
+Anselin, Luc et Raymond JGM Florax. 1995. <em>New directions in spatial
+econometrics</em>. Springer.
+</div>
+<div id="ref-anselin2013advances" class="csl-entry" role="listitem">
+Anselin, Luc, Raymond Florax et Sergio J Rey. 2013. <em>Advances in
+spatial econometrics: methodology, tools and applications</em>. Springer
+Science.
+</div>
+<div id="ref-anselin2014modern" class="csl-entry" role="listitem">
+Anselin, Luc et Sergio J Rey. 2014. <em>Modern spatial econometrics in
+practice: A guide to GeoDa, GeoDaSpace and PySAL</em>. GeoDa Press LLC.
 </div>
 <div id="ref-RBoldAirMethodesQuanti" class="csl-entry" role="listitem">
 Apparicio, Philippe et Jérémy Gelb. 2022. <em>Méthodes quantitatives en
@@ -295,6 +316,11 @@ Bivand, Roger, Giovanni Millo et Gianfranco Piras. 2021. <span>«&nbsp;A
 review of software for spatial econometrics in R.&nbsp;»</span>
 <em>Mathematics</em> 9 (11): 1276. <a href="https://doi.org/10.3390/math9111276">https://doi.org/10.3390/math9111276</a>.
 </div>
+<div id="ref-bivand2008applied" class="csl-entry" role="listitem">
+Bivand, Roger, Edzer J Pebesma, Virgilio Gómez-Rubio et Edzer Jan
+Pebesma. 2008. <em>Applied spatial data analysis with R</em>. Vol.
+747248717. Springer.
+</div>
 <div id="ref-packagesGWR" class="csl-entry" role="listitem">
 Bivand, Roger et Danlin Yu. 2023. <em>spgwr: Geographically Weighted
 Regression</em>. s.n. <a href="https://CRAN.R-project.org/package=spgwr">https://CRAN.R-project.org/package=spgwr</a>.
@@ -320,14 +346,37 @@ geographically weighted approach to ecological inference.&nbsp;»</span>
 Chi, Guangqing et Jun Zhu. 2019. <em>Spatial regression models for the
 social sciences</em>. SAGE publications.
 </div>
+<div id="ref-dube2024integrated" class="csl-entry" role="listitem">
+Dubé, Jean, Julie Le Gallo, François Des Rosiers, Diègo Legros et
+Marie-Pier Champagne. 2024. <span>«&nbsp;An integrated causal framework to
+evaluate uplift value with an example on change in public transport
+supply.&nbsp;»</span> <em>Transportation research part E: logistics and
+transportation review</em> 185. Elsevier: 103500.
+</div>
 <div id="ref-dube2014econometrie" class="csl-entry" role="listitem">
 Dubé, Jean et Diègo Legros. 2014. <em>Econom<span>é</span>trie spatiale
 appliqu<span>é</span>e des microdonn<span>é</span>es</em>. ISTE Group.
+</div>
+<div id="ref-dube2017measuring" class="csl-entry" role="listitem">
+Dubé, Jean, Diègo Legros, Marius Thériault et François Des Rosiers.
+2017. <span>«&nbsp;Measuring and interpreting urban externalities in
+real-estate data: A spatio-temporal difference-in-differences (stdid)
+estimator.&nbsp;»</span> <em>Buildings</em> 7 (2): 51. <a href="https://doi.org/10.3390/buildings7020051">https://doi.org/10.3390/buildings7020051</a>.
+</div>
+<div id="ref-elhorst2014spatial" class="csl-entry" role="listitem">
+Elhorst, JP. 2014. <em>Spatial econometrics: from cross-sectional data
+to spatial panels</em>. springer. <a href="https://link.springer.com/book/10.1007/978-3-642-40340-8">https://link.springer.com/book/10.1007/978-3-642-40340-8</a>.
 </div>
 <div id="ref-fotheringham2003geographically" class="csl-entry" role="listitem">
 Fotheringham, A Stewart, Chris Brunsdon et Martin Charlton. 2003.
 <em>Geographically weighted regression: the analysis of spatially
 varying relationships</em>. John Wiley &amp; Sons.
+</div>
+<div id="ref-stewart1996geography" class="csl-entry" role="listitem">
+Fotheringham, A Stewart, Martin Charlton et Chris Brunsdon. 1996.
+<span>«&nbsp;The geography of parameter space: an investigation of spatial
+non-stationarity.&nbsp;»</span> <em>International journal of geographical
+information systems</em> 10 (5). Taylor &amp; Francis: 605‑627.
 </div>
 <div id="ref-fotheringham2017multiscale" class="csl-entry" role="listitem">
 Fotheringham, A Stewart, Wenbai Yang et Wei Kang. 2017.
@@ -358,6 +407,9 @@ Greenacre, Michael, Marina Martinez-Alvaro et Agustin Blasco. 2021.
 datasets: a validation of the additive logratio transformation.&nbsp;»</span>
 <em>Frontiers in microbiology</em> 12. Frontiers Media SA: 727398.
 </div>
+<div id="ref-griffith2003spatial" class="csl-entry" role="listitem">
+Griffith, Daniel A. 2003. <em>Spatial filtering</em>. Springer.
+</div>
 <div id="ref-Griffith1988" class="csl-entry" role="listitem">
 Griffith, Daniel A. 1988. <em>Advanced Spatial Statistics: Special
 Topics in the Exploration of Quantitative Spatial Data Series</em>.
@@ -368,9 +420,10 @@ Griffith, Daniel A., Yongwan Chun et Bin Li. 2019. <em>Spatial
 regression analysis using eigenvector spatial filtering</em>. Academic
 Press.
 </div>
-<div id="ref-griffith2003spatial" class="csl-entry" role="listitem">
-Griffith, Daniel A et Daniel A Griffith. 2003. <em>Spatial
-filtering</em>. Springer.
+<div id="ref-griffith2006spatial" class="csl-entry" role="listitem">
+Griffith, Daniel A et Pedro R Peres-Neto. 2006. <span>«&nbsp;Spatial modeling
+in ecology: the flexibility of eigenfunction spatial analyses.&nbsp;»</span>
+<em>Ecology</em> 87 (10): 2603‑2613. <a href="https://doi.org/10.1890/0012-9658(2006)87[2603:SMIETF]2.0.CO;2">https://doi.org/10.1890/0012-9658(2006)87[2603:SMIETF]2.0.CO;2</a>.
 </div>
 <div id="ref-helbich2016spatially" class="csl-entry" role="listitem">
 Helbich, Marco et Daniel A Griffith. 2016. <span>«&nbsp;Spatially varying
@@ -385,8 +438,30 @@ Package for Exploring Spatial Heterogeneity Using Geographically
 Weighted Models.&nbsp;»</span> <em>Journal of Statistical Software</em> 63
 (17): 1‑50. <a href="https://10.18637/jss.v063.i17">10.18637/jss.v063.i17</a>.
 </div>
+<div id="ref-kelejian1998generalized" class="csl-entry" role="listitem">
+Kelejian, Harry H et Ingmar R Prucha. 1998. <span>«&nbsp;A generalized
+spatial two-stage least squares procedure for estimating a spatial
+autoregressive model with autoregressive disturbances.&nbsp;»</span> <em>The
+journal of real estate finance and economics</em> 17. Springer: 99‑121.
+<a href="https://doi.org/10.1023/A:1007707430416">https://doi.org/10.1023/A:1007707430416</a>.
+</div>
+<div id="ref-kim2003measuring" class="csl-entry" role="listitem">
+Kim, Chong Won, Tim T Phipps et Luc Anselin. 2003. <span>«&nbsp;Measuring the
+benefits of air quality improvement: a spatial hedonic
+approach.&nbsp;»</span> <em>Journal of environmental economics and
+management</em> 45 (1): 24‑39. <a href="https://doi.org/10.1016/S0095-0696(02)00013-X">https://doi.org/10.1016/S0095-0696(02)00013-X</a>.
+</div>
+<div id="ref-Gallo2002" class="csl-entry" role="listitem">
+Le Gallo, Julie. 2002. <span>«&nbsp;Econométrie spatiale : l’autocorrélation
+spatiale dans les modèles de régression linéaire.&nbsp;»</span> <em>Economie
+prevision</em> 155 (4): 139‑157.
+</div>
+<div id="ref-lesage2008introduction" class="csl-entry" role="listitem">
+LeSage, James P et R. Kelly Pace. 2009. <em>An introduction to spatial
+econometrics</em>. 123. CRC Press.
+</div>
 <div id="ref-lu2011geographically" class="csl-entry" role="listitem">
-Lu, Binbin, Martin Charlton et A Stewart Fotheringhama. 2011.
+Lu, Binbin, Martin Charlton et A Stewart Fotheringham. 2011.
 <span>«&nbsp;Geographically weighted regression using a non-Euclidean
 distance metric with a study on London house price data.&nbsp;»</span>
 <em>Procedia Environmental Sciences</em> 7: 92‑97. <a href="https://doi.org/10.1016/j.proenv.2011.07.017">https://doi.org/10.1016/j.proenv.2011.07.017</a>.
@@ -417,6 +492,10 @@ specifications in eigenvector spatial filtering: a simulation
 study.&nbsp;»</span> <em>Journal of Geographical Systems</em> 17. Springer:
 311‑331.
 </div>
+<div id="ref-pace2008spatial" class="csl-entry" role="listitem">
+Pace, R Kelley et James P LeSage. 2008. <span>«&nbsp;A spatial Hausman
+test.&nbsp;»</span> <em>Economics Letters</em> 101 (3): 282‑284. <a href="https://doi.org/10.1016/j.econlet.2008.09.003">https://doi.org/10.1016/j.econlet.2008.09.003</a>.
+</div>
 <div id="ref-paelinck1978spatial" class="csl-entry" role="listitem">
 Paelinck, Jean. 1978. <span>«&nbsp;Spatial econometrics.&nbsp;»</span>
 <em>Economics Letters</em> 1 (1): 59‑63. <a href="https://doi.org/10.1016/0165-1765(78)90097-6">https://doi.org/10.1016/0165-1765(78)90097-6</a>.
@@ -427,11 +506,11 @@ Seya, Hajime, Daisuke Murakami, Morito Tsutsumi et Yoshiki Yamagata.
 in eigenvector-based spatial filtering.&nbsp;»</span> <em>Geographical
 analysis</em> 47 (3). Wiley Online Library: 284‑299.
 </div>
-<div id="ref-stewart1996geography" class="csl-entry" role="listitem">
-Stewart Fotheringham, A, Martin Charlton et Chris Brunsdon. 1996.
-<span>«&nbsp;The geography of parameter space: an investigation of spatial
-non-stationarity.&nbsp;»</span> <em>International journal of geographical
-information systems</em> 10 (5). Taylor &amp; Francis: 605‑627.
+<div id="ref-steimetz2010spatial" class="csl-entry" role="listitem">
+Steimetz, Seiji SC. 2010. <span>«&nbsp;Spatial multipliers in hedonic
+analysis: a comment on <span>“spatial hedonic models of airport noise,
+proximity, and housing prices”</span>.&nbsp;»</span> <em>Journal of Regional
+Science</em> 50 (5): 995‑998. <a href="https://doi.org/10.1111/j.1467-9787.2010.00679.x">https://doi.org/10.1111/j.1467-9787.2010.00679.x</a>.
 </div>
 <div id="ref-tobler1970computer" class="csl-entry" role="listitem">
 Tobler, Waldo R. 1970. <span>«&nbsp;A computer movie simulating urban growth
