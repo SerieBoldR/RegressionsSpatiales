@@ -228,7 +228,7 @@ Il existe actuellement trois approches permettant de sélectionner les vecteurs 
 
 La première approche proposée [@griffith2003spatial] consiste à appliquer une procédure itérative de sélection des vecteurs propres spatiaux, à la manière d'une régression pas à pas (*stepwise regression*). Elle ajoute un vecteur propre spatial au modèle s'il vérifie les trois critères suivants :
 
-1. Il permet d'augmenter le R^2 du modèle.
+1. Il permet d'augmenter le R^2^ du modèle.
 
 2. Il permet de réduire l'autocorrélation spatiale des résidus.
 
@@ -272,7 +272,7 @@ La méthode par *lasso* a été proposée comme alternative à la sélection pas
 
 ## Mise en œuvre et analyse dans R {#sec-073}
 
-Pour illustrer l'utilisation des modèles SEVM, nous utilisons le même exemple que pour les modèles GAM (@sec-065). Nous avons mentionné un peu plus haut que ces deux types de modèles se ressemblaient beaucoup dans leur façon d'intégrer l'espace dans leur formulation. 
+Pour illustrer l'utilisation des modèles SEVM, nous utilisons le même exemple que pour les modèles GAM ([section @sec-065]). Nous avons mentionné un peu plus haut que ces deux types de modèles se ressemblaient beaucoup dans leur façon d'intégrer l'espace dans leur formulation. 
 
 Nous modélisons donc une fois encore le log du ratio entre les parts modales du transport collectif et de la voiture pour les déplacements pendulaires pour les secteurs de recensement de la région métropolitaine de Montréal en 2021.
 
@@ -281,7 +281,7 @@ Afin d'éviter les répétitions, nous présentons directement les différents m
 
 ### Modèle SEVM par sélection itérative {#sec-0731}
 
-La première approche pour développer un SEVM consiste à sélectionner les vecteurs propres spatiaux à l'aide de la méthode décrite à la @#sec-0721. L'approche est notamment implémentée dans le *package* `spatialreg`.
+La première approche pour développer un SEVM consiste à sélectionner les vecteurs propres spatiaux à l'aide de la méthode décrite à la [section @sec-0721]. L'approche est notamment implémentée dans le *package* `spatialreg`.
 
 ```{r}
 #| echo: true 
@@ -301,7 +301,8 @@ library(mgcv, quietly = TRUE)
 library(gamlss, quietly = TRUE)
 
 # Chargement des données
-data_mtl <- st_read('data/chap06/data_sr_access.gpkg')
+data_mtl <- st_read('data/chap06/data_sr_access.gpkg',
+                    quiet = TRUE)
 
 # les variables d'accessibilités sont multipliées par 100 pour s'exprimer 
 # sur l'échelle 0-100 plutôt que 0-1
@@ -378,7 +379,7 @@ moran.mc(residuals(res), listw = listw, nsim = 999)
 plot(res)
 ```
 
-La @fig-ressev1 montre que les résidus simulés ne suivent pas une distribution uniforme. Nous avions rencontré un enjeu similaire lorsque nous avions ajusté les modèles GAM dans la @sec-065. Nous avions notamment déterminé qu'une distribution de Student était plus adaptée qu'une simple distribution normale pour notre GLM. La fonction `ME` permet de sélectionner les vecteurs propres spatiaux pour un nombre limité de GLM. Pour pouvoir appliquer l'approche de sélection à d'autres types de modèles, il est nécessaire de l'implémenter manuellement. Nous répliquons ici l'approche décrite à la @sec-0621.
+La @fig-ressev1 montre que les résidus simulés ne suivent pas une distribution uniforme. Nous avions rencontré un enjeu similaire lorsque nous avions ajusté les modèles GAM dans la [section @sec-065]. Nous avions notamment déterminé qu'une distribution de Student était plus adaptée qu'une simple distribution normale pour notre GLM. La fonction `ME` permet de sélectionner les vecteurs propres spatiaux pour un nombre limité de GLM. Pour pouvoir appliquer l'approche de sélection à d'autres types de modèles, il est nécessaire de l'implémenter manuellement. Nous répliquons ici l'approche décrite à la @sec-0721.
 
 ```{r}
 #| echo: true 
@@ -520,13 +521,13 @@ plot(res)
 moran.mc(residuals(res), listw = listw, nsim = 999)
 ```
 
-Nous notons une nette amélioration dans la distribution des résidus (@fig-ressev2). Nous effectuerons l'interprétation des résultats de ce modèle en comparaison avec ceux obtenus par les deux autres versions (@sec-0634).
+Nous notons une nette amélioration dans la distribution des résidus (@fig-ressev2). Nous effectuerons l'interprétation des résultats de ce modèle en comparaison avec ceux obtenus par les deux autres versions (@sec-0734).
 
 ### Modèle SEVM avec effet aléatoire {#sec-0732}
 
 Pour rappel, le modèle SEVM par effet aléatoire consiste à ne retenir que les vecteurs propres avec de l'autocorrélation positive et à pénaliser les coefficients des vecteurs propres en les modélisant comme un effet aléatoire provenant d'une distribution normale centrée sur 0. Cette approche est plus difficile à appliquer dans R, notamment parce qu'elle relève intrinsèquement d'une conception bayésienne du modèle. Le *package* `spmoran` offre une implémentation, mais elle se limite principalement sur le modèle linéaire classique (distribution gaussienne des résidus). Toutefois, `spmoran` peut être utilisé pour modéliser d'autres types de distribution, mais il utilise pour cela des fonctions de lien complexe transformant la variable dépendante pour garantir qu'elle suit une distribution normale. Cette approche rend l'interprétation des effets des variables indépendantes très difficile.
 
-Cependant, comme nous l'avons mentionné plus haut (@sec-0622), la pénalisation des coefficients d'un modèle induite par leur introduction comme un effet aléatoire est équivalente à leur pénalisation par la méthode *ridge* (*l1 regularization.*). Il existe plusieurs *packages* dans R permettant d'implémenter ce type de pénalisation dans des GLM dont `glmnet`, `ridge`, et `gamlss`. Le package `mgcv` que nous avons présenté dans la section sur les modèles GAM est également capable d'inclure une pénalité de type *ridge* sur les coefficients des termes linéaires. Il faut pour cela utiliser un paramètre méconnu appelé `paraPen`. Considérant que la distribution de Student a donné des bons résultats jusqu'ici avec la fonction `gam` et le paramètre `family = scat`, nous allons continuer à les utiliser. De plus, le package `mgcv` est capable de déterminer automatiquement le paramètre $\lambda$ calibrant la force de la pénalisation.
+Cependant, comme nous l'avons mentionné plus haut (@sec-0722), la pénalisation des coefficients d'un modèle induite par leur introduction comme un effet aléatoire est équivalente à leur pénalisation par la méthode *ridge* (*l1 regularization.*). Il existe plusieurs *packages* dans R permettant d'implémenter ce type de pénalisation dans des GLM dont `glmnet`, `ridge`, et `gamlss`. Le package `mgcv` que nous avons présenté dans la section sur les modèles GAM est également capable d'inclure une pénalité de type *ridge* sur les coefficients des termes linéaires. Il faut pour cela utiliser un paramètre méconnu appelé `paraPen`. Considérant que la distribution de Student a donné des bons résultats jusqu'ici avec la fonction `gam` et le paramètre `family = scat`, nous allons continuer à les utiliser. De plus, le package `mgcv` est capable de déterminer automatiquement le paramètre $\lambda$ calibrant la force de la pénalisation.
 
 ```{r}
 #| echo: true 
@@ -746,7 +747,9 @@ Une partie des différences dans les résultats obtenus s'expliquent par une pri
 #| fig-cap: Comparaison des termes spatiaux des trois modèles SEVM
 #| out-width: '100%'
 
-#save(base_model, model_ridge, model_lasso,model_sel,retenu,moran_ev_sel, data_mtl2, file = 'data/chap07/models_sevm.rda')
+#save(base_model, model_ridge, model_lasso,
+#     model_sel,retenu,moran_ev_sel, data_mtl2, 
+#     file = 'data/chap07/models_sevm.rda')
 
 #_______________________________________________________
 # Extraction du terme spatial du modèle par sélection

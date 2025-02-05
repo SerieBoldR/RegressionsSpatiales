@@ -222,10 +222,7 @@ tmap_arrange(carte1, carte2, carte3, ncol=2, nrow=2)
 load("data/Bcn.RData")
 ```
 
-### Jeu de données sur la région métropolitaine de Montraéal {#sec-0114}
-
-
-### Jeu de données sur la densité pour six villes espagnoles {#sec-0115}
+### Jeu de données sur la densité pour six villes espagnoles {#sec-0114}
 
 ```{r}
 #| echo: false
@@ -235,7 +232,7 @@ load("data/Density.RData")
 
 ```
 
-### Jeu de données sur la densité pour six régions métropolitaines espagnoles {#sec-0116}
+### Jeu de données sur la densité pour six régions métropolitaines espagnoles {#sec-0115}
 
 ```{r}
 #| echo: false

@@ -249,12 +249,14 @@ Ce modèle a-t-il corrigé le problème de dépendance spatiale du modèle de r�
 #| fig-align: center
 #| fig-cap: Cartographie des résidus du modèle SLX
 #| out-width: 85%
-
+legende.parametres <- list(text.separator = "à", 
+                           decimal.mark = ",", 
+                           big.mark = " ")
 lm.morantest(Modele.SLX, W.Rook, alternative="two.sided")
 LyonIris$SLX.Residus <- residuals(Modele.SLX)
 tm_shape(LyonIris)+
   tm_fill(col="SLX.Residus", n = 5, style = "quantile", 
-          legend.format = list(text.separator = "à"),
+          legend.format = legende.parametres,
           palette = "-RdBu", title = "Résidus") +
   tm_layout(frame=FALSE) + 
   tm_scale_bar(breaks = c(0,5))
@@ -368,10 +370,13 @@ Ce modèle a-t-il corrigé le problème de dépendance spatiale du modèle de r�
 ## Autocorrélation spatiale des résidus
 moran.mc(resid(Modele.SAR), W.Rook, nsim=999)
 ## Cartographie des résidus
+legende.parametres <- list(text.separator = "à", 
+                           decimal.mark = ",", 
+                           big.mark = " ")
 LyonIris$SAR.Residus <- resid(Modele.SAR)
 tm_shape(LyonIris)+
   tm_fill(col="SAR.Residus", n = 5, style = "quantile", 
-          legend.format = list(text.separator = "à"),
+          legend.format = legende.parametres,
           palette = "-RdBu", title = "Résidus") +
   tm_layout(frame=FALSE) + 
   tm_scale_bar(breaks = c(0,5))

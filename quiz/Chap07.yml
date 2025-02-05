@@ -32,7 +32,7 @@
      - "Elles sont plus lentes à calculer que la méthode par sélection"
      - "Elles retiennent les vecteurs propres pertinents en incluant une pénalisation"
      - "Elles sont moins efficaces pour capturer la corrélation spatiale dans les résidus"
-  help: "Relisez au besoin la [section @sec-0722] et la section [@sec-0723]."
+  help: "Relisez au besoin la [section @sec-0722] et la [section @sec-0723]."
 
 - label: "Comment peut-on interpréter les effets spatiaux dans un modèle SEVM?"
   type: uc
