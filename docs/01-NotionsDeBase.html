@@ -302,12 +302,14 @@ window.Quarto = {
 </li>
   <li><a href="#sec-015" id="toc-sec-015" class="nav-link" data-scroll-target="#sec-015"><span class="header-section-number">1.5</span> Bref retour sur la régression linéaire multiple</a></li>
   <li>
-<a href="#sec-017" id="toc-sec-017" class="nav-link" data-scroll-target="#sec-017"><span class="header-section-number">1.6</span> Pourquoi recourir à des régressions spatiales?</a>
+<a href="#sec-016" id="toc-sec-016" class="nav-link" data-scroll-target="#sec-016"><span class="header-section-number">1.6</span> Pourquoi recourir à des régressions spatiales?</a>
   <ul class="collapse">
 <li><a href="#sec-0171" id="toc-sec-0171" class="nav-link" data-scroll-target="#sec-0171"><span class="header-section-number">1.6.1</span> Dépendance spatiale</a></li>
   <li><a href="#sec-0172" id="toc-sec-0172" class="nav-link" data-scroll-target="#sec-0172"><span class="header-section-number">1.6.2</span> Hétérogénité spatiale</a></li>
   </ul>
 </li>
+  <li><a href="#sec-017" id="toc-sec-017" class="nav-link" data-scroll-target="#sec-017"><span class="header-section-number">1.7</span> Quiz de révision</a></li>
+  <li><a href="#sec-018" id="toc-sec-018" class="nav-link" data-scroll-target="#sec-018"><span class="header-section-number">1.8</span> Exercices de révision</a></li>
   </ul><div class="toc-actions"><ul><li><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></nav>
     </div>
 <!-- main -->
@@ -370,7 +372,12 @@ window.Quarto = {
 <code>RColorBrewer</code> pour construire une palette de couleur.</li>
 </ul>
 </li>
-<li>Pour les mesures d’autocorrélation spatiale&nbsp;: - <code>spdep</code> pour construire des matrices de pondération spatiales et calculer le <em>I</em> de Moran.</li>
+<li>Pour les mesures d’autocorrélation spatiale&nbsp;:
+<ul>
+<li>
+<code>spdep</code> pour construire des matrices de pondération spatiales et calculer le <em>I</em> de Moran.</li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -571,7 +578,7 @@ Tableau&nbsp;1.2: Statistiques descriptives du jeu de données sur Montréal
 </tr>
 <tr class="odd">
 <td style="text-align: left;">revenu_median</td>
-<td style="text-align: left;">Revenu médian à faible revenu</td>
+<td style="text-align: left;">Revenu médian des ménages (milliers de dollars)</td>
 <td style="text-align: right;">40,2</td>
 <td style="text-align: right;">9,5</td>
 </tr>
@@ -804,7 +811,7 @@ Figure&nbsp;1.3: Relation topologique entre des entités spatiales polygonales
 Figure&nbsp;1.4: Relations de voisinage et évaluation de la contiguïté
 </figcaption></figure>
 </div>
-<p>Habituellement appelée <span class="math inline">\(W\)</span>, la matrice de contiguïté est binaire selon le partage tant d’un nœud (<em>Queen</em> en anglais) (<a href="#eq-ContiguiteQueen" class="quarto-xref">équation&nbsp;<span>1.1</span></a>) que d’un segment commun (<em>Rook</em> en anglais) (<a href="#eq-ContiguiteRook" class="quarto-xref">équation&nbsp;<span>1.2</span></a>).</p>
+<p>Habituellement appelée <span class="math inline">\(\mathbf{W}\)</span>, la matrice de contiguïté est binaire selon le partage tant d’un nœud (<em>Queen</em> en anglais) (<a href="#eq-ContiguiteQueen" class="quarto-xref">équation&nbsp;<span>1.1</span></a>) que d’un segment commun (<em>Rook</em> en anglais) (<a href="#eq-ContiguiteRook" class="quarto-xref">équation&nbsp;<span>1.2</span></a>).</p>
 <p><span id="eq-ContiguiteQueen"><span class="math display">\[
 w_{ij} =
 \begin{cases}
@@ -1667,7 +1674,7 @@ Figure&nbsp;1.10: Exemple de variable spatialement décalée
 <div class="bloc_objectif-body">
 <p>On distingue habituellement les statistiques d’autocorrélation spatiale globales et locales&nbsp;:</p>
 <ul>
-<li><p>Les statistiques d’autocorrélation spatiale globales qui renvoient une valeur pour l’ensemble de l’espace d’étude. Succinctement, elles permettent de vérifier si les entités proches ou voisines d’une couche géographique ont tendance à être (dis)semblables en fonction d’un phénomène donné (soit une variable).</p></li>
+<li><p>Les statistiques d’autocorrélation spatiale globales renvoient une valeur pour l’ensemble de l’espace d’étude. Succinctement, elles permettent de vérifier si les entités proches ou voisines d’une couche géographique ont tendance à être (dis)semblables en fonction d’un phénomène donné (soit une variable).</p></li>
 <li><p>Les mesures d’autocorrélation spatiale locales renvoient des valeurs pour chacune des entités spatiales. Succinctement, il s’agit de vérifier si chaque entité spatiale est significativement (dis)semblable de celles voisines ou proches.</p></li>
 </ul>
 <p>Nous aborderons ici uniquement une <strong>statistique d’autocorrélation spatiale globale</strong>, soit le <strong><em>I</em></strong> <strong>de Moran</strong>, pour évaluer l’autocorrélation spatiale d’une variable continue. Pour aborder une panoplie de mesures globales ou locales, nous invitons à consulter le chapitre intitulé <a href="https://serieboldr.github.io/MethodesAnalyseSpatiale/01-ManipulationDonneesSpatiales.html"><em>Autocorrélation spatiale</em></a> <span class="citation" data-cites="RBoldAirMethodesAnalysesSpatiales">(<a href="references.html#ref-RBoldAirMethodesAnalysesSpatiales" role="doc-biblioref">Apparicio et Gelb 2024</a>)</span>.</p>
@@ -1693,7 +1700,7 @@ I = \frac{n}{\Sigma_{i=1}^n \Sigma_{j=1}^n w_{ij}} \frac{\Sigma_{i=1}^n \Sigma_{
 <p><strong>Standardisation de la matrice de pondération et <em>I</em> de Moran</strong></p>
 </div>
 <div class="bloc_notes-body">
-<p>Nous avons vu que si la matrice de pondération spatiale est standardisée en ligne (<a href="#sec-0123" class="quarto-xref">section&nbsp;<span>1.2.3</span></a>), alors chaque ligne de la matrice vaut&nbsp;1 et la somme de l’ensemble des valeurs de la matrice est égale au nombre d’entités spatiales (<span class="math inline">\(n\)</span>). Or, dans l’<a href="#eq-MoranIa" class="quarto-xref">équation&nbsp;<span>1.9</span></a>), <span class="math inline">\(\Sigma_{i=1}^n \Sigma_{j=1}^n w_{ij}\)</span> représente la somme des pondérations de la matrice, soit <span class="math inline">\(n\)</span> si elles sont standardisées en ligne. Puisque <span class="math inline">\(\frac{n}{n}=1\)</span>, alors l’équation du <em>I</em> de Moran est simplifiée comme suit&nbsp;:</p>
+<p>Nous avons vu que si la matrice de pondération spatiale est standardisée en ligne (<a href="#sec-0123" class="quarto-xref">section&nbsp;<span>1.2.3</span></a>), alors chaque ligne de la matrice vaut&nbsp;1 et la somme de l’ensemble des valeurs de la matrice est égale au nombre d’entités spatiales (<span class="math inline">\(n\)</span>). Or, dans l’<a href="#eq-MoranIa" class="quarto-xref">équation&nbsp;<span>1.9</span></a>, <span class="math inline">\(\Sigma_{i=1}^n \Sigma_{j=1}^n w_{ij}\)</span> représente la somme des pondérations de la matrice, soit <span class="math inline">\(n\)</span> si elles sont standardisées en ligne. Puisque <span class="math inline">\(\frac{n}{n}=1\)</span>, alors l’équation du <em>I</em> de Moran est simplifiée comme suit&nbsp;:</p>
 <p><span id="eq-MoranIb"><span class="math display">\[
 I = \frac{\Sigma_{i=1}^n \Sigma_{j=1}^n w_{ij}(x_i-\bar{x})(x_j-\bar{x})}{\Sigma_{i=1}^n (x_i-\bar{x})^2}
 \tag{1.10}\]</span></span></p>
@@ -1708,7 +1715,7 @@ I = \frac{\Sigma_{i=1}^n \Sigma_{j=1}^n w_{ij}(x_i-\bar{x})(x_j-\bar{x})}{\Sigma
 <li><p>quand <span class="math inline">\(I = 0\)</span>, l’autocorrélation est nulle, c’est-à-dire que la contiguïté ou la proximité spatiale des zones ne jouent aucun rôle;</p></li>
 <li><p>quand <span class="math inline">\(I &lt; 0\)</span>, l’autocorrélation est négative, c’est-à-dire que les entités géographiques ont tendance à être dissemblables d’autant plus qu’elles sont voisines ou proches.</p></li>
 </ul>
-<p>Les limites de -1 et 1 sont les maximums théoriques du <em>I</em> de Moran. Dans la pratique, elles sont limitées par la matrice spatiale utilisée dans le calcul. En effet, selon la matrice spatiale, le maximum du <em>I</em> de Moran peut être inférieur à 1, et son minimum supérieur à -1. Le calcul de ces bornes propres à chaque matrice spatiale peut se faire en utilisant les maximums et minimums des valeurs propres de <span class="math inline">\(\frac{W+W^T}{2}\)</span>, quand la matrice spatiale est standardisée. À titre d’exemple, nous calculons ci-dessous les maximums et minimums possibles pour une matrice de contiguïté selon le partage d’un nœud (<em>Queen</em>) pour les 506 IRIS de l’agglomération de Lyon. Il apparaît ainsi que pour la matrice matrice de contiguïté selon le partage d’un nœud (<em>Queen</em>), quelle soit la variable analysée, la valeur de <em>I</em> de Moran ne pourra pas dépasser les limites -0,64 et 1,04.</p>
+<p>Les limites de -1 et 1 sont les maximums théoriques du <em>I</em> de Moran. Dans la pratique, elles sont limitées par la matrice spatiale utilisée dans le calcul. En effet, selon la matrice spatiale, le maximum du <em>I</em> de Moran peut être inférieur à 1, et son minimum supérieur à -1. Le calcul de ces bornes propres à chaque matrice spatiale peut se faire en utilisant les maximums et minimums des valeurs propres de <span class="math inline">\(\frac{W+W^T}{2}\)</span>, quand la matrice spatiale est standardisée. À titre d’exemple, nous calculons ci-dessous les maximums et minimums possibles pour une matrice de contiguïté selon le partage d’un nœud (<em>Queen</em>) pour les 506 IRIS de l’agglomération de Lyon. Il apparaît ainsi que pour la matrice de contiguïté selon le partage d’un nœud (<em>Queen</em>), quelle soit la variable analysée, la valeur de <em>I</em> de Moran ne pourra pas dépasser les limites -0,64 et 1,04.</p>
 <div class="cell">
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Matrice de contiguïté selon le partage d'un nœud (Queen)</span></span>
 <span><span class="va">Queen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/poly2nb.html">poly2nb</a></span><span class="op">(</span><span class="va">LyonIris</span>, queen <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -2279,7 +2286,7 @@ x_{N1} &amp; x_{N2} &amp; x_{N3} &amp; \cdots &amp; x_{Nk} &amp; \cdots &amp; x_
 <p><span id="eq-DP"><span class="math display">\[
 \frac{\partial y}{\partial x_k}=\beta_k
 \tag{1.20}\]</span></span></p>
-<p>Ces effets sont habituellement l’essence de l’intérêt des modèles de régression. Par exemple, une variation de deux unités de la variable <span class="math inline">\(x_k\)</span> devrait entraîner une variation dans <span class="math inline">\(y\)</span> de <span class="math inline">\(2\beta_k\)</span> unités. Cette analyse est souvent le centre d’intérêt des modèles de régression, bien que l’interprétation causale ne soit pas nécessairement directe <span class="citation" data-cites="dube2024integrated">(<a href="references.html#ref-dube2024integrated" role="doc-biblioref">Dubé et al. 2024</a>)</span>.</p>
+<p>Ces effets sont habituellement l’essence de l’intérêt des modèles de régression. Par exemple, une variation de deux unités de la variable <span class="math inline">\(x_k\)</span> devrait entraîner une variation dans <span class="math inline">\(y\)</span> de <span class="math inline">\(2\beta_k\)</span> unités, toutes choses étant égales par ailleurs. Cette analyse est souvent le centre d’intérêt des modèles de régression, bien que l’interprétation causale ne soit pas nécessairement directe <span class="citation" data-cites="dube2024integrated">(<a href="references.html#ref-dube2024integrated" role="doc-biblioref">Dubé et al. 2024</a>)</span>.</p>
 <div class="bloc_aller_loin">
 <div class="bloc_aller_loin-header">
 <div class="bloc_aller_loin-icon">
@@ -2291,9 +2298,9 @@ x_{N1} &amp; x_{N2} &amp; x_{N3} &amp; \cdots &amp; x_{Nk} &amp; \cdots &amp; x_
 <p>Afin de bien maîtriser les principes de base et les hypothèses de la régression linéaire multiple, mesurer la qualité d’ajustement du modèle, introduire des variables explicatives particulières (variable qualitative dichotomique ou polytomique, variable d’interaction, etc.), interpréter les résultats d’un modèle de régression la mettre en œuvre dans R, nous vous invitons à lire le <a href="https://serieboldr.github.io/MethodesQuantitatives/07-regressionlineaire.html">chapitre suivant</a> <span class="citation" data-cites="RBoldAirMethodesQuanti">(<a href="references.html#ref-RBoldAirMethodesQuanti" role="doc-biblioref">Apparicio et Gelb 2022</a>)</span>.</p>
 </div>
 </div>
-</section><section id="sec-017" class="level2" data-number="1.6"><h2 data-number="1.6" class="anchored" data-anchor-id="sec-017">
+</section><section id="sec-016" class="level2" data-number="1.6"><h2 data-number="1.6" class="anchored" data-anchor-id="sec-016">
 <span class="header-section-number">1.6</span> Pourquoi recourir à des régressions spatiales?</h2>
-<p>Deux motivations principales peuvent conduire à réaliser des régressions spatiales&nbsp;: la <strong>dépendance spatiale</strong> ou l’<strong>hétérogénéité</strong> du modèle de régression classique appliquées à des données spatiales <span class="citation" data-cites="chi2019spatial">(<a href="references.html#ref-chi2019spatial" role="doc-biblioref">Chi et Zhu 2019</a>, pp.&nbsp;41-43)</span>.</p>
+<p>Deux motivations principales peuvent conduire à réaliser des régressions spatiales&nbsp;: la <strong>dépendance spatiale</strong> ou l’<strong>hétérogénéité</strong> du modèle de régression classique appliquées à des données spatiales <span class="citation" data-cites="chi2019spatial">(<a href="references.html#ref-chi2019spatial" role="doc-biblioref">Chi et Zhu 2019, 41‑43</a>)</span>.</p>
 <section id="sec-0171" class="level3" data-number="1.6.1"><h3 data-number="1.6.1" class="anchored" data-anchor-id="sec-0171">
 <span class="header-section-number">1.6.1</span> Dépendance spatiale</h3>
 <p>Dans un modèle, les résidus (<span class="math inline">\(\epsilon\)</span>) sont la différence entre les valeurs observées (<span class="math inline">\(y_i\)</span>) et les valeurs prédites par le modèle (<span class="math inline">\(\widehat{y_i}\)</span>). Une des hypothèses de la régression linéaire multiple est que les observations doivent être indépendantes les unes des autres (<em>indépendance du terme d’erreur</em>). Le non-respect de cette hypothèse produit des résultats biaisés, notamment pour les coefficients de régression. Un simple test de présence d’autocorrélation spatiale entre les résidus permet de vérifier si cette hypothèse est respectée (<a href="#sec-014" class="quarto-xref">section&nbsp;<span>1.4</span></a>).</p>
@@ -2390,7 +2397,7 @@ Figure&nbsp;1.13: Cartographie des résidus d’un modèle MCO
 </div>
 <div class="bloc_aller_loin-body">
 <p><strong>Les modèles d’économétrie spatiale</strong> (<a href="02-ModelesEconometrieSpatiale.html" class="quarto-xref">chapitre&nbsp;<span>2</span></a> et <a href="03-ModelesSpatiauxPanel.html" class="quarto-xref">chapitre&nbsp;<span>3</span></a>) sont des solutions particulièrement intéressantes pour remédier au problème de dépendance spatiale d’un modèle et obtenir des coefficients de régression non biaisés.</p>
-<p><strong>Les modèles linéaires généralisés avec des vecteurs spatiaux</strong> (<a href="07-SEM.html" class="quarto-xref">chapitre&nbsp;<span>7</span></a>) permettent de capturer les tendances spatiales en résumant la matrice de pondérations spatiales <span class="math inline">\(W\)</span>.</p>
+<p><strong>Les modèles linéaires généralisés et ceux avec filtrage spatial</strong> (<a href="07-SEM.html" class="quarto-xref">chapitre&nbsp;<span>7</span></a>) permettent de capturer les tendances spatiales en résumant la matrice de pondérations spatiales <span class="math inline">\(W\)</span>.</p>
 </div>
 </div>
 </section><section id="sec-0172" class="level3" data-number="1.6.2"><h3 data-number="1.6.2" class="anchored" data-anchor-id="sec-0172">
@@ -2406,6 +2413,424 @@ Figure&nbsp;1.13: Cartographie des résidus d’un modèle MCO
 <div class="bloc_aller_loin-body">
 <p><strong>Les régressions géographiquement pondérées</strong> (<a href="04-GWRClassique.html" class="quarto-xref">chapitre&nbsp;<span>4</span></a> et <a href="05-GWRExtensions.html" class="quarto-xref">chapitre&nbsp;<span>5</span></a>), sont des outils d’exploration particulièrement adaptés pour explorer et cartographier l’instabilité des relations entre les variables dépendante et indépendantes d’un modèle de régression.</p>
 <p><strong>Les modèles généralisés additifs</strong> (<a href="06-GAM.html" class="quarto-xref">chapitre&nbsp;<span>6</span></a>) permettent d’introduire des lissages spatiaux pour capturer les tendances spatiales, soit de manière continues (avec une spline bivariée sur les coordonnées géographiques), soit de manière discrète (avec un lissage par champ aléatoire de Markov).</p>
+</div>
+</div>
+</section></section><section id="sec-017" class="level2" data-number="1.7"><h2 data-number="1.7" class="anchored" data-anchor-id="sec-017">
+<span class="header-section-number">1.7</span> Quiz de révision</h2>
+<div id="Chap01" class="card">
+<link type="text/javascript" src="libs/quizlib.1.0.1.min.js">
+<script>var Quiz=function(a,b){this.Classes=Object.freeze({QUESTION:"quizlib-question",QUESTION_TITLE:"quizlib-question-title",QUESTION_ANSWERS:"quizlib-question-answers",QUESTION_WARNING:"quizlib-question-warning",CORRECT:"quizlib-correct",INCORRECT:"quizlib-incorrect",TEMP:"quizlib-temp"}),this.unansweredQuestionText="Question sans réponse !",this.container=document.getElementById(a),this.questions=[],this.result=new QuizResult,this.answers=b;for(var c=0;c<this.container.children.length;c++)this.container.children[c].classList.contains(Quiz.Classes.QUESTION)&&this.questions.push(this.container.children[c]);if(this.answers.length!=this.questions.length)throw new Error("Number of answers does not match number of questions!")};Quiz.Classes=Object.freeze({QUESTION:"quizlib-question",QUESTION_TITLE:"quizlib-question-title",QUESTION_ANSWERS:"quizlib-question-answers",QUESTION_WARNING:"quizlib-question-warning",CORRECT:"quizlib-correct",INCORRECT:"quizlib-incorrect",TEMP:"quizlib-temp"}),Quiz.prototype.checkAnswers=function(a){void 0===a&&(a=!0);for(var b=[],c=[],d=0;d<this.questions.length;d++){var e=this.questions[d],f=this.answers[d],g=[];this.clearHighlights(e);for(var h,i=e.getElementsByClassName(Quiz.Classes.QUESTION_ANSWERS)[0].getElementsByTagName("input"),j=0;j<i.length;j++)h=i[j],"checkbox"===h.type||"radio"===h.type?h.checked&&g.push(h.value):""!==h.value&&g.push(h.value);1!=g.length||Array.isArray(f)?0===g.length&&b.push(e):g=g[0],c.push(Utils.compare(g,f))}if(0===b.length||!a)return this.result.setResults(c),!0;for(d=0;d<b.length;d++){var k=document.createElement("span");k.appendChild(document.createTextNode(this.unansweredQuestionText)),k.className=Quiz.Classes.QUESTION_WARNING,b[d].getElementsByClassName(Quiz.Classes.QUESTION_TITLE)[0].appendChild(k)}return!1},Quiz.prototype.clearHighlights=function(a){for(var b=a.getElementsByClassName(Quiz.Classes.QUESTION_WARNING);b.length>0;)b[0].parentNode.removeChild(b[0]);var c,d=[a.getElementsByClassName(Quiz.Classes.CORRECT),a.getElementsByClassName(this.Classes.INCORRECT)];for(i=0;i<d.length;i++)for(;d[i].length>0;)c=d[i][0],c.classList.remove(Quiz.Classes.CORRECT),c.classList.remove(Quiz.Classes.INCORRECT);for(var e=a.getElementsByClassName(Quiz.Classes.TEMP);e.length>0;)e[0].parentNode.removeChild(e[0])},Quiz.prototype.highlightResults=function(a){for(var b,c=0;c<this.questions.length;c++)b=this.questions[c],b.getElementsByClassName(Quiz.Classes.QUESTION_TITLE)[0].classList.add(this.result.results[c]?Quiz.Classes.CORRECT:Quiz.Classes.INCORRECT),void 0!==a&&a(this,b,c,this.result.results[c])};var QuizResult=function(){this.results=[],this.totalQuestions=0,this.score=0,this.scorePercent=0,this.scorePercentFormatted=0};QuizResult.prototype.setResults=function(a){this.results=a,this.totalQuestions=this.results.length,this.score=0;for(var b=0;b<this.results.length;b++)this.results[b]&&this.score++;this.scorePercent=this.score/this.totalQuestions,this.scorePercentFormatted=Math.floor(100*this.scorePercent)};var Utils=function(){};Utils.compare=function(a,b){if(a.length!=b.length)return!1;if(Array.isArray(a)&&Array.isArray(b)){for(var c=0;c<a.length;c++)if(a[c]!==b[c])return!1;return!0}return a===b};
+
+function showResults(quiz) {
+    // Check answers and continue if all questions have been answered
+    if (quiz.checkAnswers()) {
+        var quizScorePercent = quiz.result.scorePercentFormatted; // The unformatted percentage is a decimal in range 0 - 1
+        var quizResultElement = document.getElementById('quiz-result');
+        quizResultElement.style.display = 'block';
+        document.getElementById('quiz-percent').innerHTML = quizScorePercent.toString();
+
+        // Change background colour of results div according to score percent
+        if (quizScorePercent > 75) quizResultElement.style.backgroundColor = '#4caf50';
+        else if (quizScorePercent > 50) quizResultElement.style.backgroundColor = '#ffc107';
+        else if (quizScorePercent > 25) quizResultElement.style.backgroundColor = '#ff9800';
+        else if (quizScorePercent > 0) quizResultElement.style.backgroundColor = '#f44336';
+
+        // Highlight questions according to whether they were correctly answered. The callback allows us to highlight/show the correct answer
+        quiz.highlightResults(handleAnswers);
+    }
+}
+
+/** Callback for Quiz.highlightResults. Highlights the correct answers of incorrectly answered questions
+ * Parameters are: the quiz object, the question element, question number, correctly answered flag
+ */
+function handleAnswers(quiz, question, no, correct) {
+    if (!correct) {
+        var answers = question.getElementsByTagName('input');
+        for (var i = 0; i < answers.length; i++) {
+            if (answers[i].type === 'checkbox' || answers[i].type === 'radio'){
+                // If the current input element is part of the correct answer, highlight it
+                if (quiz.answers[no].indexOf(answers[i].value) > -1) {
+                    answers[i].parentNode.classList.add(Quiz.Classes.CORRECT);
+                }
+            } else {
+                // If the input is anything other than a checkbox or radio button, show the correct answer next to the element
+                var correctAnswer = document.createElement('span');
+                correctAnswer.classList.add(Quiz.Classes.CORRECT);
+                correctAnswer.classList.add(Quiz.Classes.TEMP); // quiz.checkAnswers will automatically remove elements with the temp class
+                correctAnswer.innerHTML = quiz.answers[no];
+                correctAnswer.style.marginLeft = '10px';
+                answers[i].parentNode.insertBefore(correctAnswer, answers[i].nextSibling);
+            }
+        }
+    }
+}
+
+  var quizz_Chap01;
+  window.onload = function() {
+    quizz_Chap01 = new Quiz('Chap01', [['1', '2', '3', '4'],'2','1',['1', '2', '3'],'1',['1', '3', '4'],'2','1']);
+  };</script><link rel="stylesheet" type="text/css" src="css/quizlib.min.css">
+<div class="card quizlib-question">
+<div class="quizlib-question-title">
+Parmi les matrices de pondération spatiale ci-dessous, lesquelles sont des matrices de contiguïté?
+</div>
+<div>
+Relisez au besoin la <a href="#sec-012" class="quarto-xref">section&nbsp;<span>1.2</span></a>.
+</div>
+<div class="quizlib-question-answers">
+<table class="table table-sm table-striped small">
+<tbody><tr>
+<td>
+<label>Partage d’un nœud</label>
+</td>
+<td>
+<input type="checkbox" name="q1" value="1">
+</td>
+</tr>
+<tr>
+<td>
+<label>Partage d’un segment</label>
+</td>
+<td>
+<input type="checkbox" name="q1" value="2">
+</td>
+</tr>
+<tr>
+<td>
+<label>Partage d’un nœud et ordre d’adjacence</label>
+</td>
+<td>
+<input type="checkbox" name="q1" value="3">
+</td>
+</tr>
+<tr>
+<td>
+<label>Partage d’un segment et ordre d’adjacence</label>
+</td>
+<td>
+<input type="checkbox" name="q1" value="4">
+</td>
+</tr>
+<tr>
+<td>
+<label>Connectivité selon la distance</label>
+</td>
+<td>
+<input type="checkbox" name="q1" value="5">
+</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+<div class="card quizlib-question">
+<div class="quizlib-question-title">
+En anglais, comment est appelée une matrice selon le partage d’un nœud?
+</div>
+<div>
+Relisez au besoin le début de la <a href="#sec-012" class="quarto-xref">section&nbsp;<span>1.2</span></a>.
+</div>
+<div class="quizlib-question-answers">
+<table class="table table-sm table-striped small">
+<tbody><tr>
+<td>
+<label>Rook</label>
+</td>
+<td>
+<input type="radio" name="q2" value="1">
+</td>
+</tr>
+<tr>
+<td>
+<label>Queen</label>
+</td>
+<td>
+<input type="radio" name="q2" value="2">
+</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+<div class="card quizlib-question">
+<div class="quizlib-question-title">
+Comparativement à une matrice de l’inverse de la distance, une matrice de l’inverse de la distance au carré accorde un poids plus important aux entités proches.
+</div>
+<div>
+Relisez au besoin la <a href="#sec-01222" class="quarto-xref">section&nbsp;<span>1.2.2.2</span></a>.
+</div>
+<div class="quizlib-question-answers">
+<table class="table table-sm table-striped small">
+<tbody><tr>
+<td>
+<label>Vrai</label>
+</td>
+<td>
+<input type="radio" name="q3" value="1">
+</td>
+</tr>
+<tr>
+<td>
+<label>Faux</label>
+</td>
+<td>
+<input type="radio" name="q3" value="2">
+</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+<div class="card quizlib-question">
+<div class="quizlib-question-title">
+Quels sont les avantages de la standardisation en ligne des matrices de pondération spatiale?
+</div>
+<div>
+Relisez au besoin la <a href="#sec-0123" class="quarto-xref">section&nbsp;<span>1.2.3</span></a>.
+</div>
+<div class="quizlib-question-answers">
+<table class="table table-sm table-striped small">
+<tbody><tr>
+<td>
+<label>La somme de chaque ligne est égale à 1.</label>
+</td>
+<td>
+<input type="checkbox" name="q4" value="1">
+</td>
+</tr>
+<tr>
+<td>
+<label>La somme de l’ensemble de la matrice est égale au nombre d’entités spatiales.</label>
+</td>
+<td>
+<input type="checkbox" name="q4" value="2">
+</td>
+</tr>
+<tr>
+<td>
+<label>La standardisation permet de comparer la dépendance spatiale selon différentes matrices.</label>
+</td>
+<td>
+<input type="checkbox" name="q4" value="3">
+</td>
+</tr>
+<tr>
+<td>
+<label>La standardisation augmente la vitesse des calculs.</label>
+</td>
+<td>
+<input type="checkbox" name="q4" value="4">
+</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+<div class="card quizlib-question">
+<div class="quizlib-question-title">
+Avec une matrice standardisée, la statistique du I de Moran varient théoriquement de :
+</div>
+<div>
+Relisez au besoin la <a href="#sec-0142" class="quarto-xref">section&nbsp;<span>1.4.2</span></a>.
+</div>
+<div class="quizlib-question-answers">
+<table class="table table-sm table-striped small">
+<tbody><tr>
+<td>
+<label>de -1 à 1</label>
+</td>
+<td>
+<input type="radio" name="q5" value="1">
+</td>
+</tr>
+<tr>
+<td>
+<label>de 0 à 100</label>
+</td>
+<td>
+<input type="radio" name="q5" value="2">
+</td>
+</tr>
+<tr>
+<td>
+<label>de moins l’infini à plus l’infini</label>
+</td>
+<td>
+<input type="radio" name="q5" value="3">
+</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+<div class="card quizlib-question">
+<div class="quizlib-question-title">
+Quelles sont les trois manières de tester la significativité du I de Moran?
+</div>
+<div>
+Relisez au besoin la <a href="#sec-0143" class="quarto-xref">section&nbsp;<span>1.4.3</span></a>.
+</div>
+<div class="quizlib-question-answers">
+<table class="table table-sm table-striped small">
+<tbody><tr>
+<td>
+<label>Avec l’hypothèse de la normalité</label>
+</td>
+<td>
+<input type="checkbox" name="q6" value="1">
+</td>
+</tr>
+<tr>
+<td>
+<label>En relançant plusieurs fois les calculs</label>
+</td>
+<td>
+<input type="checkbox" name="q6" value="2">
+</td>
+</tr>
+<tr>
+<td>
+<label>Avec l’hypothèse de la randomisation</label>
+</td>
+<td>
+<input type="checkbox" name="q6" value="3">
+</td>
+</tr>
+<tr>
+<td>
+<label>Avec la méthode Monte-Carlo (habituellement avec 999 échantillons)</label>
+</td>
+<td>
+<input type="checkbox" name="q6" value="4">
+</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+<div class="card quizlib-question">
+<div class="quizlib-question-title">
+Comment mesurer la dépendance spatiale d’un modèle MCO?
+</div>
+<div>
+Relisez au besoin la <a href="#sec-0171" class="quarto-xref">section&nbsp;<span>1.6.1</span></a>.
+</div>
+<div class="quizlib-question-answers">
+<table class="table table-sm table-striped small">
+<tbody><tr>
+<td>
+<label>En analysant le R2</label>
+</td>
+<td>
+<input type="radio" name="q7" value="1">
+</td>
+</tr>
+<tr>
+<td>
+<label>En calculant le I de Moran sur les résidus du modèle</label>
+</td>
+<td>
+<input type="radio" name="q7" value="2">
+</td>
+</tr>
+<tr>
+<td>
+<label>En similant des variables spatiales</label>
+</td>
+<td>
+<input type="radio" name="q7" value="3">
+</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+<div class="card quizlib-question">
+<div class="quizlib-question-title">
+Quel est le synomyme de l’hétérogénité spatiale?
+</div>
+<div>
+Relisez au besoin la <a href="#sec-0172" class="quarto-xref">section&nbsp;<span>1.6.2</span></a>.
+</div>
+<div class="quizlib-question-answers">
+<table class="table table-sm table-striped small">
+<tbody><tr>
+<td>
+<label>Non-stationnarité</label>
+</td>
+<td>
+<input type="radio" name="q8" value="1">
+</td>
+</tr>
+<tr>
+<td>
+<label>Variation spatiale</label>
+</td>
+<td>
+<input type="radio" name="q8" value="2">
+</td>
+</tr>
+<tr>
+<td>
+<label>Corrélation spatiale</label>
+</td>
+<td>
+<input type="radio" name="q8" value="3">
+</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+<button type="button" onclick="showResults(quizz_Chap01);" id="buttonID">
+Vérifier votre résultat
+</button>
+<div id="quiz-result" class="card">
+<p><span id="quiz-percent"></span></p>
+</div>
+</div>
+</section><section id="sec-018" class="level2" data-number="1.8"><h2 data-number="1.8" class="anchored" data-anchor-id="sec-018">
+<span class="header-section-number">1.8</span> Exercices de révision</h2>
+<div class="bloc_exercice">
+<div class="bloc_exercice-header">
+<div class="bloc_exercice-icon">
+
+</div>
+<p><strong>Exercice 2.</strong> Matrice de contiguïté selon partage d’un segment et I de Moran</p>
+</div>
+<div class="bloc_exercice-body">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/Lyon.Rdata"</span>)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spdep)</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Matrice de contiguïté selon le partage d'un nœud (Queen)</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>à compléter</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="co"># I de Moran sur la variable Lden elon l’hypothèse de la normalité</span></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>à compléter<span class="er">)</span></span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a><span class="co"># I de Moran sur la variable Lden selon la normalité selon l’hypothèse de la randomisation</span></span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>à compléter</span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a><span class="co"># I de Moran sur la variable Lden selon des permutations Monte-Carlo</span></span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>à compléter</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Correction à la <a href="08-Exercices.html#sec-08011" class="quarto-xref">section&nbsp;<span>8.1.1</span></a>.</p>
+</div>
+</div>
+<div class="bloc_exercice">
+<div class="bloc_exercice-header">
+<div class="bloc_exercice-icon">
+
+</div>
+<p><strong>Exercice 2.</strong> Modèle MCO et dépendance spatiale</p>
+</div>
+<div class="bloc_exercice-body">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/Lyon.Rdata"</span>)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spdep)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Modèle MCO</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>formule <span class="ot">&lt;-</span> <span class="st">"Lden ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed"</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>à compléter</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Résultats du modèle</span></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>à compléter</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Matrice de contiguïté (Rook)</span></span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>à compléter</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a><span class="co"># I de Moran sur les résidus du modèle global (MCO)</span></span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>à compléter</span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Cartographie des résidus</span></span>
+<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a>à compléter</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Correction à la <a href="08-Exercices.html#sec-08012" class="quarto-xref">section&nbsp;<span>8.1.2</span></a>.</p>
 </div>
 </div>
 
@@ -2439,7 +2864,7 @@ Moran, Patrick. 1950. <span>«&nbsp;A test for the serial independence of residu
 Tobler, Waldo R. 1970. <span>«&nbsp;A computer movie simulating urban growth in the Detroit region.&nbsp;»</span> <em>Economic geography</em> 46 (sup1): 234‑240. <a href="https://doi.org/10.2307/143141">https://doi.org/10.2307/143141</a>.
 </div>
 </div>
-</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");

@@ -1,75 +1,74 @@
-- label: "La classe sf est composée de trois éléments :"
+- label: "Parmi les matrices de pondération spatiale ci-dessous, lesquelles sont des matrices de contiguïté?"
   type: mc
-  response: [1,2,3]
+  response: [1,2,3,4]
   answers:
-     - "simple feature geometry (sfg) : géométrie d'une observation"
-     - "simple feature column (sfc) : liste toutes les géométries d'une couche"
-     - "data.fame : données attributaires"
-     - "raster : données images"
-  help: "Relisez au besoin la [section @sec-011142]."
+     - "Partage d’un nœud"
+     - "Partage d’un segment"
+     - "Partage d’un nœud et ordre d’adjacence"
+     - "Partage d’un segment et ordre d’adjacence"
+     - "Connectivité selon la distance"
+  help: "Relisez au besoin la [section @sec-012]."
 
-- label: "Laquelle de ces fonctions permet de changer la projection cartographique d'une couche géographique?"
+- label: "En anglais, comment est appelée une matrice selon le partage d'un nœud?"
   type: uc
   response: 2
   answers:
-     - "st_crs(x)"
-     - "st_transform(x, crs)"
-     - "st_is_longlat(x)"
-  help: "Relisez au besoin le début de la [section @sec-0121]."
+     - "Rook"
+     - "Queen"
+  help: "Relisez au besoin le début de la [section @sec-012]."
 
-- label: "Laquelle de ces fonctions n'est pas une fonction géométrique sur une couche?"
-  type: uc
-  response: 4
-  answers:
-     - "st_bbox(x)"
-     - "st_union(x)"
-     - "st_point_on_surface(x)"
-     - "st_crop(x, y, xmin, ymin, xmax, ymax)"
-     - "st_centroid(x)"
-  help: "Relisez au besoin la [section @sec-0122]."
-
-- label: "Comparativement à l'algorithme de Douglas et Peucker, que permet l’algorithme de Visvalingam lors de la simplification des contours?"
-  type: uc
-  response: 2
-  answers:
-     - "Il est plus rapide."
-     - "Il permet de conserver les frontières."
-  help: "Relisez au besoin la [section @sec-01224]."
-
-- label: "Tous les points sont compris dans leur enveloppe convexe."
+- label: "Comparativement à une matrice de l'inverse de la distance, une matrice de l'inverse de la distance au carré accorde un poids plus important aux entités proches."
   type: uc
   response: 1
   answers:
      - "Vrai"
      - "Faux"
-  help: "Relisez au besoin la [section @sec-01225]."
+  help: "Relisez au besoin la [section @sec-01222]."
 
-- label: "Quelles sont les quatre fonctions de mesures géométriques et de récupération des coordonnées géographiques?"
+- label: "Quels sont les avantages de la standardisation en ligne des matrices de pondération spatiale?"
   type: mc
-  response: [1,2,3,4]
+  response: [1,2,3]
   answers:
-     - "st_area(x)"
-     - "st_length(x)"
-     - "st_distance(x,y)"
-     - "st_coordinates(x)"
-     - "st_union(x)"
-  help: "Relisez au besoin la [section @sec-0124]."
+     - "La somme de chaque ligne est égale à 1."
+     - "La somme de l'ensemble de la matrice est égale au nombre d'entités spatiales."
+     - "La standardisation permet de comparer la dépendance spatiale selon différentes matrices."
+     - "La standardisation augmente la vitesse des calculs."
+  help: "Relisez au besoin la [section @sec-0123]."
 
-- label: "Quelle est la différence entre les fonctions st_intersects(x, y) et st_intersection(x, y)?"
+- label: "Avec une matrice standardisée, la statistique du I de Moran varient théoriquement de :"
+  type: uc
+  response: 1
+  answers:
+     - "de -1 à 1"
+     - "de 0 à 100"
+     - "de moins l'infini à plus l'infini"
+  help: "Relisez au besoin la [section @sec-0142]."
+
+- label: "Quelles sont les trois manières de tester la significativité du I de Moran?"
+  type: mc
+  response: [1, 3, 4]
+  answers:
+     - "Avec l'hypothèse de la normalité"
+     - "En relançant plusieurs fois les calculs"
+     - "Avec l'hypothèse de la randomisation"
+     - "Avec la méthode Monte-Carlo (habituellement avec 999 échantillons)"
+  help: "Relisez au besoin la [section @sec-0143]."
+
+- label: "Comment mesurer la dépendance spatiale d'un modèle MCO?"
   type: uc
   response: 2
   answers:
-     - "Elles génèrent le même résultat."
-     - "La première est une requête spatiale, la seconde renvoie l'intersection entre deux couches."
-     - "La première renvoie l'intersection entre deux couches, la seconde est une requête spatiale."
-  help: "Relisez le deuxième encadré à la [section @sec-0126]."
-
-- label: "Laquelle des fonctions sf permet d'exporter des données vectorielles?"
+     - "En analysant le R2"
+     - "En calculant le I de Moran sur les résidus du modèle"
+     - "En similant des variables spatiales"
+  help: "Relisez au besoin la [section @sec-0171]."
+ 
+- label: "Quel est le synomyme de l'hétérogénité spatiale?"
   type: uc
-  response: 2
+  response: 1
   answers:
-     - "st_read()"
-     - "st_write()"
-     - "writeRaster()"
-  help: "Relisez au besoin la [section @sec-0141]."
+     - "Non-stationnarité"
+     - "Variation spatiale"
+     - "Corrélation spatiale"
+  help: "Relisez au besoin la [section @sec-0172]."
   

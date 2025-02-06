@@ -14,7 +14,7 @@ Dans ce chapitre, nous décrivons uniquement les modèles économétriques spati
 À la fin de ce chapitre, vous devriez être en mesure de :
 
 -   Saisir les raisons motivant le choix d'un modèle de régression (externalités, effets d’entraînement, effets mixtes, etc.).
--   Comprendre les différents modèles spatiaux autorégressifs (SLX, SAR, SEm, SDM, SDEM, Manski).
+-   Comprendre les différents modèles spatiaux autorégressifs (SLX, SAR, SEM, SDM, SDEM, Manski).
 -   Utiliser une stratégie pour choisir un modèle (tests du multiplicateur de Lagrange, tests du ratio de vraisemblance, critère d’information d’Akaike).
 -   Vérifier si le modèle autorégressif a corrigé ou non la dépendance spatiale du modèle MCO.
 -   Mettre en pratique ces modèles spatiaux dans R.
@@ -139,7 +139,7 @@ Où :
 
 -   $\beta$, est un vecteur de dimension $(K+1)$ qui renferme l'ensemble des coefficients de régression, pour les $K$ variables indépendantes et la constante.
 
--   $\mathbf{WX}$ est une matrice de variables indépendantes décalées spatialement, résultant d'une opération matricielle simple, soit $\mathbf{WX} = \mathbf{W} \times \mathbf{X}$, où $W$ est de dimension $(N×N)$, $\mathbf{X}$ est de dimension $(N \times K)$, d'où $\mathbf{WX}$ est de dimension $(N \times K)$, où chaque observations représente la moyenne des valeurs des variables indépendantes autour d'une observation donnée.
+-   $\mathbf{WX}$ est une matrice de variables indépendantes décalées spatialement, résultant d'une opération matricielle simple, soit $\mathbf{WX} = \mathbf{W} \times \mathbf{X}$, où $W$ est de dimension $(N×N)$, $\mathbf{X}$ est de dimension $(N \times K)$, d'où $\mathbf{WX}$ est de dimension $(N \times K)$, où chaque observation représente la moyenne des valeurs des variables indépendantes autour d'une observation donnée.
 
 -   $\theta$ est un vecteur de coefficients associés aux valeurs décalées spatialement des variables indépendantes (excluant la constante) de dimension $(K \times 1)$.
 
@@ -176,7 +176,7 @@ Si le modèle SLX offre une solution intéressante pour régler le potentiel pro
 
 Pour illustrer la mise en œuvre dans R des différentes modèles d'économétrie spatiale, nous utilisons le jeu de données sur Lyon ([section @sec-0111]). Les modèles seront construits avec comme variable dépendante le dioxyde d'azote (NO~2~) et cinq variables sociodémographiques comme variables indépendantes ([section @sec-0111]). Le modèle MCO (non spatial) a déjà été présenté à la [section @sec-0171].
 
-Le modèle SLX est construit avec la fonction `lmSLX` du *package* `spatialreg` [@bivand2021review]. Remarquez, dans le code ci-dessous, le paramètre `listw = W.Rook` qui est utilisé pour spécifier la matrice de pondérations spatiales.
+Le modèle SLX est construit avec la fonction `lmSLX` du *package* `spatialreg` [@bivand2021review]. Dans le code ci-dessous, remarquez le paramètre `listw = W.Rook` qui est utilisé pour spécifier la matrice de pondérations spatiales.
 
 ```{r}
 #| echo: true 
@@ -234,7 +234,7 @@ impacts(Modele.SLX)
 summary(impacts(Modele.SLX))
 ```
 
-À la lecture des valeurs de *p*, nous constatons que seule la variable `Pct0_14` a un impact direct et indirect significatif au seuil 0,01. L'augmentation d'un point de pourcentage de la population de moins de 15 ans est associé localement à une réduction de 0,20 de la concentration annuelle du dioxyde d'azote. La même augmentation d'un point de pourcentage dans les entités envoient, entraîne une réduction de 0,78. L'effet total est donc une réduction de 0,98.
+À la lecture des valeurs de *p*, nous constatons que seule la variable `Pct0_14` a des impacts direct et indirect significatifs au seuil 0,01. L'augmentation d'un point de pourcentage de la population de moins de 15 ans est associé localement à une réduction de 0,20 de la concentration annuelle du dioxyde d'azote. La même augmentation d'un point de pourcentage dans les entités voisines, entraîne une réduction de 0,78. L'effet total est donc une réduction de 0,98.
 
 **Dépendance spatiale du modèle SLX?**
 
@@ -288,7 +288,7 @@ Où :
 
 -   $\mathbf{I}$, est une matrice identité, c'est-à-dire une matrice où la diagonale comporte des 1 et où les autres éléments sont nuls, de dimension $(N \times N)$.
 
-Le modèle nécessite une méthode d'estimation appropriée. La première approche, par maximum de vraisemblance, fut proposée dès le départ par Anselin [-@anselin1988]. Cette approche a été largement mobilisée dans les premières applications. Bien qu'intéressante, cette approche repose sur certaines hypothèses, dont la distribution du terme d'erreur et l'absence d'hétéroscédasticité.
+Le modèle nécessite une méthode d'estimation appropriée. La première approche, par maximum de vraisemblance, fut proposée dès le départ par Luc Anselin [-@anselin1988]. Cette approche a été largement mobilisée dans les premières applications. Bien qu'intéressante, cette approche repose sur certaines hypothèses, dont la distribution du terme d'erreur et l'absence d'hétéroscédasticité.
 
 Plus récemment, Kelejian et Prucha [-@kelejian1998generalized] ont proposé une approche basée sur les moindres carrés généralisés (MCG). Cette approche a l'avantage d'être plus rapide en plus de permettre de corriger pour la présence d'hétéroscédasticité. Elle a cependant le désavantage de reposer sur l'hypothèse importante d'exogénéité de la matrice de pondérations spatiales, qui sert d'instrument lors du processus d'estimation.
 
@@ -351,7 +351,7 @@ impacts(Modele.SAR, listw = W.Rook, R = 999)
 summary(impacts(Modele.SAR, listw = W.Rook, R = 999), zstats = TRUE, short = TRUE)
 ```
 
-L'interprétation des effets directs se rapproche de celle des coefficients classiques. Ainsi, selon ce modèle, l'augmentation du niveau de vie médian de 1000 € dans un IRIS est associée avec une diminution moyenne de la concentration de dioxyde d'azote de 0,14 dans cet IRIS. L'effet total est de -0.82, indiquant qu'en moyenne, l'augmentation de 1000 € du niveau de vie médian dans un IRIS est associée avec une diminution moyenne de 0,82 de la concentration de dioxyde d'azote dans l'ensemble des IRIS. Au final, l'effet indirect est simplement la différence entre l'effet total et l'effet direct. Nous pouvons constater ici que les effets indirects sont plus importants que les effets directs.
+L'interprétation des effets directs se rapproche de celle des coefficients classiques. Ainsi, selon ce modèle, l'augmentation du niveau de vie médian de 1000 € dans un IRIS est associée avec une diminution moyenne de la concentration de dioxyde d'azote de 0,14 dans cet IRIS. L'effet total est de -0,82, indiquant qu'en moyenne, l'augmentation de 1000 € du niveau de vie médian dans un IRIS est associée avec une diminution moyenne de 0,82 de la concentration de dioxyde d'azote dans l'ensemble des IRIS. Au final, l'effet indirect est simplement la différence entre l'effet total et l'effet direct. Nous pouvons constater ici que les effets indirects sont plus importants que les effets directs.
 
 **Dépendance spatiale du modèle SAR?**
 
@@ -388,7 +388,7 @@ tm_shape(LyonIris)+
 
 L'autocorrélation spatiale résiduelle peut être liée à deux explications simples. La première est liée à **l'omission de variables spatiales importantes et significatives**, et pour laquelle on ne dispose d'aucune information spécifique. La seconde peut provenir d'une **forme d'hétérogénéité spatiale** qui n'est, autrement, pas intégrée à l'analyse. On peut ainsi imaginer que les comportements sont liés dans l'espace pour des raisons qui ne sont pas observables, et encore moins mesurables.
 
-Dans les deux cas, on peut simplement corriger le problème sans pour autant tenter de tirer profit d'une forme spécifique de relations spatiales (externalités, effets d'entraînement). C'est essentiellement dans ces cas que les modèles avec spécifications autorégressive sur les termes d'erreurs (ou SEM -- ***s**patial **e**rror **m**odel*) peuvent être intéressants : ils ne permettent pas d'apporter une richesse supplémentaire à l'analyse et l'interprétation, mais ils permettent vraisemblablement de corriger pour le problème d'interdépendance des termes d'erreurs. Plus spécifiquement, le modèle SEM s'exprime par la spécification suivante :
+Dans les deux cas, on peut simplement corriger le problème sans pour autant tenter de tirer profit d'une forme spécifique de relations spatiales (externalités, effets d'entraînement). C'est essentiellement dans ces cas que les modèles avec une spécification autorégressive sur les termes d'erreurs (ou SEM -- ***s**patial **e**rror **m**odel*) peuvent être intéressants : ils ne permettent pas d'apporter une richesse supplémentaire à l'analyse et l'interprétation, mais ils permettent vraisemblablement de corriger pour le problème d'interdépendance des termes d'erreurs. Plus spécifiquement, le modèle SEM s'exprime par la spécification suivante :
 
 $$
 \mathbf{y}=\mathbf{\iota}\alpha+\mathbf{X\beta}+\mathbf{\nu}
@@ -673,11 +673,11 @@ moran.mc(resid(Modele.Manski), W.Rook, nsim=999)
 
 Évidemment, la question qui brûle les lèvres est de savoir quelle spécification devrait-on retenir pour l'analyse empirique et la présentation des résultats? Deux avenues sont possibles.
 
-D'une part, il est possible que certains impératifs théoriques guident la cherheuse ou le chercheur vers une spécification particulière. Ainsi, si l'on cherche à vérifier comment les caractéristiques des milieux avoisinants influencent une variable d'intérêt, alors les spécifications SLX ou SDEM sont à privilégier puisqu'elle permet explicitement d'aborder la question. Si l'intérêt est de voir comment une variation locale d'une variable d'intérêt peut avoir des influences à la grandeur du territoire, alors la spécification SAR est probablement à privilégier puisqu'elle permet d'évaluer l'impact spatial « global » d'un changement à microéchelle. Il est également possible qu'une question de recherche trouve un écho parmi les deux possibilités, dans lequel des cas le modèle SDM d'avère intéressant.
+D'une part, il est possible que **certains impératifs théoriques guident la chercheuse ou le chercheur vers une spécification particulière**. Ainsi, si l'on souhaite vérifier comment les caractéristiques des milieux avoisinants influencent une variable d'intérêt, alors les spécifications SLX ou SDEM sont à privilégier puisqu'elle permet explicitement d'aborder la question. Si l'intérêt est de voir comment une variation locale d'une variable d'intérêt peut avoir des influences à la grandeur du territoire, alors la spécification SAR est probablement à privilégier puisqu'elle permet d'évaluer l'impact spatial « global » d'un changement à microéchelle. Il est également possible qu'une question de recherche trouve un écho parmi les deux possibilités, dans lequel des cas le modèle SDM d'avère intéressant.
 
-Si un chercheur souhaite essentiellement corriger la présence d'autocorrélation spatiale entre les résidus sans intégrer explicitement de liens spatiaux dans l'interprétation du modèle, alors la spécification SEM peut s'avérer intéressante. Il faut néanmoins avouer que cette correction de l'autocorrélation spatiale n'apporte que peu d'intérêt au niveau de l'interprétation outre corriger les écarts-types des coefficients estimés.
+Si une chercheuse ou un chercheur **souhaite essentiellement corriger la présence d'autocorrélation spatiale entre les résidus** sans intégrer explicitement de liens spatiaux dans l'interprétation du modèle, alors la spécification SEM peut s'avérer intéressante. Il faut néanmoins avouer que cette correction de l'autocorrélation spatiale n'apporte que peu d'intérêt au niveau de l'interprétation outre corriger les écarts-types des coefficients estimés.
 
-D'autre part, le choix peut également être basé sur des considérations plus statistiques. En lequel des cas le chercheur souhaite identifier, sur la base de critères préalablement définis, le modèle qui offre la performance la meilleure. Bien que le test de Moran permette de détecter la présence d'autocorrélation spatiale dans les résidus, le test n'est malheureusement pas mobilisable pour tenter d'identifier une spécification préférable.
+D'autre part, **le choix peut également être basé sur des considérations plus statistiques**. En lequel des cas le chercheur souhaite identifier, sur la base de critères préalablement définis, le modèle qui offre la performance la meilleure. Bien que le test de Moran permette de détecter la présence d'autocorrélation spatiale dans les résidus, le test n'est malheureusement pas mobilisable pour tenter d'identifier une spécification préférable.
 
 Il existe trois différentes stratégies de tests : les tests de ratio de vraisemblance, qui nécessitent l'estimation des modèles contraints (les spécifications linéaires classiques) et non contraints (les modèles économétriques spatiaux); les tests de Wald, qui nécessitent aussi l'estimation des modèles contraints et non contraints; et les tests du multiplicateur de Lagrange (ou test LM), qui nécessitent uniquement l'estimation des modèles contraints.
 
@@ -737,9 +737,11 @@ Globalement, la procédure est la suivante :
 
 **Étape A. Sélection d'un modèle modèle mixte à partir des coefficients autorégressifs du modèle généralisé** :
 
-1.   Si la valeur du coefficient $\lambda$ (lambda) n'est pas significativement différente de 0, alors nous calculons le modèle mixte SDM.
 
-2.   Si la valeur du coefficient $\rho$ (rho) n'est pas significativement différente de 0, alors nous calculons le modèle mixte SDEM.
+1.   Si la valeur du coefficient $\rho$ (rho) n'est pas significativement différente de 0, alors nous calculons le modèle mixte SDEM.
+
+2.   Si la valeur du coefficient $\lambda$ (lambda) n'est pas significativement différente de 0, alors nous calculons le modèle mixte SDM.
+
 
 **Étape B. Sélection du modèle SLX**
 
@@ -951,9 +953,7 @@ Manski  <- sacsarlm(formule, listw=W.Rook, data = LyonIris, type="sacmixed")
 :::
 
 
-
 ## Quiz de révision {#sec-023}
-
 
 ```{r}
 #| label: quizChapitre02

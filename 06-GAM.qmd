@@ -30,11 +30,11 @@ Dans ce chapitre, nous abordons deux formes de modèles généralisées additifs
 ::: bloc_package-body
 -   Pour importer et manipuler des fichiers géographiques :
     -   `sf` pour importer et manipuler des données vectorielles.
--   Pour mesurer l'autocorrélation spatiale de nos variables :
-    -   `spdep` permettant de calculer une variété d'indicateurs d'autocorrélation spatiale et matrices de pondération spatiale.
+-   Pour mesurer l'autocorrélation :
+    -   `spdep` pour construire des matrices de pondération spatiales et calculer le *I* de Moran.
 -   Pour construire des cartes et des graphiques :
-    -   `tmap` est certainement le meilleur *package* pour la cartographie.
     -   `ggplot2` pour construire des graphiques.
+    -   `tmap` est certainement le meilleur *package* pour la cartographie.
 -   Pour construire des modèles GAM :
     -   `mcgv` le *package* de référence pour ajuster des modèles GAM. De nombreux autres *packages* proposent des extensions pour ce type de modèle et se basent principalement sur les outils mis à disposition par `mgcv` pour créer des bases et leurs matrices de pénalisation (`gamm4`, `brms`, `gamlss`, `qgam`, etc.).
     -   `DHARMa` un *package* permettant d'effectuer des diagnostics sur des résidus de modèles GLM
@@ -45,13 +45,13 @@ Dans ce chapitre, nous abordons deux formes de modèles généralisées additifs
 
 Les modèles généralisés additifs (GAM) constituent une famille de modèles de régression très flexibles permettant notamment de modéliser des relations non paramétriques entre les variables indépendantes et la variable dépendante.
 
-Dans un modèle de régression classique, nous partons du principe que les variables *X* (indépendantes) ont un impact linéaire sur la variable *Y* (dépendante). Cette hypothèse simplifie grandement les relations entre les variables observées et permet d'interpréter les résultats plus facilement (analyse des coefficients de régression). Or, cette hypothèse peut être fausse et les relations non linéaires ont plus tendance à être la norme que l'exception.
+Dans un modèle de régression classique, nous partons du principe que les variables $\mathbf{X}$ (indépendantes) ont un impact linéaire sur la variable $\mathbf{Y}$ (dépendante). Cette hypothèse simplifie grandement les relations entre les variables observées et permet d'interpréter les résultats plus facilement (analyse des coefficients de régression). Or, cette hypothèse peut être fausse et les relations non linéaires ont plus tendance à être la norme que l'exception.
 
 Dans un GAM, plutôt que modéliser une relation linéaire, nous partons du principe que la relation modélisée peut être non linéaire et suivre une fonction *f*. On parle alors de relations non paramétriques, car la forme de cette fonction s'ajuste aux données et ne suit pas une forme prédéterminée.
 
-Ces fonctions *f* sont le plus souvent estimées avec des *splines*. Le fonctionnement de base est assez simple. Pour chaque variable *X* devant suivre une relation non linéaire, la variable est remplacée par *k* sous-variable (*x1*, *x2*, ..., *xk*). *k* représente le niveau de complexité attendu de la relation, plus *k* est grand, plus la fonction à ajuster pourra être complexe. Le modèle va estimer un coefficient pour chacune de ces sous-variables, et la somme des effets de ces sous-variables permet de reconstruire la relation non inéaire.
+Ces fonctions $f$ sont le plus souvent estimées avec des splines. Le fonctionnement de base est assez simple. Pour chaque variable $\mathbf{X}$ devant suivre une relation non linéaire, la variable est remplacée par $k$ sous-variable ($x_1$, $x_2$, ..., $x_k$). $k$ représente le niveau de complexité attendu de la relation : plus il est grand, plus la fonction à ajuster pourra être complexe. Le modèle va estimer un coefficient pour chacune de ces sous-variables, et la somme des effets de ces sous-variables permet de reconstruire la relation non linéaire.
 
-La @fig-gam1 permet d'illustrer ce principe. Les lignes grises représentent les sous-variables, aussi appelées bases, qui sont ensuite multiplées par leur coefficient respectif pour obtenir leurs effets (en couleur), puis la ligne bleue représente leur somme. La ligne bleue capture très efficacement la relation entre la variable X et Y.
+La @fig-gam1 permet d'illustrer ce principe. Les lignes grises représentent les sous-variables, aussi appelées bases, qui sont ensuite multipliées par leur coefficient respectif pour obtenir leurs effets (en couleur), puis la ligne bleue représente leur somme. La ligne bleue capture très efficacement la relation entre les variables $\mathbf{X}$ et $\mathbf{Y}$.
 
 ```{r}
 #| echo: false 
@@ -84,6 +84,7 @@ ggplot() +
             color = 'grey',
             linetype = 'dashed', 
             data = df2, linewidth = 1) +
+  labs(x = "X", y = "Y")+
   geom_line(aes(x = X, y = value, color = variable), linewidth = 1, data = df) +
   geom_line(aes(x = X, y = total), color = "blue", linewidth = 1, data = df) +
   theme(legend.position = "none") 
@@ -302,23 +303,23 @@ avec $sp$ une matrice comprenant de deux colonnes, soit les coordonnées cartés
 
 ## Pourquoi recourir à un modèle GAM? {#sec-063}
 
-Les modèles GAM sont très flexibles puisqu'ils sont une extension directe des modèles linéaires généralisés (GLM). Ils peuvent donc être appliqués à des variables dépendantes suivant de nombreuses distributions (normale, gamma, binomiale, poisson, tweedie, log-normal, etc.). Cependant, ils imposent une conceptualisation particulière de l'espace. En effet, un modèle GAM n'inclut pas directement la notion de dépendance spatiale dans sa formulation. L'hypothèse d'indépendance des observations est conservée (contrairement à un modèle des moindres carrés généralisés, GLS). Le modèle intègre simplement un terme flexible correspondant à l'ajout d'un ensemble de nouvelles variables *X* structurées afin de capturer un effet spatialement positivement autocorrélé.
+Les modèles GAM sont très flexibles puisqu'ils sont une extension directe des modèles linéaires généralisés (GLM). Ils peuvent donc être appliqués à des variables dépendantes suivant de nombreuses distributions (normale, gamma, binomiale, poisson, tweedie, log-normal, etc.). Cependant, ils imposent une conceptualisation particulière de l'espace. En effet, un modèle GAM n'inclut pas directement la notion de dépendance spatiale dans sa formulation. L'hypothèse d'indépendance des observations est conservée (contrairement à un modèle des moindres carrés généralisés, GLS). Le modèle intègre simplement un terme flexible correspondant à l'ajout d'un ensemble de nouvelles variables $\mathbf{X}$ structurées afin de capturer un effet spatialement positivement autocorrélé.
 
-Si nous reprenons notre exemple avec la pollution atmosphérique, le modèle est un simple GLM dans lequel on suppose que les niveau de pollution suivent une distribution normale et que les observations sont indépendantes. Cependant la moyenne de cette distribution peut être prédite avec une spline calculée à partir des coordonnées spatiales des observations. Le modèle ne part donc pas du principe que deux observations proches sont plus similaires, mais seulement qu'il existe un effet spatial permettant de prédire les niveaux moyens de pollution attendus. Un modèle GAM ne vise donc pas explicitement à corriger l'effet de la dépendance spatiale, mais plutôt à capturer un effet spatialement structuré et non capturé par les variables indépendantes X. Sans l'ajout de la spline, cet effet se serait retrouvé dans les résidus du modèle.
+Si nous reprenons l'exemple de la pollution atmosphérique, le modèle est un simple GLM dans lequel on suppose que les niveau de pollution suivent une distribution normale et que les observations sont indépendantes. Cependant, la moyenne de cette distribution peut être prédite avec une spline calculée à partir des coordonnées spatiales des observations. Le modèle ne part donc pas du principe que deux observations proches sont plus similaires, mais plutôt qu'il existe un effet spatial permettant de prédire les niveaux moyens de pollution attendus. Un modèle GAM ne vise donc pas explicitement à corriger l'effet de la dépendance spatiale, mais plutôt à capturer un effet spatialement structuré et non capturé par les variables indépendantes $\mathbf{X}$. Sans l'ajout de la spline, cet effet se serait retrouvé dans les résidus du modèle.
 
 La cartographie de l'effet spatial dans un modèle GAM permet de visualiser les secteurs de l'espace d'étude dans lesquels, **toutes choses étant égales par ailleurs**, la variable dépendante est plus forte ou plus faible que la moyenne régionale. Il peut être vu comme un ajustement local de la prédiction. Une forme de malus ou de bonus que le modèle ajoute à sa prédiction pour tenir compte de la variation spatiale de la variable dépendante qui n'a pas été expliquée par les variables indépendantes.
 
-Puisqu'un modèle GAM ne prend pas directement en compte l'autocorrélation spatiale, il est tout à fait possible qu'il échoue à réduire suffisamment la dépendance spatiale des résidus d'un modèle global (non spatial). Il faudra alors privilégier d'autres formes de modèles. De même, si notre cadre théorique nous amène à penser que nos observations s'influencent mutuellement dans l'espace, il sera beaucoup plus cohérent d'utiliser un modèle économétrique (@sec-chap02).
+Puisqu'un modèle GAM ne prend pas directement en compte l'autocorrélation spatiale, il est tout à fait possible qu'il échoue à réduire suffisamment la dépendance spatiale des résidus d'un modèle global (non spatial). Il faudra alors privilégier d'autres formes de modèles. De même, si notre cadre théorique nous amène à penser que nos observations s'influencent mutuellement dans l'espace, il sera beaucoup plus cohérent d'utiliser un modèle économétrique ([chapitre @sec-chap02]).
 
-Prenons un exemple concret pour lequel l'utilisation d'un modèle GAM serait particulièrement pertinente. Dans une étude récente [@gelb2022cyclists], les auteurs cherchent à modéliser les niveaux d'expositions de cyclistes aux pollutions atmosphériques et sonores. Les données utilisées ont été collectées par des cyclistes qui parcouraient différents environnements urbains équipés de capteurs de bruit et de pollution. Plus spécifiquement, l'objectif de l'étude était de déterminer quelles caractéristiques de l'environnement urbain réduisent ou augmentent significativement les niveaux d'exposition des cyclistes. Dans leur cadre théorique (@fig-cadretheorique), les auteurs distinguent :
+Prenons un exemple concret pour lequel l'utilisation d'un modèle GAM serait particulièrement pertinente. Dans une étude récente, Gelb et Apparicio [-@gelb2022cyclists] cherchent à modéliser les niveaux d'exposition de cyclistes aux pollutions atmosphériques et sonores. Les données utilisées ont été collectées par des cyclistes qui parcouraient différents environnements urbains équipés de capteurs de bruit et de pollution. Plus spécifiquement, l'objectif de l'étude était de déterminer quelles caractéristiques de l'environnement urbain réduisent ou augmentent significativement les niveaux d'exposition des cyclistes. Dans leur cadre théorique (@fig-cadretheorique), les auteurs distinguent :
 
-1.  les effets du micro-environnement, causés par les caractéristiques locales comme le type de rue utilisé, la densité bâtie, la présence de végétation, etc.
+1.  Les effets du micro-environnement, causés par les caractéristiques locales comme le type de rue utilisé, la densité bâtie, la présence de végétation, etc.
 
-2.  la pollution d'arrière-plan, causée par des phénomènes géographiques régionaux comme la localisation des industries, des autoroutes, la topographie, etc.
+2.  La pollution d'arrière-plan, causée par des phénomènes géographiques régionaux comme la localisation des industries, des autoroutes, la topographie, etc.
 
 ![Cadre théorique de l'exposition des cyclistes](images/Chap06/cadre_theorique_exposition.png){#fig-cadretheorique width="90%" fig-align="center"}
 
-L'exposition mesurée pour un cycliste à un endroit *t* dépend donc des caractéristiques propres de cet endroit, mais aussi de la pollution d'arrière-plan. Par exemple, si nous prenons une rue A, en tous points identique à une rue B, nous pouvons nous attendre à mesurer des niveaux de pollution plus élevée pour B si celle-ci est située dans un secteur plus industrialisé de la ville. Cette différence ne s'explique pas par des caractéristiques propres à A ou B, puisqu'elles sont identiques, mais bien par un effet d'arrière-plan produit par différents phénomènes géographiques et donc spatialement autocorrélé. Par conséquent, dans cet exemple, l'intégration de la pollution d'arrière-plan avec une spline spatiale est particulièrement pertinente, car l'interprétation de l'effet produit par cette spline s'intègre directement dans le cadre théorique.
+L'exposition mesurée pour un cycliste à un endroit *t* dépend donc des caractéristiques propres de cet endroit, mais aussi de la pollution d'arrière-plan. Par exemple, si nous prenons une rue A, en tous points identique à une rue B, nous pouvons nous attendre à mesurer des niveaux de pollution plus élevés pour B si celle-ci est située dans un secteur plus industrialisé de la ville. Cette différence ne s'explique pas par des caractéristiques propres à A ou B, puisqu'elles sont identiques, mais bien par un effet d'arrière-plan produit par différents phénomènes géographiques et donc spatialement autocorrélé. Par conséquent, dans cet exemple, l'intégration de la pollution d'arrière-plan avec une spline spatiale est particulièrement pertinente, car l'interprétation de l'effet produit par cette spline s'intègre directement dans le cadre théorique.
 
 ## *Random Markow Field* (RFM) ou spline bivariée? {#sec-064}
 
@@ -339,7 +340,7 @@ Mathématiquement parlant, un modèle de type CAR (*conditionnal autoregressive 
 :::
 :::
 
-Dans l'@eq-gam3, le terme $\eta$ représente l'effet spatial. Il est le plus souvent modélisé comme un effet provenant d'une distribution normale multivariée, centrée sur zéro et dont la matrice de covariance est calculée grâce à un terme $\lambda$ et une matrice de pondération spatiale $W$. Ce type de modèle est communément appelé un modèle à effet mixte, car il combine des effets fixes (les coefficients $\beta$) et des effets **aléatoires** ($\lambda$). Les effets aléatoires ne sont pas estimés de la même façon que les effets fixes : ils sont en effet pénalisés. Pour une introduction sur les modèles à effets mixtes, vous pouvez consulter [ce chapitre sur les GLMM](https://serieboldr.github.io/MethodesQuantitatives/09-GLMM.html) du livre *Méthodes quantitatives en sciences sociales : un grand bol d'R* [@RBoldAirMethodesQuanti].
+Dans l'@eq-gam3, le terme $\eta$ représente l'effet spatial. Il est le plus souvent modélisé comme un effet provenant d'une distribution normale multivariée, centrée sur zéro et dont la matrice de covariance est calculée grâce à un terme $\lambda$ et une matrice de pondération spatiale $W$. Ce type de modèle est communément appelé un modèle à effet mixte, car il combine des effets **fixes** (coefficients $\beta$) et des effets **aléatoires** ($\lambda$). Les effets aléatoires ne sont pas estimés de la même façon que les effets fixes : ils sont en effet pénalisés. Pour une introduction sur les modèles à effets mixtes, vous pouvez consulter [ce chapitre sur les GLMM](https://serieboldr.github.io/MethodesQuantitatives/09-GLMM.html) du livre *Méthodes quantitatives en sciences sociales : un grand bol d'R* [@RBoldAirMethodesQuanti].
 
 $$
 \begin{aligned}
@@ -351,7 +352,7 @@ $$ {#eq-gam3}
 
 Il existe un lien direct entre les modèles à effets mixtes et les GAM. En effet, il est possible de reformuler un GLMM comme un GAM et vice-versa, ce qui signifie qu'une spline pénalisée peut être utilisée pour représenter un effet aléatoire [@wood2017generalized].
 
-Dans R, avec le package `mgcv`, il est possible d'utiliser une spline pénalisée par une matrice de pondération spatiale *W* pour approximer l'effet aléatoire que nous aurions modélisé avec un modèle de type CAR. L'intérêt d'utiliser un GAM plutôt qu'un CAR est que nous pouvons contrôler directement le degré de lissage (autocorrélation spatiale) du terme spatial dans le modèle grâce au nombre de degrés de liberté (*k*) de la spline. En utilisant un nombre de degrés de liberté maximal ($k = n-1$), soit une base par observation, alors on obtient un *full rank MRF*, autorisant de facto la plus grande variance possible du terme spatial. En réduisant *k*, nous obtenons des modèles d'ordre inférieur (*lower rank MRF*) dont le terme spatial est plus lisse et moins complexe.
+Dans R, avec le *package* `mgcv`, il est possible d'utiliser une spline pénalisée par une matrice de pondération spatiale *W* pour approximer l'effet aléatoire que nous aurions modélisé avec un modèle de type CAR. L'intérêt d'utiliser un GAM plutôt qu'un CAR est que nous pouvons contrôler directement le degré de lissage (autocorrélation spatiale) du terme spatial dans le modèle grâce au nombre de degrés de liberté (*k*) de la spline. En utilisant un nombre de degrés de liberté maximal ($k = n-1$), soit une base par observation, alors on obtient un *full rank MRF*, autorisant de facto la plus grande variance possible du terme spatial. En réduisant *k*, nous obtenons des modèles d'ordre inférieur (*lower rank MRF*) dont le terme spatial est plus lisse et moins complexe.
 
 $$
 \begin{aligned}
@@ -364,9 +365,7 @@ $$ {#eq-gam4}
 
 Pour illustrer la réalisation des différentes modèles GAM (non spatiale, avec une spline bivariée sur les coordonnées géographiques et avec une spline spatiale de type RMF), nous utilisons le jeu de données sur les parts modales dans la région métropolitaine de Montréal ([section @sec-0112]). Ce jeu de données comprend trois variables mesurant respectivement la proportion des individus utilisant la voiture, le transport collectif ou un mode actif (marche ou vélo) comme mode de transport principal pour ses déplacements domicile-travail en 2021 pour les secteurs de recensement (@fig-datamtlCarto).
 
-Lorsqu'un ensemble de variables sont des proportions d'un total (leur somme donne 1 ou 100), alors on désigne l'ensemble de ces variables comme des données compositionnelles. Ces données doivent être analysées avec des méthodes spécifiques, car elles ont un comportement particulier. La diminution de l'une d'entre elle provoque nécessairement l'augmentation d'une autre. Elles ne sont donc pas indépendantes et certaines catégories ont même tendance à exister simultanément ou au contraire se repousser.
-
-L'analyse de données compositionnelles est un domaine en soit et sort du matériel que nous souhaitons couvrir dans ce livre. Il existe d'excellentes ressources et packages R sur le sujet [@van2013analyzing; @comp_pkg2024; @comp_pkg2025].
+Lorsqu'un ensemble de variables sont des proportions d'un total (leur somme donne 1 ou 100), alors on désigne l'ensemble de ces variables comme des données compositionnelles. Ces données doivent être analysées avec des méthodes spécifiques, car elles ont un comportement particulier. La diminution de l'une d'entre elle provoque nécessairement l'augmentation d'une autre. Elles ne sont donc pas indépendantes et certaines catégories ont même tendance à exister simultanément ou au contraire se repousser. L'analyse de données compositionnelles est un domaine en soit et sort du matériel que nous souhaitons couvrir dans ce livre. Il existe d'excellentes ressources et *packages* R sur le sujet [@van2013analyzing; @comp_pkg2024; @comp_pkg2025].
 
 Nous utilisons ici l'approche du log des ratios (*alr*). Il s'agit d'une transformation que l'on peut appliquer aux données compositionnelles pour pouvoir les analyser avec des méthodes classiques de statistiques. On lui préfère généralement une autre méthode de transformation, soit celle isométrique des log ratios (*ilr*), mais cette dernière produit des résultats plus difficiles à interpréter [@greenacre2021compositional]. Nous utiliserons donc l'approche *alr* dans cet exemple. La transformation *alr* est décrite par la formule suivante :
 
@@ -470,7 +469,7 @@ Pour modéliser cette variable, nous utilisons deux ensembles de variables indé
 -   Pourcentage de personnes issues des minorités visibles (`prt_minorite_vis`).
 -   Pourcentage de ménages monoparentaux (`prt_monoparental`).
 -   Taux de chômage (`prt_chomage`).
--   Revenu médian (`revenu_median`).
+-   Revenu médian des ménages en milliers de dollars (`revenu_median`).
 -   Pourcentage de personnes à faible revenu (`prt_personnes_faibles_revenu`).
 
 2.  Des variables mesurant les niveaux d'accessibilité :
@@ -1089,7 +1088,7 @@ moran.mc(residuals(à compléter)
 moran.mc(à compléter)
 ```
 
-Correction à la [section @sec-08051].
+Correction à la [section @sec-08061].
 :::
 :::
 
@@ -1099,7 +1098,7 @@ Correction à la [section @sec-08051].
 ::: bloc_exercice-icon
 :::
 
-**Exercice 2.** Réalisation d'un modèle GAM avec une spline bivariée sur les coordonnées géographiques
+**Exercice 2.** Réalisation d'un modèle GAM avec une spline bivariée
 :::
 
 ::: bloc_exercice-body
@@ -1111,43 +1110,15 @@ Correction à la [section @sec-08051].
 #| eval: false
 # Chargement du jeu de données sur l'agglomération Lyonnaise
 load("data/Lyon.Rdata")
-# Ajout des coordonnées x et y
-XY <- st_coordinates(st_centroid(LyonIris))
-LyonIris$X <- XY[,1]
-LyonIris$Y <- XY[,2]
-# Ajout des coordonnées x et y
-Modele.GAMSpline <- gam(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed+
-                        s(X,Y, bs = 'gp', m = 3),
-                        data = LyonIris, family = scat)
+# Ajout des coordonnées x et y dans la couche sf LyonIris
+à compléter
+# Modèle GAM avec la distribution de student et une spline
+# sur les coordonnées x et y avec la distribution de Student
+Modele.GAMSpline <- à compléter
 summary(Modele.GAMSpline)
 ```
 
-Correction à la [section @sec-08052].
-:::
-:::
-
-
-
-
-::: bloc_exercice
-::: bloc_exercice-header
-::: bloc_exercice-icon
-:::
-
-**Exercice 3.** Réalisation d'un modèle GAM avec une spline de type RMF
-:::
-
-::: bloc_exercice-body
-
-```{r}
-#| echo: true 
-#| message: false 
-#| warning: false 
-#| eval: false
-
-```
-
-Correction à la [section @sec-08053].
+Correction à la [section @sec-08062].
 :::
 :::
 

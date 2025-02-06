@@ -270,7 +270,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
 <li><a href="#sec-08061" id="toc-sec-08061" class="nav-link" data-scroll-target="#sec-08061"><span class="header-section-number">8.6.1</span> Exercice&nbsp;1</a></li>
   <li><a href="#sec-08062" id="toc-sec-08062" class="nav-link" data-scroll-target="#sec-08062"><span class="header-section-number">8.6.2</span> Exercice&nbsp;2</a></li>
-  <li><a href="#sec-08063" id="toc-sec-08063" class="nav-link" data-scroll-target="#sec-08063"><span class="header-section-number">8.6.3</span> Exercice&nbsp;3</a></li>
   </ul>
 </li>
   <li>
@@ -303,8 +302,48 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="header-section-number">8.1</span> Exercices du chapitre&nbsp;1</h2>
 <section id="sec-08011" class="level3" data-number="8.1.1"><h3 data-number="8.1.1" class="anchored" data-anchor-id="sec-08011">
 <span class="header-section-number">8.1.1</span> Exercice&nbsp;1</h3>
+<div class="cell">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"data/Lyon.Rdata"</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/spdep/">spdep</a></span><span class="op">)</span></span>
+<span><span class="co">## Matrice de contiguïté selon le partage d'un nœud (Queen)</span></span>
+<span><span class="va">Queen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/poly2nb.html">poly2nb</a></span><span class="op">(</span><span class="va">LyonIris</span>, queen<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">W.Queen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">Rook</span>, zero.policy<span class="op">=</span><span class="cn">TRUE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
+<span><span class="co"># I de Moran sur la variable lden elon l’hypothèse de la normalité</span></span>
+<span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.test.html">moran.test</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">$</span><span class="va">Lden</span>, listw<span class="op">=</span><span class="va">W.Queen</span>, zero.policy<span class="op">=</span><span class="cn">TRUE</span>, randomisation <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co"># I de Moran sur la variable lden selon la normalité selon l’hypothèse de la randomisation</span></span>
+<span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.test.html">moran.test</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">$</span><span class="va">Lden</span>, listw<span class="op">=</span><span class="va">W.Queen</span>, zero.policy<span class="op">=</span><span class="cn">TRUE</span>, randomisation <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co"># I de Moran sur la variable lden selon des permutations Monte-Carlo</span></span>
+<span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">$</span><span class="va">Lden</span>, listw<span class="op">=</span><span class="va">W.Queen</span>, zero.policy<span class="op">=</span><span class="cn">TRUE</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section><section id="sec-08012" class="level3" data-number="8.1.2"><h3 data-number="8.1.2" class="anchored" data-anchor-id="sec-08012">
 <span class="header-section-number">8.1.2</span> Exercice&nbsp;2</h3>
+<div class="cell">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"data/Lyon.Rdata"</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/spdep/">spdep</a></span><span class="op">)</span></span>
+<span><span class="co"># Modèle MCO</span></span>
+<span><span class="va">formule</span> <span class="op">&lt;-</span> <span class="st">"Lden ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed"</span></span>
+<span><span class="va">Modele.MCO</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">formule</span>, data <span class="op">=</span> <span class="va">LyonIris</span><span class="op">)</span></span>
+<span><span class="co"># Résultats du modèle</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">Modele.MCO</span><span class="op">)</span></span>
+<span><span class="co">## Matrice de contiguïté (Rook)</span></span>
+<span><span class="va">Rook</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/poly2nb.html">poly2nb</a></span><span class="op">(</span><span class="va">LyonIris</span>, queen<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">W.Rook</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">Rook</span>, zero.policy<span class="op">=</span><span class="cn">TRUE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
+<span><span class="co"># I de Moran sur les résidus du modèle global (MCO)</span></span>
+<span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/lm.morantest.html">lm.morantest</a></span><span class="op">(</span><span class="va">Modele.MCO</span>, <span class="va">W.Rook</span><span class="op">)</span></span>
+<span><span class="co"># Cartographie des résidus</span></span>
+<span><span class="va">LyonIris</span><span class="op">$</span><span class="va">MCO.Residus</span> <span class="op">&lt;-</span> <span class="va">Modele.MCO</span><span class="op">$</span><span class="va">residuals</span></span>
+<span><span class="fu">tmap_mode</span><span class="op">(</span><span class="st">"plot"</span><span class="op">)</span></span>
+<span><span class="fu">tm_shape</span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span><span class="op">+</span></span>
+<span>         <span class="fu">tm_borders</span><span class="op">(</span>col<span class="op">=</span><span class="st">"gray25"</span>, lwd<span class="op">=</span><span class="fl">.5</span><span class="op">)</span><span class="op">+</span></span>
+<span>         <span class="fu">tm_fill</span><span class="op">(</span>col<span class="op">=</span><span class="st">"MCO.Residus"</span>, n <span class="op">=</span> <span class="fl">6</span>, style <span class="op">=</span> <span class="st">"pretty"</span>, </span>
+<span>                 legend.format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>text.separator <span class="op">=</span> <span class="st">"à"</span>,</span>
+<span>                                      decimal.mark <span class="op">=</span> <span class="st">","</span><span class="op">)</span>,</span>
+<span>                 midpoint <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>                 palette <span class="op">=</span> <span class="st">"-RdBu"</span>, </span>
+<span>                 title <span class="op">=</span> <span class="st">"MCO"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>         <span class="fu">tm_layout</span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span><span class="op">+</span> </span>
+<span>         <span class="fu">tm_scale_bar</span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section><section id="sec-08013" class="level3" data-number="8.1.3"><h3 data-number="8.1.3" class="anchored" data-anchor-id="sec-08013">
 <span class="header-section-number">8.1.3</span> Exercice&nbsp;3</h3>
 </section></section><section id="sec-0802" class="level2" data-number="8.2"><h2 data-number="8.2" class="anchored" data-anchor-id="sec-0802">
@@ -312,12 +351,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="sec-08021" class="level3" data-number="8.2.1"><h3 data-number="8.2.1" class="anchored" data-anchor-id="sec-08021">
 <span class="header-section-number">8.2.1</span> Exercice&nbsp;1</h3>
 <div class="cell">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/spatialreg/">spatialreg</a></span><span class="op">)</span></span>
-<span><span class="co"># Matrice de contiguïté selon le partage d'un segment (Rook)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"data/Lyon.Rdata"</span><span class="op">)</span></span>
-<span><span class="va">Rook</span> <span class="op">&lt;-</span> <span class="fu">poly2nb</span><span class="op">(</span><span class="va">LyonIris</span>, queen<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">W.Rook</span> <span class="op">&lt;-</span> <span class="fu">nb2listw</span><span class="op">(</span><span class="va">Rook</span>, zero.policy<span class="op">=</span><span class="cn">TRUE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
+<span><span class="co"># Matrice de contiguïté selon le partage d'un segment</span></span>
+<span><span class="va">Rook</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/poly2nb.html">poly2nb</a></span><span class="op">(</span><span class="va">LyonIris</span>, queen<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">W.Rook</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">Rook</span>, zero.policy<span class="op">=</span><span class="cn">TRUE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
 <span><span class="co"># Modèles</span></span>
 <span><span class="va">formule</span> <span class="op">&lt;-</span> <span class="st">"PM25 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed"</span></span>
 <span><span class="co"># Modèles MOC, SLX, SDM, SDEM, SAR, SEM, Manski</span></span>
@@ -332,23 +371,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section><section id="sec-08022" class="level3" data-number="8.2.2"><h3 data-number="8.2.2" class="anchored" data-anchor-id="sec-08022">
 <span class="header-section-number">8.2.2</span> Exercice&nbsp;2</h3>
 <div class="cell">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu">lm.LMtests</span><span class="op">(</span>model <span class="op">=</span> <span class="va">MCO</span>,</span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/lm.RStests.html">lm.LMtests</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">MCO</span>,</span>
 <span>                   listw <span class="op">=</span> <span class="va">W.Rook</span>,</span>
 <span>                   test <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"LMlag"</span>,<span class="st">"LMerr"</span>,<span class="st">"RLMlag"</span>,<span class="st">"RLMerr"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="sec-08023" class="level3" data-number="8.2.3"><h3 data-number="8.2.3" class="anchored" data-anchor-id="sec-08023">
 <span class="header-section-number">8.2.3</span> Exercice&nbsp;3</h3>
 <div class="cell">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Valeurs d'AIC et de BIC</span></span>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Valeurs d'AIC et de BIC</span></span>
 <span><span class="va">AICs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html">AIC</a></span><span class="op">(</span><span class="va">MCO</span>, <span class="va">SLX</span>, <span class="va">SDM</span>, <span class="va">SDEM</span>, <span class="va">SAR</span>, <span class="va">SEM</span><span class="op">)</span></span>
 <span><span class="va">BICs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html">BIC</a></span><span class="op">(</span><span class="va">MCO</span>, <span class="va">SLX</span>, <span class="va">SDM</span>, <span class="va">SDEM</span>, <span class="va">SAR</span>, <span class="va">SEM</span><span class="op">)</span></span>
 <span><span class="co">## Autocorrélation spatiale des résidus</span></span>
-<span><span class="va">IMoran.MCO</span>  <span class="op">&lt;-</span> <span class="fu">moran.mc</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">MCO</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span>
-<span><span class="va">IMoran.SLX</span>  <span class="op">&lt;-</span> <span class="fu">moran.mc</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">SLX</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span>
-<span><span class="va">IMoran.SAR</span>  <span class="op">&lt;-</span> <span class="fu">moran.mc</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">SAR</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span>
-<span><span class="va">IMoran.SEM</span>  <span class="op">&lt;-</span> <span class="fu">moran.mc</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">SEM</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span>
-<span><span class="va">IMoran.SDM</span>  <span class="op">&lt;-</span> <span class="fu">moran.mc</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">SDM</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span>
-<span><span class="va">IMoran.SDEM</span> <span class="op">&lt;-</span> <span class="fu">moran.mc</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">SDEM</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span>
+<span><span class="va">IMoran.MCO</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">MCO</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span>
+<span><span class="va">IMoran.SLX</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">SLX</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span>
+<span><span class="va">IMoran.SAR</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">SAR</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span>
+<span><span class="va">IMoran.SEM</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">SEM</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span>
+<span><span class="va">IMoran.SDM</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">SDM</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span>
+<span><span class="va">IMoran.SDEM</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">SDEM</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">MoranI.s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">IMoran.MCO</span><span class="op">$</span><span class="va">statistic</span>, <span class="va">IMoran.SLX</span><span class="op">$</span><span class="va">statistic</span>,</span>
 <span>             <span class="va">IMoran.SAR</span><span class="op">$</span><span class="va">statistic</span>, <span class="va">IMoran.SEM</span><span class="op">$</span><span class="va">statistic</span>,</span>
@@ -379,7 +418,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="sec-08041" class="level3" data-number="8.4.1"><h3 data-number="8.4.1" class="anchored" data-anchor-id="sec-08041">
 <span class="header-section-number">8.4.1</span> Exercice&nbsp;1</h3>
 <div class="cell">
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rsbivand/spgwr/">spgwr</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"data/Lyon.Rdata"</span><span class="op">)</span></span>
 <span><span class="co"># Ajout des coordonnées x et y</span></span>
@@ -423,7 +462,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section><section id="sec-08042" class="level3" data-number="8.4.2"><h3 data-number="8.4.2" class="anchored" data-anchor-id="sec-08042">
 <span class="header-section-number">8.4.2</span> Exercice&nbsp;2</h3>
 <div class="cell">
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Modèle MCO</span></span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Modèle MCO</span></span>
 <span><span class="va">Modele.Global</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">formule</span>, data <span class="op">=</span> <span class="va">LyonIris</span><span class="op">)</span></span>
 <span><span class="co"># Comparaison des R2</span></span>
 <span><span class="va">R2.global</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">Modele.Global</span><span class="op">)</span><span class="op">$</span><span class="va">r.squared</span></span>
@@ -442,7 +481,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section><section id="sec-08043" class="level3" data-number="8.4.3"><h3 data-number="8.4.3" class="anchored" data-anchor-id="sec-08043">
 <span class="header-section-number">8.4.3</span> Exercice&nbsp;3</h3>
 <div class="cell">
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/">tmap</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/">tmap</a></span><span class="op">)</span></span>
 <span><span class="co"># Récupération du R carré locaux et valeurs de t locales</span></span>
 <span><span class="va">LyonIris</span><span class="op">$</span><span class="va">GWR.R2</span> <span class="op">&lt;-</span> <span class="va">Modele.GWR</span><span class="op">$</span><span class="va">SDF</span><span class="op">$</span><span class="va">localR2</span></span>
 <span><span class="va">VarsIndep</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Pct0_14"</span>, <span class="st">"Pct_65"</span>, <span class="st">"Pct_Img"</span>, <span class="st">"Pct_brevet"</span>, <span class="st">"NivVieMed"</span><span class="op">)</span></span>
@@ -527,8 +566,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="header-section-number">8.5</span> Exercices du chapitre&nbsp;5</h2>
 <section id="sec-08051" class="level3" data-number="8.5.1"><h3 data-number="8.5.1" class="anchored" data-anchor-id="sec-08051">
 <span class="header-section-number">8.5.1</span> Exercice&nbsp;1</h3>
+</section><section id="sec-08052" class="level3" data-number="8.5.2"><h3 data-number="8.5.2" class="anchored" data-anchor-id="sec-08052">
+<span class="header-section-number">8.5.2</span> Exercice&nbsp;2</h3>
+</section><section id="sec-08053" class="level3" data-number="8.5.3"><h3 data-number="8.5.3" class="anchored" data-anchor-id="sec-08053">
+<span class="header-section-number">8.5.3</span> Exercice&nbsp;3</h3>
+</section></section><section id="sec-0806" class="level2" data-number="8.6"><h2 data-number="8.6" class="anchored" data-anchor-id="sec-0806">
+<span class="header-section-number">8.6</span> Exercices du chapitre&nbsp;6</h2>
+<section id="sec-08061" class="level3" data-number="8.6.1"><h3 data-number="8.6.1" class="anchored" data-anchor-id="sec-08061">
+<span class="header-section-number">8.6.1</span> Exercice&nbsp;1</h3>
 <div class="cell">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">mgcv</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-forge.r-project.org/projects/car/">car</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://florianhartig.github.io/DHARMa/">DHARMa</a></span><span class="op">)</span></span>
@@ -560,33 +607,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">Modele.GAM2</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Matrice de contiguïté selon le partage d'un nœud </span></span>
-<span><span class="va">queen_nb</span> <span class="op">&lt;-</span> <span class="fu">poly2nb</span><span class="op">(</span><span class="va">LyonIris</span>, queen <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">queen_w</span> <span class="op">&lt;-</span> <span class="fu">nb2listw</span><span class="op">(</span><span class="va">queen_nb</span>, style <span class="op">=</span> <span class="st">'W'</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">queen_nb</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/poly2nb.html">poly2nb</a></span><span class="op">(</span><span class="va">LyonIris</span>, queen <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">queen_w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">queen_nb</span>, style <span class="op">=</span> <span class="st">'W'</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># I de Moran sur les résidus gaussiens</span></span>
-<span><span class="fu">moran.mc</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">Modele.GAM2</span>, </span>
+<span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">Modele.GAM2</span>, </span>
 <span>                   type <span class="op">=</span> <span class="st">'pearson'</span><span class="op">)</span>, </span>
 <span>                   listw <span class="op">=</span> <span class="va">queen_w</span>, nsim <span class="op">=</span> <span class="fl">999</span>,</span>
 <span>                   zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># I de Moran sur les résidus simulés</span></span>
-<span><span class="fu">moran.mc</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">GAM2.res</span>, </span>
+<span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">GAM2.res</span>, </span>
 <span>                   type <span class="op">=</span> <span class="st">'pearson'</span><span class="op">)</span>, </span>
 <span>                   listw <span class="op">=</span> <span class="va">queen_w</span>, nsim <span class="op">=</span> <span class="fl">999</span>,</span>
 <span>                   zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="sec-08052" class="level3" data-number="8.5.2"><h3 data-number="8.5.2" class="anchored" data-anchor-id="sec-08052">
-<span class="header-section-number">8.5.2</span> Exercice&nbsp;2</h3>
-</section><section id="sec-08053" class="level3" data-number="8.5.3"><h3 data-number="8.5.3" class="anchored" data-anchor-id="sec-08053">
-<span class="header-section-number">8.5.3</span> Exercice&nbsp;3</h3>
-</section></section><section id="sec-0806" class="level2" data-number="8.6"><h2 data-number="8.6" class="anchored" data-anchor-id="sec-0806">
-<span class="header-section-number">8.6</span> Exercices du chapitre&nbsp;6</h2>
-<section id="sec-08061" class="level3" data-number="8.6.1"><h3 data-number="8.6.1" class="anchored" data-anchor-id="sec-08061">
-<span class="header-section-number">8.6.1</span> Exercice&nbsp;1</h3>
 </section><section id="sec-08062" class="level3" data-number="8.6.2"><h3 data-number="8.6.2" class="anchored" data-anchor-id="sec-08062">
 <span class="header-section-number">8.6.2</span> Exercice&nbsp;2</h3>
-</section><section id="sec-08063" class="level3" data-number="8.6.3"><h3 data-number="8.6.3" class="anchored" data-anchor-id="sec-08063">
-<span class="header-section-number">8.6.3</span> Exercice&nbsp;3</h3>
+<div class="cell">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Chargement du jeu de données sur l'agglomération Lyonnaise</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"data/Lyon.Rdata"</span><span class="op">)</span></span>
+<span><span class="co"># Ajout des coordonnées x et y dans la couche sf LyonIris</span></span>
+<span><span class="va">XY</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html">st_coordinates</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_centroid</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">LyonIris</span><span class="op">$</span><span class="va">X</span> <span class="op">&lt;-</span> <span class="va">XY</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span></span>
+<span><span class="va">LyonIris</span><span class="op">$</span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="va">XY</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span></span>
+<span><span class="co"># Modèle GAM avec la distribution de student et une spline</span></span>
+<span><span class="co"># sur les coordonnées x et y avec la distribution de Student</span></span>
+<span><span class="va">Modele.GAMSpline</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/gam.html">gam</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span><span class="op">+</span></span>
+<span>                        <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html">s</a></span><span class="op">(</span><span class="va">X</span>,<span class="va">Y</span>, bs <span class="op">=</span> <span class="st">'gp'</span>, m <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>,</span>
+<span>                        data <span class="op">=</span> <span class="va">LyonIris</span>, family <span class="op">=</span> <span class="va">scat</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">Modele.GAMSpline</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section></section><section id="sec-0706" class="level2" data-number="8.7"><h2 data-number="8.7" class="anchored" data-anchor-id="sec-0706">
 <span class="header-section-number">8.7</span> Exercices du chapitre&nbsp;7</h2>
 <section id="sec-07061" class="level3" data-number="8.7.1"><h3 data-number="8.7.1" class="anchored" data-anchor-id="sec-07061">

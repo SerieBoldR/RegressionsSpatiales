@@ -78,7 +78,7 @@ render_quizz(Chap03Quiz)
 ::: bloc_exercice-icon
 :::
 
-**Exercice 1.** Calcul du centre moyen et de la distance standard pour les accidents
+**Exercice 1.** À compléter
 :::
 
 ::: bloc_exercice-body
@@ -102,7 +102,7 @@ Correction à la [section @sec-08031].
 ::: bloc_exercice-icon
 :::
 
-**Exercice 2.** Calcul et cartographie de la densité des accidents dans un maillage irrégulier
+**Exercice 2.** À compléter
 :::
 
 ::: bloc_exercice-body
@@ -126,7 +126,7 @@ Correction à la [section @sec-08032].
 ::: bloc_exercice-icon
 :::
 
-**Exercice 3.** Calcul et cartographie de la densité des accidents dans un maillage régulier
+**Exercice 3.** À compléter
 :::
 
 ::: bloc_exercice-body

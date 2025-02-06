@@ -4,7 +4,58 @@
 
 ### Exercice 1 {#sec-08011}
 
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+load("data/Lyon.Rdata")
+library(spdep)
+## Matrice de contiguïté selon le partage d'un nœud (Queen)
+Queen <- poly2nb(LyonIris, queen=TRUE)
+W.Queen <- nb2listw(Rook, zero.policy=TRUE, style = "W")
+# I de Moran sur la variable lden elon l’hypothèse de la normalité
+moran.test(LyonIris$Lden, listw=W.Queen, zero.policy=TRUE, randomisation = FALSE)
+# I de Moran sur la variable lden selon la normalité selon l’hypothèse de la randomisation
+moran.test(LyonIris$Lden, listw=W.Queen, zero.policy=TRUE, randomisation = FALSE)
+# I de Moran sur la variable lden selon des permutations Monte-Carlo
+moran.mc(LyonIris$Lden, listw=W.Queen, zero.policy=TRUE, nsim=999)
+```
+
 ### Exercice 2 {#sec-08012}
+
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+load("data/Lyon.Rdata")
+library(spdep)
+# Modèle MCO
+formule <- "Lden ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed"
+Modele.MCO <- lm(formule, data = LyonIris)
+# Résultats du modèle
+summary(Modele.MCO)
+## Matrice de contiguïté (Rook)
+Rook <- poly2nb(LyonIris, queen=TRUE)
+W.Rook <- nb2listw(Rook, zero.policy=TRUE, style = "W")
+# I de Moran sur les résidus du modèle global (MCO)
+lm.morantest(Modele.MCO, W.Rook)
+# Cartographie des résidus
+LyonIris$MCO.Residus <- Modele.MCO$residuals
+tmap_mode("plot")
+tm_shape(LyonIris)+
+         tm_borders(col="gray25", lwd=.5)+
+         tm_fill(col="MCO.Residus", n = 6, style = "pretty", 
+                 legend.format = list(text.separator = "à",
+                                      decimal.mark = ","),
+                 midpoint = 0,
+                 palette = "-RdBu", 
+                 title = "MCO") +
+         tm_layout(frame=FALSE)+ 
+         tm_scale_bar(breaks = c(0,5))
+```
+
 
 ### Exercice 3 {#sec-08013}
 
@@ -18,8 +69,8 @@
 #| eval: false
 library(sf)
 library(spatialreg)
-# Matrice de contiguïté selon le partage d'un segment (Rook)
 load("data/Lyon.Rdata")
+# Matrice de contiguïté selon le partage d'un segment
 Rook <- poly2nb(LyonIris, queen=FALSE)
 W.Rook <- nb2listw(Rook, zero.policy=TRUE, style = "W")
 # Modèles
@@ -253,6 +304,14 @@ tmap_arrange(Carte1, Carte2, Carte3, Carte4, Carte5, ncol = 2, nrow=3)
 
 ### Exercice 1 {#sec-08051}
 
+### Exercice 2 {#sec-08052}
+
+### Exercice 3 {#sec-08053}
+
+## Exercices du chapitre 6 {#sec-0806}
+
+### Exercice 1 {#sec-08061}
+
 ```{r}
 #| echo: true 
 #| message: false 
@@ -306,18 +365,26 @@ moran.mc(residuals(GAM2.res,
                    zero.policy = TRUE)
 ```
 
-### Exercice 2 {#sec-08052}
-
-### Exercice 3 {#sec-08053}
-
-## Exercices du chapitre 6 {#sec-0806}
-
-### Exercice 1 {#sec-08061}
-
 ### Exercice 2 {#sec-08062}
 
-### Exercice 3 {#sec-08063}
-
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+# Chargement du jeu de données sur l'agglomération Lyonnaise
+load("data/Lyon.Rdata")
+# Ajout des coordonnées x et y dans la couche sf LyonIris
+XY <- st_coordinates(st_centroid(LyonIris))
+LyonIris$X <- XY[,1]
+LyonIris$Y <- XY[,2]
+# Modèle GAM avec la distribution de student et une spline
+# sur les coordonnées x et y avec la distribution de Student
+Modele.GAMSpline <- gam(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed+
+                        s(X,Y, bs = 'gp', m = 3),
+                        data = LyonIris, family = scat)
+summary(Modele.GAMSpline)
+```
 
 ## Exercices du chapitre 7 {#sec-0706}
 

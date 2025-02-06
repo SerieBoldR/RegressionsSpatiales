@@ -2,8 +2,8 @@
   type: uc
   response: 1
   answers:
-     - "L'instabilité spatiale du modèle"
-     - "La dépendance du modèle"
+     - "L'hétérogénité (non-stationnarité) du modèle MCO"
+     - "La dépendance du modèle MCO"
   help: "Relisez le deuxième encadré à la [section @sec-0411]."
 
 - label: "Un modèle de régression géographiquement pondérée produit autant de régressions que d'entités spatiales dans le jeu de données à l'étude."
@@ -45,7 +45,7 @@
      - "LMZ.F1GWR.test"
      - "LMZ.F2GWR.test"
      - "LMZ.F3GWR.test"
-  help: "Relisez le deuxième encadré à la [section @sec-0423]."
+  help: "Relisez le deuxième encadré à la [section @sec-04213]."
 
 - label: "Quelle fonction du package spgwr permet de vérifier si les coefficients de régression varient significativement dans l'espace?"
   type: uc
@@ -55,5 +55,5 @@
      - "LMZ.F1GWR.test"
      - "LMZ.F2GWR.test"
      - "LMZ.F3GWR.test"
-  help: "Relisez le deuxième encadré à la [section @sec-0423]."
+  help: "Relisez le deuxième encadré à la [section @sec-04213]."
   

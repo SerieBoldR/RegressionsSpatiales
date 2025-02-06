@@ -36,7 +36,7 @@ Avant d'explorer les différents types de régressions spatiales dans les chapit
     -   `ggplot2` et `ggpubr` pour construire des graphiques.
     -   `tmap` pour construire des cartes thématiques.
     -   `RColorBrewer` pour construire une palette de couleur.
- -   Pour les mesures d'autocorrélation spatiale :
+-   Pour les mesures d'autocorrélation spatiale :
     -   `spdep` pour construire des matrices de pondération spatiales et calculer le *I* de Moran.
 :::
 :::
@@ -138,7 +138,7 @@ intitule <- c("Proportion de familles monoparentales",
               "Proportion de minorités visibles",
               "Proportion de chômeurs",
               "Proportion de personnes à faible revenu",
-              "Revenu médian à faible revenu",
+              "Revenu médian des ménages (milliers de dollars)",
               "Habitants au km2",
               "Transports en commun (effectifs)",
               "Automobile (effectifs)",
@@ -319,7 +319,7 @@ Bien entendu, les ordres d'adjacence peuvent être également définis selon le 
 
 ![Relations de voisinage et évaluation de la contiguïté](images/Chap01/FigureAdjacence.png){#fig-Chap01Contiguity2 width="60%" fig-align="center"}
 
-Habituellement appelée $W$, la matrice de contiguïté est binaire selon le partage tant d'un nœud (*Queen* en anglais) (@eq-ContiguiteQueen) que d'un segment commun (*Rook* en anglais) (@eq-ContiguiteRook).
+Habituellement appelée $\mathbf{W}$, la matrice de contiguïté est binaire selon le partage tant d'un nœud (*Queen* en anglais) (@eq-ContiguiteQueen) que d'un segment commun (*Rook* en anglais) (@eq-ContiguiteRook).
 
 $$
  w_{ij} = 
@@ -957,7 +957,7 @@ L'autocorrélation spatiale permet d'estimer la corrélation d'une variable par 
 ::: bloc_objectif-body
 On distingue habituellement les statistiques d'autocorrélation spatiale globales et locales :
 
--   Les statistiques d'autocorrélation spatiale globales qui renvoient une valeur pour l'ensemble de l'espace d'étude. Succinctement, elles permettent de vérifier si les entités proches ou voisines d'une couche géographique ont tendance à être (dis)semblables en fonction d'un phénomène donné (soit une variable).
+-   Les statistiques d'autocorrélation spatiale globales renvoient une valeur pour l'ensemble de l'espace d'étude. Succinctement, elles permettent de vérifier si les entités proches ou voisines d'une couche géographique ont tendance à être (dis)semblables en fonction d'un phénomène donné (soit une variable).
 
 -   Les mesures d'autocorrélation spatiale locales renvoient des valeurs pour chacune des entités spatiales. Succinctement, il s'agit de vérifier si chaque entité spatiale est significativement (dis)semblable de celles voisines ou proches.
 
@@ -989,7 +989,7 @@ $$ {#eq-MoranIa}
 **Standardisation de la matrice de pondération et *I* de Moran**
 :::
 ::: bloc_notes-body 
-Nous avons vu que si la matrice de pondération spatiale est standardisée en ligne ([section @sec-0123]), alors chaque ligne de la matrice vaut 1 et la somme de l'ensemble des valeurs de la matrice est égale au nombre d'entités spatiales ($n$). Or, dans l'@eq-MoranIa), $\Sigma_{i=1}^n \Sigma_{j=1}^n w_{ij}$ représente la somme des pondérations de la matrice, soit $n$ si elles sont standardisées en ligne. Puisque $\frac{n}{n}=1$, alors l'équation du *I* de Moran est simplifiée comme suit :
+Nous avons vu que si la matrice de pondération spatiale est standardisée en ligne ([section @sec-0123]), alors chaque ligne de la matrice vaut 1 et la somme de l'ensemble des valeurs de la matrice est égale au nombre d'entités spatiales ($n$). Or, dans l'@eq-MoranIa, $\Sigma_{i=1}^n \Sigma_{j=1}^n w_{ij}$ représente la somme des pondérations de la matrice, soit $n$ si elles sont standardisées en ligne. Puisque $\frac{n}{n}=1$, alors l'équation du *I* de Moran est simplifiée comme suit :
 
 $$
 I = \frac{\Sigma_{i=1}^n \Sigma_{j=1}^n w_{ij}(x_i-\bar{x})(x_j-\bar{x})}{\Sigma_{i=1}^n (x_i-\bar{x})^2}
@@ -1009,7 +1009,7 @@ Avec une matrice standardisée, la statistique du *I* de Moran varie de -1 à 1 
 
 -   quand $I < 0$, l'autocorrélation est négative, c'est-à-dire que les entités géographiques ont tendance à être dissemblables d'autant plus qu'elles sont voisines ou proches.
 
-Les limites de -1 et 1 sont les maximums théoriques du *I* de Moran. Dans la pratique, elles sont limitées par la matrice spatiale utilisée dans le calcul. En effet, selon la matrice spatiale, le maximum du *I* de Moran peut être inférieur à 1, et son minimum supérieur à -1. Le calcul de ces bornes propres à chaque matrice spatiale peut se faire en utilisant les maximums et minimums des valeurs propres de $\frac{W+W^T}{2}$, quand la matrice spatiale est standardisée. À titre d'exemple, nous calculons ci-dessous les maximums et minimums possibles pour une matrice de contiguïté selon le partage d'un nœud (*Queen*) pour les 506 IRIS de l'agglomération de Lyon. Il apparaît ainsi que pour la matrice matrice de contiguïté selon le partage d'un nœud (*Queen*), quelle soit la variable analysée, la valeur de *I* de Moran ne pourra pas dépasser les limites -0,64 et 1,04.
+Les limites de -1 et 1 sont les maximums théoriques du *I* de Moran. Dans la pratique, elles sont limitées par la matrice spatiale utilisée dans le calcul. En effet, selon la matrice spatiale, le maximum du *I* de Moran peut être inférieur à 1, et son minimum supérieur à -1. Le calcul de ces bornes propres à chaque matrice spatiale peut se faire en utilisant les maximums et minimums des valeurs propres de $\frac{W+W^T}{2}$, quand la matrice spatiale est standardisée. À titre d'exemple, nous calculons ci-dessous les maximums et minimums possibles pour une matrice de contiguïté selon le partage d'un nœud (*Queen*) pour les 506 IRIS de l'agglomération de Lyon. Il apparaît ainsi que pour la matrice de contiguïté selon le partage d'un nœud (*Queen*), quelle soit la variable analysée, la valeur de *I* de Moran ne pourra pas dépasser les limites -0,64 et 1,04.
 
 
 ```{r}
@@ -1443,7 +1443,7 @@ $$
 \frac{\partial y}{\partial x_k}=\beta_k
 $$ {#eq-DP}
 
-Ces effets sont habituellement l'essence de l'intérêt des modèles de régression. Par exemple, une variation de deux unités de la variable $x_k$ devrait entraîner une variation dans $y$ de $2\beta_k$ unités. Cette analyse est souvent le centre d'intérêt des modèles de régression, bien que l'interprétation causale ne soit pas nécessairement directe [@dube2024integrated].
+Ces effets sont habituellement l'essence de l'intérêt des modèles de régression. Par exemple, une variation de deux unités de la variable $x_k$ devrait entraîner une variation dans $y$ de $2\beta_k$ unités, toutes choses étant égales par ailleurs. Cette analyse est souvent le centre d'intérêt des modèles de régression, bien que l'interprétation causale ne soit pas nécessairement directe [@dube2024integrated].
 
 ::: bloc_aller_loin
 ::: bloc_aller_loin-header
@@ -1458,9 +1458,9 @@ Afin de bien maîtriser les principes de base et les hypothèses de la régressi
 :::
 :::
 
-## Pourquoi recourir à des régressions spatiales? {#sec-017}
+## Pourquoi recourir à des régressions spatiales? {#sec-016}
 
-Deux motivations principales peuvent conduire à réaliser des régressions spatiales : la **dépendance spatiale** ou l'**hétérogénéité** du modèle de régression classique appliquées à des données spatiales [@chi2019spatial, pp. 41-43].
+Deux motivations principales peuvent conduire à réaliser des régressions spatiales : la **dépendance spatiale** ou l'**hétérogénéité** du modèle de régression classique appliquées à des données spatiales [@chi2019spatial, p. 41-43].
 
 ### Dépendance spatiale {#sec-0171}
 Dans un modèle, les résidus ($\epsilon$) sont la différence entre les valeurs observées ($y_i$) et les valeurs prédites par le modèle ($\widehat{y_i}$). Une des hypothèses de la régression linéaire multiple est que les observations doivent être indépendantes les unes des autres (*indépendance du terme d'erreur*). Le non-respect de cette hypothèse produit des résultats biaisés, notamment pour les coefficients de régression. Un simple test de présence d’autocorrélation spatiale entre les résidus permet de vérifier si cette hypothèse est respectée ([section @sec-014]).
@@ -1528,7 +1528,7 @@ tm_shape(LyonIris)+
 ::: bloc_aller_loin-body
 **Les modèles d'économétrie spatiale** ([chapitre @sec-chap02] et [chapitre @sec-chap03]) sont des solutions particulièrement intéressantes pour remédier au problème de dépendance spatiale d'un modèle et obtenir des coefficients de régression non biaisés.
 
-**Les modèles linéaires généralisés avec des vecteurs spatiaux** ([chapitre @sec-chap07]) permettent de capturer les tendances spatiales en résumant la matrice de pondérations spatiales $W$.
+**Les modèles linéaires généralisés et ceux avec filtrage spatial** ([chapitre @sec-chap07]) permettent de capturer les tendances spatiales en résumant la matrice de pondérations spatiales $W$.
 :::
 :::
 
@@ -1546,5 +1546,81 @@ L'hétérogénité ou la non-stationnarité (***spatial heterogeneity*** ou ***n
 **Les régressions géographiquement pondérées** ([chapitre @sec-chap04] et [chapitre @sec-chap05]), sont des outils d'exploration particulièrement adaptés pour explorer et cartographier l'instabilité des relations entre les variables dépendante et indépendantes d'un modèle de régression.
 
 **Les modèles généralisés additifs** ([chapitre @sec-chap06]) permettent d'introduire des lissages spatiaux pour capturer les tendances spatiales, soit de manière continues (avec une spline bivariée sur les coordonnées géographiques), soit de manière discrète (avec un lissage par champ aléatoire de Markov).
+:::
+:::
+
+## Quiz de révision {#sec-017}
+
+```{r}
+#| label: quizChapitre01
+#| echo: false 
+#| eval: true 
+#| message: false 
+#| warning: false 
+#| results: asis
+source("code_complementaire/QuizzFunctions.R")
+Chap01Quiz <- quizz("quiz/Chap01.yml", "Chap01")
+render_quizz(Chap01Quiz)
+```
+
+## Exercices de révision {#sec-018}
+
+
+::: bloc_exercice
+::: bloc_exercice-header
+::: bloc_exercice-icon
+:::
+**Exercice 2.** Matrice de contiguïté selon partage d'un segment et I de Moran
+:::
+::: bloc_exercice-body
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+load("data/Lyon.Rdata")
+library(spdep)
+## Matrice de contiguïté selon le partage d'un nœud (Queen)
+à compléter
+# I de Moran sur la variable Lden elon l’hypothèse de la normalité
+à compléter)
+# I de Moran sur la variable Lden selon la normalité selon l’hypothèse de la randomisation
+à compléter
+# I de Moran sur la variable Lden selon des permutations Monte-Carlo
+à compléter
+```
+Correction à la [section @sec-08011].
+:::
+:::
+
+::: bloc_exercice
+::: bloc_exercice-header
+::: bloc_exercice-icon
+:::
+**Exercice 2.** Modèle MCO et dépendance spatiale
+:::
+::: bloc_exercice-body
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+load("data/Lyon.Rdata")
+library(spdep)
+# Modèle MCO
+formule <- "Lden ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed"
+à compléter
+# Résultats du modèle
+à compléter
+## Matrice de contiguïté (Rook)
+à compléter
+
+# I de Moran sur les résidus du modèle global (MCO)
+à compléter
+
+# Cartographie des résidus
+à compléter
+```
+Correction à la [section @sec-08012].
 :::
 :::
