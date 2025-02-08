@@ -97,7 +97,7 @@ ggplot() +
 **Modèles généralisés additifs**
 :::
 ::: bloc_attention-body
-Pour une explication détaillée du fonctionnement des *splines*, vous pouvez consulter le [chapitre sur les GAM](https://serieboldr.github.io/MethodesQuantitatives/11-GAM.html) du livre *Méthodes quantitatives en sciences sociales : un grand bol d'R* [@RBoldAirMethodesQuanti].
+Pour une explication détaillée du fonctionnement des *splines*, vous pouvez consulter le [chapitre sur les GAM](https://serieboldr.github.io/MethodesQuantitatives/11-GAM.html) du livre *Méthodes quantitatives en sciences sociales : un grand bol d'R* [@RBoldAirMethodesQuanti].
 :::
 :::
 

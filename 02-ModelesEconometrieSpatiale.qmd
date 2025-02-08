@@ -68,15 +68,14 @@ Selon Jean Dubé et Diègo Legros, quelques raisons expliquent « le choix d'un 
 library(knitr)
 library(kableExtra)
 
-Modeles <- c("SLX", "SAR", "SEM", "SDM", "SDEM")
-TablSynth <- data.frame(
+tab_synth <- data.frame(
               SLX  = c("X", " ", " ", " ", " ", "VI"),
               SAR  = c(" ", "X", " ", " ", " ", "VD"),
               SEM  = c(" ", " ", "X", "X", " ", "TE"),
               SDM  = c("X", "X", " ", " ", "X", "VI et VD"), 
               SDEM = c("X", " ", "X", "X", "X", "VI et TE")
               )
-rownames(TablSynth) <- c(
+rownames(tab_synth) <- c(
                          "Externalités spatiale",
                          "Effets d'entraînement",
                          "Omission de variables",
@@ -87,7 +86,7 @@ rownames(TablSynth) <- c(
 
 note <- "VD = Variable dépendante. VI = Variables indépendantes. TE = terme d'erreur."
 
-kbl(TablSynth,
+kbl(tab_synth,
 			row.names = TRUE,
 			align= c("c", "c", "c", "c", "c", "c"),
 			format = "markdown",
@@ -176,7 +175,7 @@ Si le modèle SLX offre une solution intéressante pour régler le potentiel pro
 
 Pour illustrer la mise en œuvre dans R des différentes modèles d'économétrie spatiale, nous utilisons le jeu de données sur Lyon ([section @sec-0111]). Les modèles seront construits avec comme variable dépendante le dioxyde d'azote (NO~2~) et cinq variables sociodémographiques comme variables indépendantes ([section @sec-0111]). Le modèle MCO (non spatial) a déjà été présenté à la [section @sec-0171].
 
-Le modèle SLX est construit avec la fonction `lmSLX` du *package* `spatialreg` [@bivand2021review]. Dans le code ci-dessous, remarquez le paramètre `listw = W.Rook` qui est utilisé pour spécifier la matrice de pondérations spatiales.
+Le modèle SLX est construit avec la fonction `lmSLX` du *package* `spatialreg` [@bivand2021review]. Dans le code ci-dessous, remarquez le paramètre `listw = w_rook` qui est utilisé pour spécifier la matrice de pondérations spatiales.
 
 ```{r}
 #| echo: true 
@@ -190,17 +189,17 @@ library(spdep)
 library(spatialreg)
 load("data/Lyon.Rdata")
 ## Matrice de contiguïté selon le partage d'un segment (Rook)
-Rook <- poly2nb(LyonIris, queen=FALSE)
-W.Rook <- nb2listw(Rook, zero.policy=TRUE, style = "W")
+nb_rook <- poly2nb(LyonIris, queen = FALSE)
+w_rook <- nb2listw(nb_rook, zero.policy = TRUE, style = "W")
 ## Construction du modèle MCO
-Modele.MCO <- lm(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+modele_MCO <- lm(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
                  data = LyonIris)
 ## Construction du modèle SLX
-Modele.SLX <- spatialreg::lmSLX(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
-                   listw = W.Rook,   # matrice de pondérations spatiales
+modele_SLX <- spatialreg::lmSLX(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+                   listw = w_rook,   # matrice de pondérations spatiales
                    data = LyonIris)  # dataframe
 ## Résultats du modèle
-summary(Modele.SLX)
+summary(modele_SLX)
 ```
 
 ::: bloc_attention
@@ -229,9 +228,9 @@ Le code suivant permet de calculer ces effets directs et indirects.
 #| message: false 
 #| eval: true
 ## Effets directs, indirects et totaux (uniquement les coefficients)
-impacts(Modele.SLX)
+impacts(modele_SLX)
 ## Effets directs, indirects et totaux (coefficients, valeurs de z et de p)
-summary(impacts(Modele.SLX))
+summary(impacts(modele_SLX))
 ```
 
 À la lecture des valeurs de *p*, nous constatons que seule la variable `Pct0_14` a des impacts direct et indirect significatifs au seuil 0,01. L'augmentation d'un point de pourcentage de la population de moins de 15 ans est associé localement à une réduction de 0,20 de la concentration annuelle du dioxyde d'azote. La même augmentation d'un point de pourcentage dans les entités voisines, entraîne une réduction de 0,78. L'effet total est donc une réduction de 0,98.
@@ -249,16 +248,16 @@ Ce modèle a-t-il corrigé le problème de dépendance spatiale du modèle de r�
 #| fig-align: center
 #| fig-cap: Cartographie des résidus du modèle SLX
 #| out-width: 85%
-legende.parametres <- list(text.separator = "à", 
+legende_parametres <- list(text.separator = "à", 
                            decimal.mark = ",", 
                            big.mark = " ")
-lm.morantest(Modele.SLX, W.Rook, alternative="two.sided")
-LyonIris$SLX.Residus <- residuals(Modele.SLX)
+lm.morantest(modele_SLX, w_rook, alternative="two.sided")
+LyonIris$SLX.Residus <- residuals(modele_SLX)
 tm_shape(LyonIris)+
-  tm_fill(col="SLX.Residus", n = 5, style = "quantile", 
-          legend.format = legende.parametres,
+  tm_fill(col = "SLX.Residus", n = 5, style = "quantile", 
+          legend.format = legende_parametres,
           palette = "-RdBu", title = "Résidus") +
-  tm_layout(frame=FALSE) + 
+  tm_layout(frame = FALSE) + 
   tm_scale_bar(breaks = c(0,5))
 ```
 
@@ -327,12 +326,12 @@ Le modèle SAR est construit avec la fonction `lagsarlm` du *package* `spatialre
 #| message: false 
 #| eval: true
 ## Construction du modèle
-Modele.SAR <- lagsarlm(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
-                              listw=W.Rook,    # matrice de pondérations spatiales
-                              data = LyonIris, # dataframe
-                              type = 'lag')    # Modèle lag par défaut
+modele_SAR <- lagsarlm(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+                             listw = w_rook,  # matrice de pondérations spatiales
+                             data = LyonIris, # dataframe
+                             type = 'lag')    # Modèle lag par défaut
 ## Résultats du modèle
-summary(Modele.SAR, Nagelkerke=TRUE)
+summary(modele_SAR, Nagelkerke = TRUE)
 ```
 
 Dans les résultats ci-dessus, la valeur de *Rho* est de 0,88 (LR = 620, *p* \< 0,001), traduisant un très fort effet d'entraînement. Autrement dit, lorsqu'en moyenne la concentration de dioxyde d'azote augmente dans les IRIS voisines ($\mathbf{Wy}$), elle augmente aussi fortement chaque IRIS ($\mathbf{y}$).
@@ -346,9 +345,9 @@ Dans les résultats ci-dessus, la valeur de *Rho* est de 0,88 (LR = 620, *p* 
 #| message: false 
 #| eval: true
 ## Effets directs, indirects et totaux (uniquement les coefficients)
-impacts(Modele.SAR, listw = W.Rook, R = 999)
+impacts(modele_SAR, listw = w_rook, R = 999)
 ## Effets directs, indirects et totaux (coefficients, valeurs de z et de p)
-summary(impacts(Modele.SAR, listw = W.Rook, R = 999), zstats = TRUE, short = TRUE)
+summary(impacts(modele_SAR, listw = w_rook, R = 999), zstats = TRUE, short = TRUE)
 ```
 
 L'interprétation des effets directs se rapproche de celle des coefficients classiques. Ainsi, selon ce modèle, l'augmentation du niveau de vie médian de 1000 € dans un IRIS est associée avec une diminution moyenne de la concentration de dioxyde d'azote de 0,14 dans cet IRIS. L'effet total est de -0,82, indiquant qu'en moyenne, l'augmentation de 1000 € du niveau de vie médian dans un IRIS est associée avec une diminution moyenne de 0,82 de la concentration de dioxyde d'azote dans l'ensemble des IRIS. Au final, l'effet indirect est simplement la différence entre l'effet total et l'effet direct. Nous pouvons constater ici que les effets indirects sont plus importants que les effets directs.
@@ -368,15 +367,15 @@ Ce modèle a-t-il corrigé le problème de dépendance spatiale du modèle de r�
 #| out-width: 85%
 
 ## Autocorrélation spatiale des résidus
-moran.mc(resid(Modele.SAR), W.Rook, nsim=999)
+moran.mc(resid(modele_SAR), w_rook, nsim = 999)
 ## Cartographie des résidus
-legende.parametres <- list(text.separator = "à", 
+legende_parametres <- list(text.separator = "à", 
                            decimal.mark = ",", 
                            big.mark = " ")
-LyonIris$SAR.Residus <- resid(Modele.SAR)
+LyonIris$SAR.Residus <- resid(modele_SAR)
 tm_shape(LyonIris)+
-  tm_fill(col="SAR.Residus", n = 5, style = "quantile", 
-          legend.format = legende.parametres,
+  tm_fill(col = "SAR.Residus", n = 5, style = "quantile", 
+          legend.format = legende_parametres,
           palette = "-RdBu", title = "Résidus") +
   tm_layout(frame=FALSE) + 
   tm_scale_bar(breaks = c(0,5))
@@ -439,11 +438,11 @@ Le modèle SEM est construit avec la fonction `errorsarlm` du *package* `spatial
 #| message: false 
 #| eval: true
 ## Construction du modèle
-Modele.SEM <- errorsarlm(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
-                         listw=W.Rook,    # matrice de pondérations spatiales
+modele_SEM <- errorsarlm(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+                         listw = w_rook,  # matrice de pondérations spatiales
                          data = LyonIris) # dataframe
 ## Résultats du modèle
-summary(Modele.SEM, Nagelkerke=TRUE)
+summary(modele_SEM, Nagelkerke = TRUE)
 ```
 
 Dans les résultats ci-dessus, la valeur de *lambda* est de 0,91 (LR = 613, *p* \< 0,001), traduisant une très forte autocorrélation spatiale sur le terme d'erreur.
@@ -457,7 +456,7 @@ Ce modèle a-t-il corrigé le problème de dépendance spatiale du modèle de r�
 #| message: false 
 #| eval: true
 ## Autocorrélation spatiale des résidus
-moran.mc(resid(Modele.SEM), W.Rook, nsim=999)
+moran.mc(resid(modele_SEM), w_rook, nsim = 999)
 ```
 
 **Les modèles MCO et SEM sont-ils différents**
@@ -472,7 +471,7 @@ Pour le vérifier, Pace et Lesage [-@pace2008spatial] propose d'appliquer le tes
 #| echo: true 
 #| message: false 
 #| eval: true
-Hausman.test(Modele.SEM)
+Hausman.test(modele_SEM)
 ```
 
 ### Modèle SDM : autocorrélation spatiale sur la variable dépendante et les variables indépendantes {#sec-0214}
@@ -522,12 +521,12 @@ Le modèle SDM est construit avec la fonction `lagsarlm` du *package* `spatialre
 #| message: false 
 #| eval: true
 ## Construction du modèle
-Modele.DurbinSpatial <- lagsarlm(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
-                       listw = W.Rook,    # matrice de pondérations spatiales
+modele_SDM <- lagsarlm(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+                       listw = w_rook,    # matrice de pondérations spatiales
                        data = LyonIris,   # dataframe
                        type = "mixed")
 ## Résultats du modèle
-summary(Modele.DurbinSpatial, Nagelkerke=TRUE)
+summary(modele_SDM, Nagelkerke = TRUE)
 ```
 
 **Effets directs, indirects et totaux**
@@ -537,9 +536,9 @@ summary(Modele.DurbinSpatial, Nagelkerke=TRUE)
 #| message: false 
 #| eval: true
 # Effets directs, indirects et totaux (uniquement les coefficients)
-impacts(Modele.DurbinSpatial, listw = W.Rook, R = 999)
+impacts(modele_SDM, listw = w_rook, R = 999)
 # Effets directs, indirects et totaux (coefficients, valeurs de z et de p)
-summary(impacts(Modele.DurbinSpatial, listw = W.Rook, R = 999), zstats = TRUE, short = TRUE)
+summary(impacts(modele_SDM, listw = w_rook, R = 999), zstats = TRUE, short = TRUE)
 ```
 
 **Dépendance spatiale du modèle SDM?**
@@ -550,7 +549,7 @@ Avec une valeur du *I* de Moran de -0,005 (*p* = 0,498), les résidus du modè
 #| echo: true 
 #| message: false 
 #| eval: true
-moran.mc(resid(Modele.DurbinSpatial), W.Rook, nsim=999)
+moran.mc(resid(modele_SDM), w_rook, nsim = 999)
 ```
 
 ### Modèle SDEM : autocorrélation spatiale sur les variables indépendantes et sur le terme d'erreur {#sec-0215}
@@ -598,12 +597,12 @@ Le modèle SDEM est construit avec la fonction `errorsarlm` du *package* `spatia
 #| message: false 
 #| eval: true
 ## Construction du modèle
-Modele.DurbinErreur <- errorsarlm(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
-                                  listw=W.Rook,    # matrice de pondérations spatiales
-                                  data = LyonIris, # dataframe
-                                  etype = 'emixed')
+modele_SDEM <- errorsarlm(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+                          listw = w_rook,  # matrice de pondérations spatiales
+                          data = LyonIris, # dataframe
+                          etype = 'emixed')
 ## Résultats du modèle
-summary(Modele.DurbinErreur, Nagelkerke=TRUE)
+summary(modele_SDEM, Nagelkerke = TRUE)
 ```
 
 **Effets directs, indirects et totaux**
@@ -613,9 +612,9 @@ summary(Modele.DurbinErreur, Nagelkerke=TRUE)
 #| message: false 
 #| eval: true
 ## Effets directs, indirects et totaux (uniquement les coefficients)
-impacts(Modele.DurbinErreur, listw = W.Rook, R = 999)
+impacts(modele_SDEM, listw = w_rook, R = 999)
 ## Effets directs, indirects et totaux (coefficients, valeurs de z et de p)
-summary(impacts(Modele.DurbinErreur, listw = W.Rook, R = 999), zstats = TRUE, short = TRUE)
+summary(impacts(modele_SDEM, listw = w_rook, R = 999), zstats = TRUE, short = TRUE)
 ```
 
 **Dépendance spatiale du modèle SDEM?**
@@ -626,7 +625,7 @@ Avec une valeur du *I* de Moran de -0,010 (*p* = 0,619), les résidus du modè
 #| echo: true 
 #| message: false 
 #| eval: true
-moran.mc(resid(Modele.DurbinErreur), W.Rook, nsim=999)
+moran.mc(resid(modele_SDEM), w_rook, nsim = 999)
 ```
 
 ### Modèle généralisé : autocorrélation spatiale de l'ensemble des variables et composantes du modèle {#sec-0216}
@@ -656,17 +655,17 @@ D'une part, certains auteurs notent que des problèmes peuvent survenir lorsque 
 #| message: false 
 #| eval: true
 ## Construction du modèle
-Modele.Manski <- sacsarlm(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
-                          listw=W.Rook,    # matrice de pondérations spatiales
+modele_Manski <- sacsarlm(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+                          listw = w_rook,  # matrice de pondérations spatiales
                           data = LyonIris, # dataframe
                           type="sacmixed")
 ## Résultats du modèle
-summary(Modele.Manski, Nagelkerke=TRUE)
+summary(modele_Manski, Nagelkerke = TRUE)
 ## Effets marginaux
-impacts(Modele.Manski, listw=W.Rook)
-summary(impacts(Modele.Manski,listw=W.Rook,R=500),zstats=TRUE)
+impacts(modele_Manski, listw = w_rook)
+summary(impacts(modele_Manski,listw = w_rook, R = 500), zstats=TRUE)
 ## Autocorrélation spatiale des résidus
-moran.mc(resid(Modele.Manski), W.Rook, nsim=999)
+moran.mc(resid(modele_Manski), w_rook, nsim = 999)
 ```
 
 ## Quel modèle choisir? {#sec-022}
@@ -710,8 +709,8 @@ Dans R, ces tests LM sont calculés sur le modèle MCO avec la fonction `lm.LMte
 #| echo: true 
 #| message: false 
 #| eval: true
-summary(lm.LMtests(model = Modele.MCO,
-                   listw = W.Rook,
+summary(lm.LMtests(model = modele_MCO,
+                   listw = w_rook,
                    test = c("LMlag","LMerr","RLMlag","RLMerr")))
 ```
 
@@ -770,21 +769,21 @@ Appliquons la stratégie « général vers le particulier » à notre jeu de d
 formule <- 'NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed'
 # Étape A. Sélection d’un modèle modèle mixte à partir 
 # des coefficients autorégressifs du modèle généralisé
-Manski  <- sacsarlm(formule, listw=W.Rook, data = LyonIris, type="sacmixed")
-Manski.lambda <- list(lambda = Manski$lambda,
-                      se     = Manski$lambda.se,
-                      z      = Manski$lambda / Manski$lambda.se,
-                      p      = 2 * (1 - pnorm(abs(Manski$lambda / Manski$lambda.se))))
+manski <- sacsarlm(formule, listw = w_rook, data = LyonIris, type="sacmixed")
+manski_lambda <- list(lambda = manski$lambda,
+                      se     = manski$lambda.se,
+                      z      = manski$lambda / manski$lambda.se,
+                      p      = 2 * (1 - pnorm(abs(manski$lambda / manski$lambda.se))))
   
-Manski.rho <- list(rho = Manski$rho,
-                   se  = Manski$rho.se,
-                   z   = Manski$rho / Manski$rho.se,
-                   p   = 2 * (1 - pnorm(abs(Manski$rho / Manski$rho.se))))
+manski_rho <- list(rho = manski$rho,
+                   se  = manski$rho.se,
+                   z   = manski$rho / manski$rho.se,
+                   p   = 2 * (1 - pnorm(abs(manski$rho / manski$rho.se))))
 
-Resultats.Manski <- data.frame(Parametre = c("lambda", "Rho"),
-                               Coef      = c(Manski.lambda$lambda, Manski.rho$rho),
-                               z         = c(Manski.lambda$z, Manski.rho$z),
-                               p         = c(Manski.lambda$p, Manski.rho$p)
+manski_resultats <- data.frame(Parametre = c("lambda", "Rho"),
+                               Coef      = c(manski_lambda$lambda, manski_rho$rho),
+                               z         = c(manski_lambda$z, manski_rho$z),
+                               p         = c(manski_lambda$p, manski_rho$p)
                               )
 ```
 
@@ -795,7 +794,7 @@ Resultats.Manski <- data.frame(Parametre = c("lambda", "Rho"),
 #| message: false
 #| warning: false
 #| eval: true
-kbl(Resultats.Manski,
+kbl(manski_resultats,
 		row.names = FALSE,
     digits = 3,
 		format.args = list(decimal.mark = ',', big.mark = " "),
@@ -816,8 +815,8 @@ Les résultats du modèle SDM montre que :
 3. Au final, nous retenons donc le modèle SDM.
 
 ```{r}
-Manski  <- sacsarlm(formule, listw=W.Rook, data = LyonIris, type="sacmixed")
-SDM <- lagsarlm(formule, listw = W.Rook, data = LyonIris, type = "mixed")
+manski <- sacsarlm(formule, listw = w_rook, data = LyonIris, type="sacmixed")
+SDM <- lagsarlm(formule, listw = w_rook, data = LyonIris, type = "mixed")
 summary(SDM)
 ```
 
@@ -831,8 +830,8 @@ Avec les tests du ratio de vraisemblance sur les modèles spatiaux, nous pouvons
 #| message: false 
 #| eval: true
 ## SDM et SEM sont-ils significativement différents?
-LR.Sarlm(Modele.DurbinSpatial, Modele.SAR)
-anova(Modele.DurbinSpatial, Modele.SAR)
+LR.Sarlm(modele_SDM, modele_SAR)
+anova(modele_SDM, modele_SAR)
 ```
 
 À l'inverse, la différence entre les valeurs du log-vraisemblance des modèles SDEM et SEM n'est pas significative (4,9728, *p* = 0,42), signalant que l'utilisation d'un modèle SDEM comparativement à un modèle SEM n'est pas nécessaire.
@@ -842,8 +841,8 @@ anova(Modele.DurbinSpatial, Modele.SAR)
 #| message: false 
 #| eval: true
 ## SDEM et SEM sont-ils significativement différents?
-LR.Sarlm(Modele.DurbinErreur, Modele.SEM)
-anova(Modele.DurbinErreur, Modele.SEM)
+LR.Sarlm(modele_SDEM, modele_SEM)
+anova(modele_SDEM, modele_SEM)
 ```
 
 ### Mesures AIC et BIC et dépendance spatiale {#sec-0224}
@@ -859,30 +858,30 @@ Nous pouvons aussi comparer l'autocorrélation spatiale des résidus des modèle
 #| message: false 
 #| eval: true
 ## Valeurs d'AIC et de BIC
-AICs <- AIC(Modele.MCO, Modele.SLX, Modele.SAR, Modele.SEM, 
-            Modele.DurbinSpatial, Modele.DurbinErreur)
-BICs <- BIC(Modele.MCO, Modele.SLX, Modele.SAR, Modele.SEM, 
-            Modele.DurbinSpatial, Modele.DurbinErreur)
+AICs <- AIC(modele_MCO, modele_SLX, modele_SAR, modele_SEM, 
+            modele_SDM, modele_SDEM)
+BICs <- BIC(modele_MCO, modele_SLX, modele_SAR, modele_SEM, 
+            modele_SDM, modele_SDEM)
 ## Autocorrélation spatiale des résidus
-IMoran.MCO <- moran.mc(resid(Modele.MCO), W.Rook, nsim=999)
-IMoran.SLX <- moran.mc(resid(Modele.SLX), W.Rook, nsim=999)
-IMoran.SLM <- moran.mc(resid(Modele.SAR), W.Rook, nsim=999)
-IMoran.SEM <- moran.mc(resid(Modele.SEM), W.Rook, nsim=999)
-IMoran.DurbinS <- moran.mc(resid(Modele.DurbinSpatial), W.Rook, nsim=999)
-IMoran.DurbinE <- moran.mc(resid(Modele.DurbinErreur), W.Rook, nsim=999)
-MoranI.s <- c(IMoran.MCO$statistic, IMoran.SLX$statistic,
-             IMoran.SLM$statistic, IMoran.SEM$statistic,
-             IMoran.DurbinS$statistic, IMoran.DurbinE$statistic)
-MoranI.p <- c(IMoran.MCO$p.value, IMoran.SLX$p.value,
-             IMoran.SLM$p.value, IMoran.SEM$p.value,
-             IMoran.DurbinS$p.value, IMoran.DurbinE$p.value)
+imoran_mco <- moran.mc(resid(modele_MCO), w_rook, nsim = 999)
+imoran_slx <- moran.mc(resid(modele_SLX), w_rook, nsim = 999)
+imoran_slm <- moran.mc(resid(modele_SAR), w_rook, nsim = 999)
+imoran_sem <- moran.mc(resid(modele_SEM), w_rook, nsim = 999)
+imoran_sdm <- moran.mc(resid(modele_SDM), w_rook, nsim = 999)
+imoran_sdem <- moran.mc(resid(modele_SDEM), w_rook, nsim = 999)
+imoran_s <- c(imoran_mco$statistic, imoran_slx$statistic,
+             imoran_slm$statistic, imoran_sem$statistic,
+             imoran_sdm$statistic, imoran_sdem$statistic)
+imoran_p <- c(imoran_mco$p.value, imoran_slx$p.value,
+             imoran_slm$p.value, imoran_sem$p.value,
+             imoran_sdm$p.value, imoran_sdem$p.value)
 ## Tableau
 Comparaison <- data.frame(Modele = c("MCO", "SLX", "SAR", "SEM", "SDM", "SDEM"),
                           AIC = AICs$AIC,
                           BIC = BICs$BIC,
                           dl = AICs$df,
-                          MoranI = MoranI.s,
-                          MoranIp = MoranI.p)
+                          MoranI = imoran_s,
+                          MoranIp = imoran_p)
 Comparaison
 ```
 
@@ -942,12 +941,12 @@ ggarrange(g1, g2)
 #| warning: false
 formule <- 'NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed'
 MCO     <- lm(formule, data = LyonIris)
-SLX     <- lmSLX(formule, listw = W.Rook, data = LyonIris)
-SDM     <- lagsarlm(formule, listw = W.Rook, data = LyonIris, type = "mixed")
-SDEM    <- errorsarlm(formule, listw=W.Rook, data = LyonIris, etype = 'emixed')
-SAR     <- lagsarlm(formule,listw=W.Rook, data = LyonIris, type = 'lag') 
-SEM     <- errorsarlm(formule, listw=W.Rook, data = LyonIris)
-Manski  <- sacsarlm(formule, listw=W.Rook, data = LyonIris, type="sacmixed")
+SLX     <- lmSLX(formule, listw = w_rook, data = LyonIris)
+SDM     <- lagsarlm(formule, listw = w_rook, data = LyonIris, type = "mixed")
+SDEM    <- errorsarlm(formule, listw = w_rook, data = LyonIris, etype = 'emixed')
+SAR     <- lagsarlm(formule,listw = w_rook, data = LyonIris, type = 'lag') 
+SEM     <- errorsarlm(formule, listw = w_rook, data = LyonIris)
+Manski  <- sacsarlm(formule, listw = w_rook, data = LyonIris, type="sacmixed")
 ```
 :::
 :::
@@ -988,7 +987,7 @@ library(spatialreg)
 # Matrice de contiguïté selon le partage d'un segment (Rook)
 load("data/Lyon.Rdata")
 Rook <- poly2nb(LyonIris, queen=FALSE)
-W.Rook <- nb2listw(Rook, zero.policy=TRUE, style = "W")
+w_rook <- nb2listw(Rook, zero.policy=TRUE, style = "W")
 # Modèles
 formule <- "PM25 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed"
 # Modèles MOC, SLX, SDM, SDEM, SAR, SEM, Manski

@@ -171,12 +171,12 @@ library(stargazer)
 library(knitr)
 library(kableExtra)
 load("data/Lyon.Rdata")
-Modele.Global <- lm(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed, data = LyonIris)
-tab    <- summary(Modele.Global)
-tabReg <- as.data.frame(tab$coefficients)
-tabReg$Variable <- rownames(tabReg)
-tabReg <- tabReg[, c(5, 1:4)]
-tabReg[1, 1] <- "Constante"
+modele_global <- lm(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed, data = LyonIris)
+tab    <- summary(modele_global)
+tab_reg <- as.data.frame(tab$coefficients)
+tab_reg$Variable <- rownames(tab_reg)
+tab_reg <- tab_reg[, c(5, 1:4)]
+tab_reg[1, 1] <- "Constante"
 R2 <- as.character(round(tab$r.squared,4))
 R2adj <- as.character(round(tab$adj.r.squared,4))
 R2 <- gsub("\\.", ",", R2) 
@@ -185,7 +185,7 @@ note <- paste0("Nombre d'observations = ", nrow(LyonIris), ". ",
                "R carré = ", R2, ". ",
                "R carré ajusté = ", R2adj, ".") 
 
-kbl(tabReg,
+kbl(tab_reg,
 			digits = 3,
 			row.names = FALSE,
 			format.args = list(decimal.mark = ',', big.mark = " "),
@@ -223,47 +223,47 @@ xy <- st_coordinates(st_centroid(LyonIris))
 LyonIris$X <- xy[,1]
 LyonIris$Y <- xy[,2]
 ## Optimisation du nombre de voisins avec le CV
-bwCV.voisins  <- gwr.sel(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
-                          data = LyonIris,
-                          method = "cv",          # Méthode cv ou AIC
-                          gweight=gwr.bisquare,   # gwr.gauss ou gwr.bisquare
-                          adapt=TRUE,
-                          verbose = FALSE,
-                          RMSE = TRUE,
-                          longlat = FALSE,
-                          coords=cbind(LyonIris$X,LyonIris$Y))
+bwCVa_voisins <- gwr.sel(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+                        data = LyonIris,
+                        method = "cv",          # Méthode cv ou AIC
+                        gweight = gwr.bisquare,   # gwr.gauss ou gwr.bisquare
+                        adapt = TRUE,
+                        verbose = FALSE,
+                        RMSE = TRUE,
+                        longlat = FALSE,
+                        coords=cbind(LyonIris$X,LyonIris$Y))
 ## Calcul de la GWR
-Modele.GWR <- gwr(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
-              data = LyonIris,
-              adapt=bwCV.voisins,
-              gweight=gwr.bisquare,
-              hatmatrix=TRUE,
-              se.fit=TRUE,
-              coords=cbind(LyonIris$X,LyonIris$Y),
-              longlat=FALSE)
+modele_gwr <- gwr(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+                  data = LyonIris,
+                  adapt = bwCVa_voisins,
+                  gweight = gwr.bisquare,
+                  hatmatrix = TRUE,
+                  se.fit = TRUE,
+                  coords = cbind(LyonIris$X,LyonIris$Y),
+                  longlat = FALSE)
 ## R2
-R2.global <- summary(Modele.Global)$r.squared
-R2.global <- as.character(round(R2.global,4))
-R2.global <- gsub("\\.", ",", R2.global) 
+r2_global <- summary(modele_global)$r.squared
+r2_global <- as.character(round(r2_global,4))
+r2_global <- gsub("\\.", ",", r2_global) 
 
-rss <- sum((Modele.GWR$lm$y - Modele.GWR$SDF$pred)^2) 
-tss <- sum((Modele.GWR$lm$y - mean(Modele.GWR$SDF$pred))^2) 
-R2.GWR <- 1 - (rss / tss)
-R2.GWR <- as.character(round(R2.GWR,4))
-R2.GWR <- gsub("\\.", ",", R2.GWR) 
+rss <- sum((modele_gwr$lm$y - modele_gwr$SDF$pred)^2) 
+tss <- sum((modele_gwr$lm$y - mean(modele_gwr$SDF$pred))^2) 
+r2_gwr <- 1 - (rss / tss)
+r2_gwr <- as.character(round(r2_gwr,4))
+r2_gwr <- gsub("\\.", ",", r2_gwr) 
 
-note <- paste0("R carré du modèle global = ", R2.global, ". R carré du modèle GWR = ", R2.GWR, ".") 
+note <- paste0("R carré du modèle global = ", r2_global, ". R carré du modèle GWR = ", r2_gwr, ".") 
 ## Anova
-GWR.anova <- anova(Modele.GWR)
-tableauAnova <- data.frame(Modèle = c("Résidus du modèle global",
+gwr_anova <- anova(modele_gwr)
+tableau_anova <- data.frame(Modèle = c("Résidus du modèle global",
                                       "Modèle GWR",
                                       "Résidus du modèle GWR"),
-                           dl = GWR.anova$Df,
-                           SumSq = GWR.anova$`Sum Sq`,
-                           MeanSq = GWR.anova$`Mean Sq`,
-                           Fisher = GWR.anova$`F value`)
+                            dl = gwr_anova$Df,
+                            SumSq = gwr_anova$`Sum Sq`,
+                            MeanSq = gwr_anova$`Mean Sq`,
+                            Fisher = gwr_anova$`F value`)
 options(knitr.kable.NA = '')
-kbl(tableauAnova,
+kbl(tableau_anova,
 			digits = 2,
 			row.names = FALSE,
 			format.args = list(decimal.mark = ',', big.mark = " "),
@@ -294,78 +294,78 @@ Deuxièmement, le sens de la relation, c'est-à-dire du coefficient et de sa val
 #| warning: false
 ## Récupération des coefficients de régression et calcul des valeurs de t locales
 library(tmap)
-LyonIris$GWR.R2 <- Modele.GWR$SDF$localR2
-VarsIndep <- c("Pct0_14", "Pct_65", "Pct_Img", "Pct_brevet", "NivVieMed")
-for(e in VarsIndep){
+LyonIris$GWR.R2 <- modele_gwr$SDF$localR2
+vars_indep <- c("Pct0_14", "Pct_65", "Pct_Img", "Pct_brevet", "NivVieMed")
+for(e in vars_indep){
   # Nom des nouvelles variables
-  var.coef <- paste0("GWR.", "B_", e)
-  var.t    <- paste0("GWR.", "T_", e)
+  var_coef <- paste0("GWR.", "B_", e)
+  var_t    <- paste0("GWR.", "T_", e)
   # Récupération des coefficients pour les variables indépendantes
-  LyonIris[[var.coef]] <- Modele.GWR$SDF[[e]]
+  LyonIris[[var_coef]] <- modele_gwr$SDF[[e]]
   # Calcul des valeurs de t pour les variables indépendantes
-  LyonIris[[var.t]]    <- Modele.GWR$SDF[[e]] / Modele.GWR$SDF[[paste0(e, "_se")]]
+  LyonIris[[var_t]]    <- modele_gwr$SDF[[e]] / modele_gwr$SDF[[paste0(e, "_se")]]
 }
 
 # Paramètres pour la légende 
-legende.parametres <- list(text.separator = "à",
+legende_parametres <- list(text.separator = "à",
                            text.less.than = "Moins de",
                            text.or.more =  "et plus",
                            decimal.mark = ",",
                            big.mark = " ")
 
 # Cartographie du R2
-Carte0 <- tm_shape(LyonIris)+
+carte0 <- tm_shape(LyonIris)+
           tm_borders(col="gray25", lwd=.2)+
           tm_fill(col="GWR.R2", 
         		  palette="YlOrBr", 
         		  n=5, style="quantile",
-        		  legend.format = legende.parametres,
+        		  legend.format = legende_parametres,
         		  title = "R2 locaux")+
           tm_layout(frame=FALSE)+
           tm_scale_bar(breaks=c(0,5))
 
-classes.intervalles = c(-Inf, -3.29, -2.58, -1.96, 1.96, 2.58, 3.29, Inf)
-Carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
+classes_intervalles = c(-Inf, -3.29, -2.58, -1.96, 1.96, 2.58, 3.29, Inf)
+carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
           tm_fill(col="GWR.T_Pct0_14", palette="-RdBu", 
                   midpoint = NA,
-                  breaks = classes.intervalles,
-                  legend.format = legende.parametres,
+                  breaks = classes_intervalles,
+                  legend.format = legende_parametres,
                   title = "Moins de 15 ans (%)")+
           tm_layout(frame=FALSE, legend.outside = TRUE)
 
-Carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
+carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
           tm_fill(col="GWR.T_Pct_65", palette="-RdBu",
                   midpoint = NA,
-                  breaks = classes.intervalles,
-                  legend.format = legende.parametres,
+                  breaks = classes_intervalles,
+                  legend.format = legende_parametres,
                   title = "65 ans et plus (%)")+
           tm_layout(frame=FALSE, legend.outside = TRUE)
 
-Carte3 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
+carte3 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
           tm_fill(col="GWR.T_Pct_Img", palette="-RdBu", 
                   midpoint = NA,
-                  breaks = classes.intervalles,
-                  legend.format = legende.parametres,
+                  breaks = classes_intervalles,
+                  legend.format = legende_parametres,
                   title = "Immigrants (%)")+
           tm_layout(frame=FALSE, legend.outside = TRUE)
 
-Carte4 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
+carte4 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
           tm_fill(col="GWR.T_Pct_brevet", palette="-RdBu", 
                   midpoint = NA,
-                  breaks = classes.intervalles,
-                  legend.format = legende.parametres,
+                  breaks = classes_intervalles,
+                  legend.format = legende_parametres,
                   title = "Faible scolarité (%)")+
           tm_layout(frame=FALSE, legend.outside = TRUE)
 
-Carte5 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
+carte5 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
           tm_fill(col="GWR.T_NivVieMed", palette="-RdBu", 
                  midpoint = NA,
-                 breaks = classes.intervalles,
-                 legend.format = legende.parametres,
+                 breaks = classes_intervalles,
+                 legend.format = legende_parametres,
                  title = "Niveau de vie (€1000)")+
           tm_layout(frame=FALSE, legend.outside = TRUE)
 
-tmap_arrange(Carte0, Carte1, Carte2, Carte3, Carte4, Carte5, ncol = 2, nrow=3)
+tmap_arrange(carte0, carte1, carte2, carte3, carte4, carte5, ncol = 2, nrow=3)
 ```
 
 **Cartographie du nombre de variables significative et de la variable plus significatives**
@@ -386,20 +386,20 @@ Les deux variables les plus significatives localement sont celles relatives au n
 #| message: false
 #| warning: false
 
-## Identifier la variable plus significative
-VarsT <- paste0("GWR.T_", c("Pct0_14", "Pct_65", "Pct_Img", "Pct_brevet", "NivVieMed"))
-Lyon.df  <- st_drop_geometry(LyonIris)
-Lyon.df <- abs(Lyon.df[,VarsT])
-PlusSign <- VarsT[apply(Lyon.df[VarsT],1,which.max)]
-PlusSign <- substr(PlusSign, 7, nchar(PlusSign))
-MaxAbsTvalue <- apply(Lyon.df[VarsT], 1, max)
-PlusSign <- ifelse(MaxAbsTvalue<1.96, "Aucune", PlusSign)
+## Identifier la variable la plus significative
+Vars_t <- paste0("GWR.T_", c("Pct0_14", "Pct_65", "Pct_Img", "Pct_brevet", "NivVieMed"))
+lyon_df  <- st_drop_geometry(LyonIris)
+lyon_df <- abs(lyon_df[,Vars_t])
+plus_sign <- Vars_t[apply(lyon_df[Vars_t],1,which.max)]
+plus_sign <- substr(plus_sign, 7, nchar(plus_sign))
+max_abs_tvalue <- apply(lyon_df[Vars_t], 1, max)
+plus_sign <- ifelse(max_abs_tvalue<1.96, "Aucune", plus_sign)
 
 ## Nombre de variables significatives au seuil de 5%, soit abs(t)= 1,96)
-LyonIris$NbSignif_1.96 <- as.factor(rowSums(Lyon.df > 1.96))
-LyonIris$PlusSign      <- as.factor(PlusSign)
+LyonIris$nb_signif_1.96 <- as.factor(rowSums(lyon_df > 1.96))
+LyonIris$plus_sign      <- as.factor(plus_sign)
 
-LyonIris$PlusSign <-  factor(PlusSign, 
+LyonIris$plus_sign <-  factor(plus_sign, 
                              levels = c("Aucune", "NivVieMed", "Pct_65", "Pct_brevet", "Pct_Img", "Pct0_14"),
                              labels = c("Aucune (159)", 
                                         "Niveau de vie (124)", 
@@ -408,17 +408,17 @@ LyonIris$PlusSign <-  factor(PlusSign,
                                         "Imigrants (27)", 
                                         "Moins de 15 ans (124)"))
 
-Carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-          tm_fill(col="NbSignif_1.96", palette="Reds",
+carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
+          tm_fill(col="nb_signif_1.96", palette="Reds",
                  title = "Sign. au seuil de 5%")+
           tm_layout(frame=FALSE)+ tm_scale_bar(breaks=c(0,5))
 
-Carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-          tm_fill(col="PlusSign", palette="Set1", 
+carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
+          tm_fill(col="plus_sign", palette="Set1", 
                  title = "Variable la plus significative")+
           tm_layout(frame=FALSE)
 
-tmap_arrange(Carte1, Carte2, ncol=2, nrow=1)
+tmap_arrange(carte1, carte2, ncol=2, nrow=1)
 ```
 
 ## Mise en œuvre et analyse dans R {#sec-042}
@@ -459,55 +459,55 @@ xy <- st_coordinates(st_centroid(LyonIris))
 LyonIris$X <- xy[,1]
 LyonIris$Y <- xy[,2]
 ## Optimisation du nombre de voisins avec le CV
-bwCV.voisins  <- gwr.sel(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
-                          data = LyonIris,
-                          method = "cv",          # Méthode cv ou AIC
-                          gweight=gwr.bisquare,   # gwr.gauss ou gwr.bisquare
-                          adapt=TRUE,
-                          verbose = FALSE,
-                          RMSE = TRUE,
-                          longlat = FALSE,
-                          coords=cbind(LyonIris$X,LyonIris$Y))
+bwCVa_voisins <- gwr.sel(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+                         data = LyonIris,
+                         method = "cv",          # Méthode cv ou AIC
+                         gweight = gwr.bisquare,   # gwr.gauss ou gwr.bisquare
+                         adapt = TRUE,
+                         verbose = FALSE,
+                         RMSE = TRUE,
+                         longlat = FALSE,
+                         coords=cbind(LyonIris$X,LyonIris$Y))
 ## Optimisation du nombre de voisins avec l'AIC
-bwaAIC.voisins <- gwr.sel(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+bwAICa_voisins <- gwr.sel(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
                           data = LyonIris,
                           method = "AIC",          # Méthode cv ou AIC
-                          gweight=gwr.bisquare,    # gwr.gauss ou gwr.bisquare
-                          adapt=TRUE,              # adaptatif
+                          gweight = gwr.bisquare,    # gwr.gauss ou gwr.bisquare
+                          adapt = TRUE,              # adaptatif
                           verbose = FALSE,
                           RMSE = TRUE,
                           longlat = FALSE,
                           coords=cbind(LyonIris$X,LyonIris$Y))
 ## Optimisation de la distance avec le CV
-bwnaCV.dist <- gwr.sel(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
-                           data = LyonIris,
-                           method = "cv",     # méthode cv ou AIC
-                           gweight=gwr.Gauss, # gwr.gauss ou gwr.bisquare
-                           adapt=FALSE,       # non adaptatif
-                           verbose = FALSE,
-                           RMSE = TRUE,
-                           longlat = FALSE,
-                           coords=cbind(LyonIris$X,LyonIris$Y))
+bwCV_dist <- gwr.sel(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+                     data = LyonIris,
+                     method = "cv",     # méthode cv ou AIC
+                     gweight=gwr.Gauss, # gwr.gauss ou gwr.bisquare
+                     adapt=FALSE,       # non adaptatif
+                     verbose = FALSE,
+                     RMSE = TRUE,
+                     longlat = FALSE,
+                     coords=cbind(LyonIris$X,LyonIris$Y))
 ## Optimisation de la distance avec l'AIC
-bwnaAIC.dist <- gwr.sel(NO2 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
-                          data = LyonIris,
-                          method = "AIC",      # méthode cv ou AIC
-                          gweight=gwr.Gauss,   # gwr.gauss ou gwr.bisquare
-                          adapt=FALSE,         # non adaptatif
-                          RMSE = TRUE,
-                          verbose = FALSE,
-                          longlat = FALSE,
-                          coords=cbind(LyonIris$X,LyonIris$Y))
+bwAIC_dist <- gwr.sel(NO2 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+                      data = LyonIris,
+                      method = "AIC",      # méthode cv ou AIC
+                      gweight=gwr.Gauss,   # gwr.gauss ou gwr.bisquare
+                      adapt=FALSE,         # non adaptatif
+                      RMSE = TRUE,
+                      verbose = FALSE,
+                      longlat = FALSE,
+                      coords=cbind(LyonIris$X,LyonIris$Y))
 ## Affichage des résultats d'optimisation 
 cat("Sélection de la taille de la zone optimale (bandwidth)",
     "\n avec le nombre de plus proches voisins :",
-    "\n  CV =", round(bwCV.voisins,4), "nombre de voisins =", 
-    round(bwCV.voisins*nrow(LyonIris)),
-    "\n  AIC =", round(bwaAIC.voisins,4), "nombre de voisins =", 
-    round(bwaAIC.voisins*nrow(LyonIris)),
+    "\n  CV =", round(bwCVa_voisins,4), "nombre de voisins =", 
+    round(bwCVa_voisins*nrow(LyonIris)),
+    "\n  AIC =", round(bwAICa_voisins,4), "nombre de voisins =", 
+    round(bwAICa_voisins*nrow(LyonIris)),
     "\nSélection de la taille de la zone optimale (bandwidth) avec la distance :",
-    "\n  CV =", round(bwnaCV.dist, 0),  "mètres",
-    "\n  AIC =", round(bwnaAIC.dist, 0), "mètres")
+    "\n  CV =", round(bwCV_dist, 0),  "mètres",
+    "\n  AIC =", round(bwAIC_dist, 0), "mètres")
 ```
 
 Les résultats ci-dessus montrent que le nombre de plus proches voisins pourrait être de 92 selon l'approche *cross-validation* et de 54 selon la méthode basée sur l'AIC. Si la valeur de *b* est basée sur la distance, elle serait alors optimale à 1315 et 1662 mètres selon les deux méthodes.
@@ -522,16 +522,16 @@ Avec la fonction `gwr`, nous estimons un modèle GWR avec un *kernel* bicarré e
 #| eval: true
 
 # Modèle global : régression linéaire multiple
-Modele.Global <- lm(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed, data = LyonIris)
+modele_global <- lm(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed, data = LyonIris)
 # Modèle GWR
-Modele.GWR <- gwr(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
-              data = LyonIris,
-              adapt=bwCV.voisins,
-              gweight=gwr.bisquare,
-              hatmatrix=TRUE,
-              se.fit=TRUE,
-              coords=cbind(LyonIris$X,LyonIris$Y),
-              longlat=FALSE)
+modele_gwr <- gwr(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+                  data = LyonIris,
+                  adapt=bwCVa_voisins,
+                  gweight = gwr.bisquare,
+                  hatmatrix = TRUE,
+                  se.fit = TRUE,
+                  coords = cbind(LyonIris$X,LyonIris$Y),
+                  longlat = FALSE)
 ```
 
 Le code ci-dessous permet de renvoyer les statistiques univariées des coefficients des 506 régressions locales, réalisées pour chacune des 506 entités spatiales (IRIS), et les statistiques d'ajustement du modèle du modèle GWR (AIC, R^2^ quasi-global, etc.).
@@ -540,7 +540,7 @@ Le code ci-dessous permet de renvoyer les statistiques univariées des coefficie
 #| echo: true 
 #| message: false 
 #| eval: true
-Modele.GWR
+modele_gwr
 ```
 
 #### Comparaison des modèles MCO et GWR {#sec-04213}
@@ -552,25 +552,25 @@ Le R^2^ du modèle GWR est bien supérieur à celui du modèle classique MCO (0,
 #| message: false
 #| warning: false
 #| eval: true
-R2.global <- summary(Modele.Global)$r.squared
-rss <- sum((Modele.GWR$lm$y - Modele.GWR$SDF$pred)^2) 
-tss <- sum((Modele.GWR$lm$y - mean(Modele.GWR$SDF$pred))^2) 
-R2.GWRquasiglobal <- 1 - (rss / tss)
-cat("R2 global (LM) = ", round(R2.global, 3),
-    "\nR2 quasi-global (GWR) : ", round(R2.GWRquasiglobal, 3))
+r2_global <- summary(modele_global)$r.squared
+rss <- sum((modele_gwr$lm$y - modele_gwr$SDF$pred)^2) 
+tss <- sum((modele_gwr$lm$y - mean(modele_gwr$SDF$pred))^2) 
+r2_gwrquasiglobal <- 1 - (rss / tss)
+cat("R2 global (LM) = ", round(r2_global, 3),
+    "\nR2 quasi-global (GWR) : ", round(r2_gwrquasiglobal, 3))
 ```
 
-Fotheringham *et al.* [-@fotheringham2003geographically] proposent plusieurs tests pour comparer les modèles GWR et classique qui sont implémentés dans le *package* `spgwr` : fonctions `BFC99.gwr.test(Modele.GWR)`, `BFC02.gwr.test(Modele.GWR)`, `LMZ.F1GWR.test(Modele.GWR)`, `LMZ.F2GWR.test(Modele.GWR)`. Si les valeurs de *p* de ces tests sont inférieures à 0,05, alors le modèle GWR améliore de façon significative la capacité prédictive du modèle de régression globale, ce que confirment les résultats ci-dessous.
+Fotheringham *et al.* [-@fotheringham2003geographically] proposent plusieurs tests pour comparer les modèles GWR et classique qui sont implémentés dans le *package* `spgwr` : fonctions `BFC99.gwr.test(modele_gwr)`, `BFC02.gwr.test(modele_gwr)`, `LMZ.F1GWR.test(modele_gwr)`, `LMZ.F2GWR.test(modele_gwr)`. Si les valeurs de *p* de ces tests sont inférieures à 0,05, alors le modèle GWR améliore de façon significative la capacité prédictive du modèle de régression globale, ce que confirment les résultats ci-dessous.
 
 ```{r}
 #| echo: true 
 #| message: false 
 #| eval: true
-anova(Modele.GWR)
-BFC99.gwr.test(Modele.GWR)
-BFC02.gwr.test(Modele.GWR)
-LMZ.F1GWR.test(Modele.GWR)
-LMZ.F2GWR.test(Modele.GWR)
+anova(modele_gwr)
+BFC99.gwr.test(modele_gwr)
+BFC02.gwr.test(modele_gwr)
+LMZ.F1GWR.test(modele_gwr)
+LMZ.F2GWR.test(modele_gwr)
 ```
 
 Un autre test (`LMZ.F3GWR.test`) permet de répondre à la question suivante : est-ce que les coefficients de régression du modèle GWR varient spatialement de façon significative? Les résultats ci-dessous démontrent que c'est le cas pour toutes les variables indépendantes et la constante (*p* \< 0,001).
@@ -579,7 +579,7 @@ Un autre test (`LMZ.F3GWR.test`) permet de répondre à la question suivante : 
 #| echo: true 
 #| eval: true
 #| message: false 
-LMZ.F3GWR.test(Modele.GWR)
+LMZ.F3GWR.test(modele_gwr)
 ```
 
 
@@ -593,15 +593,15 @@ Pour comparer **la dépendance spatiale** des deux modèles (MCO versus GWR), no
 #| message: false 
 library(spdep)
 ## Résidus des modèles global (MCO) et GWR
-LyonIris$MCO.Residus <- Modele.Global$residuals
-LyonIris$GWR.Residus <- Modele.GWR$SDF$pred - Modele.GWR$lm$y
+LyonIris$MCO.Residus <- modele_global$residuals
+LyonIris$GWR.Residus <- modele_gwr$SDF$pred - modele_gwr$lm$y
 ## Matrice de contiguïté
-Rook <- poly2nb(LyonIris, queen=TRUE)
-W.Rook <- nb2listw(Rook, zero.policy=TRUE, style = "W")
+rook_nb <- poly2nb(LyonIris, queen=TRUE)
+rook_w <- nb2listw(rook_nb, zero.policy=TRUE, style = "W")
 # I de Moran sur les résidus du modèle global (MCO)
-moran.test(LyonIris$MCO.Residus, W.Rook, randomisation = FALSE)
+moran.test(LyonIris$MCO.Residus, rook_w, randomisation = FALSE)
 # I de Moran sur les résidus du modèle GWR (MCO)
-moran.test(LyonIris$GWR.Residus, W.Rook, randomisation = FALSE)
+moran.test(LyonIris$GWR.Residus, rook_w, randomisation = FALSE)
 ```
 
 
@@ -617,7 +617,7 @@ moran.test(LyonIris$GWR.Residus, W.Rook, randomisation = FALSE)
 
 ## Cartographie des résidus du modèle MCO
 tmap_mode("plot")
-Carte1 <- tm_shape(LyonIris)+
+carte1 <- tm_shape(LyonIris)+
             tm_borders(col="gray25", lwd=.5)+
             tm_fill(col="MCO.Residus", n = 6, style = "pretty", 
                   legend.format = list(text.separator = "à",
@@ -627,7 +627,7 @@ Carte1 <- tm_shape(LyonIris)+
                   title = "MCO") +
             tm_layout(frame=FALSE)
 ## Cartographie des résidus du modèle GWR
-Carte2 <- tm_shape(LyonIris)+
+carte2 <- tm_shape(LyonIris)+
             tm_borders(col="gray25", lwd=.5)+
             tm_fill(col="GWR.Residus", n = 6, style = "pretty", 
                   legend.format = list(text.separator = "à",
@@ -637,30 +637,30 @@ Carte2 <- tm_shape(LyonIris)+
                   title = "GWR") +
             tm_layout(frame=FALSE) + 
             tm_scale_bar(breaks = c(0,5))
-tmap_arrange(Carte1, Carte2, nrow = 1)
+tmap_arrange(carte1, carte2, nrow = 1)
 ```
 
 #### Cartographie des résultats du modèle GWR {#sec-04214}
 
-Dans un premier temps, nous ajoutons les valeurs locales des R^2^, des coefficients de régression et des valeurs de *t* dans la couche `sf`. Notez que les résultats locaux de la GWR sont stockés dans l'objet `Modele.GWR$SDF`.
+Dans un premier temps, nous ajoutons les valeurs locales des R^2^, des coefficients de régression et des valeurs de *t* dans la couche `sf`. Notez que les résultats locaux de la GWR sont stockés dans l'objet `modele_gwr$SDF`.
 
 ```{r}
 #| echo: true 
 #| message: false 
 #| eval: true
 ## Récupération du R carré local
-LyonIris$GWR.R2 <- Modele.GWR$SDF$localR2
+LyonIris$GWR.R2 <- modele_gwr$SDF$localR2
 ## Récupération des coefficients de régression et calcul des valeurs de t locales
-names(Modele.GWR$SDF)
-VarsIndep <- c("Pct0_14", "Pct_65", "Pct_Img", "Pct_brevet", "NivVieMed")
-for(e in VarsIndep){
+names(modele_gwr$SDF)
+vars_indep <- c("Pct0_14", "Pct_65", "Pct_Img", "Pct_brevet", "NivVieMed")
+for(e in vars_indep){
   # Nom des nouvelles variables
-  var.coef <- paste0("GWR.", "B_", e)
-  var.t    <- paste0("GWR.", "T_", e)
+  var_coef <- paste0("GWR.", "B_", e)
+  var_t    <- paste0("GWR.", "T_", e)
   # Récupération des coefficients pour les variables indépendantes
-  LyonIris[[var.coef]] <- Modele.GWR$SDF[[e]]
+  LyonIris[[var_coef]] <- modele_gwr$SDF[[e]]
   # Calcul des valeurs de t pour les variables indépendantes
-  LyonIris[[var.t]]    <- Modele.GWR$SDF[[e]] / Modele.GWR$SDF[[paste0(e, "_se")]]
+  LyonIris[[var_t]]    <- modele_gwr$SDF[[e]] / modele_gwr$SDF[[paste0(e, "_se")]]
 }
 ```
 
@@ -690,7 +690,7 @@ Le code ci-dessous permet ensuite de cartographier les R^2^ locaux de la GWR (@f
 
 library(tmap)
 # Paramètres pour la légende 
-legende.parametres <- list(text.separator = "à",
+legende_parametres <- list(text.separator = "à",
                            decimal.mark = ",")
 
 tm_shape(LyonIris)+
@@ -698,7 +698,7 @@ tm_shape(LyonIris)+
   tm_fill(col="GWR.R2", 
 		  palette="YlOrBr", 
 		  n=5, style="quantile",
-		  legend.format = legende.parametres,
+		  legend.format = legende_parametres,
 		  title = "R2 locaux")+
   tm_layout(frame=FALSE)+
   tm_scale_bar(breaks=c(0,5))
@@ -720,42 +720,42 @@ Le code ci-dessous permet ensuite de cartographier les coefficients locaux de la
 #| fig-cap: Cartographie des coefficients de régression de la GWR
 #| out-width: 100%
 # Paramètres pour la légende 
-legende.parametres <- list(text.separator = "à",
+legende_parametres <- list(text.separator = "à",
                            decimal.mark = ",",
                            big.mark = " ")
 
-Carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
+carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
           tm_fill(col="GWR.B_Pct0_14", palette="YlOrBr", n=4, style="pretty",
-		              legend.format = legende.parametres,
+		              legend.format = legende_parametres,
                   title = "Moins de 15 ans (%)")+
           tm_layout(frame=FALSE, legend.outside = TRUE)
 
-Carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
+carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
           tm_fill(col="GWR.B_Pct_65", palette="YlOrBr", n=4, style="pretty", 
-		              legend.format = legende.parametres,
+		              legend.format = legende_parametres,
                   title = "65 ans et plus (%)")+
           tm_layout(frame=FALSE, legend.outside = TRUE)
 
-Carte3 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
+carte3 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
           tm_fill(col="GWR.B_Pct_Img", palette="YlOrBr", n=4, style="pretty", 
-		              legend.format = legende.parametres,
+		              legend.format = legende_parametres,
                   title = "Immigrants (%)")+
           tm_layout(frame=FALSE, legend.outside = TRUE)
 
-Carte4 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
+carte4 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
           tm_fill(col="GWR.B_Pct_brevet", palette="YlOrBr", n=4, style="pretty", 
-		              legend.format = legende.parametres,
+		              legend.format = legende_parametres,
                   title = "Faible scolarité (%)")+
           tm_layout(frame=FALSE, legend.outside = TRUE)
 
-Carte5 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5,)+
+carte5 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5,)+
           tm_fill(col="GWR.B_NivVieMed", palette="YlOrBr", n=4, style="pretty",
-		              legend.format = legende.parametres,
+		              legend.format = legende_parametres,
                   title = "Niveau de vie (€1000)")+
           tm_layout(frame=FALSE, legend.outside = TRUE)+
           tm_scale_bar(breaks=c(0,5))
 
-tmap_arrange(Carte1, Carte2, Carte3, Carte4, Carte5, ncol = 2, nrow=3)
+tmap_arrange(carte1, carte2, carte3, carte4, carte5, ncol = 2, nrow=3)
 ```
 
 ##### Cartographie des valeurs de *t* locales {#sec-042143}
@@ -773,55 +773,55 @@ Pour cartographier les valeurs de *t*, nous utilisons les seuils de ± 1,96, 2,5
 #| out-width: 100%
 
 # Paramètres pour la légende 
-legende.parametres <- list(text.separator = "à",
+legende_parametres <- list(text.separator = "à",
                            text.less.than = "Moins de",
                            text.or.more =  "et plus",
                            decimal.mark = ",",
                            big.mark = " ")
 
-classes.intervalles = c(-Inf, -3.29, -2.58, -1.96, 1.96, 2.58, 3.29, Inf)
-Carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
+classes_intervalles = c(-Inf, -3.29, -2.58, -1.96, 1.96, 2.58, 3.29, Inf)
+carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
           tm_fill(col="GWR.T_Pct0_14", palette="-RdBu", 
                   midpoint = NA,
-                  breaks = classes.intervalles,
-                  legend.format = legende.parametres,
+                  breaks = classes_intervalles,
+                  legend.format = legende_parametres,
                   title = "Moins de 15 ans (%)")+
           tm_layout(frame=FALSE, legend.outside = TRUE)
 
-Carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
+carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
           tm_fill(col="GWR.T_Pct_65", palette="-RdBu",
                   midpoint = NA,
-                  breaks = classes.intervalles,
-                  legend.format = legende.parametres,
+                  breaks = classes_intervalles,
+                  legend.format = legende_parametres,
                   title = "65 ans et plus (%)")+
           tm_layout(frame=FALSE, legend.outside = TRUE)
 
-Carte3 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
+carte3 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
           tm_fill(col="GWR.T_Pct_Img", palette="-RdBu", 
                   midpoint = NA,
-                  breaks = classes.intervalles,
-                  legend.format = legende.parametres,
+                  breaks = classes_intervalles,
+                  legend.format = legende_parametres,
                   title = "Immigrants (%)")+
           tm_layout(frame=FALSE, legend.outside = TRUE)
 
-Carte4 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
+carte4 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
           tm_fill(col="GWR.T_Pct_brevet", palette="-RdBu", 
                   midpoint = NA,
-                  breaks = classes.intervalles,
-                  legend.format = legende.parametres,
+                  breaks = classes_intervalles,
+                  legend.format = legende_parametres,
                   title = "Faible scolarité (%)")+
           tm_layout(frame=FALSE, legend.outside = TRUE)
 
-Carte5 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
+carte5 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
           tm_fill(col="GWR.T_NivVieMed", palette="-RdBu", 
                  midpoint = NA,
-                 breaks = classes.intervalles,
-                 legend.format = legende.parametres,
+                 breaks = classes_intervalles,
+                 legend.format = legende_parametres,
                  title = "Niveau de vie (€1000)")+
           tm_layout(frame=FALSE, legend.outside = TRUE)+
           tm_scale_bar(breaks=c(0,5))
 
-tmap_arrange(Carte1, Carte2, Carte3, Carte4, Carte5, ncol = 2, nrow=3)
+tmap_arrange(carte1, carte2, carte3, carte4, carte5, ncol = 2, nrow=3)
 ```
 
 ##### Cartographie du nombre de variables significatives {#sec-042144}
@@ -838,28 +838,28 @@ Nous pouvons aussi cartographier le nombre de variables localement significative
 #| fig-cap: "Nombre de variables significatives aux seuils de 5% et 1%"
 #| out-width: 85%
 
-## Identifier la variable plus significative avec les valeurs de t
-VarsT <- paste0("GWR.T_", c("Pct0_14", "Pct_65", "Pct_Img", "Pct_brevet", "NivVieMed"))
-Lyon.df  <- st_drop_geometry(LyonIris)
-Lyon.df <- abs(Lyon.df[,VarsT])
-PlusSign <- VarsT[apply(Lyon.df[VarsT],1,which.max)]
-PlusSign <- substr(PlusSign, 7, nchar(PlusSign))
-MaxAbsTvalue <- apply(Lyon.df[VarsT], 1, max)
-PlusSign <- ifelse(MaxAbsTvalue<1.96, "Aucune", PlusSign)
+## Identifier la variable la plus significative avec les valeurs de t
+Vars_t <- paste0("GWR.T_", c("Pct0_14", "Pct_65", "Pct_Img", "Pct_brevet", "NivVieMed"))
+lyon_df  <- st_drop_geometry(LyonIris)
+lyon_df <- abs(lyon_df[,Vars_t])
+plus_sign <- Vars_t[apply(lyon_df[Vars_t],1,which.max)]
+plus_sign <- substr(plus_sign, 7, nchar(plus_sign))
+max_abs_tvalue <- apply(lyon_df[Vars_t], 1, max)
+plus_sign <- ifelse(max_abs_tvalue<1.96, "Aucune", plus_sign)
 ## Nombre de variables significatives au seuil de 5%, soit abs(t)= 1,96)
-LyonIris$NbSignif_1.96 <- as.factor(rowSums(Lyon.df > 1.96))
-LyonIris$NbSignif_2.58 <- as.factor(rowSums(Lyon.df > 2.58))
-LyonIris$PlusSign      <- as.factor(PlusSign)
+LyonIris$nb_signif_1.96 <- as.factor(rowSums(lyon_df > 1.96))
+LyonIris$nb_signif_2.58 <- as.factor(rowSums(lyon_df > 2.58))
+LyonIris$plus_sign      <- as.factor(plus_sign)
 ## Cartographie
-Carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-          tm_fill(col="NbSignif_1.96", palette="Reds",
+carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
+          tm_fill(col="nb_signif_1.96", palette="Reds",
                  title = "Sign. au seuil de 5%")+
           tm_layout(frame=FALSE)+ tm_scale_bar(breaks=c(0,5))
-Carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-          tm_fill(col="NbSignif_2.58", palette="Reds", 
+carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
+          tm_fill(col="nb_signif_2.58", palette="Reds", 
                  title = "Sign. au seuil de 1%")+
           tm_layout(frame=FALSE)
-tmap_arrange(Carte1, Carte2, ncol=2, nrow=1)
+tmap_arrange(carte1, carte2, ncol=2, nrow=1)
 ```
 
 ##### Cartographie de la variable la plus significative avec la valeur de *t* {#sec-042145}
@@ -871,12 +871,12 @@ Finalement, le code ci-dessous permet de repérer la variable la plus significat
 #| eval: true 
 #| message: false 
 #| warning: false
-#| label: fig-GWRPlussign
+#| label: fig-GWRplus_sign
 #| fig-align: center
 #| fig-cap: "Variable indépendante la plus significative au seuil de 5 %"
 #| out-width: 85%
 tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-          tm_fill(col="PlusSign", palette="Set1", 
+          tm_fill(col="plus_sign", palette="Set1", 
                  title = "Variable la plus significative")+
           tm_layout(frame=FALSE)+ tm_scale_bar(breaks=c(0,5))
 ```
@@ -899,47 +899,47 @@ library(GWmodel)
 load("data/Lyon.Rdata")
 # Construction de la matrice de distance
 xy <- st_coordinates(st_centroid(LyonIris))
-MatriceDistance <- gw.dist(dp.locat=xy, p = 2, longlat=FALSE)
+matrice_distances <- gw.dist(dp.locat=xy, p = 2, longlat = FALSE)
 ## Optimisation du nombre de voisins avec le CV
-bwCV.voisins  <- bw.gwr(NO2 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed, 
-                         data = LyonIris,
-                         dMat = MatriceDistance,
-                         approach="CV", 
-                         kernel="bisquare",
-                         adaptive=TRUE, 
-                         longlat=FALSE)
+bwCV_voisins <- bw.gwr(NO2 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed, 
+                       data = LyonIris,
+                       dMat = matrice_distances,
+                       approach="CV", 
+                       kernel="bisquare",
+                       adaptive=TRUE, 
+                       longlat = FALSE)
 ## Optimisation du nombre de voisins avec l'AIC
-bwAIC.voisins <- bw.gwr(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed, 
+bwAIC_voisins <- bw.gwr(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed, 
                         data = LyonIris,
-                        dMat = MatriceDistance,
+                        dMat = matrice_distances,
                         approach="AIC", 
                         kernel="bisquare",
                         adaptive=TRUE, 
-                        longlat=FALSE)
+                        longlat = FALSE)
 ## Optimisation de la distance avec le CV
-bwnCV.dist <- bw.gwr(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed, 
-                     data = LyonIris,
-                     dMat = MatriceDistance,
-                     approach="CV", 
-                     kernel="gaussian",
-                     adaptive=FALSE, 
-                     longlat=FALSE)
+bwCV_dist <- bw.gwr(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed, 
+                    data = LyonIris,
+                    dMat = matrice_distances,
+                    approach="CV", 
+                    kernel="gaussian",
+                    adaptive=FALSE, 
+                    longlat = FALSE)
 ## Optimisation de la distance avec l'AIC
-bwAIC.dist <- bw.gwr(NO2 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed, 
+bwAIC_dist <- bw.gwr(NO2 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed, 
                      data = LyonIris,
-                     dMat = MatriceDistance,
+                     dMat = matrice_distances,
                      approach="AIC", 
                      kernel="gaussian",
                      adaptive=FALSE, 
-                     longlat=FALSE)
+                     longlat = FALSE)
 ## Affichage des résultats d'optimisation 
 cat("Sélection de la taille de la zone optimale (bandwidth)",
     "\n avec le nombre de plus proches voisins :",
-    "\n  CV =", round(bwCV.voisins,4), "nombre de voisins =",  round(bwCV.voisins*nrow(LyonIris)),
-    "\n  AIC =", round(bwAIC.voisins,4), "nombre de voisins =", round(bwAIC.voisins*nrow(LyonIris)),
+    "\n  CV =", round(bwCV_voisins, 4), "nombre de voisins =",  round(bwCV_voisins*nrow(LyonIris)),
+    "\n  AIC =", round(bwAIC_voisins, 4), "nombre de voisins =", round(bwAIC_voisins*nrow(LyonIris)),
     "\nSélection de la taille de la zone optimale (bandwidth) avec la distance :",
-    "\n  CV =", round(bwnCV.dist, 0),  "mètres",
-    "\n  AIC =", round(bwAIC.dist, 0), "mètres")
+    "\n  CV =", round(bwCV_dist, 0),  "mètres",
+    "\n  AIC =", round(bwAIC_dist, 0), "mètres")
 ```
 
 
@@ -964,21 +964,21 @@ Comparativement à la fonction `gwr` du *package* `spgwr`, `gwr.basic` du *packa
 #| warning: false
 #| eval: true
 # Calcul de la GWR
-Modele.GWR <- gwr.basic(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+modele_gwr <- gwr.basic(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
                         data = LyonIris,
-                        dMat = MatriceDistance,  # Matrice de distances
-                        bw = bwCV.voisins,       # Zone d'influence
+                        dMat = matrice_distances,  # Matrice de distances
+                        bw = bwCV_voisins,       # Zone d'influence
                         kernel = "bisquare",     # Gaussien ou bicarrée
                         adaptive=TRUE,           # Nombre de voisins (TRUE) ou distance (FALSE)
                         F123.test = TRUE,        # Tests F123
-                        longlat=FALSE)
-Modele.GWR
+                        longlat = FALSE)
+modele_gwr
 ```
 
 
 #### Cartographie des résultats du modèle GWR {#sec-04223}
 
-Une fois le modèle obtenu, nous disposons de l'ensemble des résultats locaux (coefficients, valeur prédite, résidus, valeurs de t et R^2^) dans l'objet `Modele.GWR$SDF` qui sera une couche `sf` comme le jeu de données initial. Il est alors aisée de reproduire les cartes présentées à la [section @sec-04214]. En guise d'exemple, dans le code ci-dessous, nous cartographions les valeurs locaux du R^2^ et uniquement celles de *t* pour la variable relative au médiane du niveau de vie (@fig-CartoGWmodel).
+Une fois le modèle obtenu, nous disposons de l'ensemble des résultats locaux (coefficients, valeur prédite, résidus, valeurs de t et R^2^) dans l'objet `modele_gwr$SDF` qui sera une couche `sf` comme le jeu de données initial. Il est alors aisée de reproduire les cartes présentées à la [section @sec-04214]. En guise d'exemple, dans le code ci-dessous, nous cartographions les valeurs locaux du R^2^ et uniquement celles de *t* pour la variable relative au médiane du niveau de vie (@fig-CartoGWmodel).
 
 ```{r}
 #| echo: true 
@@ -989,38 +989,38 @@ Une fois le modèle obtenu, nous disposons de l'ensemble des résultats locaux (
 #| fig-align: center
 #| fig-cap: "Exemple de cartographie avec les résultats de la GWR obtenus avec le *package* `GWmodel`"
 #| out-width: 85%
-GWR.Resultats <- Modele.GWR$SDF
-names(GWR.Resultats)
+gwr_resultats <- modele_gwr$SDF
+names(gwr_resultats)
 
-legende.parametres <- list(text.separator = "à",
+legende_parametres <- list(text.separator = "à",
                            text.less.than = "Moins de",
                            text.or.more =  "et plus",
                            decimal.mark = ",",
                            big.mark = " ")
 
-classes.intervalles = c(-Inf, -3.29, -2.58, -1.96, 1.96, 2.58, 3.29, Inf)
+classes_intervalles = c(-Inf, -3.29, -2.58, -1.96, 1.96, 2.58, 3.29, Inf)
 
 # Cartographie du R2
-Carte1 <- tm_shape(GWR.Resultats)+
+carte1 <- tm_shape(gwr_resultats)+
   tm_borders(col="gray25", lwd=.5)+
   tm_fill(col="Local_R2", 
 		  palette="YlOrBr", 
 		  n=5, style="quantile",
-		  legend.format = legende.parametres,
+		  legend.format = legende_parametres,
 		  title = "R2 locaux")+
   tm_layout(frame=FALSE)+
   tm_scale_bar(breaks=c(0,5))
 
 # Cartographie d'une valeur de t
-Carte2 <- tm_shape(GWR.Resultats)+ tm_borders(col="gray25", lwd=.5)+
+carte2 <- tm_shape(gwr_resultats)+ tm_borders(col="gray25", lwd=.5)+
           tm_fill(col="NivVieMed_TV", palette="-RdBu", 
                  midpoint = NA,
-                 breaks = classes.intervalles,
-                 legend.format = legende.parametres,
+                 breaks = classes_intervalles,
+                 legend.format = legende_parametres,
                  title = "Niveau de vie (€1000)")+
           tm_layout(frame=FALSE)
 
-tmap_arrange(Carte1, Carte2)
+tmap_arrange(carte1, carte2)
 ```
 
 ## GWR classiques pour d'autres distributions {#sec-043}
@@ -1076,7 +1076,7 @@ La GWR fait face aussi à d'importantes critiques :
 #| fig-cap: "Corrélation de Pearson entre les coefficients de régression locaux de la GWR"
 #| out-width: 85%
 library("GGally")
-df <- data.frame(Modele.GWR$SDF)
+df <- data.frame(modele_gwr$SDF)
 df <- df[, 2:7]
 names(df) <- c("Constante" , "Pct0_14", "Pct_65", "Pct_Img", "Pct_brevet", "NivVieMed")
 
@@ -1091,6 +1091,7 @@ library("corrplot")
 # corrplot.mixed(p, lower="number", lower.col = "black",
 #                       upper = "ellipse", upper.col=couleurs(100))
 ```
+
 
 ## Quiz de révision {#sec-045}
 
@@ -1130,16 +1131,15 @@ LyonIris$X <- à compléter
 LyonIris$Y <- à compléter
 # Optimisation du nombre de voisins avec le CV
 formule <- "PM25 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed"
-bwCV.voisins  <- gwr.sel(à compléter)
+bwCV_voisins <- gwr.sel(à compléter)
 # Réalisation de la GWR
-Modele.GWR <- gwr(à compléter)
+modele_gwr <- gwr(à compléter)
 # Affichage des résultats
-Modele.GWR
+modele_gwr
 ```
 Correction à la [section @sec-08041].
 :::
 :::
-
 
 ::: bloc_exercice
 ::: bloc_exercice-header
@@ -1156,14 +1156,14 @@ Correction à la [section @sec-08041].
 library(sf)
 library(spgwr)
 # Modèle MCO
-Modele.Global <- à compléter
+modele_global <- à compléter
 # Comparaison des R2
-R2.global <- à compléter
+r2_global <- à compléter
 rss <- à compléter
 tss <- à compléter
-R2.GWRquasiglobal <- à compléter
-cat("R2 global (LM) = ", round(R2.global, 3),
-    "\nR2 quasi-global (GWR) : ", round(R2.GWRquasiglobal, 3))
+r2_gwrquasiglobal <- à compléter
+cat("R2 global (LM) = ", round(r2_global, 3),
+    "\nR2 quasi-global (GWR) : ", round(r2_gwrquasiglobal, 3))
 # Comparaison des R2
 à compléter
 # Les coefficients du modèle GWR varient-ils significativement dans l'espace?
@@ -1193,7 +1193,7 @@ library(tmap)
 
 # Cartographie des valeurs de t locales
 ## Paramètres pour la légende 
-legende.parametres <- list(text.separator = "à",
+legende_parametres <- list(text.separator = "à",
                            text.less.than = "Moins de",
                            text.or.more =  "et plus",
                            decimal.mark = ",",

@@ -512,8 +512,7 @@ Figure&nbsp;7.2: Représentation de quatre vecteurs propres issue d’une matric
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://www.gamlss.com/">gamlss</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Chargement des données</span></span>
-<span><span class="va">data_mtl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html">st_read</a></span><span class="op">(</span><span class="st">'data/chap06/data_sr_access.gpkg'</span>,</span>
-<span>                    quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">data_mtl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html">st_read</a></span><span class="op">(</span><span class="st">'data/chap06/data_sr_access.gpkg'</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># les variables d'accessibilités sont multipliées par 100 pour s'exprimer </span></span>
 <span><span class="co"># sur l'échelle 0-100 plutôt que 0-1</span></span>
@@ -547,11 +546,11 @@ Figure&nbsp;7.2: Représentation de quatre vecteurs propres issue d’une matric
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Sélection des vecteurs propres de Moran </span></span>
 <span><span class="va">moran_ev_sel</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ME.html">ME</a></span><span class="op">(</span><span class="va">alr_val</span> <span class="op">~</span> <span class="va">prt_minorite_vis</span> <span class="op">+</span> <span class="va">prt_monoparental</span> <span class="op">+</span> <span class="va">revenu_median</span> <span class="op">+</span></span>
 <span>                   <span class="va">acs_idx_emp_tc_peak</span> <span class="op">+</span> <span class="va">acs_idx_emp_pieton</span>,</span>
-<span>                data <span class="op">=</span> <span class="va">data_mtl</span>,</span>
-<span>                family <span class="op">=</span> <span class="va">gaussian</span>,</span>
-<span>                listw <span class="op">=</span> <span class="va">listw</span>,</span>
-<span>                alpha <span class="op">=</span> <span class="fl">0.05</span>,</span>
-<span>                zero.policy<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span>                   data <span class="op">=</span> <span class="va">data_mtl</span>,</span>
+<span>                   family <span class="op">=</span> <span class="va">gaussian</span>,</span>
+<span>                   listw <span class="op">=</span> <span class="va">listw</span>,</span>
+<span>                   alpha <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>                   zero.policy<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">moran_ev_sel</span><span class="op">$</span><span class="va">vectors</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La fonction ME a sélectionné 46 vecteurs propres que nous pouvons utiliser pour ajuster le modèle complet.</p>
@@ -559,8 +558,8 @@ Figure&nbsp;7.2: Représentation de quatre vecteurs propres issue d’une matric
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_sel</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">alr_val</span> <span class="op">~</span> <span class="va">prt_minorite_vis</span> <span class="op">+</span> <span class="va">prt_monoparental</span> <span class="op">+</span> <span class="va">revenu_median</span> <span class="op">+</span></span>
 <span>                 <span class="va">acs_idx_emp_tc_peak</span> <span class="op">+</span> <span class="va">acs_idx_emp_pieton</span> <span class="op">+</span> </span>
 <span>                 <span class="fu"><a href="https://rdrr.io/r/stats/fitted.values.html">fitted</a></span><span class="op">(</span><span class="va">moran_ev_sel</span><span class="op">)</span>,</span>
-<span>                data <span class="op">=</span> <span class="va">data_mtl</span>,</span>
-<span>                family <span class="op">=</span> <span class="va">gaussian</span><span class="op">)</span></span>
+<span>                 data <span class="op">=</span> <span class="va">data_mtl</span>,</span>
+<span>                 family <span class="op">=</span> <span class="va">gaussian</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Validation des résidus</span></span>
 <span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DHARMa/man/simulateResiduals.html">simulateResiduals</a></span><span class="op">(</span><span class="va">model_sel</span>, plot <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
@@ -997,7 +996,7 @@ data:  residuals(res)
 weights: listw  
 number of simulations + 1: 1000 
 
-statistic = 0.054179, observed rank = 996, p-value = 0.004
+statistic = 0.054179, observed rank = 998, p-value = 0.002
 alternative hypothesis: greater</code></pre>
 </div>
 <div class="cell-output-display">
@@ -1072,7 +1071,7 @@ data:  residuals(res)
 weights: listw  
 number of simulations + 1: 1000 
 
-statistic = 0.03771, observed rank = 980, p-value = 0.02
+statistic = 0.037659, observed rank = 979, p-value = 0.021
 alternative hypothesis: greater</code></pre>
 </div>
 <div class="cell-output-display">
@@ -1277,45 +1276,45 @@ Lasso
 <span>                         style <span class="op">=</span> <span class="st">"fisher"</span>,</span>
 <span>                         n <span class="op">=</span> <span class="fl">7</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">legende.parametres</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>text.separator <span class="op">=</span> <span class="st">"à"</span>,</span>
+<span><span class="va">legende_parametres</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>text.separator <span class="op">=</span> <span class="st">"à"</span>,</span>
 <span>                           decimal.mark <span class="op">=</span> <span class="st">","</span>,</span>
 <span>                           digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">map1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">data_mtl</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="va">carte1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">data_mtl</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"effet_sel"</span>, </span>
 <span>          breaks <span class="op">=</span> <span class="va">breaks</span><span class="op">$</span><span class="va">brks</span>,</span>
 <span>          midpoint <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>          legend.format <span class="op">=</span> <span class="va">legende.parametres</span>,</span>
+<span>          legend.format <span class="op">=</span> <span class="va">legende_parametres</span>,</span>
 <span>          palette <span class="op">=</span> <span class="st">"-RdBu"</span>, title <span class="op">=</span> <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span>, legend.show <span class="op">=</span> <span class="cn">FALSE</span>, title <span class="op">=</span> <span class="st">'SEL-SEVM'</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">map2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">data_mtl</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="va">carte2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">data_mtl</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"effet_ridge"</span>,</span>
 <span>          breaks <span class="op">=</span> <span class="va">breaks</span><span class="op">$</span><span class="va">brks</span>,</span>
 <span>          midpoint <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>          legend.format <span class="op">=</span> <span class="va">legende.parametres</span>,</span>
+<span>          legend.format <span class="op">=</span> <span class="va">legende_parametres</span>,</span>
 <span>          palette <span class="op">=</span> <span class="st">"-RdBu"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span>, legend.show <span class="op">=</span> <span class="cn">FALSE</span>, title <span class="op">=</span>  <span class="st">'RE-SEVM'</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">map3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">data_mtl</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="va">carte3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">data_mtl</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"effet_lasso"</span>, </span>
 <span>          breaks <span class="op">=</span> <span class="va">breaks</span><span class="op">$</span><span class="va">brks</span>,</span>
 <span>          midpoint <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>          legend.format <span class="op">=</span> <span class="va">legende.parametres</span>,</span>
+<span>          legend.format <span class="op">=</span> <span class="va">legende_parametres</span>,</span>
 <span>          palette <span class="op">=</span> <span class="st">"-RdBu"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span>, legend.show <span class="op">=</span> <span class="cn">FALSE</span>, title <span class="op">=</span> <span class="st">'LASSO-SEVM'</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Cette carte est ajoutée pour ne pas apparaître mais afficher la légende </span></span>
 <span><span class="co"># commune dans le 4ème panneau</span></span>
-<span><span class="va">map4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">data_mtl</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="va">carte4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">data_mtl</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"effet_lasso"</span>, </span>
 <span>          breaks <span class="op">=</span> <span class="va">breaks</span><span class="op">$</span><span class="va">brks</span>,</span>
 <span>          midpoint <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>          legend.format <span class="op">=</span> <span class="va">legende.parametres</span>,</span>
+<span>          legend.format <span class="op">=</span> <span class="va">legende_parametres</span>,</span>
 <span>          palette <span class="op">=</span> <span class="st">"-RdBu"</span>, title <span class="op">=</span> <span class="st">'effet spatial'</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>legend.only <span class="op">=</span> <span class="cn">TRUE</span>,scale<span class="op">=</span><span class="fl">1.5</span>, asp<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tmap_arrange.html">tmap_arrange</a></span><span class="op">(</span><span class="va">map1</span>, <span class="va">map2</span>, <span class="va">map3</span>, <span class="va">map4</span>, nrow <span class="op">=</span> <span class="fl">2</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tmap_arrange.html">tmap_arrange</a></span><span class="op">(</span><span class="va">carte1</span>, <span class="va">carte2</span>, <span class="va">carte3</span>, <span class="va">carte4</span>, nrow <span class="op">=</span> <span class="fl">2</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-sevm6" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-sevm6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">

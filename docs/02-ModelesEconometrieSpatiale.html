@@ -520,7 +520,7 @@ Figure&nbsp;2.1: Effets marginaux dans un modèle SLX
 </section><section id="sec-02112" class="level4" data-number="2.1.1.2"><h4 data-number="2.1.1.2" class="anchored" data-anchor-id="sec-02112">
 <span class="header-section-number">2.1.1.2</span> Modèle SLX dans R</h4>
 <p>Pour illustrer la mise en œuvre dans R des différentes modèles d’économétrie spatiale, nous utilisons le jeu de données sur Lyon (<a href="01-NotionsDeBase.html#sec-0111" class="quarto-xref">section&nbsp;<span>1.1.1</span></a>). Les modèles seront construits avec comme variable dépendante le dioxyde d’azote (NO<sub>2</sub>) et cinq variables sociodémographiques comme variables indépendantes (<a href="01-NotionsDeBase.html#sec-0111" class="quarto-xref">section&nbsp;<span>1.1.1</span></a>). Le modèle MCO (non spatial) a déjà été présenté à la <a href="01-NotionsDeBase.html#sec-0171" class="quarto-xref">section&nbsp;<span>1.6.1</span></a>.</p>
-<p>Le modèle SLX est construit avec la fonction <code>lmSLX</code> du <em>package</em> <code>spatialreg</code> <span class="citation" data-cites="bivand2021review">(<a href="references.html#ref-bivand2021review" role="doc-biblioref">Bivand, Millo et Piras 2021</a>)</span>. Dans le code ci-dessous, remarquez le paramètre <code>listw = W.Rook</code> qui est utilisé pour spécifier la matrice de pondérations spatiales.</p>
+<p>Le modèle SLX est construit avec la fonction <code>lmSLX</code> du <em>package</em> <code>spatialreg</code> <span class="citation" data-cites="bivand2021review">(<a href="references.html#ref-bivand2021review" role="doc-biblioref">Bivand, Millo et Piras 2021</a>)</span>. Dans le code ci-dessous, remarquez le paramètre <code>listw = w_rook</code> qui est utilisé pour spécifier la matrice de pondérations spatiales.</p>
 <div class="cell">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Chargemement des packages et des données</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
@@ -529,17 +529,17 @@ Figure&nbsp;2.1: Effets marginaux dans un modèle SLX
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/spatialreg/">spatialreg</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"data/Lyon.Rdata"</span><span class="op">)</span></span>
 <span><span class="co">## Matrice de contiguïté selon le partage d'un segment (Rook)</span></span>
-<span><span class="va">Rook</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/poly2nb.html">poly2nb</a></span><span class="op">(</span><span class="va">LyonIris</span>, queen<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">W.Rook</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">Rook</span>, zero.policy<span class="op">=</span><span class="cn">TRUE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
+<span><span class="va">nb_rook</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/poly2nb.html">poly2nb</a></span><span class="op">(</span><span class="va">LyonIris</span>, queen <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">w_rook</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">nb_rook</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
 <span><span class="co">## Construction du modèle MCO</span></span>
-<span><span class="va">Modele.MCO</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
+<span><span class="va">modele_MCO</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
 <span>                 data <span class="op">=</span> <span class="va">LyonIris</span><span class="op">)</span></span>
 <span><span class="co">## Construction du modèle SLX</span></span>
-<span><span class="va">Modele.SLX</span> <span class="op">&lt;-</span> <span class="fu">spatialreg</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/SLX.html">lmSLX</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
-<span>                   listw <span class="op">=</span> <span class="va">W.Rook</span>,   <span class="co"># matrice de pondérations spatiales</span></span>
+<span><span class="va">modele_SLX</span> <span class="op">&lt;-</span> <span class="fu">spatialreg</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/SLX.html">lmSLX</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
+<span>                   listw <span class="op">=</span> <span class="va">w_rook</span>,   <span class="co"># matrice de pondérations spatiales</span></span>
 <span>                   data <span class="op">=</span> <span class="va">LyonIris</span><span class="op">)</span>  <span class="co"># dataframe</span></span>
 <span><span class="co">## Résultats du modèle</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">Modele.SLX</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">modele_SLX</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -580,7 +580,7 @@ lag.NivVieMed   -1.805e-02   1.750e-01  -1.031e-01   9.179e-01</code></pre>
 <p>Le code suivant permet de calculer ces effets directs et indirects.</p>
 <div class="cell">
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Effets directs, indirects et totaux (uniquement les coefficients)</span></span>
-<span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/impacts.html">impacts</a></span><span class="op">(</span><span class="va">Modele.SLX</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/impacts.html">impacts</a></span><span class="op">(</span><span class="va">modele_SLX</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Impact measures (SlX, glht):
                 Direct    Indirect      Total
@@ -591,7 +591,7 @@ Pct_brevet -0.07363272 -0.30128171 -0.3749144
 NivVieMed  -0.18440960 -0.01804718 -0.2024568</code></pre>
 </div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Effets directs, indirects et totaux (coefficients, valeurs de z et de p)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/impacts.html">impacts</a></span><span class="op">(</span><span class="va">Modele.SLX</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/impacts.html">impacts</a></span><span class="op">(</span><span class="va">modele_SLX</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Impact measures (SlX, glht, n-k):
                 Direct    Indirect      Total
@@ -630,10 +630,10 @@ NivVieMed  0.0955397 0.91786    0.17454   </code></pre>
 <p><strong>Dépendance spatiale du modèle SLX?</strong></p>
 <p>Ce modèle a-t-il corrigé le problème de dépendance spatiale du modèle de régression linéaire classique? Avec une valeur du <em>I</em> de Moran de 0,605 (<em>p</em>&nbsp;&lt;&nbsp;0,001), les résidus sont toujours fortement autocorrélés spatialement (<a href="#fig-figCartoResSLX" class="quarto-xref">figure&nbsp;<span>2.2</span></a>).</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">legende.parametres</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>text.separator <span class="op">=</span> <span class="st">"à"</span>, </span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">legende_parametres</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>text.separator <span class="op">=</span> <span class="st">"à"</span>, </span>
 <span>                           decimal.mark <span class="op">=</span> <span class="st">","</span>, </span>
 <span>                           big.mark <span class="op">=</span> <span class="st">" "</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/lm.morantest.html">lm.morantest</a></span><span class="op">(</span><span class="va">Modele.SLX</span>, <span class="va">W.Rook</span>, alternative<span class="op">=</span><span class="st">"two.sided"</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/lm.morantest.html">lm.morantest</a></span><span class="op">(</span><span class="va">modele_SLX</span>, <span class="va">w_rook</span>, alternative<span class="op">=</span><span class="st">"two.sided"</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Global Moran I for regression residuals
@@ -641,7 +641,7 @@ NivVieMed  0.0955397 0.91786    0.17454   </code></pre>
 data:  
 model: lm(formula = formula(paste("y ~ ", paste(colnames(x)[-1],
 collapse = "+"))), data = as.data.frame(x), weights = weights)
-weights: W.Rook
+weights: w_rook
 
 Moran I statistic standard deviate = 21.951, p-value &lt; 2.2e-16
 alternative hypothesis: two.sided
@@ -649,12 +649,12 @@ sample estimates:
 Observed Moran I      Expectation         Variance 
     0.6046602748    -0.0072844321     0.0007771643 </code></pre>
 </div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">LyonIris</span><span class="op">$</span><span class="va">SLX.Residus</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">Modele.SLX</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">LyonIris</span><span class="op">$</span><span class="va">SLX.Residus</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">modele_SLX</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"SLX.Residus"</span>, n <span class="op">=</span> <span class="fl">5</span>, style <span class="op">=</span> <span class="st">"quantile"</span>, </span>
-<span>          legend.format <span class="op">=</span> <span class="va">legende.parametres</span>,</span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"SLX.Residus"</span>, n <span class="op">=</span> <span class="fl">5</span>, style <span class="op">=</span> <span class="st">"quantile"</span>, </span>
+<span>          legend.format <span class="op">=</span> <span class="va">legende_parametres</span>,</span>
 <span>          palette <span class="op">=</span> <span class="st">"-RdBu"</span>, title <span class="op">=</span> <span class="st">"Résidus"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_scale_bar.html">tm_scale_bar</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-figCartoResSLX" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -719,16 +719,16 @@ Figure&nbsp;2.3: Effets marginaux dans un modèle SAR
 <p>Le modèle SAR est construit avec la fonction <code>lagsarlm</code> du <em>package</em> <code>spatialreg</code>.</p>
 <div class="cell">
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Construction du modèle</span></span>
-<span><span class="va">Modele.SAR</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">lagsarlm</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
-<span>                              listw<span class="op">=</span><span class="va">W.Rook</span>,    <span class="co"># matrice de pondérations spatiales</span></span>
-<span>                              data <span class="op">=</span> <span class="va">LyonIris</span>, <span class="co"># dataframe</span></span>
-<span>                              type <span class="op">=</span> <span class="st">'lag'</span><span class="op">)</span>    <span class="co"># Modèle lag par défaut</span></span>
+<span><span class="va">modele_SAR</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">lagsarlm</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
+<span>                             listw <span class="op">=</span> <span class="va">w_rook</span>,  <span class="co"># matrice de pondérations spatiales</span></span>
+<span>                             data <span class="op">=</span> <span class="va">LyonIris</span>, <span class="co"># dataframe</span></span>
+<span>                             type <span class="op">=</span> <span class="st">'lag'</span><span class="op">)</span>    <span class="co"># Modèle lag par défaut</span></span>
 <span><span class="co">## Résultats du modèle</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">Modele.SAR</span>, Nagelkerke<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">modele_SAR</span>, Nagelkerke <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:lagsarlm(formula = NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + 
-    NivVieMed, data = LyonIris, listw = W.Rook, type = "lag")
+    NivVieMed, data = LyonIris, listw = w_rook, type = "lag")
 
 Residuals:
       Min        1Q    Median        3Q       Max 
@@ -764,7 +764,7 @@ test value: 0.6198, p-value: 0.43112</code></pre>
 <p>À nouveau, il est possible d’utiliser la fonction <code>impacts</code> pour obtenir les effets marginaux direct et indirects.</p>
 <div class="cell">
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Effets directs, indirects et totaux (uniquement les coefficients)</span></span>
-<span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/impacts.html">impacts</a></span><span class="op">(</span><span class="va">Modele.SAR</span>, listw <span class="op">=</span> <span class="va">W.Rook</span>, R <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/impacts.html">impacts</a></span><span class="op">(</span><span class="va">modele_SAR</span>, listw <span class="op">=</span> <span class="va">w_rook</span>, R <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Impact measures (lag, exact):
                 Direct   Indirect      Total
@@ -775,7 +775,7 @@ Pct_brevet -0.02704205 -0.1324283 -0.1594703
 NivVieMed  -0.13836534 -0.6775923 -0.8159576</code></pre>
 </div>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Effets directs, indirects et totaux (coefficients, valeurs de z et de p)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/impacts.html">impacts</a></span><span class="op">(</span><span class="va">Modele.SAR</span>, listw <span class="op">=</span> <span class="va">W.Rook</span>, R <span class="op">=</span> <span class="fl">999</span><span class="op">)</span>, zstats <span class="op">=</span> <span class="cn">TRUE</span>, short <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/impacts.html">impacts</a></span><span class="op">(</span><span class="va">modele_SAR</span>, listw <span class="op">=</span> <span class="va">w_rook</span>, R <span class="op">=</span> <span class="fl">999</span><span class="op">)</span>, zstats <span class="op">=</span> <span class="cn">TRUE</span>, short <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Impact measures (lag, exact):
                 Direct   Indirect      Total
@@ -789,27 +789,27 @@ Simulation results ( variance matrix):
 ========================================================
 Simulated standard errors
                Direct  Indirect     Total
-Pct0_14    0.04176519 0.2425784 0.2799465
-Pct_65     0.03771803 0.1949496 0.2316695
-Pct_Img    0.03616854 0.1869336 0.2223262
-Pct_brevet 0.02572590 0.1299186 0.1551870
-NivVieMed  0.06794785 0.3544275 0.4190787
+Pct0_14    0.04269629 0.2384841 0.2766080
+Pct_65     0.03728889 0.1949398 0.2311491
+Pct_Img    0.03357521 0.1736879 0.2063216
+Pct_brevet 0.02517766 0.1308822 0.1554346
+NivVieMed  0.06629249 0.3458891 0.4086378
 
 Simulated z-values:
               Direct  Indirect     Total
-Pct0_14    -3.330378 -2.862841 -2.977559
-Pct_65     -1.311355 -1.266571 -1.279320
-Pct_Img     1.118363  1.069932  1.081546
-Pct_brevet -1.039047 -1.011624 -1.019152
-NivVieMed  -2.043945 -1.944400 -1.975835
+Pct0_14    -3.279259 -2.910723 -3.015724
+Pct_65     -1.279061 -1.208600 -1.225611
+Pct_Img     1.311368  1.253517  1.268652
+Pct_brevet -1.129508 -1.069886 -1.083848
+NivVieMed  -2.108911 -1.998737 -2.033943
 
 Simulated p-values:
-           Direct     Indirect  Total    
-Pct0_14    0.00086728 0.0041986 0.0029055
-Pct_65     0.18973771 0.2053086 0.2007846
-Pct_Img    0.26341186 0.2846497 0.2794545
-Pct_brevet 0.29878291 0.3117177 0.3081307
-NivVieMed  0.04095900 0.0518472 0.0481735</code></pre>
+           Direct    Indirect  Total    
+Pct0_14    0.0010408 0.0036059 0.0025637
+Pct_65     0.2008757 0.2268165 0.2203450
+Pct_Img    0.1897336 0.2100176 0.2045653
+Pct_brevet 0.2586837 0.2846704 0.2784320
+NivVieMed  0.0349523 0.0456369 0.0419573</code></pre>
 </div>
 </div>
 <p>L’interprétation des effets directs se rapproche de celle des coefficients classiques. Ainsi, selon ce modèle, l’augmentation du niveau de vie médian de 1000&nbsp;€ dans un IRIS est associée avec une diminution moyenne de la concentration de dioxyde d’azote de 0,14 dans cet IRIS. L’effet total est de -0,82, indiquant qu’en moyenne, l’augmentation de 1000&nbsp;€ du niveau de vie médian dans un IRIS est associée avec une diminution moyenne de 0,82 de la concentration de dioxyde d’azote dans l’ensemble des IRIS. Au final, l’effet indirect est simplement la différence entre l’effet total et l’effet direct. Nous pouvons constater ici que les effets indirects sont plus importants que les effets directs.</p>
@@ -817,26 +817,26 @@ NivVieMed  0.04095900 0.0518472 0.0481735</code></pre>
 <p>Ce modèle a-t-il corrigé le problème de dépendance spatiale du modèle de régression linéaire classique? Avec une valeur du <em>I</em> de Moran de -0,014 (<em>p</em>&nbsp;=&nbsp;0,654), les résidus ne sont plus spatialement autocorrélés (<a href="#fig-figCartoResSAR" class="quarto-xref">figure&nbsp;<span>2.4</span></a>).</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Autocorrélation spatiale des résidus</span></span>
-<span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">Modele.SAR</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">modele_SAR</span><span class="op">)</span>, <span class="va">w_rook</span>, nsim <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Monte-Carlo simulation of Moran I
 
-data:  resid(Modele.SAR) 
-weights: W.Rook  
+data:  resid(modele_SAR) 
+weights: w_rook  
 number of simulations + 1: 1000 
 
-statistic = -0.014281, observed rank = 357, p-value = 0.643
+statistic = -0.014281, observed rank = 363, p-value = 0.637
 alternative hypothesis: greater</code></pre>
 </div>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Cartographie des résidus</span></span>
-<span><span class="va">legende.parametres</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>text.separator <span class="op">=</span> <span class="st">"à"</span>, </span>
+<span><span class="va">legende_parametres</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>text.separator <span class="op">=</span> <span class="st">"à"</span>, </span>
 <span>                           decimal.mark <span class="op">=</span> <span class="st">","</span>, </span>
 <span>                           big.mark <span class="op">=</span> <span class="st">" "</span><span class="op">)</span></span>
-<span><span class="va">LyonIris</span><span class="op">$</span><span class="va">SAR.Residus</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">Modele.SAR</span><span class="op">)</span></span>
+<span><span class="va">LyonIris</span><span class="op">$</span><span class="va">SAR.Residus</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">modele_SAR</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"SAR.Residus"</span>, n <span class="op">=</span> <span class="fl">5</span>, style <span class="op">=</span> <span class="st">"quantile"</span>, </span>
-<span>          legend.format <span class="op">=</span> <span class="va">legende.parametres</span>,</span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"SAR.Residus"</span>, n <span class="op">=</span> <span class="fl">5</span>, style <span class="op">=</span> <span class="st">"quantile"</span>, </span>
+<span>          legend.format <span class="op">=</span> <span class="va">legende_parametres</span>,</span>
 <span>          palette <span class="op">=</span> <span class="st">"-RdBu"</span>, title <span class="op">=</span> <span class="st">"Résidus"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_scale_bar.html">tm_scale_bar</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -891,15 +891,15 @@ Figure&nbsp;2.4: Cartographie des résidus du modèle SAR
 <p>Le modèle SEM est construit avec la fonction <code>errorsarlm</code> du <em>package</em> <code>spatialreg</code>.</p>
 <div class="cell">
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Construction du modèle</span></span>
-<span><span class="va">Modele.SEM</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">errorsarlm</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
-<span>                         listw<span class="op">=</span><span class="va">W.Rook</span>,    <span class="co"># matrice de pondérations spatiales</span></span>
+<span><span class="va">modele_SEM</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">errorsarlm</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
+<span>                         listw <span class="op">=</span> <span class="va">w_rook</span>,  <span class="co"># matrice de pondérations spatiales</span></span>
 <span>                         data <span class="op">=</span> <span class="va">LyonIris</span><span class="op">)</span> <span class="co"># dataframe</span></span>
 <span><span class="co">## Résultats du modèle</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">Modele.SEM</span>, Nagelkerke<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">modele_SEM</span>, Nagelkerke <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:errorsarlm(formula = NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + 
-    NivVieMed, data = LyonIris, listw = W.Rook)
+    NivVieMed, data = LyonIris, listw = w_rook)
 
 Residuals:
       Min        1Q    Median        3Q       Max 
@@ -933,16 +933,16 @@ AIC: 2755.5, (AIC for lm: 3366.6)</code></pre>
 <p>Ce modèle a-t-il corrigé le problème de dépendance spatiale du modèle de régression linéaire classique? Avec une valeur du <em>I</em> de Moran de -0,013 (<em>p</em>&nbsp;=&nbsp;0,614), les résidus ne sont plus spatialement autocorrélés.</p>
 <div class="cell">
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Autocorrélation spatiale des résidus</span></span>
-<span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">Modele.SEM</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">modele_SEM</span><span class="op">)</span>, <span class="va">w_rook</span>, nsim <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Monte-Carlo simulation of Moran I
 
-data:  resid(Modele.SEM) 
-weights: W.Rook  
+data:  resid(modele_SEM) 
+weights: w_rook  
 number of simulations + 1: 1000 
 
-statistic = -0.011827, observed rank = 360, p-value = 0.64
+statistic = -0.011827, observed rank = 386, p-value = 0.614
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
@@ -953,7 +953,7 @@ alternative hypothesis: greater</code></pre>
 <li><p>Si <em>p</em>&nbsp;&gt;&nbsp;0,05, les résultats des modèles ne sont différents et l’on peut conserver le modèle MCO.</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/sarlm_tests.html">Hausman.test</a></span><span class="op">(</span><span class="va">Modele.SEM</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/sarlm_tests.html">Hausman.test</a></span><span class="op">(</span><span class="va">modele_SEM</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Spatial Hausman test (asymptotic)
@@ -1003,16 +1003,16 @@ Figure&nbsp;2.5: Effets marginaux dans un modèle SDM
 <p>Le modèle SDM est construit avec la fonction <code>lagsarlm</code> du <em>package</em> <code>spatialreg</code>. Notez que le paramètre <code>type = "mixed"</code> spécifie l’utilisation d’un modèle mixte.</p>
 <div class="cell">
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Construction du modèle</span></span>
-<span><span class="va">Modele.DurbinSpatial</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">lagsarlm</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
-<span>                       listw <span class="op">=</span> <span class="va">W.Rook</span>,    <span class="co"># matrice de pondérations spatiales</span></span>
+<span><span class="va">modele_SDM</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">lagsarlm</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
+<span>                       listw <span class="op">=</span> <span class="va">w_rook</span>,    <span class="co"># matrice de pondérations spatiales</span></span>
 <span>                       data <span class="op">=</span> <span class="va">LyonIris</span>,   <span class="co"># dataframe</span></span>
 <span>                       type <span class="op">=</span> <span class="st">"mixed"</span><span class="op">)</span></span>
 <span><span class="co">## Résultats du modèle</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">Modele.DurbinSpatial</span>, Nagelkerke<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">modele_SDM</span>, Nagelkerke <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:lagsarlm(formula = NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + 
-    NivVieMed, data = LyonIris, listw = W.Rook, type = "mixed")
+    NivVieMed, data = LyonIris, listw = w_rook, type = "mixed")
 
 Residuals:
       Min        1Q    Median        3Q       Max 
@@ -1051,7 +1051,7 @@ test value: 0.0748, p-value: 0.78447</code></pre>
 <p><strong>Effets directs, indirects et totaux</strong></p>
 <div class="cell">
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Effets directs, indirects et totaux (uniquement les coefficients)</span></span>
-<span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/impacts.html">impacts</a></span><span class="op">(</span><span class="va">Modele.DurbinSpatial</span>, listw <span class="op">=</span> <span class="va">W.Rook</span>, R <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/impacts.html">impacts</a></span><span class="op">(</span><span class="va">modele_SDM</span>, listw <span class="op">=</span> <span class="va">w_rook</span>, R <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Impact measures (mixed, exact):
                 Direct    Indirect       Total
@@ -1062,7 +1062,7 @@ Pct_brevet -0.01903815 -0.46681402 -0.48585217
 NivVieMed  -0.15403413 -0.11775603 -0.27179016</code></pre>
 </div>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Effets directs, indirects et totaux (coefficients, valeurs de z et de p)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/impacts.html">impacts</a></span><span class="op">(</span><span class="va">Modele.DurbinSpatial</span>, listw <span class="op">=</span> <span class="va">W.Rook</span>, R <span class="op">=</span> <span class="fl">999</span><span class="op">)</span>, zstats <span class="op">=</span> <span class="cn">TRUE</span>, short <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/impacts.html">impacts</a></span><span class="op">(</span><span class="va">modele_SDM</span>, listw <span class="op">=</span> <span class="va">w_rook</span>, R <span class="op">=</span> <span class="fl">999</span><span class="op">)</span>, zstats <span class="op">=</span> <span class="cn">TRUE</span>, short <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Impact measures (mixed, exact):
                 Direct    Indirect       Total
@@ -1076,42 +1076,42 @@ Simulation results ( variance matrix):
 ========================================================
 Simulated standard errors
                Direct  Indirect     Total
-Pct0_14    0.04293445 0.3287792 0.3553899
-Pct_65     0.03528705 0.2929193 0.3156918
-Pct_Img    0.03356708 0.2783524 0.2988846
-Pct_brevet 0.02453232 0.1941841 0.2098794
-NivVieMed  0.06794419 0.4973031 0.5315213
+Pct0_14    0.04359111 0.3407078 0.3687219
+Pct_65     0.03608724 0.2751450 0.2988277
+Pct_Img    0.03324719 0.2757163 0.2945619
+Pct_brevet 0.02391069 0.1995064 0.2150237
+NivVieMed  0.06991472 0.4838717 0.5206284
 
 Simulated z-values:
                Direct   Indirect       Total
-Pct0_14    -2.8476194 -3.0935091 -3.20589404
-Pct_65     -0.6102380  0.1307031  0.05306434
-Pct_Img     1.9727771  3.4543468  3.43860419
-Pct_brevet -0.7275068 -2.4094572 -2.31430871
-NivVieMed  -2.2067843 -0.1853710 -0.45552972
+Pct0_14    -2.8525566 -3.0367269 -3.14324355
+Pct_65     -0.6134445  0.1093624  0.02661404
+Pct_Img     1.9563628  3.4659403  3.46500931
+Pct_brevet -0.7639862 -2.3197903 -2.23733617
+NivVieMed  -2.1962028 -0.2295485 -0.50826830
 
 Simulated p-values:
            Direct    Indirect   Total     
-Pct0_14    0.0044048 0.00197805 0.00134644
-Pct_65     0.5417042 0.89601014 0.95768064
-Pct_Img    0.0485210 0.00055163 0.00058472
-Pct_brevet 0.4669155 0.01597627 0.02065079
-NivVieMed  0.0273291 0.85293804 0.64872819</code></pre>
+Pct0_14    0.0043369 0.00239162 0.00167087
+Pct_65     0.5395825 0.91291502 0.97876757
+Pct_Img    0.0504224 0.00052838 0.00053021
+Pct_brevet 0.4448755 0.02035222 0.02526438
+NivVieMed  0.0280774 0.81844263 0.61126520</code></pre>
 </div>
 </div>
 <p><strong>Dépendance spatiale du modèle SDM?</strong></p>
 <p>Avec une valeur du <em>I</em> de Moran de -0,005 (<em>p</em>&nbsp;=&nbsp;0,498), les résidus du modèle SDEM ne sont pas spatialement autocorrélés.</p>
 <div class="cell">
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">Modele.DurbinSpatial</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">modele_SDM</span><span class="op">)</span>, <span class="va">w_rook</span>, nsim <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Monte-Carlo simulation of Moran I
 
-data:  resid(Modele.DurbinSpatial) 
-weights: W.Rook  
+data:  resid(modele_SDM) 
+weights: w_rook  
 number of simulations + 1: 1000 
 
-statistic = -0.0046127, observed rank = 447, p-value = 0.553
+statistic = -0.0046127, observed rank = 482, p-value = 0.518
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
@@ -1152,16 +1152,16 @@ Figure&nbsp;2.6: Effets marginaux dans un modèle SDEM
 <p>Le modèle SDEM est construit avec la fonction <code>errorsarlm</code> du <em>package</em> <code>spatialreg</code>. Notez que le paramètre <code>etype = "mixed"</code> spécifie l’utilisation d’un modèle mixte.</p>
 <div class="cell">
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Construction du modèle</span></span>
-<span><span class="va">Modele.DurbinErreur</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">errorsarlm</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
-<span>                                  listw<span class="op">=</span><span class="va">W.Rook</span>,    <span class="co"># matrice de pondérations spatiales</span></span>
-<span>                                  data <span class="op">=</span> <span class="va">LyonIris</span>, <span class="co"># dataframe</span></span>
-<span>                                  etype <span class="op">=</span> <span class="st">'emixed'</span><span class="op">)</span></span>
+<span><span class="va">modele_SDEM</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">errorsarlm</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
+<span>                          listw <span class="op">=</span> <span class="va">w_rook</span>,  <span class="co"># matrice de pondérations spatiales</span></span>
+<span>                          data <span class="op">=</span> <span class="va">LyonIris</span>, <span class="co"># dataframe</span></span>
+<span>                          etype <span class="op">=</span> <span class="st">'emixed'</span><span class="op">)</span></span>
 <span><span class="co">## Résultats du modèle</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">Modele.DurbinErreur</span>, Nagelkerke<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">modele_SDEM</span>, Nagelkerke <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:errorsarlm(formula = NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + 
-    NivVieMed, data = LyonIris, listw = W.Rook, etype = "emixed")
+    NivVieMed, data = LyonIris, listw = w_rook, etype = "emixed")
 
 Residuals:
       Min        1Q    Median        3Q       Max 
@@ -1198,7 +1198,7 @@ AIC: 2760.5, (AIC for lm: 3222.6)</code></pre>
 <p><strong>Effets directs, indirects et totaux</strong></p>
 <div class="cell">
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Effets directs, indirects et totaux (uniquement les coefficients)</span></span>
-<span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/impacts.html">impacts</a></span><span class="op">(</span><span class="va">Modele.DurbinErreur</span>, listw <span class="op">=</span> <span class="va">W.Rook</span>, R <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/impacts.html">impacts</a></span><span class="op">(</span><span class="va">modele_SDEM</span>, listw <span class="op">=</span> <span class="va">w_rook</span>, R <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Impact measures (SDEM, glht):
                  Direct    Indirect       Total
@@ -1209,7 +1209,7 @@ Pct_brevet  0.009784961 -0.03804813 -0.02826317
 NivVieMed  -0.167855498 -0.10253070 -0.27038620</code></pre>
 </div>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Effets directs, indirects et totaux (coefficients, valeurs de z et de p)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/impacts.html">impacts</a></span><span class="op">(</span><span class="va">Modele.DurbinErreur</span>, listw <span class="op">=</span> <span class="va">W.Rook</span>, R <span class="op">=</span> <span class="fl">999</span><span class="op">)</span>, zstats <span class="op">=</span> <span class="cn">TRUE</span>, short <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/impacts.html">impacts</a></span><span class="op">(</span><span class="va">modele_SDEM</span>, listw <span class="op">=</span> <span class="va">w_rook</span>, R <span class="op">=</span> <span class="fl">999</span><span class="op">)</span>, zstats <span class="op">=</span> <span class="cn">TRUE</span>, short <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Impact measures (SDEM, glht, n):
                  Direct    Indirect       Total
@@ -1247,16 +1247,16 @@ NivVieMed  0.013576 0.552040 0.201589</code></pre>
 <p><strong>Dépendance spatiale du modèle SDEM?</strong></p>
 <p>Avec une valeur du <em>I</em> de Moran de -0,010 (<em>p</em>&nbsp;=&nbsp;0,619), les résidus du modèle SDEM ne sont pas spatialement autocorrélés.</p>
 <div class="cell">
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">Modele.DurbinErreur</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">modele_SDEM</span><span class="op">)</span>, <span class="va">w_rook</span>, nsim <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Monte-Carlo simulation of Moran I
 
-data:  resid(Modele.DurbinErreur) 
-weights: W.Rook  
+data:  resid(modele_SDEM) 
+weights: w_rook  
 number of simulations + 1: 1000 
 
-statistic = -0.010362, observed rank = 396, p-value = 0.604
+statistic = -0.010362, observed rank = 406, p-value = 0.594
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
@@ -1278,16 +1278,16 @@ alternative hypothesis: greater</code></pre>
 <span class="header-section-number">2.1.6.2</span> Modèle généralisé (Manski) dans R</h4>
 <div class="cell">
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Construction du modèle</span></span>
-<span><span class="va">Modele.Manski</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">sacsarlm</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
-<span>                          listw<span class="op">=</span><span class="va">W.Rook</span>,    <span class="co"># matrice de pondérations spatiales</span></span>
+<span><span class="va">modele_Manski</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">sacsarlm</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
+<span>                          listw <span class="op">=</span> <span class="va">w_rook</span>,  <span class="co"># matrice de pondérations spatiales</span></span>
 <span>                          data <span class="op">=</span> <span class="va">LyonIris</span>, <span class="co"># dataframe</span></span>
 <span>                          type<span class="op">=</span><span class="st">"sacmixed"</span><span class="op">)</span></span>
 <span><span class="co">## Résultats du modèle</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">Modele.Manski</span>, Nagelkerke<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">modele_Manski</span>, Nagelkerke <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:sacsarlm(formula = NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + 
-    NivVieMed, data = LyonIris, listw = W.Rook, type = "sacmixed")
+    NivVieMed, data = LyonIris, listw = w_rook, type = "sacmixed")
 
 Residuals:
       Min        1Q    Median        3Q       Max 
@@ -1325,7 +1325,7 @@ Number of parameters estimated: 14
 AIC: 2734.1, (AIC for lm: 3366.6)</code></pre>
 </div>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Effets marginaux</span></span>
-<span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/impacts.html">impacts</a></span><span class="op">(</span><span class="va">Modele.Manski</span>, listw<span class="op">=</span><span class="va">W.Rook</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/impacts.html">impacts</a></span><span class="op">(</span><span class="va">modele_Manski</span>, listw <span class="op">=</span> <span class="va">w_rook</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Impact measures (sacmixed, exact):
                 Direct    Indirect      Total
@@ -1335,7 +1335,7 @@ Pct_Img     0.06560041  0.96904739  1.0346478
 Pct_brevet -0.01824321 -0.47544430 -0.4936875
 NivVieMed  -0.15390071 -0.11726571 -0.2711664</code></pre>
 </div>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/impacts.html">impacts</a></span><span class="op">(</span><span class="va">Modele.Manski</span>,listw<span class="op">=</span><span class="va">W.Rook</span>,R<span class="op">=</span><span class="fl">500</span><span class="op">)</span>,zstats<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/impacts.html">impacts</a></span><span class="op">(</span><span class="va">modele_Manski</span>,listw <span class="op">=</span> <span class="va">w_rook</span>, R <span class="op">=</span> <span class="fl">500</span><span class="op">)</span>, zstats<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Impact measures (sacmixed, exact):
                 Direct    Indirect      Total
@@ -1357,20 +1357,20 @@ Sample size per chain = 500
    plus standard error of the mean:
 
                Mean      SD Naive SE Time-series SE
-Pct0_14    -0.12006 0.04501 0.002013       0.002013
-Pct_65     -0.01920 0.03615 0.001617       0.001617
-Pct_Img     0.06683 0.03252 0.001454       0.001454
-Pct_brevet -0.01969 0.02713 0.001213       0.001213
-NivVieMed  -0.15307 0.06984 0.003123       0.002822
+Pct0_14    -0.12290 0.04466 0.001997       0.001997
+Pct_65     -0.01843 0.03717 0.001662       0.001662
+Pct_Img     0.06597 0.03412 0.001526       0.001526
+Pct_brevet -0.01994 0.02490 0.001113       0.001019
+NivVieMed  -0.15849 0.07041 0.003149       0.002615
 
 2. Quantiles for each variable:
 
                 2.5%      25%      50%       75%    97.5%
-Pct0_14    -0.202036 -0.15131 -0.11835 -0.088741 -0.03902
-Pct_65     -0.087777 -0.04312 -0.02111  0.004355  0.05172
-Pct_Img     0.005337  0.04673  0.06542  0.089326  0.12975
-Pct_brevet -0.072012 -0.03814 -0.02112 -0.001440  0.03141
-NivVieMed  -0.284910 -0.20128 -0.15199 -0.103462 -0.02108
+Pct0_14    -0.200165 -0.15651 -0.12237 -0.092347 -0.02795
+Pct_65     -0.092869 -0.04094 -0.01977  0.006863  0.05744
+Pct_Img     0.005464  0.04264  0.06624  0.089648  0.13274
+Pct_brevet -0.070308 -0.03655 -0.01960 -0.003017  0.02689
+NivVieMed  -0.304637 -0.20763 -0.15695 -0.108463 -0.02511
 
 ========================================================
 Indirect:
@@ -1384,20 +1384,20 @@ Sample size per chain = 500
    plus standard error of the mean:
 
                Mean     SD Naive SE Time-series SE
-Pct0_14    -1.04956 0.4223  0.01889        0.01889
-Pct_65      0.05654 0.3090  0.01382        0.01382
-Pct_Img     0.99886 0.3377  0.01510        0.01510
-Pct_brevet -0.48647 0.2285  0.01022        0.01022
-NivVieMed  -0.11720 0.5488  0.02454        0.02454
+Pct0_14    -1.04791 0.3795  0.01697       0.017562
+Pct_65      0.05299 0.3291  0.01472       0.014716
+Pct_Img     0.99356 0.3268  0.01461       0.013582
+Pct_brevet -0.48254 0.2308  0.01032       0.009641
+NivVieMed  -0.11005 0.5323  0.02380       0.023804
 
 2. Quantiles for each variable:
 
-              2.5%     25%      50%     75%   97.5%
-Pct0_14    -1.9219 -1.2726 -1.02278 -0.7831 -0.3854
-Pct_65     -0.5549 -0.1412  0.05012  0.2513  0.6273
-Pct_Img     0.4747  0.7917  0.97556  1.1847  1.7533
-Pct_brevet -0.9759 -0.6226 -0.47566 -0.3406 -0.1024
-NivVieMed  -1.2684 -0.4281 -0.12641  0.2304  1.0284
+              2.5%     25%      50%     75%    97.5%
+Pct0_14    -1.8462 -1.2659 -1.01395 -0.7926 -0.42100
+Pct_65     -0.5211 -0.1566  0.04325  0.2325  0.78985
+Pct_Img     0.4987  0.7846  0.96773  1.1529  1.70064
+Pct_brevet -0.9699 -0.6193 -0.47409 -0.3452 -0.05505
+NivVieMed  -1.2028 -0.4248 -0.11762  0.2200  0.90974
 
 ========================================================
 Total:
@@ -1411,57 +1411,57 @@ Sample size per chain = 500
    plus standard error of the mean:
 
                Mean     SD Naive SE Time-series SE
-Pct0_14    -1.16962 0.4499  0.02012        0.02063
-Pct_65      0.03734 0.3327  0.01488        0.01488
-Pct_Img     1.06569 0.3570  0.01596        0.01596
-Pct_brevet -0.50616 0.2460  0.01100        0.01100
-NivVieMed  -0.27028 0.5859  0.02620        0.02620
+Pct0_14    -1.17081 0.4064  0.01817        0.01871
+Pct_65      0.03456 0.3528  0.01578        0.01578
+Pct_Img     1.05953 0.3463  0.01549        0.01549
+Pct_brevet -0.50248 0.2454  0.01098        0.01017
+NivVieMed  -0.26854 0.5699  0.02549        0.02549
 
 2. Quantiles for each variable:
 
               2.5%     25%      50%      75%    97.5%
-Pct0_14    -2.0548 -1.4064 -1.13476 -0.89096 -0.44394
-Pct_65     -0.6283 -0.1791  0.03349  0.24419  0.65241
-Pct_Img     0.5000  0.8412  1.04417  1.25843  1.82649
-Pct_brevet -1.0153 -0.6527 -0.49282 -0.34175 -0.08047
-NivVieMed  -1.4963 -0.6087 -0.28151  0.08892  0.98060
+Pct0_14    -1.9879 -1.4024 -1.14004 -0.90520 -0.49635
+Pct_65     -0.5808 -0.1982  0.01863  0.23263  0.82490
+Pct_Img     0.5339  0.8343  1.03869  1.23628  1.81002
+Pct_brevet -1.0282 -0.6484 -0.49754 -0.35201 -0.04314
+NivVieMed  -1.3706 -0.6277 -0.29036  0.08778  0.85041
 
 ========================================================
 Simulated standard errors
                Direct  Indirect     Total
-Pct0_14    0.04501286 0.4223167 0.4498744
-Pct_65     0.03615073 0.3090098 0.3327139
-Pct_Img    0.03252289 0.3377019 0.3569700
-Pct_brevet 0.02712911 0.2284512 0.2460077
-NivVieMed  0.06983774 0.5488070 0.5859193
+Pct0_14    0.04466003 0.3794502 0.4063993
+Pct_65     0.03716579 0.3290666 0.3527575
+Pct_Img    0.03412280 0.3267611 0.3463473
+Pct_brevet 0.02489684 0.2307789 0.2454309
+NivVieMed  0.07040510 0.5322709 0.5698878
 
 Simulated z-values:
-               Direct   Indirect      Total
-Pct0_14    -2.6673073 -2.4852388 -2.5998832
-Pct_65     -0.5311109  0.1829625  0.1122200
-Pct_Img     2.0547290  2.9578140  2.9853631
-Pct_brevet -0.7258800 -2.1294176 -2.0574983
-NivVieMed  -2.1918270 -0.2135618 -0.4612862
+               Direct   Indirect       Total
+Pct0_14    -2.7518242 -2.7616593 -2.88093171
+Pct_65     -0.4959105  0.1610400  0.09797659
+Pct_Img     1.9332889  3.0406352  3.05915625
+Pct_brevet -0.8007637 -2.0909314 -2.04733522
+NivVieMed  -2.2511756 -0.2067516 -0.47121921
 
 Simulated p-values:
            Direct    Indirect  Total    
-Pct0_14    0.0076462 0.0129465 0.0093256
-Pct_65     0.5953420 0.8548274 0.9106489
-Pct_Img    0.0399052 0.0030983 0.0028324
-Pct_brevet 0.4679123 0.0332197 0.0396383
-NivVieMed  0.0283920 0.8308888 0.6445933</code></pre>
+Pct0_14    0.0059264 0.0057508 0.0039650
+Pct_65     0.6199576 0.8720619 0.9219509
+Pct_Img    0.0532006 0.0023608 0.0022196
+Pct_brevet 0.4232685 0.0365342 0.0406252
+NivVieMed  0.0243744 0.8362039 0.6374842</code></pre>
 </div>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Autocorrélation spatiale des résidus</span></span>
-<span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">Modele.Manski</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">modele_Manski</span><span class="op">)</span>, <span class="va">w_rook</span>, nsim <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Monte-Carlo simulation of Moran I
 
-data:  resid(Modele.Manski) 
-weights: W.Rook  
+data:  resid(modele_Manski) 
+weights: w_rook  
 number of simulations + 1: 1000 
 
-statistic = -0.0009215, observed rank = 509, p-value = 0.491
+statistic = -0.0009215, observed rank = 529, p-value = 0.471
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
@@ -1499,8 +1499,8 @@ Figure&nbsp;2.7: Démarche pour choisir entre les modèles MCO, SAR et SEM
 </ol>
 <p>Dans R, ces tests LM sont calculés sur le modèle MCO avec la fonction <code>lm.LMtests</code> et une matrice de pondérations spatiales. Dans les résultats ci-dessous, nous ne retenons pas le modèle SEM car la valeur de 0,740 pour le <code>RLMerr</code> n’est pas significative (<em>p</em>&nbsp;=&nbsp;0,3898). Par contre, les valeurs de <code>LMlag</code> et de <code>RLMlag</code> (555 et 123) sont significatives, ce qui justifie la sélection du modèle SAR.</p>
 <div class="cell">
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/lm.RStests.html">lm.LMtests</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">Modele.MCO</span>,</span>
-<span>                   listw <span class="op">=</span> <span class="va">W.Rook</span>,</span>
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/lm.RStests.html">lm.LMtests</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">modele_MCO</span>,</span>
+<span>                   listw <span class="op">=</span> <span class="va">w_rook</span>,</span>
 <span>                   test <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"LMlag"</span>,<span class="st">"LMerr"</span>,<span class="st">"RLMlag"</span>,<span class="st">"RLMerr"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    Rao's score (a.k.a Lagrange multiplier) diagnostics for spatial
@@ -1568,21 +1568,21 @@ Figure&nbsp;2.8: Démarche à partir du modèle généralisé (modèle Manski)
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">formule</span> <span class="op">&lt;-</span> <span class="st">'NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed'</span></span>
 <span><span class="co"># Étape A. Sélection d’un modèle modèle mixte à partir </span></span>
 <span><span class="co"># des coefficients autorégressifs du modèle généralisé</span></span>
-<span><span class="va">Manski</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">sacsarlm</a></span><span class="op">(</span><span class="va">formule</span>, listw<span class="op">=</span><span class="va">W.Rook</span>, data <span class="op">=</span> <span class="va">LyonIris</span>, type<span class="op">=</span><span class="st">"sacmixed"</span><span class="op">)</span></span>
-<span><span class="va">Manski.lambda</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>lambda <span class="op">=</span> <span class="va">Manski</span><span class="op">$</span><span class="va">lambda</span>,</span>
-<span>                      se     <span class="op">=</span> <span class="va">Manski</span><span class="op">$</span><span class="va">lambda.se</span>,</span>
-<span>                      z      <span class="op">=</span> <span class="va">Manski</span><span class="op">$</span><span class="va">lambda</span> <span class="op">/</span> <span class="va">Manski</span><span class="op">$</span><span class="va">lambda.se</span>,</span>
-<span>                      p      <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">pnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">Manski</span><span class="op">$</span><span class="va">lambda</span> <span class="op">/</span> <span class="va">Manski</span><span class="op">$</span><span class="va">lambda.se</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">manski</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">sacsarlm</a></span><span class="op">(</span><span class="va">formule</span>, listw <span class="op">=</span> <span class="va">w_rook</span>, data <span class="op">=</span> <span class="va">LyonIris</span>, type<span class="op">=</span><span class="st">"sacmixed"</span><span class="op">)</span></span>
+<span><span class="va">manski_lambda</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>lambda <span class="op">=</span> <span class="va">manski</span><span class="op">$</span><span class="va">lambda</span>,</span>
+<span>                      se     <span class="op">=</span> <span class="va">manski</span><span class="op">$</span><span class="va">lambda.se</span>,</span>
+<span>                      z      <span class="op">=</span> <span class="va">manski</span><span class="op">$</span><span class="va">lambda</span> <span class="op">/</span> <span class="va">manski</span><span class="op">$</span><span class="va">lambda.se</span>,</span>
+<span>                      p      <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">pnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">manski</span><span class="op">$</span><span class="va">lambda</span> <span class="op">/</span> <span class="va">manski</span><span class="op">$</span><span class="va">lambda.se</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span>  </span>
-<span><span class="va">Manski.rho</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>rho <span class="op">=</span> <span class="va">Manski</span><span class="op">$</span><span class="va">rho</span>,</span>
-<span>                   se  <span class="op">=</span> <span class="va">Manski</span><span class="op">$</span><span class="va">rho.se</span>,</span>
-<span>                   z   <span class="op">=</span> <span class="va">Manski</span><span class="op">$</span><span class="va">rho</span> <span class="op">/</span> <span class="va">Manski</span><span class="op">$</span><span class="va">rho.se</span>,</span>
-<span>                   p   <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">pnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">Manski</span><span class="op">$</span><span class="va">rho</span> <span class="op">/</span> <span class="va">Manski</span><span class="op">$</span><span class="va">rho.se</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">manski_rho</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>rho <span class="op">=</span> <span class="va">manski</span><span class="op">$</span><span class="va">rho</span>,</span>
+<span>                   se  <span class="op">=</span> <span class="va">manski</span><span class="op">$</span><span class="va">rho.se</span>,</span>
+<span>                   z   <span class="op">=</span> <span class="va">manski</span><span class="op">$</span><span class="va">rho</span> <span class="op">/</span> <span class="va">manski</span><span class="op">$</span><span class="va">rho.se</span>,</span>
+<span>                   p   <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">pnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">manski</span><span class="op">$</span><span class="va">rho</span> <span class="op">/</span> <span class="va">manski</span><span class="op">$</span><span class="va">rho.se</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">Resultats.Manski</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>Parametre <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"lambda"</span>, <span class="st">"Rho"</span><span class="op">)</span>,</span>
-<span>                               Coef      <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">Manski.lambda</span><span class="op">$</span><span class="va">lambda</span>, <span class="va">Manski.rho</span><span class="op">$</span><span class="va">rho</span><span class="op">)</span>,</span>
-<span>                               z         <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">Manski.lambda</span><span class="op">$</span><span class="va">z</span>, <span class="va">Manski.rho</span><span class="op">$</span><span class="va">z</span><span class="op">)</span>,</span>
-<span>                               p         <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">Manski.lambda</span><span class="op">$</span><span class="va">p</span>, <span class="va">Manski.rho</span><span class="op">$</span><span class="va">p</span><span class="op">)</span></span>
+<span><span class="va">manski_resultats</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>Parametre <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"lambda"</span>, <span class="st">"Rho"</span><span class="op">)</span>,</span>
+<span>                               Coef      <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">manski_lambda</span><span class="op">$</span><span class="va">lambda</span>, <span class="va">manski_rho</span><span class="op">$</span><span class="va">rho</span><span class="op">)</span>,</span>
+<span>                               z         <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">manski_lambda</span><span class="op">$</span><span class="va">z</span>, <span class="va">manski_rho</span><span class="op">$</span><span class="va">z</span><span class="op">)</span>,</span>
+<span>                               p         <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">manski_lambda</span><span class="op">$</span><span class="va">p</span>, <span class="va">manski_rho</span><span class="op">$</span><span class="va">p</span><span class="op">)</span></span>
 <span>                              <span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
@@ -1625,12 +1625,12 @@ Tableau&nbsp;2.2: Résultats des coefficients autorégressifs du modèle génér
 <li><p>Au final, nous retenons donc le modèle SDM.</p></li>
 </ol>
 <div class="cell">
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">Manski</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">sacsarlm</a></span><span class="op">(</span><span class="va">formule</span>, listw<span class="op">=</span><span class="va">W.Rook</span>, data <span class="op">=</span> <span class="va">LyonIris</span>, type<span class="op">=</span><span class="st">"sacmixed"</span><span class="op">)</span></span>
-<span><span class="va">SDM</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">lagsarlm</a></span><span class="op">(</span><span class="va">formule</span>, listw <span class="op">=</span> <span class="va">W.Rook</span>, data <span class="op">=</span> <span class="va">LyonIris</span>, type <span class="op">=</span> <span class="st">"mixed"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">manski</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">sacsarlm</a></span><span class="op">(</span><span class="va">formule</span>, listw <span class="op">=</span> <span class="va">w_rook</span>, data <span class="op">=</span> <span class="va">LyonIris</span>, type<span class="op">=</span><span class="st">"sacmixed"</span><span class="op">)</span></span>
+<span><span class="va">SDM</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">lagsarlm</a></span><span class="op">(</span><span class="va">formule</span>, listw <span class="op">=</span> <span class="va">w_rook</span>, data <span class="op">=</span> <span class="va">LyonIris</span>, type <span class="op">=</span> <span class="st">"mixed"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">SDM</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-Call:lagsarlm(formula = formule, data = LyonIris, listw = W.Rook, 
+Call:lagsarlm(formula = formule, data = LyonIris, listw = w_rook, 
     type = "mixed")
 
 Residuals:
@@ -1671,7 +1671,7 @@ test value: 0.0748, p-value: 0.78447</code></pre>
 <p>Avec les tests du ratio de vraisemblance sur les modèles spatiaux, nous pouvons vérifier dans R de vérifier si le recours d’un modèle mixte est justifié comparativement à un modèle non mixte. Dans le code ci-dessous, nous vérifions si le modèle SDM est statistiquement différent du modèle SAR avec les fonctions <code>LR.Sarlm</code> et <code>anova</code>. Les résultats signalent un écart significatif des valeurs du log-vraisemblance (26,101, <em>p</em>&nbsp;&lt;&nbsp;0,001). Par conséquent, ce modèle mixte a un apport significatif.</p>
 <div class="cell">
 <div class="sourceCode" id="cb54"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## SDM et SEM sont-ils significativement différents?</span></span>
-<span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/sarlm_tests.html">LR.Sarlm</a></span><span class="op">(</span><span class="va">Modele.DurbinSpatial</span>, <span class="va">Modele.SAR</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/sarlm_tests.html">LR.Sarlm</a></span><span class="op">(</span><span class="va">modele_SDM</span>, <span class="va">modele_SAR</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Likelihood ratio for spatial linear models
@@ -1679,20 +1679,20 @@ test value: 0.0748, p-value: 0.78447</code></pre>
 data:  
 Likelihood ratio = 26.101, df = 5, p-value = 8.528e-05
 sample estimates:
-Log likelihood of Modele.DurbinSpatial           Log likelihood of Modele.SAR 
-                             -1353.106                              -1366.157 </code></pre>
+Log likelihood of modele_SDM Log likelihood of modele_SAR 
+                   -1353.106                    -1366.157 </code></pre>
 </div>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span><span class="op">(</span><span class="va">Modele.DurbinSpatial</span>, <span class="va">Modele.SAR</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span><span class="op">(</span><span class="va">modele_SDM</span>, <span class="va">modele_SAR</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>                     Model df    AIC  logLik Test L.Ratio    p-value
-Modele.DurbinSpatial     1 13 2732.2 -1353.1    1                   
-Modele.SAR               2  8 2748.3 -1366.2    2  26.101 8.5283e-05</code></pre>
+<pre><code>           Model df    AIC  logLik Test L.Ratio    p-value
+modele_SDM     1 13 2732.2 -1353.1    1                   
+modele_SAR     2  8 2748.3 -1366.2    2  26.101 8.5283e-05</code></pre>
 </div>
 </div>
 <p>À l’inverse, la différence entre les valeurs du log-vraisemblance des modèles SDEM et SEM n’est pas significative (4,9728, <em>p</em>&nbsp;=&nbsp;0,42), signalant que l’utilisation d’un modèle SDEM comparativement à un modèle SEM n’est pas nécessaire.</p>
 <div class="cell">
 <div class="sourceCode" id="cb58"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## SDEM et SEM sont-ils significativement différents?</span></span>
-<span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/sarlm_tests.html">LR.Sarlm</a></span><span class="op">(</span><span class="va">Modele.DurbinErreur</span>, <span class="va">Modele.SEM</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/sarlm_tests.html">LR.Sarlm</a></span><span class="op">(</span><span class="va">modele_SDEM</span>, <span class="va">modele_SEM</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Likelihood ratio for spatial linear models
@@ -1700,14 +1700,14 @@ Modele.SAR               2  8 2748.3 -1366.2    2  26.101 8.5283e-05</code></pre
 data:  
 Likelihood ratio = 4.9728, df = 5, p-value = 0.4192
 sample estimates:
-Log likelihood of Modele.DurbinErreur          Log likelihood of Modele.SEM 
-                            -1367.250                             -1369.737 </code></pre>
+Log likelihood of modele_SDEM  Log likelihood of modele_SEM 
+                    -1367.250                     -1369.737 </code></pre>
 </div>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span><span class="op">(</span><span class="va">Modele.DurbinErreur</span>, <span class="va">Modele.SEM</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span><span class="op">(</span><span class="va">modele_SDEM</span>, <span class="va">modele_SEM</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>                    Model df    AIC  logLik Test L.Ratio p-value
-Modele.DurbinErreur     1 13 2760.5 -1367.2    1                
-Modele.SEM              2  8 2755.5 -1369.7    2  4.9728  0.4192</code></pre>
+<pre><code>            Model df    AIC  logLik Test L.Ratio p-value
+modele_SDEM     1 13 2760.5 -1367.2    1                
+modele_SEM      2  8 2755.5 -1369.7    2  4.9728  0.4192</code></pre>
 </div>
 </div>
 </section><section id="sec-0224" class="level3" data-number="2.2.4"><h3 data-number="2.2.4" class="anchored" data-anchor-id="sec-0224">
@@ -1717,39 +1717,39 @@ Modele.SEM              2  8 2755.5 -1369.7    2  4.9728  0.4192</code></pre>
 <p>Nous pouvons aussi comparer l’autocorrélation spatiale des résidus des modèles avec le <em>I</em> de Moran.</p>
 <div class="cell">
 <div class="sourceCode" id="cb62"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Valeurs d'AIC et de BIC</span></span>
-<span><span class="va">AICs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html">AIC</a></span><span class="op">(</span><span class="va">Modele.MCO</span>, <span class="va">Modele.SLX</span>, <span class="va">Modele.SAR</span>, <span class="va">Modele.SEM</span>, </span>
-<span>            <span class="va">Modele.DurbinSpatial</span>, <span class="va">Modele.DurbinErreur</span><span class="op">)</span></span>
-<span><span class="va">BICs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html">BIC</a></span><span class="op">(</span><span class="va">Modele.MCO</span>, <span class="va">Modele.SLX</span>, <span class="va">Modele.SAR</span>, <span class="va">Modele.SEM</span>, </span>
-<span>            <span class="va">Modele.DurbinSpatial</span>, <span class="va">Modele.DurbinErreur</span><span class="op">)</span></span>
+<span><span class="va">AICs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html">AIC</a></span><span class="op">(</span><span class="va">modele_MCO</span>, <span class="va">modele_SLX</span>, <span class="va">modele_SAR</span>, <span class="va">modele_SEM</span>, </span>
+<span>            <span class="va">modele_SDM</span>, <span class="va">modele_SDEM</span><span class="op">)</span></span>
+<span><span class="va">BICs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html">BIC</a></span><span class="op">(</span><span class="va">modele_MCO</span>, <span class="va">modele_SLX</span>, <span class="va">modele_SAR</span>, <span class="va">modele_SEM</span>, </span>
+<span>            <span class="va">modele_SDM</span>, <span class="va">modele_SDEM</span><span class="op">)</span></span>
 <span><span class="co">## Autocorrélation spatiale des résidus</span></span>
-<span><span class="va">IMoran.MCO</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">Modele.MCO</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span>
-<span><span class="va">IMoran.SLX</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">Modele.SLX</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span>
-<span><span class="va">IMoran.SLM</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">Modele.SAR</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span>
-<span><span class="va">IMoran.SEM</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">Modele.SEM</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span>
-<span><span class="va">IMoran.DurbinS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">Modele.DurbinSpatial</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span>
-<span><span class="va">IMoran.DurbinE</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">Modele.DurbinErreur</span><span class="op">)</span>, <span class="va">W.Rook</span>, nsim<span class="op">=</span><span class="fl">999</span><span class="op">)</span></span>
-<span><span class="va">MoranI.s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">IMoran.MCO</span><span class="op">$</span><span class="va">statistic</span>, <span class="va">IMoran.SLX</span><span class="op">$</span><span class="va">statistic</span>,</span>
-<span>             <span class="va">IMoran.SLM</span><span class="op">$</span><span class="va">statistic</span>, <span class="va">IMoran.SEM</span><span class="op">$</span><span class="va">statistic</span>,</span>
-<span>             <span class="va">IMoran.DurbinS</span><span class="op">$</span><span class="va">statistic</span>, <span class="va">IMoran.DurbinE</span><span class="op">$</span><span class="va">statistic</span><span class="op">)</span></span>
-<span><span class="va">MoranI.p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">IMoran.MCO</span><span class="op">$</span><span class="va">p.value</span>, <span class="va">IMoran.SLX</span><span class="op">$</span><span class="va">p.value</span>,</span>
-<span>             <span class="va">IMoran.SLM</span><span class="op">$</span><span class="va">p.value</span>, <span class="va">IMoran.SEM</span><span class="op">$</span><span class="va">p.value</span>,</span>
-<span>             <span class="va">IMoran.DurbinS</span><span class="op">$</span><span class="va">p.value</span>, <span class="va">IMoran.DurbinE</span><span class="op">$</span><span class="va">p.value</span><span class="op">)</span></span>
+<span><span class="va">imoran_mco</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">modele_MCO</span><span class="op">)</span>, <span class="va">w_rook</span>, nsim <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span>
+<span><span class="va">imoran_slx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">modele_SLX</span><span class="op">)</span>, <span class="va">w_rook</span>, nsim <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span>
+<span><span class="va">imoran_slm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">modele_SAR</span><span class="op">)</span>, <span class="va">w_rook</span>, nsim <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span>
+<span><span class="va">imoran_sem</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">modele_SEM</span><span class="op">)</span>, <span class="va">w_rook</span>, nsim <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span>
+<span><span class="va">imoran_sdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">modele_SDM</span><span class="op">)</span>, <span class="va">w_rook</span>, nsim <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span>
+<span><span class="va">imoran_sdem</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">modele_SDEM</span><span class="op">)</span>, <span class="va">w_rook</span>, nsim <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span>
+<span><span class="va">imoran_s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">imoran_mco</span><span class="op">$</span><span class="va">statistic</span>, <span class="va">imoran_slx</span><span class="op">$</span><span class="va">statistic</span>,</span>
+<span>             <span class="va">imoran_slm</span><span class="op">$</span><span class="va">statistic</span>, <span class="va">imoran_sem</span><span class="op">$</span><span class="va">statistic</span>,</span>
+<span>             <span class="va">imoran_sdm</span><span class="op">$</span><span class="va">statistic</span>, <span class="va">imoran_sdem</span><span class="op">$</span><span class="va">statistic</span><span class="op">)</span></span>
+<span><span class="va">imoran_p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">imoran_mco</span><span class="op">$</span><span class="va">p.value</span>, <span class="va">imoran_slx</span><span class="op">$</span><span class="va">p.value</span>,</span>
+<span>             <span class="va">imoran_slm</span><span class="op">$</span><span class="va">p.value</span>, <span class="va">imoran_sem</span><span class="op">$</span><span class="va">p.value</span>,</span>
+<span>             <span class="va">imoran_sdm</span><span class="op">$</span><span class="va">p.value</span>, <span class="va">imoran_sdem</span><span class="op">$</span><span class="va">p.value</span><span class="op">)</span></span>
 <span><span class="co">## Tableau</span></span>
 <span><span class="va">Comparaison</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>Modele <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"MCO"</span>, <span class="st">"SLX"</span>, <span class="st">"SAR"</span>, <span class="st">"SEM"</span>, <span class="st">"SDM"</span>, <span class="st">"SDEM"</span><span class="op">)</span>,</span>
 <span>                          AIC <span class="op">=</span> <span class="va">AICs</span><span class="op">$</span><span class="va">AIC</span>,</span>
 <span>                          BIC <span class="op">=</span> <span class="va">BICs</span><span class="op">$</span><span class="va">BIC</span>,</span>
 <span>                          dl <span class="op">=</span> <span class="va">AICs</span><span class="op">$</span><span class="va">df</span>,</span>
-<span>                          MoranI <span class="op">=</span> <span class="va">MoranI.s</span>,</span>
-<span>                          MoranIp <span class="op">=</span> <span class="va">MoranI.p</span><span class="op">)</span></span>
+<span>                          MoranI <span class="op">=</span> <span class="va">imoran_s</span>,</span>
+<span>                          MoranIp <span class="op">=</span> <span class="va">imoran_p</span><span class="op">)</span></span>
 <span><span class="va">Comparaison</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Modele      AIC      BIC dl       MoranI MoranIp
 1    MCO 3366.626 3396.212  7  0.587312061   0.001
 2    SLX 3222.594 3273.313 12  0.604660275   0.001
-3    SAR 2748.314 2782.126  8 -0.014281059   0.659
-4    SEM 2755.474 2789.286  8 -0.011826605   0.640
-5    SDM 2732.212 2787.157 13 -0.004612686   0.506
-6   SDEM 2760.501 2815.446 13 -0.010361653   0.623</code></pre>
+3    SAR 2748.314 2782.126  8 -0.014281059   0.661
+4    SEM 2755.474 2789.286  8 -0.011826605   0.622
+5    SDM 2732.212 2787.157 13 -0.004612686   0.538
+6   SDEM 2760.501 2815.446 13 -0.010361653   0.614</code></pre>
 </div>
 </div>
 <p>Quelques lignes de code suffisent pour créer deux graphiques permettant de comparer visuellement les résultats des différents modèles (<a href="#fig-GraphComparaison" class="quarto-xref">figure&nbsp;<span>2.9</span></a>). Les résultats démontrent que&nbsp;:</p>
@@ -1802,12 +1802,12 @@ Figure&nbsp;2.9: Comparaison des différents modèles
 <div class="cell">
 <div class="sourceCode" id="cb65"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">formule</span> <span class="op">&lt;-</span> <span class="st">'NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed'</span></span>
 <span><span class="va">MCO</span>     <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">formule</span>, data <span class="op">=</span> <span class="va">LyonIris</span><span class="op">)</span></span>
-<span><span class="va">SLX</span>     <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/SLX.html">lmSLX</a></span><span class="op">(</span><span class="va">formule</span>, listw <span class="op">=</span> <span class="va">W.Rook</span>, data <span class="op">=</span> <span class="va">LyonIris</span><span class="op">)</span></span>
-<span><span class="va">SDM</span>     <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">lagsarlm</a></span><span class="op">(</span><span class="va">formule</span>, listw <span class="op">=</span> <span class="va">W.Rook</span>, data <span class="op">=</span> <span class="va">LyonIris</span>, type <span class="op">=</span> <span class="st">"mixed"</span><span class="op">)</span></span>
-<span><span class="va">SDEM</span>    <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">errorsarlm</a></span><span class="op">(</span><span class="va">formule</span>, listw<span class="op">=</span><span class="va">W.Rook</span>, data <span class="op">=</span> <span class="va">LyonIris</span>, etype <span class="op">=</span> <span class="st">'emixed'</span><span class="op">)</span></span>
-<span><span class="va">SAR</span>     <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">lagsarlm</a></span><span class="op">(</span><span class="va">formule</span>,listw<span class="op">=</span><span class="va">W.Rook</span>, data <span class="op">=</span> <span class="va">LyonIris</span>, type <span class="op">=</span> <span class="st">'lag'</span><span class="op">)</span> </span>
-<span><span class="va">SEM</span>     <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">errorsarlm</a></span><span class="op">(</span><span class="va">formule</span>, listw<span class="op">=</span><span class="va">W.Rook</span>, data <span class="op">=</span> <span class="va">LyonIris</span><span class="op">)</span></span>
-<span><span class="va">Manski</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">sacsarlm</a></span><span class="op">(</span><span class="va">formule</span>, listw<span class="op">=</span><span class="va">W.Rook</span>, data <span class="op">=</span> <span class="va">LyonIris</span>, type<span class="op">=</span><span class="st">"sacmixed"</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="va">SLX</span>     <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/SLX.html">lmSLX</a></span><span class="op">(</span><span class="va">formule</span>, listw <span class="op">=</span> <span class="va">w_rook</span>, data <span class="op">=</span> <span class="va">LyonIris</span><span class="op">)</span></span>
+<span><span class="va">SDM</span>     <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">lagsarlm</a></span><span class="op">(</span><span class="va">formule</span>, listw <span class="op">=</span> <span class="va">w_rook</span>, data <span class="op">=</span> <span class="va">LyonIris</span>, type <span class="op">=</span> <span class="st">"mixed"</span><span class="op">)</span></span>
+<span><span class="va">SDEM</span>    <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">errorsarlm</a></span><span class="op">(</span><span class="va">formule</span>, listw <span class="op">=</span> <span class="va">w_rook</span>, data <span class="op">=</span> <span class="va">LyonIris</span>, etype <span class="op">=</span> <span class="st">'emixed'</span><span class="op">)</span></span>
+<span><span class="va">SAR</span>     <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">lagsarlm</a></span><span class="op">(</span><span class="va">formule</span>,listw <span class="op">=</span> <span class="va">w_rook</span>, data <span class="op">=</span> <span class="va">LyonIris</span>, type <span class="op">=</span> <span class="st">'lag'</span><span class="op">)</span> </span>
+<span><span class="va">SEM</span>     <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">errorsarlm</a></span><span class="op">(</span><span class="va">formule</span>, listw <span class="op">=</span> <span class="va">w_rook</span>, data <span class="op">=</span> <span class="va">LyonIris</span><span class="op">)</span></span>
+<span><span class="va">Manski</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/ML_models.html">sacsarlm</a></span><span class="op">(</span><span class="va">formule</span>, listw <span class="op">=</span> <span class="va">w_rook</span>, data <span class="op">=</span> <span class="va">LyonIris</span>, type<span class="op">=</span><span class="st">"sacmixed"</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -2128,7 +2128,7 @@ Vérifier votre résultat
 <span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Matrice de contiguïté selon le partage d'un segment (Rook)</span></span>
 <span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/Lyon.Rdata"</span>)</span>
 <span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>Rook <span class="ot">&lt;-</span> <span class="fu">poly2nb</span>(LyonIris, <span class="at">queen=</span><span class="cn">FALSE</span>)</span>
-<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>W.Rook <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(Rook, <span class="at">zero.policy=</span><span class="cn">TRUE</span>, <span class="at">style =</span> <span class="st">"W"</span>)</span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>w_rook <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(Rook, <span class="at">zero.policy=</span><span class="cn">TRUE</span>, <span class="at">style =</span> <span class="st">"W"</span>)</span>
 <span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Modèles</span></span>
 <span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a>formule <span class="ot">&lt;-</span> <span class="st">"PM25 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed"</span></span>
 <span id="cb66-9"><a href="#cb66-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Modèles MOC, SLX, SDM, SDEM, SAR, SEM, Manski</span></span>

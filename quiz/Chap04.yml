@@ -1,11 +1,3 @@
-- label: "Un modèle de régression géographiquement pondérée permet d'explorer :"
-  type: uc
-  response: 1
-  answers:
-     - "L'hétérogénité (non-stationnarité) du modèle MCO"
-     - "La dépendance du modèle MCO"
-  help: "Relisez le deuxième encadré à la [section @sec-0411]."
-
 - label: "Un modèle de régression géographiquement pondérée produit autant de régressions que d'entités spatiales dans le jeu de données à l'étude."
   type: uc
   response: 1

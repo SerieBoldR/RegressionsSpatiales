@@ -87,6 +87,7 @@ library(sf, quietly = TRUE)
 library(tmap, quietly = TRUE)
 
 # chargement des SR de la RMR de Montréal
+# chargement des SR de la RMR de Montréal
 data_mtl <- st_read('data/chap06/data_sr_access.gpkg', quiet = TRUE) %>%
   st_transform(2950)
 
@@ -134,40 +135,40 @@ data_mtl$vector100 <- moran_vectors[,100]
 data_mtl$vector375 <- moran_vectors[,375]
 data_mtl$vector970 <- moran_vectors[,970]
 
-legende.parametres <- list(text.separator = "à",
+legende_parametres <- list(text.separator = "à",
                            decimal.mark = ",",
                            digits = 1)
 
-map1 <- tm_shape(data_mtl)+
+carte1 <- tm_shape(data_mtl)+
   tm_fill(col="vector10", n = 7, style = "fisher", 
-          legend.format = legende.parametres,
+          legend.format = legende_parametres,
           palette = "-RdBu", title = "") +
   tm_layout(frame=FALSE, legend.outside = TRUE,
             main.title.size = 0.85,
             main.title = paste0('Vecteur propre 10 (I de Moran = ', 
                                 format(round(moran_vals[[5]],2), decimal.mark =","), ')'))
 
-map2 <- tm_shape(data_mtl)+
+carte2 <- tm_shape(data_mtl)+
   tm_fill(col="vector100", n = 7, style = "quantile", 
-          legend.format = legende.parametres,
+          legend.format = legende_parametres,
           palette = "-RdBu", title = "") +
   tm_layout(frame=FALSE, legend.outside = TRUE,
             main.title.size = 0.85,
             main.title = paste0('Vecteur propre 100 (I de Moran = ', 
                                 format(round(moran_vals[[100]],2), decimal.mark =","), ')'))
 
-map3 <- tm_shape(data_mtl)+
+carte3 <- tm_shape(data_mtl)+
   tm_fill(col="vector375", n = 7, style = "quantile", 
-          legend.format = legende.parametres,
+          legend.format = legende_parametres,
           palette = "-RdBu", title = "") +
   tm_layout(frame=FALSE, legend.outside = TRUE,
             main.title.size = 0.85,
             main.title = paste0('Vecteur propre 375 (I de Moran = ', 
                                 format(round(moran_vals[[375]],2), decimal.mark =","), ')'))
 
-map4 <- tm_shape(data_mtl)+
+carte4 <- tm_shape(data_mtl)+
   tm_fill(col="vector970", n = 7, style = "quantile", 
-          legend.format = legende.parametres,
+          legend.format = legende_parametres,
           palette = "-RdBu", title = "") +
   tm_layout(frame=FALSE, legend.outside = TRUE,
             main.title.size = 0.85,
@@ -175,7 +176,7 @@ map4 <- tm_shape(data_mtl)+
                                 format(round(moran_vals[[970]],2), decimal.mark =","), ')')) + 
   tm_scale_bar(breaks = c(0,10)) 
 
-tmap_arrange(map1, map2, map3, map4, nrow = 2, ncol = 2)
+tmap_arrange(carte1, carte2, carte3, carte4, nrow = 2, ncol = 2)
 ```
 
 Rappelons ici que ces vecteurs sont obtenus pas décomposition de la matrice de pondération spatiale. Il ne s'agit pas de données qui ont été collectées sur le territoire d'étude. Ils représentent des géographies possibles qui peuvent émerger de notre matrice de pondérations spatiales $W$.
@@ -301,8 +302,7 @@ library(mgcv, quietly = TRUE)
 library(gamlss, quietly = TRUE)
 
 # Chargement des données
-data_mtl <- st_read('data/chap06/data_sr_access.gpkg',
-                    quiet = TRUE)
+data_mtl <- st_read('data/chap06/data_sr_access.gpkg', quiet = TRUE)
 
 # les variables d'accessibilités sont multipliées par 100 pour s'exprimer 
 # sur l'échelle 0-100 plutôt que 0-1
@@ -347,11 +347,11 @@ listw <- nb2listw(nbs, style = 'W', zero.policy = TRUE)
 # Sélection des vecteurs propres de Moran 
 moran_ev_sel <- ME(alr_val ~ prt_minorite_vis + prt_monoparental + revenu_median +
                    acs_idx_emp_tc_peak + acs_idx_emp_pieton,
-                data = data_mtl,
-                family = gaussian,
-                listw = listw,
-                alpha = 0.05,
-                zero.policy=TRUE)
+                   data = data_mtl,
+                   family = gaussian,
+                   listw = listw,
+                   alpha = 0.05,
+                   zero.policy=TRUE)
 ncol(moran_ev_sel$vectors)
 ```
 
@@ -370,8 +370,8 @@ La fonction ME a sélectionné `r ncol(moran_ev_sel $vectors)` vecteurs propres 
 model_sel <- glm(alr_val ~ prt_minorite_vis + prt_monoparental + revenu_median +
                  acs_idx_emp_tc_peak + acs_idx_emp_pieton + 
                  fitted(moran_ev_sel),
-                data = data_mtl,
-                family = gaussian)
+                 data = data_mtl,
+                 family = gaussian)
 
 # Validation des résidus
 res <- simulateResiduals(model_sel, plot = FALSE)
@@ -812,45 +812,45 @@ breaks <- classIntervals(c(pred_sel,
                          style = "fisher",
                          n = 7)
 
-legende.parametres <- list(text.separator = "à",
+legende_parametres <- list(text.separator = "à",
                            decimal.mark = ",",
                            digits = 2)
 
-map1 <- tm_shape(data_mtl) +
+carte1 <- tm_shape(data_mtl) +
   tm_fill(col="effet_sel", 
           breaks = breaks$brks,
           midpoint = 1,
-          legend.format = legende.parametres,
+          legend.format = legende_parametres,
           palette = "-RdBu", title = ) +
   tm_layout(frame=FALSE, legend.show = FALSE, title = 'SEL-SEVM')
 
-map2 <- tm_shape(data_mtl) +
+carte2 <- tm_shape(data_mtl) +
   tm_fill(col="effet_ridge",
           breaks = breaks$brks,
           midpoint = 1,
-          legend.format = legende.parametres,
+          legend.format = legende_parametres,
           palette = "-RdBu") +
   tm_layout(frame=FALSE, legend.show = FALSE, title =  'RE-SEVM')
 
-map3 <- tm_shape(data_mtl) +
+carte3 <- tm_shape(data_mtl) +
   tm_fill(col="effet_lasso", 
           breaks = breaks$brks,
           midpoint = 1,
-          legend.format = legende.parametres,
+          legend.format = legende_parametres,
           palette = "-RdBu") +
   tm_layout(frame=FALSE, legend.show = FALSE, title = 'LASSO-SEVM')
 
 # Cette carte est ajoutée pour ne pas apparaître mais afficher la légende 
 # commune dans le 4ème panneau
-map4 <- tm_shape(data_mtl) +
+carte4 <- tm_shape(data_mtl) +
   tm_fill(col="effet_lasso", 
           breaks = breaks$brks,
           midpoint = 1,
-          legend.format = legende.parametres,
+          legend.format = legende_parametres,
           palette = "-RdBu", title = 'effet spatial') +
   tm_layout(legend.only = TRUE,scale=1.5, asp=0)
 
-tmap_arrange(map1, map2, map3, map4, nrow = 2, ncol = 2)
+tmap_arrange(carte1, carte2, carte3, carte4, nrow = 2, ncol = 2)
 
 ```
 
