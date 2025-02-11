@@ -76,7 +76,7 @@ tab_synth <- data.frame(
               SDEM = c("X", " ", "X", "X", "X", "VI et TE")
               )
 rownames(tab_synth) <- c(
-                         "Externalités spatiale",
+                         "Externalités spatiales",
                          "Effets d'entraînement",
                          "Omission de variables",
                          "Hétérogénéité spatiale",
@@ -188,16 +188,20 @@ library(tmap)
 library(spdep)
 library(spatialreg)
 load("data/Lyon.Rdata")
+
 ## Matrice de contiguïté selon le partage d'un segment (Rook)
 nb_rook <- poly2nb(LyonIris, queen = FALSE)
 w_rook <- nb2listw(nb_rook, zero.policy = TRUE, style = "W")
+
 ## Construction du modèle MCO
-modele_MCO <- lm(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+modele_MCO <- lm(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
                  data = LyonIris)
+
 ## Construction du modèle SLX
-modele_SLX <- spatialreg::lmSLX(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+modele_SLX <- spatialreg::lmSLX(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
                    listw = w_rook,   # matrice de pondérations spatiales
                    data = LyonIris)  # dataframe
+
 ## Résultats du modèle
 summary(modele_SLX)
 ```
@@ -326,7 +330,7 @@ Le modèle SAR est construit avec la fonction `lagsarlm` du *package* `spatialre
 #| message: false 
 #| eval: true
 ## Construction du modèle
-modele_SAR <- lagsarlm(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+modele_SAR <- lagsarlm(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
                              listw = w_rook,  # matrice de pondérations spatiales
                              data = LyonIris, # dataframe
                              type = 'lag')    # Modèle lag par défaut
@@ -372,7 +376,9 @@ moran.mc(resid(modele_SAR), w_rook, nsim = 999)
 legende_parametres <- list(text.separator = "à", 
                            decimal.mark = ",", 
                            big.mark = " ")
+
 LyonIris$SAR.Residus <- resid(modele_SAR)
+
 tm_shape(LyonIris)+
   tm_fill(col = "SAR.Residus", n = 5, style = "quantile", 
           legend.format = legende_parametres,
@@ -438,9 +444,10 @@ Le modèle SEM est construit avec la fonction `errorsarlm` du *package* `spatial
 #| message: false 
 #| eval: true
 ## Construction du modèle
-modele_SEM <- errorsarlm(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+modele_SEM <- errorsarlm(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
                          listw = w_rook,  # matrice de pondérations spatiales
                          data = LyonIris) # dataframe
+
 ## Résultats du modèle
 summary(modele_SEM, Nagelkerke = TRUE)
 ```
@@ -521,10 +528,11 @@ Le modèle SDM est construit avec la fonction `lagsarlm` du *package* `spatialre
 #| message: false 
 #| eval: true
 ## Construction du modèle
-modele_SDM <- lagsarlm(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+modele_SDM <- lagsarlm(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
                        listw = w_rook,    # matrice de pondérations spatiales
                        data = LyonIris,   # dataframe
                        type = "mixed")
+
 ## Résultats du modèle
 summary(modele_SDM, Nagelkerke = TRUE)
 ```
@@ -597,10 +605,11 @@ Le modèle SDEM est construit avec la fonction `errorsarlm` du *package* `spatia
 #| message: false 
 #| eval: true
 ## Construction du modèle
-modele_SDEM <- errorsarlm(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+modele_SDEM <- errorsarlm(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
                           listw = w_rook,  # matrice de pondérations spatiales
                           data = LyonIris, # dataframe
                           etype = 'emixed')
+
 ## Résultats du modèle
 summary(modele_SDEM, Nagelkerke = TRUE)
 ```
@@ -655,15 +664,18 @@ D'une part, certains auteurs notent que des problèmes peuvent survenir lorsque 
 #| message: false 
 #| eval: true
 ## Construction du modèle
-modele_Manski <- sacsarlm(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+modele_Manski <- sacsarlm(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
                           listw = w_rook,  # matrice de pondérations spatiales
                           data = LyonIris, # dataframe
                           type="sacmixed")
+
 ## Résultats du modèle
 summary(modele_Manski, Nagelkerke = TRUE)
+
 ## Effets marginaux
 impacts(modele_Manski, listw = w_rook)
 summary(impacts(modele_Manski,listw = w_rook, R = 500), zstats=TRUE)
+
 ## Autocorrélation spatiale des résidus
 moran.mc(resid(modele_Manski), w_rook, nsim = 999)
 ```
@@ -766,10 +778,11 @@ Globalement, la procédure est la suivante :
 Appliquons la stratégie « général vers le particulier » à notre jeu de données. Pour l'étape A, nous constatons que le coefficient lambda n'est pas significativement différent de 0 ($\lambda =$ -0,028, p = 0,811), contrairement à celle de rho ($\rho =$ 0,848, p < 0,001). Par conséquent, nous construisons uniquement le modèle SDM.
 
 ```{r}
-formule <- 'NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed'
+formule <- 'NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed'
 # Étape A. Sélection d’un modèle modèle mixte à partir 
 # des coefficients autorégressifs du modèle généralisé
 manski <- sacsarlm(formule, listw = w_rook, data = LyonIris, type="sacmixed")
+
 manski_lambda <- list(lambda = manski$lambda,
                       se     = manski$lambda.se,
                       z      = manski$lambda / manski$lambda.se,
@@ -860,8 +873,10 @@ Nous pouvons aussi comparer l'autocorrélation spatiale des résidus des modèle
 ## Valeurs d'AIC et de BIC
 AICs <- AIC(modele_MCO, modele_SLX, modele_SAR, modele_SEM, 
             modele_SDM, modele_SDEM)
+
 BICs <- BIC(modele_MCO, modele_SLX, modele_SAR, modele_SEM, 
             modele_SDM, modele_SDEM)
+
 ## Autocorrélation spatiale des résidus
 imoran_mco <- moran.mc(resid(modele_MCO), w_rook, nsim = 999)
 imoran_slx <- moran.mc(resid(modele_SLX), w_rook, nsim = 999)
@@ -869,9 +884,11 @@ imoran_slm <- moran.mc(resid(modele_SAR), w_rook, nsim = 999)
 imoran_sem <- moran.mc(resid(modele_SEM), w_rook, nsim = 999)
 imoran_sdm <- moran.mc(resid(modele_SDM), w_rook, nsim = 999)
 imoran_sdem <- moran.mc(resid(modele_SDEM), w_rook, nsim = 999)
+
 imoran_s <- c(imoran_mco$statistic, imoran_slx$statistic,
              imoran_slm$statistic, imoran_sem$statistic,
              imoran_sdm$statistic, imoran_sdem$statistic)
+
 imoran_p <- c(imoran_mco$p.value, imoran_slx$p.value,
              imoran_slm$p.value, imoran_sem$p.value,
              imoran_sdm$p.value, imoran_sdem$p.value)
@@ -899,9 +916,9 @@ Quelques lignes de code suffisent pour créer deux graphiques permettant de comp
 #| fig-align: center
 #| fig-cap: Comparaison des différents modèles
 #| out-width: 85%
-
 library(ggplot2)
 library(ggpubr)
+
 ## Graphique pour l'autocorrélation spatiale
 g1 <- ggplot(data=Comparaison, aes(x=reorder(Modele,MoranI), y=MoranI)) +
       geom_segment(aes(x=reorder(Modele, MoranI),
@@ -911,6 +928,7 @@ g1 <- ggplot(data=Comparaison, aes(x=reorder(Modele,MoranI), y=MoranI)) +
   xlab("Modèle") + ylab("I de Moran")+
   labs(title="Autocorrélation spatiale des résidus",
        caption="Plus la valeur du I de Moran est faible, \nmoins il y a d'autocorrélation spatiale.")
+
 ## Graphique pour les valeurs d'AIC
 g2 <- ggplot(data=Comparaison, aes(x=reorder(Modele,AIC), y=AIC)) +
   geom_segment(aes(x=reorder(Modele, AIC),
@@ -920,6 +938,7 @@ g2 <- ggplot(data=Comparaison, aes(x=reorder(Modele,AIC), y=AIC)) +
   xlab("Modèle") + ylab("AIC")+
   labs(title="Qualité d'ajustement du modèle",
        caption="Plus la valeur d'AIC est faible, \nplus le modèle est performant.")
+
 ## Figure avec les deux graphiques
 ggarrange(g1, g2)
 ```
@@ -939,7 +958,7 @@ ggarrange(g1, g2)
 #| eval: flase 
 #| message: false 
 #| warning: false
-formule <- 'NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed'
+formule <- 'NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed'
 MCO     <- lm(formule, data = LyonIris)
 SLX     <- lmSLX(formule, listw = w_rook, data = LyonIris)
 SDM     <- lagsarlm(formule, listw = w_rook, data = LyonIris, type = "mixed")
@@ -989,7 +1008,7 @@ load("data/Lyon.Rdata")
 Rook <- poly2nb(LyonIris, queen=FALSE)
 w_rook <- nb2listw(Rook, zero.policy=TRUE, style = "W")
 # Modèles
-formule <- "PM25 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed"
+formule <- "PM25 ~  Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed"
 # Modèles MOC, SLX, SDM, SDEM, SAR, SEM, Manski
 à compléter
 ```

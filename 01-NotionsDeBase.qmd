@@ -2,6 +2,8 @@
 
 Avant d'explorer les différents types de régressions spatiales dans les chapitres suivants, il est primordial de comprendre plusieurs notions clés, comme l'autocorrélation spatiale, la dépendance spatiale et l'hétérogénéité spatiale. Aussi, de nombreuses méthodes de régression spatiale s'appuient sur l'utilisation de matrices de pondération spatiale. Nous proposons également un bref rappel sur la régression linéaire multiple.
 
+Certaines sections de ce chapitre sont adaptées du manuel suivant : Apparicio P. et J. Gelb (2024). *Méthodes d’analyse spatiales : un grand bol d’R*. Université de Sherbrooke, Département de géomatique appliquée. fabriqueREL. Licence CC BY-SA.
+
 ::: bloc_objectif
 ::: bloc_objectif-header
 ::: bloc_objectif-icon
@@ -18,6 +20,8 @@ Avant d'explorer les différents types de régressions spatiales dans les chapit
 -   Comprendre la notion de variable spatialement décalée.
 -   Calculer une mesure d'autocorrélation spatiale globale (*I* de Moran) dans R.
 -   Évaluer la dépendance spatiale d'un modèle de régression multiple en calculant le *I* de Moran sur ses résidus.
+
+
 :::
 :::
 
@@ -74,9 +78,9 @@ Premièrement, nous utiliserons le jeu de données spatiales `LyonIris` du *pack
 library(sf)
 load("data/Lyon.Rdata")
 donnees <- st_drop_geometry(LyonIris)
-donnees <-  donnees[c("Lden","NO2","PM25","VegHautPrt",
-                      "Pct0_14","Pct_65","Pct_Img",
-                      "TxChom1564","Pct_brevet","NivVieMed")]
+donnees <-  donnees[c("Lden", "NO2", "PM25", "VegHautPrt",
+                      "Pct0_14", "Pct_65", "Pct_Img",
+                      "TxChom1564", "Pct_brevet", "NivVieMed")]
 
 intitule <- c("Bruit routier (Lden dB(A))",
               "Dioxyde d'azote (ug/m^3^)",
@@ -91,7 +95,7 @@ intitule <- c("Bruit routier (Lden dB(A))",
 
 stats <- data.frame(variable = names(donnees),
                     nom = intitule,
-                    type = c("EN","EN","EN","EN","SE","SE","SE","SE","SE","SE"),
+                    type = c("EN", "EN", "EN", "EN", "SE", "SE", "SE", "SE", "SE", "SE"),
                     moy = round(sapply(donnees, mean),2),
                     et = round(sapply(donnees, sd),2),                    
                     minimum = round(sapply(donnees, min),2), 
@@ -101,12 +105,12 @@ knitr::kable(stats,
 			digits = 1,
 			row.names = FALSE,
 			format.args = list(decimal.mark = ',', big.mark = " "),
-			col.names=c("Nom","Intitulé","Type","Moy.", "E.-T.", "Min.", "Max."),
-			align= c("l","l", "c", "r", "r", "r", "r"),
+			col.names=c("Nom", "Intitulé", "Type", "Moy.", "E.-T.", "Min.", "Max."),
+			align= c("l", "l", "c", "r", "r", "r", "r"),
 			format = "markdown")
 ```
 
-### Jeu de données sur la région métropolitaine de Montraéal {#sec-0112}
+### Jeu de données sur la région métropolitaine de Montréal {#sec-0112}
 
 Deuxièmement, nous utiliserons un jeu de données spatiales sur les parts modales dans la région de Montréal extraites du recensement de 2021 de Statistique Canada pour la région métropolitaine de Montréal (@tbl-Mtl). En guise d'exemple, les proportions des navetteurs utilisant respectivement le transport en commun et l'automobile par secteur de recensement sont présentées à la @fig-datamtlCarto.
 
@@ -162,8 +166,8 @@ knitr::kable(stats,
 			digits = 1,
 			row.names = FALSE,
 			format.args = list(decimal.mark = ',', big.mark = " "),
-			col.names=c("Nom","Intitulé","Moy.", "E.-T."),
-			align= c("l","l", "r", "r"),
+			col.names=c("Nom", "Intitulé", "Moy.", "E.-T."),
+			align= c("l", "l", "r", "r"),
 			format = "markdown")
 ```
 
@@ -592,22 +596,28 @@ library(sf)    # pour importer des couches géographiques
 library(spdep) # pour construire les matrices de pondération
 ## Utilisation du jeu de données sur l'agglomération de Lyon
 load("data/Lyon.Rdata")
+
 ## Matrice selon le partage d'un nœud (Queen)
 # Création de la matrice spatiale
 nb_queen <- poly2nb(LyonIris, queen = TRUE)
+
 # Affichage de la première ligne de la matrice
 nb_queen[[1]]
+
 # Création de la matrice de pondération avec une standardisation en ligne
 w_queen <- nb2listw(nb_queen, zero.policy = TRUE, style = "W")
+
 # Affichage de la première ligne des pondérations standardisée
 w_queen$weights[[1]]
 cat("La somme de la première ligne de la matrice de pondération est égale à",
     sum(w_queen$weights[[1]]))
 # Affichage de la première ligne des pondérations non standardisée
 nb2listw(nb_queen, zero.policy = TRUE, style = "B")$weights[[1]]
+
 ## Matrice selon le partage d'un segment (Rook)
 nb_rook <- poly2nb(LyonIris, queen = FALSE)
 w_rook <- nb2listw(nb_rook, zero.policy = TRUE, style = "W")
+
 ##  Comparaison des deux matrices de contiguïté
 # Résultat de la matrice de pondération (Queen)
 summary(w_queen)
@@ -643,8 +653,10 @@ La fonction `dnearneigh(sf points, d1=, d2=)` crée une matrice de connectivité
 #| warning: false
 ## Conversion des polygones en points avec st_centroid
 iris_centroides <- st_centroid(LyonIris)
+
 ## Matrice binaire avec un seuil de 2500 mètres
 connect_2500m <- dnearneigh(iris_centroides, d1 = 0, d2 = 2500)
+
 ## Matrice de pondération spatiale standardisée en ligne
 w_connect_2500m <- nb2listw(connect_2500m, zero.policy = TRUE, style = "W")
 ```
@@ -667,13 +679,17 @@ Le code ci-dessous, qui permet de les créer les matrices de l'inverse de la dis
 #| warning: false
 ## Coordonnées des centroïdes des entités spatiales
 coords <- st_coordinates(iris_centroides)
+
 ## Création de la matrice de distance
 distances <- as.matrix(dist(coords, method = "euclidean"))
+
 # S'assurer que la diagonale de la matrice est à 0
 diag(distances) <- 0
+
 ## Matrices inverse de la distance et inverse de la distance au carré
 inv_distances <- ifelse(distances!=0, 1/distances, distances)
 inv_distances2 <- ifelse(distances!=0, 1/distances^2, distances)
+
 ## Matrices de pondération spatiale standardisées en ligne
 w_inv_distances  <- mat2listw(inv_distances, style = "W")
 w_inv_distances2 <- mat2listw(inv_distances2, style = "W")
@@ -704,14 +720,17 @@ Nous avons vu qu'il est possible d'utiliser une matrice de distance en fixant un
 #| warning: false
 ## Coordonnées des centroïdes des entités spatiales
 coords <- st_coordinates(iris_centroides)
+
 ## Création de la matrice de distance
 distances <- as.matrix(dist(coords, method = "euclidean"))
+
 ## Création de différentes matrices avec différents seuils
 inv_distances_1000m  <- ifelse(distances<=1000 & distances!=0, 1/distances, 0)
 inv_distances_2500m  <- ifelse(distances<=2500 & distances!=0, 1/distances, 0)
 inv_distances_5000m  <- ifelse(distances<=5000 & distances!=0, 1/distances, 0)
 inv_distances2_2500m <- ifelse(distances<=2500 & distances!=0, 1/distances^2, 0)
 inv_distances2_5000m <- ifelse(distances<=5000 & distances!=0, 1/distances^2, 0)
+
 ## Matrices de pondération spatiale standardisées en ligne
 w_inv_distances_1000 <- mat2listw(inv_distances_1000m, style = "W", zero.policy = TRUE)
 w_inv_distances_2500 <- mat2listw(inv_distances_2500m, style = "W", zero.policy = TRUE)
@@ -756,10 +775,13 @@ La syntaxe ci-dessous permet ainsi de construire des matrices de pondération (i
 #| warning: false
 ## Coordonnées des centroïdes des entités spatiales
 coords <- st_coordinates(iris_centroides)
+
 ## Trouver le plus proche voisin
 k1 <- knn2nb(knearneigh(coords))
+
 ## Affichage de la distance la plus proche pour les 506 IRIS
 round(unlist(nbdists(k1, coords)), 0)
+
 ## Trouver la distance maximale       
 plusprochevoisin_max <- max(unlist(nbdists(k1, coords)))
 cat("Distance maximale au plus proche voisin :", round(plusprochevoisin_max, 0), "mètres")
@@ -767,12 +789,16 @@ cat("Distance maximale au plus proche voisin :", round(plusprochevoisin_max, 0),
 ## Matrice de distance avec la valeur maximale
 # les voisins les plus proches avec le seuil de distance maximal
 voisins_distmax <- dnearneigh(coords, 0, plusprochevoisin_max)
+
 # Distances avec le seuil maximum
 distances <- nbdists(voisins_distmax, coords)
+
 # Inverse de la distance
 inv_distances <- lapply(distances, function(x) (1/x))
+
 # Inverse de la distance au carré
 inv_distances2 <- lapply(distances, function(x) (1/x^2))
+
 ## Matrices de pondération spatiale standardisées en ligne
 w_inv_distances  <- nb2listw(voisins_distmax, glist = inv_distances, style = "W", zero.policy = TRUE)
 w_inv_distances2 <- nb2listw(voisins_distmax, glist = inv_distances2, style = "W", zero.policy = TRUE)
@@ -788,11 +814,13 @@ La fonction `knearneigh` du *package* `spdep` crée des matrices de distance sel
 #| warning: false
 ## Coordonnées géographiques des centroïdes des polygones
 coords <- st_coordinates(st_centroid(LyonIris))
+
 ## Matrices des plus proches voisins de 2 à 5
 k2 <- knn2nb(knearneigh(coords, k = 2))
 k3 <- knn2nb(knearneigh(coords, k = 3))
 k4 <- knn2nb(knearneigh(coords, k = 4))
 k5 <- knn2nb(knearneigh(coords, k = 5))
+
 ## Matrices de pondération spatiale standardisées en ligne
 w_k2 <-  nb2listw(k2, zero.policy = FALSE, style = "W")
 w_k3 <-  nb2listw(k3, zero.policy = FALSE, style = "W")
@@ -916,25 +944,30 @@ library(spdep)
 load("data/Lyon.Rdata")
 # Matrice de pondération spatiale standardisée en ligne selon la contiguïté 
 w_rook<- nb2listw(poly2nb(LyonIris, queen = FALSE), zero.policy = TRUE, style = "W")
+
 # Variable spatialement décalée
 LyonIris$W_NO2 <- lag.listw(w_rook, LyonIris$NO2)
+
 # Cartographie avec tmap
 tmap_mode("plot")
 legende_parametres <- list(text.separator = "à", 
                            decimal.mark = ",", 
                            big.mark = " ")
+
 carte1 <- tm_shape(LyonIris)+
           tm_borders(col = "gray25", lwd=.2)+
           tm_fill(col = "NO2", palette = "Reds", n = 5, style = "quantile",
                   legend.format = legende_parametres,
         		      title = "(a) Variable initiale")+
           tm_layout(frame = FALSE)+tm_scale_bar(breaks=c(0,5))
+
 carte2 <- tm_shape(LyonIris)+
           tm_borders(col = "gray25", lwd=.2)+
           tm_fill(col = "W_NO2", palette = "Reds", n = 5, style = "quantile",
         		      legend.format = legende_parametres,
         		      title = "(b) Spatialement décalée")+
           tm_layout(frame = FALSE)
+
 tmap_arrange(carte1, carte2, ncol = 2, nrow = 1)
 ```
 
@@ -1082,20 +1115,24 @@ nb_queen <- poly2nb(LyonIris, queen = TRUE)
 nb_rook <- poly2nb(LyonIris, queen = FALSE)
 w_queen <- nb2listw(nb_queen, zero.policy = TRUE, style = "W")
 w_rook <- nb2listw(nb_rook, zero.policy = TRUE, style = "W")
+
 # Matrice de contiguité (ordre 2 à 5)
 w_rook2 <- nblag_cumul(nblag(nb_rook, 2)) %>% nb2listw(zero.policy = TRUE, style = "W")
 w_rook3 <- nblag_cumul(nblag(nb_rook, 3)) %>% nb2listw(zero.policy = TRUE, style = "W")
 w_rook4 <- nblag_cumul(nblag(nb_rook, 4)) %>% nb2listw(zero.policy = TRUE, style = "W")
 w_rook5 <- nblag_cumul(nblag(nb_rook, 5)) %>% nb2listw(zero.policy = TRUE, style = "W")
+
 # Matrice de connectivité binaire
 centroides <- st_centroid(LyonIris)
 w_connect_2500m <- dnearneigh(centroides, d1 = 0, d2 = 2500) %>%
                   nb2listw(zero.policy = TRUE, style = "W")
+
 # Inverse de la distance et inverse de la distance au carré (matrices complètes)
 distances <- as.matrix(dist(st_coordinates(centroides), method = "euclidean"))
 diag(distances) <- 0
 w_inv_distances <- ifelse(distances!=0, 1/distances, distances) %>% mat2listw(style = "W")
 w_inv_distances2 <- ifelse(distances!=0, 1/distances^2, distances) %>% mat2listw(style = "W")
+
 # Inverse de la distance et inverse de la distance au carré (matrices réduites)
 coords <- st_coordinates(centroides)
 plusprochevoisin_max <- max(unlist(nbdists(knn2nb(knearneigh(coords)),coords)))
@@ -1104,6 +1141,7 @@ w_inv_distances_reduite  <- lapply(dists, function(x) (1/x)) %>%
                             nb2listw(voisins_distmax, glist = ., style = "W", zero.policy = TRUE)
 w_inv_distances2_reduite <- lapply(dists, function(x) (1/x^2)) %>%
                             nb2listw(voisins_distmax, glist = ., style = "W", zero.policy = TRUE)
+
 # Inverse de la distance et inverse de la distance au carré avec un seuil de distance
 w_inv_distances_1000m  <- ifelse(distances<=1000 & distances!=0, 1/distances, 0) %>%
                           mat2listw(style = "W", zero.policy = TRUE)
@@ -1115,6 +1153,7 @@ w_inv_distances2_2500m <- ifelse(distances<=2500 & distances!=0, 1/distances^2, 
                           mat2listw(style = "W", zero.policy = TRUE)
 w_inv_distances2_5000m <- ifelse(distances<=5000 & distances!=0, 1/distances^2, 0) %>%
                           mat2listw(style = "W", zero.policy = TRUE)
+
 ## Matrices des plus proches voisins de 2 à 5
 w_k2 <- knn2nb(knearneigh(coords, k = 2)) %>% nb2listw(zero.policy = FALSE, style = "W")
 w_k3 <- knn2nb(knearneigh(coords, k = 3)) %>% nb2listw(zero.policy = FALSE, style = "W")
@@ -1190,10 +1229,12 @@ liste_matrices <- list(w_queen = w_queen,
                        w_k3 = w_k3, 
                        w_k4 = w_k4, 
                        w_k5 = w_k5)
+
 ## Vecteur pour le I de Moran et la valeur de p
 moranI <- c()
 pvalue <- c()
 i<-0
+
 ## Boucle pour calculer le I de Moran avec la liste des matrices
 for (e in liste_matrices){
    i<-i+1
@@ -1204,6 +1245,7 @@ for (e in liste_matrices){
    moranI[i] <- test$statistic
    pvalue[i] <- test$p.value
 }
+
 # Création d'un DataFrame avec les valeurs du I de Moran et de p
 moran_resultats <- data.frame(Matrices = names(liste_matrices),
                               MoranIs = round(moranI, 4),
@@ -1498,11 +1540,14 @@ library(spdep)
 library(tmap)
 ## Modèle MCO
 LyonIris$MCO.Residus <- modele_MCO$residuals
+
 ## Matrice de contiguïté
 nb_rook <- poly2nb(LyonIris, queen = TRUE)
 w_rook<- nb2listw(nb_rook, zero.policy = TRUE, style = "W")
+
 # I de Moran sur les résidus du modèle global (MCO)
 lm.morantest(modele_MCO, w_rook)
+
 # Cartographie des résidus
 tmap_mode("plot")
 tm_shape(LyonIris)+

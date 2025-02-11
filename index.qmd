@@ -242,16 +242,17 @@ Ce projet a bénéficié du soutien pédagogique et financier de la [***fabrique
 -   Nadia Villeuneuve, bibliothécaire, Université Laval.
 
 
-À MODIFIER PLUS TARD.
-Nous remercions aussi les membres du comité de révision pour leurs commentaires et suggestions très constructifs. Ce comité est composé de quatre personnes étudiantes du [Département de géomatique appliquée](https://www.usherbrooke.ca/geomatique/) de l'[Université de Sherbrooke](https://www.usherbrooke.ca/) :
+Nous remercions aussi les membres du comité de révision pour leurs commentaires et suggestions très constructifs. Ce comité est composé de plusieurs personnes étudiantes du [Département de géomatique appliquée](https://www.usherbrooke.ca/geomatique/) de l'[Université de Sherbrooke](https://www.usherbrooke.ca/) et de l'École supérieure d'aménagement du territoire et de développement régional ([ÉSAD]https://www.esad.ulaval.ca/) de l'[Université de Laval](https://www.ulaval.ca/).
 
--  À modifier, personnes étudiantes à la [maîtrise en géomatique appliquée et télédétection (type recherche)](https://www.usherbrooke.ca/geomatique/etudes/programmes/2e-cycle/maitrise-en-geomatique-appliquee-et-teledetection-type-recherche).
 
--   À modifier, étudiante à la maîtrise [en géomatique appliquée et télédétection](https://www.usherbrooke.ca/admission/programme/622/maitrise-en-geomatique-appliquee-et-teledetection/).
+-   Diego Andres Cardenas Morales, [étudiante au doctorat en aménagement du territoire et développement régional](https://www.esad.ulaval.ca/programmes/doctorat-amenagement).
 
--   Marie-Hélène Gadbois Del Carpio, étudiante à la maîtrise [en géomatique appliquée et télédétection](https://www.usherbrooke.ca/admission/programme/622/maitrise-en-geomatique-appliquee-et-teledetection/) a participé activement à la mise en page du manuel; elle est désormais une grande spécialiste des feuilles de style en cascade (CSS) et de Quarto.
+-   Marie-Clara Delage, Victor Bibeau, Liam Messier et Jean-Francois Darveau, personnes étudiantes de troisième année au [baccalauréat en géomatique appliquée à l'environnement](https://www.usherbrooke.ca/admission/programme/271/baccalaureat-en-geomatiqueappliquee-a-lenvironnement/).
 
-Finalement, nous remercions Denise Latreille, réviseure linguistique et chargée de cours à l'Université Sherbrooke, pour la révision du manuel.
+Marie-Hélène Gadbois Del Carpio, étudiants à la [maîtrise en géomatique appliquée et télédétection (type recherche)](https://www.usherbrooke.ca/geomatique/etudes/programmes/2e-cycle/maitrise-en-geomatique-appliquee-et-teledetection-type-recherche). Elle a participé activement à la mise en page du manuel; elle est désormais une grande spécialiste des feuilles de style en cascade (CSS), de Quarto et LaTeX.
+
+
+Finalement, nous remercions Denise Latreille, réviseuse linguistique et chargée de cours à l'Université Sherbrooke, pour la révision du manuel.
 
 ```{r}
 #| echo: false

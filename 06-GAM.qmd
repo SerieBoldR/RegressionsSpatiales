@@ -406,17 +406,19 @@ data_mtl <- data_mtl %>%
   )
 
 plot1 <- ggplot(data_mtl) + 
-  geom_histogram(aes(x = ratio),fill = 'grey', color = 'black', bins = 30) + 
+  geom_histogram(aes(x = ratio), fill = 'grey', color = 'black', bins = 30) + 
   theme_bw() + 
   labs(x = 'part modale TC / part modale auto',
        y = 'effectif'
        )
+
 plot2 <- ggplot(data_mtl) + 
-  geom_histogram(aes(x = alr_val),fill = 'grey', color = 'black', bins = 30) + 
+  geom_histogram(aes(x = alr_val), fill = 'grey', color = 'black', bins = 30) + 
   theme_bw() + 
   labs(x = 'log(part modale TC / part modale auto)',
        y = 'effectif'
        )
+
 ggarrange(plot1, plot2, nrow = 2)
 
 ```
@@ -433,14 +435,17 @@ La @fig-gamhist illustre la distribution de la variable que nous souhaitons mod�
 #| fig-align: center
 library(spdep, quietly = TRUE)
 library(dplyr, quietly = TRUE)
+
 # Matrice de de contiguïté selon le partage d'un nœud 
 queen_nb <- poly2nb(data_mtl, queen = TRUE)
 queen_w <- nb2listw(queen_nb, style = 'W', zero.policy = TRUE)
+
 # Calcul du I de moran de la variable ratio
 moran_i <- moran.mc(data_mtl$alr_val, 
                     listw = queen_w, 
                     zero.policy = TRUE, nsim = 999)
 moran_text <- format(as.numeric(round(moran_i$statistic,3)) , decimal.mark =",")
+
 # Cartographie de la variable
 tm_shape(data_mtl) +
   tm_fill(col="alr_val", n = 7,
@@ -486,6 +491,7 @@ Les indicateurs d'accessibilité sont exprimés comme un score variant de 0 (pir
 #| warning: false
 library(mgcv)
 library(car)
+
 # Vérification de la multicolinéarité avant d'ajuster un premier modèle
 vif(lm(alr_val ~ prt_minorite_vis + prt_monoparental + 
          prt_chomage + revenu_median + prt_personnes_faibles_revenu + 
@@ -523,10 +529,12 @@ Pour une description des résidus simulés, vous pourrez consulter [ce chapitre 
 #| out-width: 85%
 library(DHARMa)
 library(mgcViz)
+
 # Modèle GLM avec une distribution normale
 glm_base <- gam(alr_val ~ prt_minorite_vis + prt_monoparental + revenu_median +
                   acs_idx_emp_tc_peak + acs_idx_emp_pieton,
          data = data_mtl, family = gaussian)
+
 # Validation des résidus
 res <- simulateResiduals(glm_base, plot = FALSE)
 plot(res)
@@ -547,6 +555,7 @@ La @fig-gamresidA indique que les résidus simulés ne suivent pas vraiment une 
 glm_base <- gam(alr_val ~ prt_minorite_vis + prt_monoparental + revenu_median +
                   acs_idx_emp_tc_peak + acs_idx_emp_pieton,
          data = data_mtl, family = scat)
+
 # Validation des résidus
 res <- simulateResiduals(glm_base, plot = FALSE)
 plot(res)
@@ -567,13 +576,16 @@ moran.mc(residuals(glm_base, type = 'pearson'),
                    listw = queen_w, nsim = 999,
                    zero.policy = TRUE)
 
-moran_i <- moran.mc(residuals(res), listw = queen_w, nsim = 999, 
-         zero.policy = TRUE)
+moran_i <- moran.mc(residuals(res), 
+                    listw = queen_w, nsim = 999, 
+                    zero.policy = TRUE)
+
 print(moran_i)
+
 moran_text <- format(as.numeric(round(moran_i$statistic,3)), 
                      decimal.mark =",")
-data_mtl$base_residual <- residuals(glm_base, type = 'response')
 
+data_mtl$base_residual <- residuals(glm_base, type = 'response')
 
 # Cartographie
 tm_shape(data_mtl) +
@@ -606,14 +618,17 @@ Nous ajustons ici un modèle GAM intégrant une spline bivariée sur les coordon
 #| fig-cap: Résidus du modèle GAM avec une spline bivariée sur les coordonnées géographiques
 #| fig-align: center
 #| out-width: 85%
+# Coordonnées X et Y
 XY <- st_coordinates(st_centroid(data_mtl))
 data_mtl$X <- XY[,1]
 data_mtl$Y <- XY[,2]
+
 # Modèle GAM avec une spline bivariée sur les coordonnées géographiques
 gam1 <- gam(alr_val ~ prt_minorite_vis + prt_monoparental + revenu_median +
                   acs_idx_emp_tc_peak + acs_idx_emp_pieton + 
               s(X,Y, bs = 'gp', m = 3),
          data = data_mtl, family = scat)
+
 # Résidus du modèle
 res <- simulateResiduals(gam1, plot = FALSE)
 plot(res)
@@ -633,7 +648,7 @@ data_mtl$sim_residual <- residuals(res)
 test <- moran.mc(data_mtl$sim_residual, listw = queen_w, nsim = 999,
                  zero.policy = TRUE)
 print(test)
-moran_text <- format(as.numeric(round(test$statistic,3)), 
+moran_text <- format(as.numeric(round(test$statistic, 3)), 
                      decimal.mark =",")
 
 tm_shape(data_mtl) +
@@ -932,6 +947,7 @@ gam2 <- gam(alr_val ~ prt_minorite_vis + prt_monoparental + revenu_median +
                   acs_idx_emp_tc_peak + acs_idx_emp_pieton + 
               s(ID_LOC, bs = 'mrf', xt = list(nb = nb), k = 150),
          data = data_mtl, family = scat)
+
 res <- simulateResiduals(gam2, plot = FALSE)
 plot(res)
 summary(gam2)
@@ -995,13 +1011,17 @@ pred_df <- data_mtl[c('prt_minorite_vis', 'prt_monoparental', 'revenu_median',
 
 # on met toutes les valeurs à 0 sauf l'identifiant des SR
 pred_df[c(1:5)] <- 0
+
 # On effectue la prédiction
 pred_df$log_ratio <- predict.gam(gam2, newdata = pred_df, type = 'link')
+
 # On retire l'effet de la constante
 pred_df$log_ratio <- pred_df$log_ratio - gam2$coefficients[[1]]
+
 # On bascule en exponentiel pour avoir l'effet sur le ratio
 pred_df$effet_sp <- exp(pred_df$log_ratio)
 results_mrf <- summary(gam2)
+
 # on peut maintenant cartographier cet effet
 map_mrf <- tm_shape(pred_df) +
   tm_fill(col="effet_sp", n = 7,

@@ -296,6 +296,7 @@ Deuxièmement, le sens de la relation, c'est-à-dire du coefficient et de sa val
 library(tmap)
 LyonIris$GWR.R2 <- modele_gwr$SDF$localR2
 vars_indep <- c("Pct0_14", "Pct_65", "Pct_Img", "Pct_brevet", "NivVieMed")
+
 for(e in vars_indep){
   # Nom des nouvelles variables
   var_coef <- paste0("GWR.", "B_", e)
@@ -454,12 +455,14 @@ library(sf)
 library(tmap)
 library(spgwr)
 load("data/Lyon.Rdata")
+
 ## Ajout des coordonnées X et Y dans LyonIris 
 xy <- st_coordinates(st_centroid(LyonIris))
 LyonIris$X <- xy[,1]
 LyonIris$Y <- xy[,2]
+
 ## Optimisation du nombre de voisins avec le CV
-bwCVa_voisins <- gwr.sel(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+bwCVa_voisins <- gwr.sel(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
                          data = LyonIris,
                          method = "cv",          # Méthode cv ou AIC
                          gweight = gwr.bisquare,   # gwr.gauss ou gwr.bisquare
@@ -468,8 +471,9 @@ bwCVa_voisins <- gwr.sel(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
                          RMSE = TRUE,
                          longlat = FALSE,
                          coords=cbind(LyonIris$X,LyonIris$Y))
+
 ## Optimisation du nombre de voisins avec l'AIC
-bwAICa_voisins <- gwr.sel(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+bwAICa_voisins <- gwr.sel(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
                           data = LyonIris,
                           method = "AIC",          # Méthode cv ou AIC
                           gweight = gwr.bisquare,    # gwr.gauss ou gwr.bisquare
@@ -478,8 +482,9 @@ bwAICa_voisins <- gwr.sel(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
                           RMSE = TRUE,
                           longlat = FALSE,
                           coords=cbind(LyonIris$X,LyonIris$Y))
+
 ## Optimisation de la distance avec le CV
-bwCV_dist <- gwr.sel(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+bwCV_dist <- gwr.sel(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
                      data = LyonIris,
                      method = "cv",     # méthode cv ou AIC
                      gweight=gwr.Gauss, # gwr.gauss ou gwr.bisquare
@@ -488,8 +493,9 @@ bwCV_dist <- gwr.sel(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
                      RMSE = TRUE,
                      longlat = FALSE,
                      coords=cbind(LyonIris$X,LyonIris$Y))
+
 ## Optimisation de la distance avec l'AIC
-bwAIC_dist <- gwr.sel(NO2 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+bwAIC_dist <- gwr.sel(NO2 ~  Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
                       data = LyonIris,
                       method = "AIC",      # méthode cv ou AIC
                       gweight=gwr.Gauss,   # gwr.gauss ou gwr.bisquare
@@ -498,6 +504,7 @@ bwAIC_dist <- gwr.sel(NO2 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
                       verbose = FALSE,
                       longlat = FALSE,
                       coords=cbind(LyonIris$X,LyonIris$Y))
+
 ## Affichage des résultats d'optimisation 
 cat("Sélection de la taille de la zone optimale (bandwidth)",
     "\n avec le nombre de plus proches voisins :",
@@ -523,10 +530,11 @@ Avec la fonction `gwr`, nous estimons un modèle GWR avec un *kernel* bicarré e
 
 # Modèle global : régression linéaire multiple
 modele_global <- lm(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed, data = LyonIris)
+
 # Modèle GWR
-modele_gwr <- gwr(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+modele_gwr <- gwr(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
                   data = LyonIris,
-                  adapt=bwCVa_voisins,
+                  adapt= bwCVa_voisins,
                   gweight = gwr.bisquare,
                   hatmatrix = TRUE,
                   se.fit = TRUE,
@@ -650,9 +658,11 @@ Dans un premier temps, nous ajoutons les valeurs locales des R^2^, des coefficie
 #| eval: true
 ## Récupération du R carré local
 LyonIris$GWR.R2 <- modele_gwr$SDF$localR2
+
 ## Récupération des coefficients de régression et calcul des valeurs de t locales
 names(modele_gwr$SDF)
 vars_indep <- c("Pct0_14", "Pct_65", "Pct_Img", "Pct_brevet", "NivVieMed")
+
 for(e in vars_indep){
   # Nom des nouvelles variables
   var_coef <- paste0("GWR.", "B_", e)
@@ -1076,14 +1086,16 @@ La GWR fait face aussi à d'importantes critiques :
 #| fig-cap: "Corrélation de Pearson entre les coefficients de régression locaux de la GWR"
 #| out-width: 85%
 library("GGally")
+
 df <- data.frame(modele_gwr$SDF)
 df <- df[, 2:7]
 names(df) <- c("Constante" , "Pct0_14", "Pct_65", "Pct_Img", "Pct_brevet", "NivVieMed")
 
 # Graphique avec le package GGally
 ggpairs(df, progress = FALSE)
+
 # Il est aussi possible de réaliser un graphique avec le package corrplot
-library("corrplot")
+# library("corrplot")
 # p <- cor(df, method="pearson")
 # couleurs <- colorRampPalette(c("#053061", "#2166AC" , "#4393C3", "#92C5DE",
 #                                "#D1E5F0", "#FFFFFF", "#FDDBC7", "#F4A582",

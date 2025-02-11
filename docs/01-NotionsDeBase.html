@@ -212,7 +212,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./03-ModelesSpatiauxPanel.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel (en cours de rédaction)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -228,7 +228,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./05-GWRExtensions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée (en cours de rédaction)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -275,7 +275,7 @@ window.Quarto = {
 <a href="#sec-011" id="toc-sec-011" class="nav-link active" data-scroll-target="#sec-011"><span class="header-section-number">1.1</span> Description des jeux de données utilisés dans le manuel</a>
   <ul class="collapse">
 <li><a href="#sec-0111" id="toc-sec-0111" class="nav-link" data-scroll-target="#sec-0111"><span class="header-section-number">1.1.1</span> Jeu de données sur l’agglomération de Lyon</a></li>
-  <li><a href="#sec-0112" id="toc-sec-0112" class="nav-link" data-scroll-target="#sec-0112"><span class="header-section-number">1.1.2</span> Jeu de données sur la région métropolitaine de Montraéal</a></li>
+  <li><a href="#sec-0112" id="toc-sec-0112" class="nav-link" data-scroll-target="#sec-0112"><span class="header-section-number">1.1.2</span> Jeu de données sur la région métropolitaine de Montréal</a></li>
   <li><a href="#sec-0113" id="toc-sec-0113" class="nav-link" data-scroll-target="#sec-0113"><span class="header-section-number">1.1.3</span> Jeu de données sur Barcelone</a></li>
   <li><a href="#sec-0114" id="toc-sec-0114" class="nav-link" data-scroll-target="#sec-0114"><span class="header-section-number">1.1.4</span> Jeu de données sur la densité pour six villes espagnoles</a></li>
   <li><a href="#sec-0115" id="toc-sec-0115" class="nav-link" data-scroll-target="#sec-0115"><span class="header-section-number">1.1.5</span> Jeu de données sur la densité pour six régions métropolitaines espagnoles</a></li>
@@ -329,6 +329,7 @@ window.Quarto = {
 
 
 </header><p>Avant d’explorer les différents types de régressions spatiales dans les chapitres suivants, il est primordial de comprendre plusieurs notions clés, comme l’autocorrélation spatiale, la dépendance spatiale et l’hétérogénéité spatiale. Aussi, de nombreuses méthodes de régression spatiale s’appuient sur l’utilisation de matrices de pondération spatiale. Nous proposons également un bref rappel sur la régression linéaire multiple.</p>
+<p>Certaines sections de ce chapitre sont adaptées du manuel suivant&nbsp;: Apparicio P. et J. Gelb (2024). <em>Méthodes d’analyse spatiales&nbsp;: un grand bol d’R</em>. Université de Sherbrooke, Département de géomatique appliquée. fabriqueREL. Licence CC BY-SA.</p>
 <div class="bloc_objectif">
 <div class="bloc_objectif-header">
 <div class="bloc_objectif-icon">
@@ -530,7 +531,7 @@ Tableau&nbsp;1.1: Statistiques descriptives du jeu de données LyonIris
 </div>
 </div>
 </section><section id="sec-0112" class="level3" data-number="1.1.2"><h3 data-number="1.1.2" class="anchored" data-anchor-id="sec-0112">
-<span class="header-section-number">1.1.2</span> Jeu de données sur la région métropolitaine de Montraéal</h3>
+<span class="header-section-number">1.1.2</span> Jeu de données sur la région métropolitaine de Montréal</h3>
 <p>Deuxièmement, nous utiliserons un jeu de données spatiales sur les parts modales dans la région de Montréal extraites du recensement de 2021 de Statistique Canada pour la région métropolitaine de Montréal (<a href="#tbl-Mtl" class="quarto-xref">tableau&nbsp;<span>1.2</span></a>). En guise d’exemple, les proportions des navetteurs utilisant respectivement le transport en commun et l’automobile par secteur de recensement sont présentées à la <a href="#fig-datamtlCarto" class="quarto-xref">figure&nbsp;<span>1.2</span></a>.</p>
 <div class="cell">
 <div id="tbl-Mtl" class="cell quarto-float quarto-figure quarto-figure-center anchored">
@@ -1238,9 +1239,11 @@ Tableau&nbsp;1.4: Standardisation de matrices de pondération spatiale
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/spdep/">spdep</a></span><span class="op">)</span> <span class="co"># pour construire les matrices de pondération</span></span>
 <span><span class="co">## Utilisation du jeu de données sur l'agglomération de Lyon</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"data/Lyon.Rdata"</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co">## Matrice selon le partage d'un nœud (Queen)</span></span>
 <span><span class="co"># Création de la matrice spatiale</span></span>
 <span><span class="va">nb_queen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/poly2nb.html">poly2nb</a></span><span class="op">(</span><span class="va">LyonIris</span>, queen <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># Affichage de la première ligne de la matrice</span></span>
 <span><span class="va">nb_queen</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1248,6 +1251,7 @@ Tableau&nbsp;1.4: Standardisation de matrices de pondération spatiale
 </div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Création de la matrice de pondération avec une standardisation en ligne</span></span>
 <span><span class="va">w_queen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">nb_queen</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># Affichage de la première ligne des pondérations standardisée</span></span>
 <span><span class="va">w_queen</span><span class="op">$</span><span class="va">weights</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1266,6 +1270,7 @@ Tableau&nbsp;1.4: Standardisation de matrices de pondération spatiale
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Matrice selon le partage d'un segment (Rook)</span></span>
 <span><span class="va">nb_rook</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/poly2nb.html">poly2nb</a></span><span class="op">(</span><span class="va">LyonIris</span>, queen <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">w_rook</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">nb_rook</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co">##  Comparaison des deux matrices de contiguïté</span></span>
 <span><span class="co"># Résultat de la matrice de pondération (Queen)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">w_queen</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1333,8 +1338,10 @@ W 506 256036 506 204.0416 2099.405</code></pre>
 <div class="cell">
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Conversion des polygones en points avec st_centroid</span></span>
 <span><span class="va">iris_centroides</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_centroid</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co">## Matrice binaire avec un seuil de 2500 mètres</span></span>
 <span><span class="va">connect_2500m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/dnearneigh.html">dnearneigh</a></span><span class="op">(</span><span class="va">iris_centroides</span>, d1 <span class="op">=</span> <span class="fl">0</span>, d2 <span class="op">=</span> <span class="fl">2500</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co">## Matrice de pondération spatiale standardisée en ligne</span></span>
 <span><span class="va">w_connect_2500m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">connect_2500m</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1350,13 +1357,17 @@ W 506 256036 506 204.0416 2099.405</code></pre>
 <div class="cell">
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Coordonnées des centroïdes des entités spatiales</span></span>
 <span><span class="va">coords</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html">st_coordinates</a></span><span class="op">(</span><span class="va">iris_centroides</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co">## Création de la matrice de distance</span></span>
 <span><span class="va">distances</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html">dist</a></span><span class="op">(</span><span class="va">coords</span>, method <span class="op">=</span> <span class="st">"euclidean"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># S'assurer que la diagonale de la matrice est à 0</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">distances</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
+<span></span>
 <span><span class="co">## Matrices inverse de la distance et inverse de la distance au carré</span></span>
 <span><span class="va">inv_distances</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">distances</span><span class="op">!=</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">/</span><span class="va">distances</span>, <span class="va">distances</span><span class="op">)</span></span>
 <span><span class="va">inv_distances2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">distances</span><span class="op">!=</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">/</span><span class="va">distances</span><span class="op">^</span><span class="fl">2</span>, <span class="va">distances</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co">## Matrices de pondération spatiale standardisées en ligne</span></span>
 <span><span class="va">w_inv_distances</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/mat2listw.html">mat2listw</a></span><span class="op">(</span><span class="va">inv_distances</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
 <span><span class="va">w_inv_distances2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/mat2listw.html">mat2listw</a></span><span class="op">(</span><span class="va">inv_distances2</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1378,14 +1389,17 @@ W 506 256036 506 204.0416 2099.405</code></pre>
 <div class="cell">
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Coordonnées des centroïdes des entités spatiales</span></span>
 <span><span class="va">coords</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html">st_coordinates</a></span><span class="op">(</span><span class="va">iris_centroides</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co">## Création de la matrice de distance</span></span>
 <span><span class="va">distances</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html">dist</a></span><span class="op">(</span><span class="va">coords</span>, method <span class="op">=</span> <span class="st">"euclidean"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co">## Création de différentes matrices avec différents seuils</span></span>
 <span><span class="va">inv_distances_1000m</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">distances</span><span class="op">&lt;=</span><span class="fl">1000</span> <span class="op">&amp;</span> <span class="va">distances</span><span class="op">!=</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">/</span><span class="va">distances</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="va">inv_distances_2500m</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">distances</span><span class="op">&lt;=</span><span class="fl">2500</span> <span class="op">&amp;</span> <span class="va">distances</span><span class="op">!=</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">/</span><span class="va">distances</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="va">inv_distances_5000m</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">distances</span><span class="op">&lt;=</span><span class="fl">5000</span> <span class="op">&amp;</span> <span class="va">distances</span><span class="op">!=</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">/</span><span class="va">distances</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="va">inv_distances2_2500m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">distances</span><span class="op">&lt;=</span><span class="fl">2500</span> <span class="op">&amp;</span> <span class="va">distances</span><span class="op">!=</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">/</span><span class="va">distances</span><span class="op">^</span><span class="fl">2</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="va">inv_distances2_5000m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">distances</span><span class="op">&lt;=</span><span class="fl">5000</span> <span class="op">&amp;</span> <span class="va">distances</span><span class="op">!=</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">/</span><span class="va">distances</span><span class="op">^</span><span class="fl">2</span>, <span class="fl">0</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co">## Matrices de pondération spatiale standardisées en ligne</span></span>
 <span><span class="va">w_inv_distances_1000</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/mat2listw.html">mat2listw</a></span><span class="op">(</span><span class="va">inv_distances_1000m</span>, style <span class="op">=</span> <span class="st">"W"</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">w_inv_distances_2500</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/mat2listw.html">mat2listw</a></span><span class="op">(</span><span class="va">inv_distances_2500m</span>, style <span class="op">=</span> <span class="st">"W"</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -1446,8 +1460,10 @@ W 438 191844 438 203.0076 1789.585</code></pre>
 <div class="cell">
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Coordonnées des centroïdes des entités spatiales</span></span>
 <span><span class="va">coords</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html">st_coordinates</a></span><span class="op">(</span><span class="va">iris_centroides</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co">## Trouver le plus proche voisin</span></span>
 <span><span class="va">k1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/knn2nb.html">knn2nb</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/knearneigh.html">knearneigh</a></span><span class="op">(</span><span class="va">coords</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co">## Affichage de la distance la plus proche pour les 506 IRIS</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nbdists.html">nbdists</a></span><span class="op">(</span><span class="va">k1</span>, <span class="va">coords</span><span class="op">)</span><span class="op">)</span>, <span class="fl">0</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1495,12 +1511,16 @@ W 438 191844 438 203.0076 1789.585</code></pre>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Matrice de distance avec la valeur maximale</span></span>
 <span><span class="co"># les voisins les plus proches avec le seuil de distance maximal</span></span>
 <span><span class="va">voisins_distmax</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/dnearneigh.html">dnearneigh</a></span><span class="op">(</span><span class="va">coords</span>, <span class="fl">0</span>, <span class="va">plusprochevoisin_max</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># Distances avec le seuil maximum</span></span>
 <span><span class="va">distances</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nbdists.html">nbdists</a></span><span class="op">(</span><span class="va">voisins_distmax</span>, <span class="va">coords</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># Inverse de la distance</span></span>
 <span><span class="va">inv_distances</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">distances</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># Inverse de la distance au carré</span></span>
 <span><span class="va">inv_distances2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">distances</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="va">x</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co">## Matrices de pondération spatiale standardisées en ligne</span></span>
 <span><span class="va">w_inv_distances</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">voisins_distmax</span>, glist <span class="op">=</span> <span class="va">inv_distances</span>, style <span class="op">=</span> <span class="st">"W"</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">w_inv_distances2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">voisins_distmax</span>, glist <span class="op">=</span> <span class="va">inv_distances2</span>, style <span class="op">=</span> <span class="st">"W"</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1511,11 +1531,13 @@ W 438 191844 438 203.0076 1789.585</code></pre>
 <div class="cell">
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Coordonnées géographiques des centroïdes des polygones</span></span>
 <span><span class="va">coords</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html">st_coordinates</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_centroid</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co">## Matrices des plus proches voisins de 2 à 5</span></span>
 <span><span class="va">k2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/knn2nb.html">knn2nb</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/knearneigh.html">knearneigh</a></span><span class="op">(</span><span class="va">coords</span>, k <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">k3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/knn2nb.html">knn2nb</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/knearneigh.html">knearneigh</a></span><span class="op">(</span><span class="va">coords</span>, k <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">k4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/knn2nb.html">knn2nb</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/knearneigh.html">knearneigh</a></span><span class="op">(</span><span class="va">coords</span>, k <span class="op">=</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">k5</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/knn2nb.html">knn2nb</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/knearneigh.html">knearneigh</a></span><span class="op">(</span><span class="va">coords</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co">## Matrices de pondération spatiale standardisées en ligne</span></span>
 <span><span class="va">w_k2</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">k2</span>, zero.policy <span class="op">=</span> <span class="cn">FALSE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
 <span><span class="va">w_k3</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">k3</span>, zero.policy <span class="op">=</span> <span class="cn">FALSE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
@@ -1628,25 +1650,30 @@ Figure&nbsp;1.9: Illustration du calcul d’une variable spatialement décalée
 <span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"data/Lyon.Rdata"</span><span class="op">)</span></span>
 <span><span class="co"># Matrice de pondération spatiale standardisée en ligne selon la contiguïté </span></span>
 <span><span class="va">w_rook</span><span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/poly2nb.html">poly2nb</a></span><span class="op">(</span><span class="va">LyonIris</span>, queen <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># Variable spatialement décalée</span></span>
 <span><span class="va">LyonIris</span><span class="op">$</span><span class="va">W_NO2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/lag.listw.html">lag.listw</a></span><span class="op">(</span><span class="va">w_rook</span>, <span class="va">LyonIris</span><span class="op">$</span><span class="va">NO2</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># Cartographie avec tmap</span></span>
 <span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tmap_mode.html">tmap_mode</a></span><span class="op">(</span><span class="st">"plot"</span><span class="op">)</span></span>
 <span><span class="va">legende_parametres</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>text.separator <span class="op">=</span> <span class="st">"à"</span>, </span>
 <span>                           decimal.mark <span class="op">=</span> <span class="st">","</span>, </span>
 <span>                           big.mark <span class="op">=</span> <span class="st">" "</span><span class="op">)</span></span>
+<span></span>
 <span><span class="va">carte1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span><span class="op">+</span></span>
 <span>          <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_borders</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"gray25"</span>, lwd<span class="op">=</span><span class="fl">.2</span><span class="op">)</span><span class="op">+</span></span>
 <span>          <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"NO2"</span>, palette <span class="op">=</span> <span class="st">"Reds"</span>, n <span class="op">=</span> <span class="fl">5</span>, style <span class="op">=</span> <span class="st">"quantile"</span>,</span>
 <span>                  legend.format <span class="op">=</span> <span class="va">legende_parametres</span>,</span>
 <span>                      title <span class="op">=</span> <span class="st">"(a) Variable initiale"</span><span class="op">)</span><span class="op">+</span></span>
 <span>          <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_scale_bar.html">tm_scale_bar</a></span><span class="op">(</span>breaks<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
 <span><span class="va">carte2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span><span class="op">+</span></span>
 <span>          <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_borders</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"gray25"</span>, lwd<span class="op">=</span><span class="fl">.2</span><span class="op">)</span><span class="op">+</span></span>
 <span>          <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"W_NO2"</span>, palette <span class="op">=</span> <span class="st">"Reds"</span>, n <span class="op">=</span> <span class="fl">5</span>, style <span class="op">=</span> <span class="st">"quantile"</span>,</span>
 <span>                      legend.format <span class="op">=</span> <span class="va">legende_parametres</span>,</span>
 <span>                      title <span class="op">=</span> <span class="st">"(b) Spatialement décalée"</span><span class="op">)</span><span class="op">+</span></span>
 <span>          <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tmap_arrange.html">tmap_arrange</a></span><span class="op">(</span><span class="va">carte1</span>, <span class="va">carte2</span>, ncol <span class="op">=</span> <span class="fl">2</span>, nrow <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-Chap01FigureVariableSpatialementDecalee2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -1779,20 +1806,24 @@ I = \frac{\Sigma_{i=1}^n \Sigma_{j=1}^n w_{ij}(x_i-\bar{x})(x_j-\bar{x})}{\Sigma
 <span><span class="va">nb_rook</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/poly2nb.html">poly2nb</a></span><span class="op">(</span><span class="va">LyonIris</span>, queen <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">w_queen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">nb_queen</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
 <span><span class="va">w_rook</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">nb_rook</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># Matrice de contiguité (ordre 2 à 5)</span></span>
 <span><span class="va">w_rook2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nblag.html">nblag_cumul</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nblag.html">nblag</a></span><span class="op">(</span><span class="va">nb_rook</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span>zero.policy <span class="op">=</span> <span class="cn">TRUE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
 <span><span class="va">w_rook3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nblag.html">nblag_cumul</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nblag.html">nblag</a></span><span class="op">(</span><span class="va">nb_rook</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span>zero.policy <span class="op">=</span> <span class="cn">TRUE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
 <span><span class="va">w_rook4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nblag.html">nblag_cumul</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nblag.html">nblag</a></span><span class="op">(</span><span class="va">nb_rook</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span>zero.policy <span class="op">=</span> <span class="cn">TRUE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
 <span><span class="va">w_rook5</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nblag.html">nblag_cumul</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nblag.html">nblag</a></span><span class="op">(</span><span class="va">nb_rook</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span>zero.policy <span class="op">=</span> <span class="cn">TRUE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># Matrice de connectivité binaire</span></span>
 <span><span class="va">centroides</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_centroid</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span></span>
 <span><span class="va">w_connect_2500m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/dnearneigh.html">dnearneigh</a></span><span class="op">(</span><span class="va">centroides</span>, d1 <span class="op">=</span> <span class="fl">0</span>, d2 <span class="op">=</span> <span class="fl">2500</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>                  <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span>zero.policy <span class="op">=</span> <span class="cn">TRUE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># Inverse de la distance et inverse de la distance au carré (matrices complètes)</span></span>
 <span><span class="va">distances</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html">dist</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html">st_coordinates</a></span><span class="op">(</span><span class="va">centroides</span><span class="op">)</span>, method <span class="op">=</span> <span class="st">"euclidean"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">distances</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
 <span><span class="va">w_inv_distances</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">distances</span><span class="op">!=</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">/</span><span class="va">distances</span>, <span class="va">distances</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/mat2listw.html">mat2listw</a></span><span class="op">(</span>style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
 <span><span class="va">w_inv_distances2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">distances</span><span class="op">!=</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">/</span><span class="va">distances</span><span class="op">^</span><span class="fl">2</span>, <span class="va">distances</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/mat2listw.html">mat2listw</a></span><span class="op">(</span>style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># Inverse de la distance et inverse de la distance au carré (matrices réduites)</span></span>
 <span><span class="va">coords</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html">st_coordinates</a></span><span class="op">(</span><span class="va">centroides</span><span class="op">)</span></span>
 <span><span class="va">plusprochevoisin_max</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nbdists.html">nbdists</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/knn2nb.html">knn2nb</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/knearneigh.html">knearneigh</a></span><span class="op">(</span><span class="va">coords</span><span class="op">)</span><span class="op">)</span>,<span class="va">coords</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -1801,6 +1832,7 @@ I = \frac{\Sigma_{i=1}^n \Sigma_{j=1}^n w_{ij}(x_i-\bar{x})(x_j-\bar{x})}{\Sigma
 <span>                            <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">voisins_distmax</span>, glist <span class="op">=</span> <span class="va">.</span>, style <span class="op">=</span> <span class="st">"W"</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">w_inv_distances2_reduite</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">dists</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="va">x</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>                            <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">voisins_distmax</span>, glist <span class="op">=</span> <span class="va">.</span>, style <span class="op">=</span> <span class="st">"W"</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># Inverse de la distance et inverse de la distance au carré avec un seuil de distance</span></span>
 <span><span class="va">w_inv_distances_1000m</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">distances</span><span class="op">&lt;=</span><span class="fl">1000</span> <span class="op">&amp;</span> <span class="va">distances</span><span class="op">!=</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">/</span><span class="va">distances</span>, <span class="fl">0</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>                          <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/mat2listw.html">mat2listw</a></span><span class="op">(</span>style <span class="op">=</span> <span class="st">"W"</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -1812,6 +1844,7 @@ I = \frac{\Sigma_{i=1}^n \Sigma_{j=1}^n w_{ij}(x_i-\bar{x})(x_j-\bar{x})}{\Sigma
 <span>                          <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/mat2listw.html">mat2listw</a></span><span class="op">(</span>style <span class="op">=</span> <span class="st">"W"</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">w_inv_distances2_5000m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">distances</span><span class="op">&lt;=</span><span class="fl">5000</span> <span class="op">&amp;</span> <span class="va">distances</span><span class="op">!=</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">/</span><span class="va">distances</span><span class="op">^</span><span class="fl">2</span>, <span class="fl">0</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>                          <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/mat2listw.html">mat2listw</a></span><span class="op">(</span>style <span class="op">=</span> <span class="st">"W"</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co">## Matrices des plus proches voisins de 2 à 5</span></span>
 <span><span class="va">w_k2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/knn2nb.html">knn2nb</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/knearneigh.html">knearneigh</a></span><span class="op">(</span><span class="va">coords</span>, k <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span>zero.policy <span class="op">=</span> <span class="cn">FALSE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
 <span><span class="va">w_k3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/knn2nb.html">knn2nb</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/knearneigh.html">knearneigh</a></span><span class="op">(</span><span class="va">coords</span>, k <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span>zero.policy <span class="op">=</span> <span class="cn">FALSE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
@@ -1918,10 +1951,12 @@ alternative hypothesis: greater</code></pre>
 <span>                       w_k3 <span class="op">=</span> <span class="va">w_k3</span>, </span>
 <span>                       w_k4 <span class="op">=</span> <span class="va">w_k4</span>, </span>
 <span>                       w_k5 <span class="op">=</span> <span class="va">w_k5</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co">## Vecteur pour le I de Moran et la valeur de p</span></span>
 <span><span class="va">moranI</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">pvalue</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">i</span><span class="op">&lt;-</span><span class="fl">0</span></span>
+<span></span>
 <span><span class="co">## Boucle pour calculer le I de Moran avec la liste des matrices</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">e</span> <span class="kw">in</span> <span class="va">liste_matrices</span><span class="op">)</span><span class="op">{</span></span>
 <span>   <span class="va">i</span><span class="op">&lt;-</span><span class="va">i</span><span class="op">+</span><span class="fl">1</span></span>
@@ -1932,6 +1967,7 @@ alternative hypothesis: greater</code></pre>
 <span>   <span class="va">moranI</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">test</span><span class="op">$</span><span class="va">statistic</span></span>
 <span>   <span class="va">pvalue</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">test</span><span class="op">$</span><span class="va">p.value</span></span>
 <span><span class="op">}</span></span>
+<span></span>
 <span><span class="co"># Création d'un DataFrame avec les valeurs du I de Moran et de p</span></span>
 <span><span class="va">moran_resultats</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>Matrices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">liste_matrices</span><span class="op">)</span>,</span>
 <span>                              MoranIs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">moranI</span>, <span class="fl">4</span><span class="op">)</span>,</span>
@@ -2347,9 +2383,11 @@ F-statistic: 54.78 on 5 and 500 DF,  p-value: &lt; 2.2e-16</code></pre>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/">tmap</a></span><span class="op">)</span></span>
 <span><span class="co">## Modèle MCO</span></span>
 <span><span class="va">LyonIris</span><span class="op">$</span><span class="va">MCO.Residus</span> <span class="op">&lt;-</span> <span class="va">modele_MCO</span><span class="op">$</span><span class="va">residuals</span></span>
+<span></span>
 <span><span class="co">## Matrice de contiguïté</span></span>
 <span><span class="va">nb_rook</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/poly2nb.html">poly2nb</a></span><span class="op">(</span><span class="va">LyonIris</span>, queen <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">w_rook</span><span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">nb_rook</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># I de Moran sur les résidus du modèle global (MCO)</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/lm.morantest.html">lm.morantest</a></span><span class="op">(</span><span class="va">modele_MCO</span>, <span class="va">w_rook</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -2847,7 +2885,7 @@ Apparicio, Philippe et Jérémy Gelb. 2022. <em>Méthodes quantitatives en scien
 ———. 2024. <em>Méthodes d’analyse spatiales : un grand bol d’R</em>. FabriqueREL, Licence CC BY-SA. <a href="https://serieboldr.github.io/MethodesAnalyseSpatiale/">https://serieboldr.github.io/MethodesAnalyseSpatiale/</a>.
 </div>
 <div id="ref-ApparicioGelbrevisited" class="csl-entry" role="listitem">
-Apparicio, Philippe, Jérémy Gelb, Anne-Sophie Dubé, Simon Kingham, Lise Gauvin et Éric Robitaille. 2017. <span>«&nbsp;The approaches to measuring the potential spatial access to urban health services revisited: distance types and aggregation-error issues.&nbsp;»</span> <em>International journal of health geographics</em> 16 (1): 32. <a href="https://doi.org/10.1186/s12942-017-0105-9">https://doi.org/10.1186/s12942-017-0105-9</a>.
+Apparicio, Philippe, Jérémy Gelb, Anne-Sophie Dubé, Simon Kingham, Lise Gauvin et Éric Robitaille. 2017. <span>«&nbsp;The approaches to measuring the potential spatial access to urban health services revisited: distance types and aggregation-error issues.&nbsp;»</span> <em>International journal of health geographics</em> 16 (1): 32. doi:<a href="https://doi.org/10.1186/s12942-017-0105-9">https://doi.org/10.1186/s12942-017-0105-9</a>.
 </div>
 <div id="ref-chi2019spatial" class="csl-entry" role="listitem">
 Chi, Guangqing et Jun Zhu. 2019. <em>Spatial regression models for the social sciences</em>. SAGE publications.
@@ -2859,13 +2897,13 @@ Dubé, Jean, Julie Le Gallo, François Des Rosiers, Diègo Legros et Marie-Pier 
 Dubé, Jean et Diègo Legros. 2014. <em>Econom<span>é</span>trie spatiale appliqu<span>é</span>e des microdonn<span>é</span>es</em>. ISTE Group.
 </div>
 <div id="ref-geary1954contiguity" class="csl-entry" role="listitem">
-Geary, Robert C. 1954. <span>«&nbsp;The contiguity ratio and statistical mapping.&nbsp;»</span> <em>The incorporated statistician</em> 5 (3): 115‑146. <a href="https://doi.org/10.2307/2986645">https://doi.org/10.2307/2986645</a>.
+Geary, Robert C. 1954. <span>«&nbsp;The contiguity ratio and statistical mapping.&nbsp;»</span> <em>The incorporated statistician</em> 5 (3): 115‑146. doi:<a href="https://doi.org/10.2307/2986645">https://doi.org/10.2307/2986645</a>.
 </div>
 <div id="ref-moran1950test" class="csl-entry" role="listitem">
-Moran, Patrick. 1950. <span>«&nbsp;A test for the serial independence of residuals.&nbsp;»</span> <em>Biometrika</em> 37 (1/2): 178‑181. <a href="https://doi.org/10.2307/2332162">https://doi.org/10.2307/2332162</a>.
+Moran, Patrick. 1950. <span>«&nbsp;A test for the serial independence of residuals.&nbsp;»</span> <em>Biometrika</em> 37 (1/2): 178‑181. doi:<a href="https://doi.org/10.2307/2332162">https://doi.org/10.2307/2332162</a>.
 </div>
 <div id="ref-tobler1970computer" class="csl-entry" role="listitem">
-Tobler, Waldo R. 1970. <span>«&nbsp;A computer movie simulating urban growth in the Detroit region.&nbsp;»</span> <em>Economic geography</em> 46 (sup1): 234‑240. <a href="https://doi.org/10.2307/143141">https://doi.org/10.2307/143141</a>.
+Tobler, Waldo R. 1970. <span>«&nbsp;A computer movie simulating urban growth in the Detroit region.&nbsp;»</span> <em>Economic geography</em> 46 (sup1): 234‑240. doi:<a href="https://doi.org/10.2307/143141">https://doi.org/10.2307/143141</a>.
 </div>
 </div>
 </section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">

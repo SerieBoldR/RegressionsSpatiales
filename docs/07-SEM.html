@@ -212,7 +212,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./03-ModelesSpatiauxPanel.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel (en cours de rédaction)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -228,7 +228,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./05-GWRExtensions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée (en cours de rédaction)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -551,6 +551,7 @@ Figure&nbsp;7.2: Représentation de quatre vecteurs propres issue d’une matric
 <span>                   listw <span class="op">=</span> <span class="va">listw</span>,</span>
 <span>                   alpha <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>                   zero.policy<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">moran_ev_sel</span><span class="op">$</span><span class="va">vectors</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La fonction ME a sélectionné 46 vecteurs propres que nous pouvons utiliser pour ajuster le modèle complet.</p>
@@ -934,6 +935,7 @@ Tableau&nbsp;7.1: Vecteurs propres retenus
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Validation brève des résidus</span></span>
 <span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DHARMa/man/simulateResiduals.html">simulateResiduals</a></span><span class="op">(</span><span class="va">base_model</span>, plot <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># I de Moran sur les résidus du modèle</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span>, listw <span class="op">=</span> <span class="va">listw</span>, nsim <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -967,6 +969,7 @@ Figure&nbsp;7.4: Résidus simulé du modèle SEVM avec distribution de Student p
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Nous devons commencer par sélectionner tous les vecteurs avec un I de Moran positif</span></span>
 <span><span class="co"># Précalcul des vecteurs propres</span></span>
 <span><span class="va">moran_ev</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://adeverse.github.io/adespatial/reference/mem.html">mem</a></span><span class="op">(</span><span class="va">listw</span>, MEM.autocor <span class="op">=</span> <span class="st">'all'</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># Pour rappel, cette méthode limite les vecteurs propres à ceux ayant une autocorrélation</span></span>
 <span><span class="co"># spatiale positive, nous allons donc retenir ici les 100 premiers vecteurs</span></span>
 <span><span class="va">ok_vectors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">moran_ev</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">]</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -986,6 +989,7 @@ Figure&nbsp;7.4: Résidus simulé du modèle SEVM avec distribution de Student p
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Validation brève des résidus</span></span>
 <span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DHARMa/man/simulateResiduals.html">simulateResiduals</a></span><span class="op">(</span><span class="va">model_ridge</span>, plot <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># I de Moran sur des résidus</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span>, listw <span class="op">=</span> <span class="va">listw</span>, nsim <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1019,6 +1023,7 @@ Figure&nbsp;7.5: Résidus du modèle RE-SEVM
 <span><span class="co"># avec un I de Moran positif</span></span>
 <span><span class="co"># Précalcul des vecteurs propres</span></span>
 <span><span class="va">moran_ev</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://adeverse.github.io/adespatial/reference/mem.html">mem</a></span><span class="op">(</span><span class="va">listw</span>, MEM.autocor <span class="op">=</span> <span class="st">'all'</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># Pour rappel, cette méthode limite les vecteurs propres à ceux ayant une</span></span>
 <span><span class="co"># autocorrélation spatiale positive, nous allons donc retenir ici les </span></span>
 <span><span class="co"># 100 premiers vecteurs</span></span>
@@ -1071,7 +1076,7 @@ data:  residuals(res)
 weights: listw  
 number of simulations + 1: 1000 
 
-statistic = 0.037659, observed rank = 979, p-value = 0.021
+statistic = 0.038835, observed rank = 978, p-value = 0.022
 alternative hypothesis: greater</code></pre>
 </div>
 <div class="cell-output-display">
@@ -1582,16 +1587,16 @@ Griffith, Daniel A. 2003. <em>Spatial filtering</em>. Springer.
 Griffith, Daniel A., Yongwan Chun et Bin Li. 2019. <em>Spatial regression analysis using eigenvector spatial filtering</em>. Academic Press.
 </div>
 <div id="ref-griffith2006spatial" class="csl-entry" role="listitem">
-Griffith, Daniel A. et Pedro R Peres-Neto. 2006. <span>«&nbsp;Spatial modeling in ecology: the flexibility of eigenfunction spatial analyses.&nbsp;»</span> <em>Ecology</em> 87 (10): 2603‑2613. <a href="https://doi.org/10.1890/0012-9658(2006)87%5B2603:SMIETF%5D2.0.CO;2">https://doi.org/10.1890/0012-9658(2006)87[2603:SMIETF]2.0.CO;2</a>.
+Griffith, Daniel A. et Pedro R Peres-Neto. 2006. <span>«&nbsp;Spatial modeling in ecology: the flexibility of eigenfunction spatial analyses.&nbsp;»</span> <em>Ecology</em> 87 (10): 2603‑2613. doi:<a href="https://doi.org/10.1890/0012-9658(2006)87%5B2603:SMIETF%5D2.0.CO;2">https://doi.org/10.1890/0012-9658(2006)87[2603:SMIETF]2.0.CO;2</a>.
 </div>
 <div id="ref-helbich2016spatially" class="csl-entry" role="listitem">
-Helbich, Marco et Daniel A. Griffith. 2016. <span>«&nbsp;Spatially varying coefficient models in real estate: Eigenvector spatial filtering and alternative approaches.&nbsp;»</span> <em>Computers, Environment and Urban Systems</em> 57. Elsevier: 1‑11.
+Helbich, Marco et Daniel A. Griffith. 2016. <span>«&nbsp;Spatially varying coefficient models in real estate: Eigenvector spatial filtering and alternative approaches.&nbsp;»</span> <em>Computers, Environment and Urban Systems</em> 57: 1‑11. doi:<a href="https://doi.org/10.1016/j.compenvurbsys.2015.12.002">https://doi.org/10.1016/j.compenvurbsys.2015.12.002</a>.
 </div>
 <div id="ref-murakami2015random" class="csl-entry" role="listitem">
 Murakami, Daisuke et Daniel A. Griffith. 2015. <span>«&nbsp;Random effects specifications in eigenvector spatial filtering: a simulation study.&nbsp;»</span> <em>Journal of Geographical Systems</em> 17. Springer: 311‑331.
 </div>
 <div id="ref-seya2015application" class="csl-entry" role="listitem">
-Seya, Hajime, Daisuke Murakami, Morito Tsutsumi et Yoshiki Yamagata. 2015. <span>«&nbsp;Application of LASSO to the eigenvector selection problem in eigenvector-based spatial filtering.&nbsp;»</span> <em>Geographical analysis</em> 47 (3). Wiley Online Library: 284‑299.
+Seya, Hajime, Daisuke Murakami, Morito Tsutsumi et Yoshiki Yamagata. 2015. <span>«&nbsp;Application of LASSO to the eigenvector selection problem in eigenvector-based spatial filtering.&nbsp;»</span> <em>Geographical analysis</em> 47 (3): 284‑299. doi:<a href="https://doi.org/10.1111/gean.12054">https://doi.org/10.1111/gean.12054</a>.
 </div>
 </div>
 </section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">

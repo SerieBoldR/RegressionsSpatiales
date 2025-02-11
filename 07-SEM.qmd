@@ -352,6 +352,7 @@ moran_ev_sel <- ME(alr_val ~ prt_minorite_vis + prt_monoparental + revenu_median
                    listw = listw,
                    alpha = 0.05,
                    zero.policy=TRUE)
+
 ncol(moran_ev_sel$vectors)
 ```
 
@@ -517,6 +518,7 @@ La procédure que nous avons appliquée a retenu `r nrow(retenu)` vecteurs propr
 # Validation brève des résidus
 res <- simulateResiduals(base_model, plot = FALSE)
 plot(res)
+
 # I de Moran sur les résidus du modèle
 moran.mc(residuals(res), listw = listw, nsim = 999)
 ```
@@ -538,6 +540,7 @@ Cependant, comme nous l'avons mentionné plus haut ([section @sec-0722]), la pé
 # Nous devons commencer par sélectionner tous les vecteurs avec un I de Moran positif
 # Précalcul des vecteurs propres
 moran_ev <- mem(listw, MEM.autocor = 'all')
+
 # Pour rappel, cette méthode limite les vecteurs propres à ceux ayant une autocorrélation
 # spatiale positive, nous allons donc retenir ici les 100 premiers vecteurs
 ok_vectors <- as.matrix(moran_ev[,1:100])
@@ -572,6 +575,7 @@ model_ridge <- gam(alr_val ~ prt_minorite_vis +
 # Validation brève des résidus
 res <- simulateResiduals(model_ridge, plot = FALSE)
 plot(res)
+
 # I de Moran sur des résidus
 moran.mc(residuals(res), listw = listw, nsim = 999)
 ```
@@ -593,6 +597,7 @@ Le *package* de prédilection pour créer des modèles avec des pénalisations e
 # avec un I de Moran positif
 # Précalcul des vecteurs propres
 moran_ev <- mem(listw, MEM.autocor = 'all')
+
 # Pour rappel, cette méthode limite les vecteurs propres à ceux ayant une
 # autocorrélation spatiale positive, nous allons donc retenir ici les 
 # 100 premiers vecteurs

@@ -212,7 +212,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./03-ModelesSpatiauxPanel.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel (en cours de rédaction)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -228,7 +228,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./05-GWRExtensions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée (en cours de rédaction)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -628,12 +628,14 @@ Figure&nbsp;4.3: Variables indépendantes significatives du modèle GWR
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/">tmap</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rsbivand/spgwr/">spgwr</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"data/Lyon.Rdata"</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co">## Ajout des coordonnées X et Y dans LyonIris </span></span>
 <span><span class="va">xy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html">st_coordinates</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_centroid</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">LyonIris</span><span class="op">$</span><span class="va">X</span> <span class="op">&lt;-</span> <span class="va">xy</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span></span>
 <span><span class="va">LyonIris</span><span class="op">$</span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="va">xy</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span></span>
+<span></span>
 <span><span class="co">## Optimisation du nombre de voisins avec le CV</span></span>
-<span><span class="va">bwCVa_voisins</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/gwr.cv.html">gwr.sel</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
+<span><span class="va">bwCVa_voisins</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/gwr.cv.html">gwr.sel</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span> <span class="op">+</span> <span class="va">Pct_65</span> <span class="op">+</span> <span class="va">Pct_Img</span> <span class="op">+</span> <span class="va">Pct_brevet</span> <span class="op">+</span> <span class="va">NivVieMed</span>,</span>
 <span>                         data <span class="op">=</span> <span class="va">LyonIris</span>,</span>
 <span>                         method <span class="op">=</span> <span class="st">"cv"</span>,          <span class="co"># Méthode cv ou AIC</span></span>
 <span>                         gweight <span class="op">=</span> <span class="va">gwr.bisquare</span>,   <span class="co"># gwr.gauss ou gwr.bisquare</span></span>
@@ -642,8 +644,9 @@ Figure&nbsp;4.3: Variables indépendantes significatives du modèle GWR
 <span>                         RMSE <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                         longlat <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>                         coords<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">$</span><span class="va">X</span>,<span class="va">LyonIris</span><span class="op">$</span><span class="va">Y</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co">## Optimisation du nombre de voisins avec l'AIC</span></span>
-<span><span class="va">bwAICa_voisins</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/gwr.cv.html">gwr.sel</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
+<span><span class="va">bwAICa_voisins</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/gwr.cv.html">gwr.sel</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span> <span class="op">+</span> <span class="va">Pct_65</span> <span class="op">+</span> <span class="va">Pct_Img</span> <span class="op">+</span> <span class="va">Pct_brevet</span> <span class="op">+</span> <span class="va">NivVieMed</span>,</span>
 <span>                          data <span class="op">=</span> <span class="va">LyonIris</span>,</span>
 <span>                          method <span class="op">=</span> <span class="st">"AIC"</span>,          <span class="co"># Méthode cv ou AIC</span></span>
 <span>                          gweight <span class="op">=</span> <span class="va">gwr.bisquare</span>,    <span class="co"># gwr.gauss ou gwr.bisquare</span></span>
@@ -652,8 +655,9 @@ Figure&nbsp;4.3: Variables indépendantes significatives du modèle GWR
 <span>                          RMSE <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                          longlat <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>                          coords<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">$</span><span class="va">X</span>,<span class="va">LyonIris</span><span class="op">$</span><span class="va">Y</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co">## Optimisation de la distance avec le CV</span></span>
-<span><span class="va">bwCV_dist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/gwr.cv.html">gwr.sel</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
+<span><span class="va">bwCV_dist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/gwr.cv.html">gwr.sel</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span> <span class="op">+</span> <span class="va">Pct_65</span> <span class="op">+</span> <span class="va">Pct_Img</span> <span class="op">+</span> <span class="va">Pct_brevet</span> <span class="op">+</span> <span class="va">NivVieMed</span>,</span>
 <span>                     data <span class="op">=</span> <span class="va">LyonIris</span>,</span>
 <span>                     method <span class="op">=</span> <span class="st">"cv"</span>,     <span class="co"># méthode cv ou AIC</span></span>
 <span>                     gweight<span class="op">=</span><span class="va">gwr.Gauss</span>, <span class="co"># gwr.gauss ou gwr.bisquare</span></span>
@@ -662,8 +666,9 @@ Figure&nbsp;4.3: Variables indépendantes significatives du modèle GWR
 <span>                     RMSE <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                     longlat <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>                     coords<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">$</span><span class="va">X</span>,<span class="va">LyonIris</span><span class="op">$</span><span class="va">Y</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co">## Optimisation de la distance avec l'AIC</span></span>
-<span><span class="va">bwAIC_dist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/gwr.cv.html">gwr.sel</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span>  <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
+<span><span class="va">bwAIC_dist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/gwr.cv.html">gwr.sel</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span>  <span class="va">Pct0_14</span> <span class="op">+</span> <span class="va">Pct_65</span> <span class="op">+</span> <span class="va">Pct_Img</span> <span class="op">+</span> <span class="va">Pct_brevet</span> <span class="op">+</span> <span class="va">NivVieMed</span>,</span>
 <span>                      data <span class="op">=</span> <span class="va">LyonIris</span>,</span>
 <span>                      method <span class="op">=</span> <span class="st">"AIC"</span>,      <span class="co"># méthode cv ou AIC</span></span>
 <span>                      gweight<span class="op">=</span><span class="va">gwr.Gauss</span>,   <span class="co"># gwr.gauss ou gwr.bisquare</span></span>
@@ -672,6 +677,7 @@ Figure&nbsp;4.3: Variables indépendantes significatives du modèle GWR
 <span>                      verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>                      longlat <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>                      coords<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">LyonIris</span><span class="op">$</span><span class="va">X</span>,<span class="va">LyonIris</span><span class="op">$</span><span class="va">Y</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co">## Affichage des résultats d'optimisation </span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Sélection de la taille de la zone optimale (bandwidth)"</span>,</span>
 <span>    <span class="st">"\n avec le nombre de plus proches voisins :"</span>,</span>
@@ -699,10 +705,11 @@ Sélection de la taille de la zone optimale (bandwidth) avec la distance :
 <div class="cell">
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Modèle global : régression linéaire multiple</span></span>
 <span><span class="va">modele_global</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span> <span class="op">+</span> <span class="va">Pct_65</span> <span class="op">+</span> <span class="va">Pct_Img</span> <span class="op">+</span> <span class="va">Pct_brevet</span> <span class="op">+</span> <span class="va">NivVieMed</span>, data <span class="op">=</span> <span class="va">LyonIris</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># Modèle GWR</span></span>
-<span><span class="va">modele_gwr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/gwr.html">gwr</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span><span class="op">+</span><span class="va">Pct_65</span><span class="op">+</span><span class="va">Pct_Img</span><span class="op">+</span><span class="va">Pct_brevet</span><span class="op">+</span><span class="va">NivVieMed</span>,</span>
+<span><span class="va">modele_gwr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rsbivand.github.io/spgwr/reference/gwr.html">gwr</a></span><span class="op">(</span><span class="va">NO2</span> <span class="op">~</span> <span class="va">Pct0_14</span> <span class="op">+</span> <span class="va">Pct_65</span> <span class="op">+</span> <span class="va">Pct_Img</span> <span class="op">+</span> <span class="va">Pct_brevet</span> <span class="op">+</span> <span class="va">NivVieMed</span>,</span>
 <span>                  data <span class="op">=</span> <span class="va">LyonIris</span>,</span>
-<span>                  adapt<span class="op">=</span><span class="va">bwCVa_voisins</span>,</span>
+<span>                  adapt<span class="op">=</span> <span class="va">bwCVa_voisins</span>,</span>
 <span>                  gweight <span class="op">=</span> <span class="va">gwr.bisquare</span>,</span>
 <span>                  hatmatrix <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                  se.fit <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -915,6 +922,7 @@ Figure&nbsp;4.4: Cartographie des résidus des modèles MCO et GWR
 <div class="cell">
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Récupération du R carré local</span></span>
 <span><span class="va">LyonIris</span><span class="op">$</span><span class="va">GWR.R2</span> <span class="op">&lt;-</span> <span class="va">modele_gwr</span><span class="op">$</span><span class="va">SDF</span><span class="op">$</span><span class="va">localR2</span></span>
+<span></span>
 <span><span class="co">## Récupération des coefficients de régression et calcul des valeurs de t locales</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">modele_gwr</span><span class="op">$</span><span class="va">SDF</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -928,6 +936,7 @@ Figure&nbsp;4.4: Cartographie des résidus des modèles MCO et GWR
 [22] "Pct_brevet_se_EDF"  "NivVieMed_se_EDF"   "pred.se"           </code></pre>
 </div>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">vars_indep</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Pct0_14"</span>, <span class="st">"Pct_65"</span>, <span class="st">"Pct_Img"</span>, <span class="st">"Pct_brevet"</span>, <span class="st">"NivVieMed"</span><span class="op">)</span></span>
+<span></span>
 <span><span class="kw">for</span><span class="op">(</span><span class="va">e</span> <span class="kw">in</span> <span class="va">vars_indep</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="co"># Nom des nouvelles variables</span></span>
 <span>  <span class="va">var_coef</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"GWR."</span>, <span class="st">"B_"</span>, <span class="va">e</span><span class="op">)</span></span>
@@ -1321,7 +1330,7 @@ Sélection de la taille de la zone optimale (bandwidth) avec la distance :
 <pre><code>   ***********************************************************************
    *                       Package   GWmodel                             *
    ***********************************************************************
-   Program starts at: 2025-02-08 14:05:26.807572 
+   Program starts at: 2025-02-10 20:33:21.01828 
    Call:
    gwr.basic(formula = NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + 
     NivVieMed, data = LyonIris, bw = bwCV_voisins, kernel = "bisquare", 
@@ -1413,7 +1422,7 @@ Sélection de la taille de la zone optimale (bandwidth) avec la distance :
    ---Significance stars
    Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
    ***********************************************************************
-   Program stops at: 2025-02-08 14:05:40.843645 </code></pre>
+   Program stops at: 2025-02-10 20:33:35.261643 </code></pre>
 </div>
 </div>
 </section><section id="sec-04223" class="level4" data-number="4.2.2.3"><h4 data-number="4.2.2.3" class="anchored" data-anchor-id="sec-04223">
@@ -1510,14 +1519,16 @@ Figure&nbsp;4.10: Exemple de cartographie avec les résultats de la GWR obtenus 
 </ul>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb52"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://ggobi.github.io/ggally/">"GGally"</a></span><span class="op">)</span></span>
+<span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">modele_gwr</span><span class="op">$</span><span class="va">SDF</span><span class="op">)</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">df</span><span class="op">[</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Constante"</span> , <span class="st">"Pct0_14"</span>, <span class="st">"Pct_65"</span>, <span class="st">"Pct_Img"</span>, <span class="st">"Pct_brevet"</span>, <span class="st">"NivVieMed"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Graphique avec le package GGally</span></span>
 <span><span class="fu"><a href="https://ggobi.github.io/ggally/reference/ggpairs.html">ggpairs</a></span><span class="op">(</span><span class="va">df</span>, progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># Il est aussi possible de réaliser un graphique avec le package corrplot</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/taiyun/corrplot">"corrplot"</a></span><span class="op">)</span></span>
+<span><span class="co"># library("corrplot")</span></span>
 <span><span class="co"># p &lt;- cor(df, method="pearson")</span></span>
 <span><span class="co"># couleurs &lt;- colorRampPalette(c("#053061", "#2166AC" , "#4393C3", "#92C5DE",</span></span>
 <span><span class="co">#                                "#D1E5F0", "#FFFFFF", "#FDDBC7", "#F4A582",</span></span>
@@ -1916,10 +1927,10 @@ Vérifier votre résultat
 Apparicio, Philippe et Jérémy Gelb. 2022. <em>Méthodes quantitatives en sciences sociales : un grand bol d’R</em>. FabriqueREL, Licence CC BY-SA. <a href="https://serieboldr.github.io/MethodesQuantitatives/">https://serieboldr.github.io/MethodesQuantitatives/</a>.
 </div>
 <div id="ref-apparicio2007modelisation" class="csl-entry" role="listitem">
-Apparicio, Philippe, Anne-Marie Séguin et Xavier Leloup. 2007. <span>«&nbsp;Modélisation spatiale de la pauvreté à Montréal: apport méthodologique de la régression géographiquement pondérée.&nbsp;»</span> <em>The Canadian Geographer/Le Géographe canadien</em> 51 (4): 412‑427. <a href="https://doi.org/10.1111/j.1541-0064.2007.00189.x">https://doi.org/10.1111/j.1541-0064.2007.00189.x</a>.
+Apparicio, Philippe, Anne-Marie Séguin et Xavier Leloup. 2007. <span>«&nbsp;Modélisation spatiale de la pauvreté à Montréal: apport méthodologique de la régression géographiquement pondérée.&nbsp;»</span> <em>The Canadian Geographer/Le Géographe canadien</em> 51 (4): 412‑427. doi:<a href="https://doi.org/10.1111/j.1541-0064.2007.00189.x">https://doi.org/10.1111/j.1541-0064.2007.00189.x</a>.
 </div>
 <div id="ref-GWModelPackage2" class="csl-entry" role="listitem">
-Binbin Lu, Paul Harris, Martin Charlton et Christopher Brunsdon. 2014. <span>«&nbsp;The <span>GWmodel</span> <span>R</span> package: further topics for exploring spatial heterogeneity using geographically weighted models.&nbsp;»</span> <em>Geo-spatial Information Science</em> 17 (2): 85‑101. <a href="https://10.1080/10095020.2014.917453">10.1080/10095020.2014.917453</a>.
+Binbin Lu, Paul Harris, Martin Charlton et Christopher Brunsdon. 2014. <span>«&nbsp;The <span>GWmodel</span> <span>R</span> package: further topics for exploring spatial heterogeneity using geographically weighted models.&nbsp;»</span> <em>Geo-spatial Information Science</em> 17 (2): 85‑101. doi:<a href="https://doi.org/10.1080/10095020.2014.917453">https://doi.org/10.1080/10095020.2014.917453</a>.
 </div>
 <div id="ref-packagesGWR" class="csl-entry" role="listitem">
 Bivand, Roger et Danlin Yu. 2023. <em>spgwr: Geographically Weighted Regression</em>. s.n. <a href="https://CRAN.R-project.org/package=spgwr">https://CRAN.R-project.org/package=spgwr</a>.
@@ -1928,7 +1939,7 @@ Bivand, Roger et Danlin Yu. 2023. <em>spgwr: Geographically Weighted Regression<
 Brunsdon, Chris, A Stewart Fotheringham et Martin E Charlton. 1996. <span>«&nbsp;Geographically weighted regression: a method for exploring spatial nonstationarity.&nbsp;»</span> <em>Geographical analysis</em> 28 (4). Wiley Online Library: 281‑298.
 </div>
 <div id="ref-calvo2003local" class="csl-entry" role="listitem">
-Calvo, Ernesto et Marcelo Escolar. 2003. <span>«&nbsp;The local voter: A geographically weighted approach to ecological inference.&nbsp;»</span> <em>American Journal of Political Science</em> 47 (1): 189‑204. <a href="https://doi.org/10.1111/1540-5907.00013">https://doi.org/10.1111/1540-5907.00013</a>.
+Calvo, Ernesto et Marcelo Escolar. 2003. <span>«&nbsp;The local voter: A geographically weighted approach to ecological inference.&nbsp;»</span> <em>American Journal of Political Science</em> 47 (1): 189‑204. doi:<a href="https://doi.org/10.1111/1540-5907.00013">https://doi.org/10.1111/1540-5907.00013</a>.
 </div>
 <div id="ref-fotheringham2003geographically" class="csl-entry" role="listitem">
 Fotheringham, A Stewart, Chris Brunsdon et Martin Charlton. 2003. <em>Geographically weighted regression: the analysis of spatially varying relationships</em>. John Wiley &amp; Sons.
@@ -1937,13 +1948,13 @@ Fotheringham, A Stewart, Chris Brunsdon et Martin Charlton. 2003. <em>Geographic
 Isabella Gollini, Binbin Lu, Martin Charlton, Christopher Brunsdon et Paul Harris. 2015. <span>«&nbsp;<span>GWmodel</span>: An <span>R</span> Package for Exploring Spatial Heterogeneity Using Geographically Weighted Models.&nbsp;»</span> <em>Journal of Statistical Software</em> 63 (17): 1‑50. <a href="https://10.18637/jss.v063.i17">10.18637/jss.v063.i17</a>.
 </div>
 <div id="ref-lu2011geographically" class="csl-entry" role="listitem">
-Lu, Binbin, Martin Charlton et A Stewart Fotheringham. 2011. <span>«&nbsp;Geographically weighted regression using a non-Euclidean distance metric with a study on London house price data.&nbsp;»</span> <em>Procedia Environmental Sciences</em> 7: 92‑97. <a href="https://doi.org/10.1016/j.proenv.2011.07.017">https://doi.org/10.1016/j.proenv.2011.07.017</a>.
+Lu, Binbin, Martin Charlton et A Stewart Fotheringham. 2011. <span>«&nbsp;Geographically weighted regression using a non-Euclidean distance metric with a study on London house price data.&nbsp;»</span> <em>Procedia Environmental Sciences</em> 7: 92‑97. doi:<a href="https://doi.org/10.1016/j.proenv.2011.07.017">https://doi.org/10.1016/j.proenv.2011.07.017</a>.
 </div>
 <div id="ref-mennis2005distribution" class="csl-entry" role="listitem">
-Mennis, Jeremy L et Lisa Jordan. 2005. <span>«&nbsp;The distribution of environmental equity: Exploring spatial nonstationarity in multivariate models of air toxic releases.&nbsp;»</span> <em>Annals of the Association of American Geographers</em> 95 (2): 249‑268. <a href="https://doi.org/10.1111/j.1467-8306.2005.00459.x">https://doi.org/10.1111/j.1467-8306.2005.00459.x</a>.
+Mennis, Jeremy L et Lisa Jordan. 2005. <span>«&nbsp;The distribution of environmental equity: Exploring spatial nonstationarity in multivariate models of air toxic releases.&nbsp;»</span> <em>Annals of the Association of American Geographers</em> 95 (2): 249‑268. doi:<a href="https://doi.org/10.1111/j.1467-8306.2005.00459.x">https://doi.org/10.1111/j.1467-8306.2005.00459.x</a>.
 </div>
 <div id="ref-wheeler2005multicollinearity" class="csl-entry" role="listitem">
-Wheeler, David et Michael Tiefelsdorf. 2005. <span>«&nbsp;Multicollinearity and correlation among local regression coefficients in geographically weighted regression.&nbsp;»</span> <em>Journal of Geographical Systems</em> 7 (2): 161‑187. <a href="https://doi.org/10.1007/s10109-005-0155-6">https://doi.org/10.1007/s10109-005-0155-6</a>.
+Wheeler, David et Michael Tiefelsdorf. 2005. <span>«&nbsp;Multicollinearity and correlation among local regression coefficients in geographically weighted regression.&nbsp;»</span> <em>Journal of Geographical Systems</em> 7 (2): 161‑187. doi:<a href="https://doi.org/10.1007/s10109-005-0155-6">https://doi.org/10.1007/s10109-005-0155-6</a>.
 </div>
 </div>
 </section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
@@ -2366,13 +2377,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="./03-ModelesSpatiauxPanel.html" class="pagination-link" aria-label="Modèles d'économétrie spatiale par panel">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel</span></span>
+      <a href="./03-ModelesSpatiauxPanel.html" class="pagination-link" aria-label="Modèles d'économétrie spatiale par panel (en cours de rédaction)">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel (en cours de rédaction)</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./05-GWRExtensions.html" class="pagination-link" aria-label="Extensions de la régression géographiquement pondérée">
-        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./05-GWRExtensions.html" class="pagination-link" aria-label="Extensions de la régression géographiquement pondérée (en cours de rédaction)">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée (en cours de rédaction)</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

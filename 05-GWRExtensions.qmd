@@ -1,4 +1,4 @@
-# Extensions de la régression géographiquement pondérée {#sec-chap05}
+# Extensions de la régression géographiquement pondérée (en cours de rédaction) {#sec-chap05}
 
 Dans le [chapitre @sec-chap04], nous avons présenté les trois formes classiques de la régression géographiquement pondérée (GWR) qui permettent de modéliser des variables dépendantes continues (GWR gaussienne), dichotomiques (GWR logistique) ou des variables de comptage (GWR Poisson). Depuis la publication de l'ouvrage de référence de Steward Fotheringham, Chris Brunsdon et Martin Charlton [-@fotheringham2003geographically], plusieurs extensions ont vu le jour. Parmi celles-ci, nous abordons dans ce chapitre :
 
