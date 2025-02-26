@@ -955,15 +955,15 @@ legende_parametres <- list(text.separator = "à",
                            big.mark = " ")
 
 carte1 <- tm_shape(LyonIris)+
-          tm_borders(col = "gray25", lwd=.2)+
-          tm_fill(col = "NO2", palette = "Reds", n = 5, style = "quantile",
+            tm_borders(col = "gray25", lwd=.2)+
+            tm_fill(col = "NO2", palette = "Reds", n = 5, style = "quantile",
                   legend.format = legende_parametres,
         		      title = "(a) Variable initiale")+
           tm_layout(frame = FALSE)+tm_scale_bar(breaks=c(0,5))
 
 carte2 <- tm_shape(LyonIris)+
-          tm_borders(col = "gray25", lwd=.2)+
-          tm_fill(col = "W_NO2", palette = "Reds", n = 5, style = "quantile",
+            tm_borders(col = "gray25", lwd=.2)+
+            tm_fill(col = "W_NO2", palette = "Reds", n = 5, style = "quantile",
         		      legend.format = legende_parametres,
         		      title = "(b) Spatialement décalée")+
           tm_layout(frame = FALSE)

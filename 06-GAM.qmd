@@ -456,10 +456,10 @@ tm_shape(data_mtl) +
                                big.mark = " ",
                                digits = 2),
           palette = "-RdBu", title = 'part modale TC / part modale auto') +
-  tm_layout(frame=FALSE, legend.outside = TRUE) + 
-  tm_scale_bar(breaks = c(0,10)) + 
-  tm_xlab(paste0('I de Moran = ', moran_text, 
-                 " (matrice de contiguïté selon le partage d'un nœud)."))
+tm_layout(frame=FALSE, legend.outside = TRUE) + 
+tm_scale_bar(breaks = c(0,10)) + 
+tm_xlab(paste0('I de Moran = ', moran_text,
+               " (matrice de contiguïté selon le partage d'un nœud)."))
 ```
 
 Sans surprise, notre variable dépendante est fortement spatialement autocorrélée. Plus on s'éloigne du centre-ville, plus le transport collectif est délaissé au profit de la voiture. Les secteurs dans lesquels la part modale du TC est supérieure à celle de l'automobile sont situés au centre de l'île de Montréal, à proximité des lignes de métro.
@@ -532,8 +532,9 @@ library(mgcViz)
 
 # Modèle GLM avec une distribution normale
 glm_base <- gam(alr_val ~ prt_minorite_vis + prt_monoparental + revenu_median +
-                  acs_idx_emp_tc_peak + acs_idx_emp_pieton,
-         data = data_mtl, family = gaussian)
+                          acs_idx_emp_tc_peak + acs_idx_emp_pieton,
+                data = data_mtl, 
+                family = gaussian)
 
 # Validation des résidus
 res <- simulateResiduals(glm_base, plot = FALSE)
@@ -553,8 +554,9 @@ La @fig-gamresidA indique que les résidus simulés ne suivent pas vraiment une 
 #| out-width: 85%
 # Modèle GLM avec une distribution normale de Student
 glm_base <- gam(alr_val ~ prt_minorite_vis + prt_monoparental + revenu_median +
-                  acs_idx_emp_tc_peak + acs_idx_emp_pieton,
-         data = data_mtl, family = scat)
+                          acs_idx_emp_tc_peak + acs_idx_emp_pieton,
+                data = data_mtl, 
+                family = scat)
 
 # Validation des résidus
 res <- simulateResiduals(glm_base, plot = FALSE)
@@ -597,10 +599,10 @@ tm_shape(data_mtl) +
                                big.mark = " ",
                                digits = 2),
           palette = "-RdBu", title = 'résidus simulés') +
-  tm_layout(frame=FALSE, legend.outside = TRUE) + 
-  tm_scale_bar(breaks = c(0,10))+
-  tm_xlab(paste0('I de Moran = ', moran_text, 
-                 " (matrice de contiguïté selon le partage d'un nœud)."))
+tm_layout(frame=FALSE, legend.outside = TRUE) + 
+tm_scale_bar(breaks = c(0,10))+
+tm_xlab(paste0('I de Moran = ', moran_text,
+               " (matrice de contiguïté selon le partage d'un nœud)."))
 ```
 
 En effet, la @fig-gamresid1 démontre clairement que la distribution des résidus du modèle GLM (avec une distribution de Student) n'est pas aléatoire spatialement. Les valeurs négatives indiquent des secteurs dans lesquels le modèle tend à prédire un log ratio trop favorable au transport collectif et inversement dans les secteurs avec des valeurs positives.
@@ -625,9 +627,10 @@ data_mtl$Y <- XY[,2]
 
 # Modèle GAM avec une spline bivariée sur les coordonnées géographiques
 gam1 <- gam(alr_val ~ prt_minorite_vis + prt_monoparental + revenu_median +
-                  acs_idx_emp_tc_peak + acs_idx_emp_pieton + 
-              s(X,Y, bs = 'gp', m = 3),
-         data = data_mtl, family = scat)
+                      acs_idx_emp_tc_peak + acs_idx_emp_pieton +
+                      s(X,Y, bs = 'gp', m = 3),
+            data = data_mtl, 
+            family = scat)
 
 # Résidus du modèle
 res <- simulateResiduals(gam1, plot = FALSE)
@@ -645,8 +648,7 @@ Les résidus simulés de ce nouveau modèle se comportent bien mieux que les ré
 #| fig-cap: Cartographie des résidus du modèle GAM avec une spline bivariée sur les coordonnées géographiques
 #| fig-align: center
 data_mtl$sim_residual <- residuals(res)
-test <- moran.mc(data_mtl$sim_residual, listw = queen_w, nsim = 999,
-                 zero.policy = TRUE)
+test <- moran.mc(data_mtl$sim_residual, listw = queen_w, nsim = 999, zero.policy = TRUE)
 print(test)
 moran_text <- format(as.numeric(round(test$statistic, 3)), 
                      decimal.mark =",")
@@ -661,10 +663,10 @@ tm_shape(data_mtl) +
                                digits = 2),
           palette = "-RdBu", 
           title = 'résidus simulés') +
-  tm_layout(frame=FALSE, legend.outside = TRUE) + 
-  tm_scale_bar(breaks = c(0,10))+
-  tm_xlab(paste0('I de Moran = ', moran_text, 
-                 " (matrice de contiguïté selon le partage d'un nœud)."))
+tm_layout(frame=FALSE, legend.outside = TRUE) + 
+tm_scale_bar(breaks = c(0,10))+
+tm_xlab(paste0('I de Moran = ', moran_text,
+               " (matrice de contiguïté selon le partage d'un nœud)."))
 ```
 
 La valeur du I de Moran (I = `r format(round(as.numeric(test$statistic),3), decimal.mark =",")`), calculé à partir de la matrice de contiguïté selon le partage d'un nœud (*Queen*), indique toujours une autocorrélation spatiale non négligeable des résidus (@fig-gamxycarto).
@@ -780,20 +782,20 @@ sf_pred <- df_pred %>%
   subset(lengths(st_intersects(.,data_mtl)) > 0)
 
 map_spline <- tm_shape(sf_pred) +
-  tm_dots(col="pred_exp", n = 7,
-          style = "fisher",
-          midpoint = 1,
-          legend.format = list(text.separator = "à", 
-                               decimal.mark = ",", 
-                               big.mark = " ",
-                               digits = 2),
-          palette = "-RdBu", 
-          title = paste0('effet de la spline bivariée\n(edf = ', 
-                         round(results$edf), ')')) +
-  tm_shape(data_mtl) + 
-  tm_borders('darkgrey', lwd = 0.01) + 
-  tm_layout(frame=FALSE, legend.outside = TRUE) + 
-  tm_scale_bar(breaks = c(0,10))
+                tm_dots(col="pred_exp", n = 7,
+                        style = "fisher",
+                        midpoint = 1,
+                        legend.format = list(text.separator = "à", 
+                                             decimal.mark = ",", 
+                                             big.mark = " ",
+                                             digits = 2),
+                        palette = "-RdBu", 
+                        title = paste0('effet de la spline bivariée\n(edf = ', 
+                                       round(results$edf), ')')) +
+              tm_shape(data_mtl) + 
+                tm_borders('darkgrey', lwd = 0.01) + 
+              tm_layout(frame=FALSE, legend.outside = TRUE) + 
+              tm_scale_bar(breaks = c(0,10))
 
 map_spline
 ```

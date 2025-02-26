@@ -327,7 +327,7 @@ carte0 <- tm_shape(LyonIris)+
 
 classes_intervalles = c(-Inf, -3.29, -2.58, -1.96, 1.96, 2.58, 3.29, Inf)
 carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
-          tm_fill(col="GWR.T_Pct0_14", palette="-RdBu", 
+            tm_fill(col="GWR.T_Pct0_14", palette="-RdBu", 
                   midpoint = NA,
                   breaks = classes_intervalles,
                   legend.format = legende_parametres,
@@ -335,7 +335,7 @@ carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
           tm_layout(frame=FALSE, legend.outside = TRUE)
 
 carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
-          tm_fill(col="GWR.T_Pct_65", palette="-RdBu",
+            tm_fill(col="GWR.T_Pct_65", palette="-RdBu",
                   midpoint = NA,
                   breaks = classes_intervalles,
                   legend.format = legende_parametres,
@@ -343,7 +343,7 @@ carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
           tm_layout(frame=FALSE, legend.outside = TRUE)
 
 carte3 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
-          tm_fill(col="GWR.T_Pct_Img", palette="-RdBu", 
+           tm_fill(col="GWR.T_Pct_Img", palette="-RdBu", 
                   midpoint = NA,
                   breaks = classes_intervalles,
                   legend.format = legende_parametres,
@@ -351,7 +351,7 @@ carte3 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
           tm_layout(frame=FALSE, legend.outside = TRUE)
 
 carte4 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
-          tm_fill(col="GWR.T_Pct_brevet", palette="-RdBu", 
+            tm_fill(col="GWR.T_Pct_brevet", palette="-RdBu", 
                   midpoint = NA,
                   breaks = classes_intervalles,
                   legend.format = legende_parametres,
@@ -359,7 +359,7 @@ carte4 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
           tm_layout(frame=FALSE, legend.outside = TRUE)
 
 carte5 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
-          tm_fill(col="GWR.T_NivVieMed", palette="-RdBu", 
+            tm_fill(col="GWR.T_NivVieMed", palette="-RdBu", 
                  midpoint = NA,
                  breaks = classes_intervalles,
                  legend.format = legende_parametres,
@@ -410,12 +410,12 @@ LyonIris$plus_sign <-  factor(plus_sign,
                                         "Moins de 15 ans (124)"))
 
 carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-          tm_fill(col="nb_signif_1.96", palette="Reds",
+            tm_fill(col="nb_signif_1.96", palette="Reds",
                  title = "Sign. au seuil de 5%")+
           tm_layout(frame=FALSE)+ tm_scale_bar(breaks=c(0,5))
 
 carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-          tm_fill(col="plus_sign", palette="Set1", 
+            tm_fill(col="plus_sign", palette="Set1", 
                  title = "Variable la plus significative")+
           tm_layout(frame=FALSE)
 
@@ -634,6 +634,7 @@ carte1 <- tm_shape(LyonIris)+
                   palette = "-RdBu", 
                   title = "MCO") +
             tm_layout(frame=FALSE)
+
 ## Cartographie des résidus du modèle GWR
 carte2 <- tm_shape(LyonIris)+
             tm_borders(col="gray25", lwd=.5)+
@@ -645,6 +646,7 @@ carte2 <- tm_shape(LyonIris)+
                   title = "GWR") +
             tm_layout(frame=FALSE) + 
             tm_scale_bar(breaks = c(0,5))
+
 tmap_arrange(carte1, carte2, nrow = 1)
 ```
 
@@ -710,8 +712,8 @@ tm_shape(LyonIris)+
 		  n=5, style="quantile",
 		  legend.format = legende_parametres,
 		  title = "R2 locaux")+
-  tm_layout(frame=FALSE)+
-  tm_scale_bar(breaks=c(0,5))
+tm_layout(frame=FALSE)+
+tm_scale_bar(breaks=c(0,5))
 ```
 
 
@@ -735,31 +737,31 @@ legende_parametres <- list(text.separator = "à",
                            big.mark = " ")
 
 carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-          tm_fill(col="GWR.B_Pct0_14", palette="YlOrBr", n=4, style="pretty",
+            tm_fill(col="GWR.B_Pct0_14", palette="YlOrBr", n=4, style="pretty",
 		              legend.format = legende_parametres,
                   title = "Moins de 15 ans (%)")+
           tm_layout(frame=FALSE, legend.outside = TRUE)
 
 carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-          tm_fill(col="GWR.B_Pct_65", palette="YlOrBr", n=4, style="pretty", 
+            tm_fill(col="GWR.B_Pct_65", palette="YlOrBr", n=4, style="pretty", 
 		              legend.format = legende_parametres,
                   title = "65 ans et plus (%)")+
           tm_layout(frame=FALSE, legend.outside = TRUE)
 
 carte3 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-          tm_fill(col="GWR.B_Pct_Img", palette="YlOrBr", n=4, style="pretty", 
+            tm_fill(col="GWR.B_Pct_Img", palette="YlOrBr", n=4, style="pretty", 
 		              legend.format = legende_parametres,
                   title = "Immigrants (%)")+
           tm_layout(frame=FALSE, legend.outside = TRUE)
 
 carte4 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-          tm_fill(col="GWR.B_Pct_brevet", palette="YlOrBr", n=4, style="pretty", 
+            tm_fill(col="GWR.B_Pct_brevet", palette="YlOrBr", n=4, style="pretty", 
 		              legend.format = legende_parametres,
                   title = "Faible scolarité (%)")+
           tm_layout(frame=FALSE, legend.outside = TRUE)
 
 carte5 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5,)+
-          tm_fill(col="GWR.B_NivVieMed", palette="YlOrBr", n=4, style="pretty",
+            tm_fill(col="GWR.B_NivVieMed", palette="YlOrBr", n=4, style="pretty",
 		              legend.format = legende_parametres,
                   title = "Niveau de vie (€1000)")+
           tm_layout(frame=FALSE, legend.outside = TRUE)+
@@ -791,7 +793,7 @@ legende_parametres <- list(text.separator = "à",
 
 classes_intervalles = c(-Inf, -3.29, -2.58, -1.96, 1.96, 2.58, 3.29, Inf)
 carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-          tm_fill(col="GWR.T_Pct0_14", palette="-RdBu", 
+            tm_fill(col="GWR.T_Pct0_14", palette="-RdBu", 
                   midpoint = NA,
                   breaks = classes_intervalles,
                   legend.format = legende_parametres,
@@ -799,7 +801,7 @@ carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
           tm_layout(frame=FALSE, legend.outside = TRUE)
 
 carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-          tm_fill(col="GWR.T_Pct_65", palette="-RdBu",
+            tm_fill(col="GWR.T_Pct_65", palette="-RdBu",
                   midpoint = NA,
                   breaks = classes_intervalles,
                   legend.format = legende_parametres,
@@ -807,7 +809,7 @@ carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
           tm_layout(frame=FALSE, legend.outside = TRUE)
 
 carte3 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-          tm_fill(col="GWR.T_Pct_Img", palette="-RdBu", 
+            tm_fill(col="GWR.T_Pct_Img", palette="-RdBu", 
                   midpoint = NA,
                   breaks = classes_intervalles,
                   legend.format = legende_parametres,
@@ -815,7 +817,7 @@ carte3 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
           tm_layout(frame=FALSE, legend.outside = TRUE)
 
 carte4 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-          tm_fill(col="GWR.T_Pct_brevet", palette="-RdBu", 
+            tm_fill(col="GWR.T_Pct_brevet", palette="-RdBu", 
                   midpoint = NA,
                   breaks = classes_intervalles,
                   legend.format = legende_parametres,
@@ -823,7 +825,7 @@ carte4 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
           tm_layout(frame=FALSE, legend.outside = TRUE)
 
 carte5 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-          tm_fill(col="GWR.T_NivVieMed", palette="-RdBu", 
+            tm_fill(col="GWR.T_NivVieMed", palette="-RdBu", 
                  midpoint = NA,
                  breaks = classes_intervalles,
                  legend.format = legende_parametres,
@@ -886,9 +888,9 @@ Finalement, le code ci-dessous permet de repérer la variable la plus significat
 #| fig-cap: "Variable indépendante la plus significative au seuil de 5 %"
 #| out-width: 85%
 tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-          tm_fill(col="plus_sign", palette="Set1", 
-                 title = "Variable la plus significative")+
-          tm_layout(frame=FALSE)+ tm_scale_bar(breaks=c(0,5))
+  tm_fill(col="plus_sign", palette="Set1", 
+          title = "Variable la plus significative")+
+tm_layout(frame=FALSE)+ tm_scale_bar(breaks=c(0,5))
 ```
 
 
@@ -1012,23 +1014,26 @@ classes_intervalles = c(-Inf, -3.29, -2.58, -1.96, 1.96, 2.58, 3.29, Inf)
 
 # Cartographie du R2
 carte1 <- tm_shape(gwr_resultats)+
-  tm_borders(col="gray25", lwd=.5)+
-  tm_fill(col="Local_R2", 
-		  palette="YlOrBr", 
-		  n=5, style="quantile",
-		  legend.format = legende_parametres,
-		  title = "R2 locaux")+
-  tm_layout(frame=FALSE)+
-  tm_scale_bar(breaks=c(0,5))
+            tm_borders(col="gray25", lwd=.5)+
+            tm_fill(col="Local_R2",
+                    palette="YlOrBr", 
+                    n=5, 
+                    style="quantile",
+                    legend.format = legende_parametres,
+                    title = "R2 locaux")+
+          tm_layout(frame=FALSE)+
+          tm_scale_bar(breaks=c(0,5))
 
 # Cartographie d'une valeur de t
-carte2 <- tm_shape(gwr_resultats)+ tm_borders(col="gray25", lwd=.5)+
-          tm_fill(col="NivVieMed_TV", palette="-RdBu", 
-                 midpoint = NA,
-                 breaks = classes_intervalles,
-                 legend.format = legende_parametres,
-                 title = "Niveau de vie (€1000)")+
-          tm_layout(frame=FALSE)
+carte2 <- tm_shape(gwr_resultats)+ 
+            tm_borders(col="gray25", lwd=.5)+
+            tm_fill(col="NivVieMed_TV", 
+                    palette="-RdBu",
+                    midpoint = NA,
+                    breaks = classes_intervalles,
+                    legend.format = legende_parametres,
+                    title = "Niveau de vie (€1000)")+
+            tm_layout(frame=FALSE)
 
 tmap_arrange(carte1, carte2)
 ```

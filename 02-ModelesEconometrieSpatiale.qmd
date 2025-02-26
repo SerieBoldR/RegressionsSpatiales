@@ -261,8 +261,8 @@ tm_shape(LyonIris)+
   tm_fill(col = "SLX.Residus", n = 5, style = "quantile", 
           legend.format = legende_parametres,
           palette = "-RdBu", title = "Résidus") +
-  tm_layout(frame = FALSE) + 
-  tm_scale_bar(breaks = c(0,5))
+tm_layout(frame = FALSE) + 
+tm_scale_bar(breaks = c(0,5))
 ```
 
 ### Modèle SAR : autocorrélation spatiale sur la variable dépendante {#sec-0212}
@@ -331,9 +331,9 @@ Le modèle SAR est construit avec la fonction `lagsarlm` du *package* `spatialre
 #| eval: true
 ## Construction du modèle
 modele_SAR <- lagsarlm(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
-                             listw = w_rook,  # matrice de pondérations spatiales
-                             data = LyonIris, # dataframe
-                             type = 'lag')    # Modèle lag par défaut
+                       listw = w_rook,  # matrice de pondérations spatiales
+                       data = LyonIris, # dataframe
+                       type = 'lag')    # Modèle lag par défaut
 ## Résultats du modèle
 summary(modele_SAR, Nagelkerke = TRUE)
 ```
@@ -383,8 +383,8 @@ tm_shape(LyonIris)+
   tm_fill(col = "SAR.Residus", n = 5, style = "quantile", 
           legend.format = legende_parametres,
           palette = "-RdBu", title = "Résidus") +
-  tm_layout(frame=FALSE) + 
-  tm_scale_bar(breaks = c(0,5))
+tm_layout(frame=FALSE) + 
+tm_scale_bar(breaks = c(0,5))
 ```
 
 ### Modèle SEM : autocorrélation spatiale sur le terme d'erreur {#sec-0213}
@@ -796,8 +796,7 @@ manski_rho <- list(rho = manski$rho,
 manski_resultats <- data.frame(Parametre = c("lambda", "Rho"),
                                Coef      = c(manski_lambda$lambda, manski_rho$rho),
                                z         = c(manski_lambda$z, manski_rho$z),
-                               p         = c(manski_lambda$p, manski_rho$p)
-                              )
+                               p         = c(manski_lambda$p, manski_rho$p))
 ```
 
 ```{r}
@@ -878,20 +877,21 @@ BICs <- BIC(modele_MCO, modele_SLX, modele_SAR, modele_SEM,
             modele_SDM, modele_SDEM)
 
 ## Autocorrélation spatiale des résidus
-imoran_mco <- moran.mc(resid(modele_MCO), w_rook, nsim = 999)
-imoran_slx <- moran.mc(resid(modele_SLX), w_rook, nsim = 999)
-imoran_slm <- moran.mc(resid(modele_SAR), w_rook, nsim = 999)
-imoran_sem <- moran.mc(resid(modele_SEM), w_rook, nsim = 999)
-imoran_sdm <- moran.mc(resid(modele_SDM), w_rook, nsim = 999)
+imoran_mco <-  moran.mc(resid(modele_MCO), w_rook, nsim = 999)
+imoran_slx <-  moran.mc(resid(modele_SLX), w_rook, nsim = 999)
+imoran_slm <-  moran.mc(resid(modele_SAR), w_rook, nsim = 999)
+imoran_sem <-  moran.mc(resid(modele_SEM), w_rook, nsim = 999)
+imoran_sdm <-  moran.mc(resid(modele_SDM), w_rook, nsim = 999)
 imoran_sdem <- moran.mc(resid(modele_SDEM), w_rook, nsim = 999)
 
 imoran_s <- c(imoran_mco$statistic, imoran_slx$statistic,
-             imoran_slm$statistic, imoran_sem$statistic,
-             imoran_sdm$statistic, imoran_sdem$statistic)
+              imoran_slm$statistic, imoran_sem$statistic,
+              imoran_sdm$statistic, imoran_sdem$statistic)
 
 imoran_p <- c(imoran_mco$p.value, imoran_slx$p.value,
-             imoran_slm$p.value, imoran_sem$p.value,
-             imoran_sdm$p.value, imoran_sdem$p.value)
+              imoran_slm$p.value, imoran_sem$p.value,
+              imoran_sdm$p.value, imoran_sdem$p.value)
+
 ## Tableau
 Comparaison <- data.frame(Modele = c("MCO", "SLX", "SAR", "SEM", "SDM", "SDEM"),
                           AIC = AICs$AIC,
