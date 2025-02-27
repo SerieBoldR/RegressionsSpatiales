@@ -13,9 +13,9 @@ Dans ce chapitre, nous abordons deux formes de modèles généralisées additifs
 ::: bloc_objectif-body
 À la fin de ce chapitre, vous devriez être en mesure de :
 
--   Comprendre pourquoi utiliser un modèle GAM avec un spline bivariée sur les coordonnées géographiques ou avec un lissage par champ aléatoire de Markov.
--   Analyser les résultats produits par ces deux types de modèles GAM.
--   Les mettre en pratique dans R.
+-   comprendre pourquoi utiliser un modèle GAM avec un spline bivariée sur les coordonnées géographiques ou avec un lissage par champ aléatoire de Markov;
+-   analyser les résultats produits par ces deux types de modèles GAM;
+-   les mettre en pratique dans R.
 :::
 :::
 

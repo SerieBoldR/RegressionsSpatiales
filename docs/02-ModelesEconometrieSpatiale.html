@@ -322,11 +322,11 @@ window.Quarto = {
 <div class="bloc_objectif-body">
 <p>À la fin de ce chapitre, vous devriez être en mesure de&nbsp;:</p>
 <ul>
-<li>Saisir les raisons motivant le choix d’un modèle de régression (externalités, effets d’entraînement, effets mixtes, etc.).</li>
-<li>Comprendre les différents modèles spatiaux autorégressifs (SLX, SAR, SEM, SDM, SDEM, Manski).</li>
-<li>Utiliser une stratégie pour choisir un modèle (tests du multiplicateur de Lagrange, tests du ratio de vraisemblance, critère d’information d’Akaike).</li>
-<li>Vérifier si le modèle autorégressif a corrigé ou non la dépendance spatiale du modèle MCO.</li>
-<li>Mettre en pratique ces modèles spatiaux dans R.</li>
+<li>Saisir les raisons motivant le choix d’un modèle de régression (externalités, effets d’entraînement, effets mixtes, etc.);</li>
+<li>comprendre les différents modèles spatiaux autorégressifs (SLX, SAR, SEM, SDM, SDEM, Manski);</li>
+<li>utiliser une stratégie pour choisir un modèle (tests du multiplicateur de Lagrange, tests du ratio de vraisemblance, critère d’information d’Akaike);</li>
+<li>vérifier si le modèle autorégressif a corrigé ou non la dépendance spatiale du modèle MCO;</li>
+<li>mettre en pratique ces modèles spatiaux dans R.</li>
 </ul>
 </div>
 </div>
@@ -793,27 +793,27 @@ Simulation results ( variance matrix):
 ========================================================
 Simulated standard errors
                Direct  Indirect     Total
-Pct0_14    0.04169926 0.2364790 0.2737258
-Pct_65     0.03682052 0.1880438 0.2239777
-Pct_Img    0.03560077 0.1850368 0.2196437
-Pct_brevet 0.02457067 0.1268724 0.1508545
-NivVieMed  0.06988862 0.3827284 0.4492233
+Pct0_14    0.04204110 0.2327814 0.2705301
+Pct_65     0.03648093 0.1857503 0.2212600
+Pct_Img    0.03419011 0.1770718 0.2104534
+Pct_brevet 0.02508535 0.1275717 0.1521101
+NivVieMed  0.06711872 0.3482848 0.4121502
 
 Simulated z-values:
               Direct  Indirect     Total
-Pct0_14    -3.333705 -2.939460 -3.047333
-Pct_65     -1.275666 -1.232279 -1.244290
-Pct_Img     1.183928  1.136824  1.149602
-Pct_brevet -1.132590 -1.097232 -1.107271
-NivVieMed  -1.989614 -1.823536 -1.863150
+Pct0_14    -3.323785 -2.991350 -3.090474
+Pct_65     -1.328879 -1.297851 -1.308664
+Pct_Img     1.285146  1.240205  1.252270
+Pct_brevet -1.057995 -1.030861 -1.039043
+NivVieMed  -2.037188 -1.952462 -1.981672
 
 Simulated p-values:
            Direct     Indirect  Total    
-Pct0_14    0.00085698 0.0032878 0.0023088
-Pct_65     0.20207350 0.2178447 0.2133927
-Pct_Img    0.23644139 0.2556120 0.2503077
-Pct_brevet 0.25738627 0.2725400 0.2681766
-NivVieMed  0.04663345 0.0682222 0.0624411</code></pre>
+Pct0_14    0.00088804 0.0027775 0.0019984
+Pct_65     0.18388782 0.1943385 0.1906483
+Pct_Img    0.19874144 0.2148996 0.2104715
+Pct_brevet 0.29005767 0.3026059 0.2987848
+NivVieMed  0.04163116 0.0508833 0.0475159</code></pre>
 </div>
 </div>
 <p>L’interprétation des effets directs se rapproche de celle des coefficients classiques. Ainsi, selon ce modèle, l’augmentation du niveau de vie médian de 1000&nbsp;€ dans un IRIS est associée avec une diminution moyenne de la concentration de dioxyde d’azote de 0,14 dans cet IRIS. L’effet total est de -0,82, indiquant qu’en moyenne, l’augmentation de 1000&nbsp;€ du niveau de vie médian dans un IRIS est associée avec une diminution moyenne de 0,82 de la concentration de dioxyde d’azote dans l’ensemble des IRIS. Au final, l’effet indirect est simplement la différence entre l’effet total et l’effet direct. Nous pouvons constater ici que les effets indirects sont plus importants que les effets directs.</p>
@@ -830,7 +830,7 @@ data:  resid(modele_SAR)
 weights: w_rook  
 number of simulations + 1: 1000 
 
-statistic = -0.014281, observed rank = 322, p-value = 0.678
+statistic = -0.014281, observed rank = 323, p-value = 0.677
 alternative hypothesis: greater</code></pre>
 </div>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Cartographie des résidus</span></span>
@@ -949,7 +949,7 @@ data:  resid(modele_SEM)
 weights: w_rook  
 number of simulations + 1: 1000 
 
-statistic = -0.011827, observed rank = 361, p-value = 0.639
+statistic = -0.011827, observed rank = 375, p-value = 0.625
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
@@ -1084,27 +1084,27 @@ Simulation results ( variance matrix):
 ========================================================
 Simulated standard errors
                Direct  Indirect     Total
-Pct0_14    0.04522275 0.3342817 0.3622376
-Pct_65     0.03564588 0.2747742 0.2971678
-Pct_Img    0.03229355 0.2838111 0.3028137
-Pct_brevet 0.02587397 0.2026936 0.2203932
-NivVieMed  0.06760888 0.4901985 0.5259590
+Pct0_14    0.04208748 0.3216015 0.3484998
+Pct_65     0.03753528 0.3014934 0.3256459
+Pct_Img    0.03227295 0.2862361 0.3053811
+Pct_brevet 0.02475646 0.2040742 0.2204203
+NivVieMed  0.06986992 0.5259567 0.5635955
 
 Simulated z-values:
-               Direct    Indirect        Total
-Pct0_14    -2.7606530 -3.07650633 -3.183722779
-Pct_65     -0.6814935  0.09217588  0.003483278
-Pct_Img     2.0564945  3.42014249  3.424830541
-Pct_brevet -0.7122016 -2.33016655 -2.226644924
-NivVieMed  -2.2713073 -0.21907312 -0.496141049
+               Direct   Indirect       Total
+Pct0_14    -2.9616901 -3.2217082 -3.33072276
+Pct_65     -0.6093668  0.1242592  0.04480504
+Pct_Img     2.0559950  3.3648911  3.37121845
+Pct_brevet -0.7140017 -2.3002837 -2.20989035
+NivVieMed  -2.1704073 -0.2004710 -0.45615204
 
 Simulated p-values:
            Direct    Indirect   Total     
-Pct0_14    0.0057686 0.00209442 0.00145394
-Pct_65     0.4955593 0.92655830 0.99722075
-Pct_Img    0.0397349 0.00062588 0.00061518
-Pct_brevet 0.4763399 0.01979735 0.02597101
-NivVieMed  0.0231284 0.82659309 0.61979490</code></pre>
+Pct0_14    0.0030596 0.00127429 0.00086621
+Pct_65     0.5422813 0.90111006 0.96426271
+Pct_Img    0.0397830 0.00076574 0.00074836
+Pct_brevet 0.4752261 0.02143215 0.02711277
+NivVieMed  0.0299760 0.84111228 0.64828065</code></pre>
 </div>
 </div>
 <p><strong>Dépendance spatiale du modèle SDM?</strong></p>
@@ -1119,7 +1119,7 @@ data:  resid(modele_SDM)
 weights: w_rook  
 number of simulations + 1: 1000 
 
-statistic = -0.0046127, observed rank = 473, p-value = 0.527
+statistic = -0.0046127, observed rank = 452, p-value = 0.548
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
@@ -1265,7 +1265,7 @@ data:  resid(modele_SDEM)
 weights: w_rook  
 number of simulations + 1: 1000 
 
-statistic = -0.010362, observed rank = 386, p-value = 0.614
+statistic = -0.010362, observed rank = 398, p-value = 0.602
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
@@ -1367,20 +1367,20 @@ Sample size per chain = 500
    plus standard error of the mean:
 
                Mean      SD Naive SE Time-series SE
-Pct0_14    -0.12002 0.04448 0.001989      0.0022466
-Pct_65     -0.02062 0.03664 0.001638      0.0015570
-Pct_Img     0.06219 0.03342 0.001494      0.0013726
-Pct_brevet -0.01828 0.02388 0.001068      0.0007548
-NivVieMed  -0.15187 0.06551 0.002930      0.0027367
+Pct0_14    -0.12010 0.04488 0.002007       0.002007
+Pct_65     -0.02141 0.03682 0.001647       0.001767
+Pct_Img     0.06791 0.03283 0.001468       0.001240
+Pct_brevet -0.01919 0.02507 0.001121       0.001121
+NivVieMed  -0.15082 0.06864 0.003070       0.003070
 
 2. Quantiles for each variable:
 
-                2.5%      25%      50%       75%    97.5%
-Pct0_14    -0.199046 -0.15296 -0.12225 -0.088417 -0.03392
-Pct_65     -0.095224 -0.04630 -0.02082  0.005025  0.04758
-Pct_Img    -0.006458  0.03956  0.06174  0.085230  0.12434
-Pct_brevet -0.063668 -0.03327 -0.01873 -0.002568  0.02906
-NivVieMed  -0.276747 -0.19412 -0.15372 -0.108869 -0.01334
+                2.5%      25%      50%       75%     97.5%
+Pct0_14    -0.205942 -0.15136 -0.11918 -0.091278 -0.025048
+Pct_65     -0.094426 -0.04455 -0.02215  0.002139  0.057131
+Pct_Img     0.003996  0.04433  0.06784  0.090676  0.131884
+Pct_brevet -0.067438 -0.03604 -0.02005 -0.004317  0.031979
+NivVieMed  -0.285756 -0.19719 -0.15394 -0.104269 -0.008971
 
 ========================================================
 Indirect:
@@ -1394,20 +1394,20 @@ Sample size per chain = 500
    plus standard error of the mean:
 
                Mean     SD Naive SE Time-series SE
-Pct0_14    -1.04885 0.3724  0.01666        0.01666
-Pct_65      0.04581 0.3114  0.01393        0.01393
-Pct_Img     0.98684 0.3487  0.01559        0.01559
-Pct_brevet -0.49535 0.2158  0.00965        0.00965
-NivVieMed  -0.14819 0.5086  0.02274        0.02274
+Pct0_14    -1.05795 0.3800 0.016995        0.01826
+Pct_65      0.04956 0.3135 0.014020        0.01551
+Pct_Img     0.99058 0.3152 0.014098        0.01249
+Pct_brevet -0.48858 0.2224 0.009946        0.01135
+NivVieMed  -0.10258 0.5700 0.025489        0.03029
 
 2. Quantiles for each variable:
 
               2.5%     25%      50%     75%   97.5%
-Pct0_14    -1.8582 -1.2851 -1.00990 -0.8111 -0.3839
-Pct_65     -0.5288 -0.1511  0.03374  0.2270  0.7030
-Pct_Img     0.4454  0.7596  0.94990  1.1530  1.6948
-Pct_brevet -0.9695 -0.6206 -0.47410 -0.3517 -0.1227
-NivVieMed  -1.1454 -0.4452 -0.15860  0.1420  0.8034
+Pct0_14    -1.9168 -1.2913 -1.00630 -0.7982 -0.4201
+Pct_65     -0.5260 -0.1326  0.02371  0.2261  0.7363
+Pct_Img     0.4416  0.7767  0.96047  1.1855  1.6611
+Pct_brevet -0.9860 -0.5992 -0.47337 -0.3494 -0.0865
+NivVieMed  -1.1257 -0.4315 -0.08299  0.2677  0.8406
 
 ========================================================
 Total:
@@ -1421,45 +1421,45 @@ Sample size per chain = 500
    plus standard error of the mean:
 
                Mean     SD Naive SE Time-series SE
-Pct0_14    -1.16888 0.4006  0.01792        0.01792
-Pct_65      0.02519 0.3330  0.01489        0.01489
-Pct_Img     1.04903 0.3665  0.01639        0.01639
-Pct_brevet -0.51363 0.2278  0.01019        0.01019
-NivVieMed  -0.30007 0.5399  0.02415        0.02415
+Pct0_14    -1.17805 0.4068  0.01819        0.01949
+Pct_65      0.02815 0.3367  0.01506        0.01911
+Pct_Img     1.05849 0.3325  0.01487        0.01290
+Pct_brevet -0.50777 0.2384  0.01066        0.01210
+NivVieMed  -0.25340 0.6033  0.02698        0.02698
 
 2. Quantiles for each variable:
 
-              2.5%     25%      50%     75%   97.5%
-Pct0_14    -2.0220 -1.4277 -1.13463 -0.9081 -0.4437
-Pct_65     -0.5827 -0.1873  0.02173  0.2159  0.7325
-Pct_Img     0.4683  0.8085  1.01925  1.2206  1.7992
-Pct_brevet -0.9993 -0.6504 -0.49027 -0.3627 -0.1337
-NivVieMed  -1.3598 -0.6178 -0.30077  0.0127  0.7263
+              2.5%     25%       50%     75%    97.5%
+Pct0_14    -2.0666 -1.4490 -1.128371 -0.8952 -0.47944
+Pct_65     -0.6095 -0.1742  0.003597  0.2331  0.77370
+Pct_Img     0.4824  0.8199  1.024958  1.2540  1.76204
+Pct_brevet -1.0326 -0.6263 -0.502477 -0.3642 -0.07586
+NivVieMed  -1.3324 -0.6006 -0.242042  0.1296  0.81187
 
 ========================================================
 Simulated standard errors
                Direct  Indirect     Total
-Pct0_14    0.04447931 0.3724216 0.4006454
-Pct_65     0.03663529 0.3114364 0.3329540
-Pct_Img    0.03341662 0.3486744 0.3665430
-Pct_brevet 0.02388191 0.2157791 0.2277986
-NivVieMed  0.06551404 0.5085654 0.5399369
+Pct0_14    0.04487793 0.3800122 0.4067683
+Pct_65     0.03682273 0.3134856 0.3366520
+Pct_Img    0.03282741 0.3152312 0.3324684
+Pct_brevet 0.02507172 0.2224030 0.2383687
+NivVieMed  0.06863716 0.5699584 0.6032915
 
 Simulated z-values:
                Direct   Indirect       Total
-Pct0_14    -2.6984302 -2.8163061 -2.91748635
-Pct_65     -0.5627248  0.1470941  0.07567069
-Pct_Img     1.8610674  2.8302727  2.86196803
-Pct_brevet -0.7656366 -2.2956358 -2.25477704
-NivVieMed  -2.3181363 -0.2913973 -0.55574096
+Pct0_14    -2.6760379 -2.7839956 -2.89611380
+Pct_65     -0.5814495  0.1581006  0.08362257
+Pct_Img     2.0686276  3.1423882  3.18372087
+Pct_brevet -0.7655654 -2.1968022 -2.13018571
+NivVieMed  -2.1973689 -0.1799802 -0.42003306
 
 Simulated p-values:
            Direct    Indirect  Total    
-Pct0_14    0.0069667 0.0048579 0.0035287
-Pct_65     0.5736223 0.8830578 0.9396811
-Pct_Img    0.0627347 0.0046508 0.0042102
-Pct_brevet 0.4438926 0.0216967 0.0241473
-NivVieMed  0.0204419 0.7707475 0.5783880</code></pre>
+Pct0_14    0.0074498 0.0053694 0.0037782
+Pct_65     0.5609376 0.8743775 0.9333565
+Pct_Img    0.0385810 0.0016758 0.0014540
+Pct_brevet 0.4439350 0.0280346 0.0331563
+NivVieMed  0.0279941 0.8571681 0.6744613</code></pre>
 </div>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Autocorrélation spatiale des résidus</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">modele_Manski</span><span class="op">)</span>, <span class="va">w_rook</span>, nsim <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1471,7 +1471,7 @@ data:  resid(modele_Manski)
 weights: w_rook  
 number of simulations + 1: 1000 
 
-statistic = -0.0009215, observed rank = 538, p-value = 0.462
+statistic = -0.0009215, observed rank = 505, p-value = 0.495
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
@@ -1762,9 +1762,9 @@ modele_SEM      2  8 2755.5 -1369.7    2  4.9728  0.4192</code></pre>
 1    MCO 3366.626 3396.212  7  0.587312061   0.001
 2    SLX 3222.594 3273.313 12  0.604660275   0.001
 3    SAR 2748.314 2782.126  8 -0.014281059   0.666
-4    SEM 2755.474 2789.286  8 -0.011826605   0.640
-5    SDM 2732.212 2787.157 13 -0.004612686   0.547
-6   SDEM 2760.501 2815.446 13 -0.010361653   0.612</code></pre>
+4    SEM 2755.474 2789.286  8 -0.011826605   0.634
+5    SDM 2732.212 2787.157 13 -0.004612686   0.538
+6   SDEM 2760.501 2815.446 13 -0.010361653   0.616</code></pre>
 </div>
 </div>
 <p>Quelques lignes de code suffisent pour créer deux graphiques permettant de comparer visuellement les résultats des différents modèles (<a href="#fig-GraphComparaison" class="quarto-xref">figure&nbsp;<span>2.9</span></a>). Les résultats démontrent que&nbsp;:</p>

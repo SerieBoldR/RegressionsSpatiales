@@ -13,11 +13,11 @@ Dans ce chapitre, nous décrivons uniquement les modèles économétriques spati
 ::: bloc_objectif-body
 À la fin de ce chapitre, vous devriez être en mesure de :
 
--   Saisir les raisons motivant le choix d'un modèle de régression (externalités, effets d’entraînement, effets mixtes, etc.).
--   Comprendre les différents modèles spatiaux autorégressifs (SLX, SAR, SEM, SDM, SDEM, Manski).
--   Utiliser une stratégie pour choisir un modèle (tests du multiplicateur de Lagrange, tests du ratio de vraisemblance, critère d’information d’Akaike).
--   Vérifier si le modèle autorégressif a corrigé ou non la dépendance spatiale du modèle MCO.
--   Mettre en pratique ces modèles spatiaux dans R.
+-   Saisir les raisons motivant le choix d'un modèle de régression (externalités, effets d’entraînement, effets mixtes, etc.);
+-   comprendre les différents modèles spatiaux autorégressifs (SLX, SAR, SEM, SDM, SDEM, Manski);
+-   utiliser une stratégie pour choisir un modèle (tests du multiplicateur de Lagrange, tests du ratio de vraisemblance, critère d’information d’Akaike);
+-   vérifier si le modèle autorégressif a corrigé ou non la dépendance spatiale du modèle MCO;
+-   mettre en pratique ces modèles spatiaux dans R.
 :::
 :::
 

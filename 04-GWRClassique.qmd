@@ -13,11 +13,11 @@ La régression géographiquement pondérée (*geographically weighted regression
 ::: bloc_objectif-body
 À la fin de ce chapitre, vous devriez être en mesure de :
 
--   Comprendre pourquoi utiliser une GWR.
--   Assimiler les principes fondamentaux d'une GWR classique (distribution gaussienne).
--   Analyser les résultats produits par une GWR.
--   Saisir que la GWR est un outil exploratoire intéressant, comprenant toutefois plusieurs limites et critiques importantes.
--   Mettre en pratique une GWR dans R.
+-   comprendre pourquoi utiliser une GWR;
+-   assimiler les principes fondamentaux d'une GWR classique (distribution gaussienne);
+-   analyser les résultats produits par une GWR;
+-   saisir que la GWR est un outil exploratoire intéressant, comprenant toutefois plusieurs limites et critiques importantes;
+-   mettre en pratique une GWR dans R.
 :::
 :::
 

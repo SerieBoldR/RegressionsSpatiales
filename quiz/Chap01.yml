@@ -35,7 +35,7 @@
      - "La standardisation augmente la vitesse des calculs."
   help: "Relisez au besoin la [section @sec-0123]."
 
-- label: "Avec une matrice standardisée, la statistique du I de Moran varient théoriquement de :"
+- label: "Avec une matrice standardisée, la statistique du I de Moran varien théoriquement de :"
   type: uc
   response: 1
   answers:
@@ -60,10 +60,10 @@
   answers:
      - "En analysant le R2"
      - "En calculant le I de Moran sur les résidus du modèle"
-     - "En similant des variables spatiales"
+     - "En simulant des variables spatiales"
   help: "Relisez au besoin la [section @sec-0171]."
  
-- label: "Quel est le synomyme de l'hétérogénité spatiale?"
+- label: "Quel est le synonyme de l'hétérogénéité spatiale?"
   type: uc
   response: 1
   answers:

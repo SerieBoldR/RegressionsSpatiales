@@ -15,9 +15,9 @@ Une autre technique utilisée pour ajouter l'espace dans un modèle a été prop
 
 À la fin de ce chapitre, vous devriez être en mesure de : 
 
--  Préparer des vecteurs propres de Moran à partir d'une matrice de pondération spatiale.
--  Utiliser ces vecteurs propres pour appliquer la méthode du filtrage spatial.
--  Analyser les résultats produits par un modèle de type SEVM (*Spatial Eigenvector Model*).
+-  préparer des vecteurs propres de Moran à partir d'une matrice de pondération spatiale;
+-  utiliser ces vecteurs propres pour appliquer la méthode du filtrage spatial;
+-  analyser les résultats produits par un modèle de type SEVM (*Spatial Eigenvector Model*).
 :::
 :::
 

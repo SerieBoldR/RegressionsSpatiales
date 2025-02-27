@@ -15,11 +15,11 @@ Certaines sections de ce chapitre sont adaptées du manuel suivant : Apparicio 
 ::: bloc_objectif-body
 À la fin de ce chapitre, vous devriez être en mesure de :
 
--   Connaître les principales matrices de pondérations spatiales.
--   Maîtriser les notions d'autocorrélation spatiale, de dépendance spatiale et d'hétérogénéité spatiale.
--   Comprendre la notion de variable spatialement décalée.
--   Calculer une mesure d'autocorrélation spatiale globale (*I* de Moran) dans R.
--   Évaluer la dépendance spatiale d'un modèle de régression multiple en calculant le *I* de Moran sur ses résidus.
+-   connaître les principales matrices de pondérations spatiales;
+-   maîtriser les notions d'autocorrélation spatiale, de dépendance spatiale et d'hétérogénéité spatiale;
+-   comprendre la notion de variable spatialement décalée;
+-   calculer une mesure d'autocorrélation spatiale globale (*I* de Moran) dans R;
+-   évaluer la dépendance spatiale d'un modèle de régression multiple en calculant le *I* de Moran sur ses résidus.
 
 
 :::
@@ -143,14 +143,14 @@ intitule <- c("Proportion de familles monoparentales",
               "Proportion de chômeurs",
               "Proportion de personnes à faible revenu",
               "Revenu médian des ménages (milliers de dollars)",
-              "Habitants au km2",
+              "Habitants au km<sup>2</sup>",
               "Transports en commun (effectifs)",
               "Automobile (effectifs)",
               "Marche (effectifs)",
               "Vélo (effectifs)",
               "Total navetteurs (effectifs)",
               "Accessibilité aux emplois en heure de pointe à vélo",             
-              "Accessibilité aux emplois en heure de pointe en transport collectif",
+              "Accessibilité aux emplois en heure de pointe en transport en commun",
               "Accessibilité aux emplois en heure de pointe à la marche",             
               "Proportion de navetteurs en transport en commun",
               "Proportion de navetteurs en auto",
@@ -177,7 +177,7 @@ knitr::kable(stats,
 #| eval: true
 #| warning: false
 #| label: fig-datamtlCarto
-#| fig-cap: Parts modales de tranport en commun et de l'automobile (proportion)
+#| fig-cap: Parts modales du transport en commun et de l'automobile (proportion)
 #| fig-align: center
 library(tmap, quietly = TRUE)
 legende_parametres <- list(text.separator = "à",
@@ -254,7 +254,7 @@ load("data/ProbitData.RData")
 :::
 
 ::: bloc_objectif-body
-Ces matrices permettent de définir les relations spatiales entre les entités spatiales d'une couche géographique, et plus spécifiquement la manière de mesurer leur relation d'adjacence (voisinage) ou de proximité (distance). Nous verrons qu'elles sont largement utilisées dans les régressions spatiales, notamment dans les modèles d'économétrie spatiale abordées dans la seconde partie du livre. Elles sont aussi nécessaires au calcul des mesures d'autocorrélation globales ou locales ([section @sec-0142]) et à la construction des variables spatialement décalées ([section @sec-013]).
+Ces matrices permettent de définir les relations spatiales entre les entités spatiales d'une couche géographique, et plus spécifiquement la manière de mesurer leur relation d'adjacence (voisinage) ou de proximité (distance). Nous verrons qu'elles sont largement utilisées dans les régressions spatiales, notamment dans les modèles d'économétrie spatiale abordés dans la seconde partie du livre. Elles sont aussi nécessaires au calcul des mesures d'autocorrélation globales ou locales ([section @sec-0142]) et à la construction des variables spatialement décalées ([section @sec-013]).
 :::
 :::
 
@@ -268,10 +268,10 @@ Il existe huit principales matrices de pondération spatiale regroupées en deux
 #| warning: false
 
 df1 <- data.frame(
-  Matrice = c("Partage d'un nœud (Queen)", 
-              "Partage d'un segment (Rook)",
-              "Partage d'un nœud et ordre d'adjacence (Queen)", 
-               "Partage d'un segment et ordre d'adjacence (Rook)",
+  Matrice = c("Partage d’un nœud (Queen)", 
+              "Partage d’un segment (Rook)",
+              "Partage d’un nœud et ordre d’adjacence (Queen)", 
+               "Partage d’un segment et ordre d’adjacence (Rook)",
               
                "Connectivité selon la distance",
                "Inverse de la distance",
@@ -290,7 +290,7 @@ my_table <- knitr::kable(df1,
    
 kableExtra::pack_rows(my_table,
 						index = c(
-						"Matrices de contiguïté (basées sur l'adjacence)" = 4,
+						"Matrices de contiguïté (basées sur l’adjacence)" = 4,
 						"Matrices de proximité (basées sur la distance)" = 4))
 ```
 
@@ -306,7 +306,7 @@ Trois évaluations de la contiguïté sont représentées à la @fig-Chap01Conti
 
 -   **Adjacence selon le partage d'un nœud** (B).
 
--   **Ordre d'adjacence selon le partage d'un segment** (C). L'ordre d'adjacence indique le nombre de frontières à traverser pour se rendre à l'entité spatiale contiguë, soit :
+-   **Ordre d'adjacence selon le partage d'une frontière commune** (C). L'ordre d'adjacence indique le nombre de frontières à traverser pour se rendre à l'entité spatiale contiguë, soit :
 
     -   **Ordre 1** : une frontière à traverser pour se rendre dans l'entité spatiale adjacente.
 
@@ -344,7 +344,7 @@ Pour construire une matrice de pondération spatiale selon la proximité, nous p
 
 Les distances cartésiennes -- euclidienne et de Manhattan (@eq-DistEuc et @eq-DistManh) -- sont facilement calculables à partir des coordonnées géographiques (*x*,*y*) lorsque la couche géographique est dans un système de projection plane (@fig-Chap01TypesDistances, a). Si la projection de la couche est sphérique (longitude/latitude), il convient d'utiliser la formule de haversine (basée sur la trigonométrie sphérique) pour obtenir la distance à vol d'oiseau (@eq-DistLongLat).
 
-Par contre, comme leurs noms l'indiquent, le calcul des distances réticulaires (@fig-Chap01TypesDistances, b) nécessite d'avoir un réseau de rues dans un système d'information géographique (par exemple, l'extension *Network Analyst* d'ArcGIS Pro) ou dans R (notamment avec le *package* R5R) pour calculer le chemin le plus rapide (voir le chapitre intitulé [*Mesures d'accessibilité spatiale selon différents modes de transport*](https://serieboldr.github.io/MethodesAnalyseSpatiale/05-AnalyseReseau.html) [@RBoldAirMethodesAnalysesSpatiales]).
+Par contre, comme leurs noms l'indiquent, le calcul des distances réticulaires (@fig-Chap01TypesDistances, b) nécessite d'avoir un réseau de rues dans un système d'information géographique (par exemple, l'extension *Network Analyst* d'ArcGIS Pro) ou dans R (notamment avec le *package* `R5R`) pour calculer le chemin le plus rapide (voir le chapitre intitulé [*Mesures d'accessibilité spatiale selon différents modes de transport*](https://serieboldr.github.io/MethodesAnalyseSpatiale/05-AnalyseReseau.html) [@RBoldAirMethodesAnalysesSpatiales]).
 
 $$
  d_{ij} = \sqrt{(x_i-x_j)^2+(y_i-y_j)^2}
@@ -460,7 +460,7 @@ Il est recommandé de standardiser les matrices de pondération en ligne. La som
 :::
 
 ::: bloc_attention-body
-Nous verrons dans les sections suivantes que ces matrices sont utilisées pour évaluer le degré d'autocorrélation spatiale globale et locale. Or, il est fréquent de comparer les valeurs des mesures d'autocorrélation spatiale obtenues avec différentes matrices d'adjacence et de proximité (contiguïté selon le partage d'un nœud, d'une frontière commune; inverse de la distance, inverse de la distance au carré, etc.). Autrement dit, la standardisation des matrices de pondération spatiale permet de vérifier si le degré de (dis)ressemblance des entités spatiales en fonction d'une variable donnée est plus fort avec une matrice de contiguïté, d'inverse de la distance ou encore d'inverse de la distance au carré, etc.
+Nous verrons dans les sections suivantes que ces matrices sont utilisées pour évaluer le degré d'autocorrélation spatiale globale et locale. Or, il est fréquent de comparer les valeurs des mesures d'autocorrélation spatiale obtenues avec différentes matrices d'adjacence et de proximité (contiguïté selon le partage d'un nœud, d'une frontière commune; inverse de la distance, inverse de la distance au carré, etc.). Autrement dit, la standardisation des matrices de pondération spatiale permet de vérifier si le degré de (dis)ressemblance des entités spatiales en fonction d'une variable donnée est plus fort avec une matrice de contiguïté, d'inverse de la distance, d'inverse de la distance au carré, etc.
 :::
 :::
 
@@ -470,7 +470,7 @@ Pour illustrer comment réaliser une standardisation, nous utilisons une couche 
 
 Au @tbl-StandardisationMatrice, différentes matrices de contiguïté et de distance ont été calculées, puis standardisées. Voici comment interpréter les différentes sections du tableau :
 
--   **Contiguïté selon le partage d'une frontière commune.** La valeur de 1 signale que deux arrondissements sont voisins, sinon la valeur est à 0. Tel qu'indiqué aux @eq-ContiguiteQueen et @eq-ContiguiteRook, un arrondissement ne peut être voisin de lui-même (ex.: valeur de 0 pour la cellule `Bro.` et `Bro.`). L'arrondissement de Brompton--Rock Forest--Saint-Élie--Deauville (`Bro.`) a deux voisins, soit ceux des Nations et de Fleurimont (`Nat.` et `Fle.`), comme indiqué par la valeur 2 dans la colonne `total`. Par contre, les arrondissements des Nations et de Fleurimont sont voisins de tous les autres (valeur de 3 dans la colonne `total`).
+-   **Contiguïté selon le partage d'une frontière commune.** La valeur de 1 signale que deux arrondissements sont voisins, sinon la valeur est à 0. Tel qu'indiqué aux équations [-@eq-ContiguiteQueen] et [-@eq-ContiguiteRook], un arrondissement ne peut être voisin de lui-même (ex.: valeur de 0 pour la cellule `Bro.` et `Bro.`). L'arrondissement de Brompton--Rock Forest--Saint-Élie--Deauville (`Bro.`) a deux voisins, soit ceux des Nations et de Fleurimont (`Nat.` et `Fle.`), comme indiqué par la valeur 2 dans la colonne `total`. Par contre, les arrondissements des Nations et de Fleurimont sont voisins de tous les autres (valeur de 3 dans la colonne `total`).
 
 -   **Standardisation de la matrice de contiguïté.** Il suffit de diviser chaque valeur de la matrice de contiguïté par la somme de la ligne correspondante. De la sorte, la somme de chaque ligne est égale à 1 et la somme de l'ensemble des valeurs de la matrice est égale au nombre d'entités spatiales (ici 4).
 
@@ -544,13 +544,13 @@ my_table <- knitr::kable(dffinal,
             )
 kableExtra::pack_rows(my_table,
             index = c(
-              "Matrice de contiguïté selon le partage d'une frontière commune" = 4,
+              "Matrice de contiguïté selon le partage d’une frontière commune" = 4,
               "Standardisation de la matrice de contiguïté" = 4,
               "Distance (km)" = 4,
-              "Matrice selon l'inverse de la distance" = 4,
-              "Matrice selon l'inverse de la distance au carré" = 4,
-              "Standardisation de l'inverse de la distance" = 4,
-              "Standardisation de l'inverse de la distance au carré" = 4
+              "Matrice selon l’inverse de la distance" = 4,
+              "Matrice selon l’inverse de la distance au carré" = 4,
+              "Standardisation de l’inverse de la distance" = 4,
+              "Standardisation de l’inverse de la distance au carré" = 4
               )
    )
 ```
@@ -566,7 +566,7 @@ kableExtra::pack_rows(my_table,
 :::
 
 ::: bloc_attention-body
-Le package `spdep` dispose de différentes fonctions pour construire des matrices de contiguïté, de connectivité et de distance :
+Le *package* `spdep` dispose de différentes fonctions pour construire des matrices de contiguïté, de connectivité et de distance :
 
 -   `poly2nb` pour des matrices de contiguïté.
 
@@ -586,7 +586,7 @@ Pour créer des matrices de pondération spatiale selon la contiguïté, nous ut
 
 -   `poly2nb(Nom de l'objet sf, queen = TRUE)` crée une matrice de contiguïté sous la forme d'une classe `nb` (*A neighbours list with class nb*). Avec le paramètre `queen = TRUE`, la contiguïté est évaluée selon le partage d'un nœud; avec `queen = FALSE`, la contiguïté est évaluée selon le partage d'un segment (frontière). La matrice spatiale comprend une ligne par polygone avec les index de ceux qui sont adjacents. Par exemple, `Queen[[1]]` renvoie la liste des polygones voisins à la première entité spatiale, soit `24 36 44 73`, c'est-à-dire quatre voisins.
 
--   `nb2listw(objet nb, zero.policy = TRUE, style = "W")` crée une matrice de pondération spatiale à partir de n'importe quelle matrice spatiale (de contiguïté ou de distance). Le `paramètre style = "W"`, qui est par défaut, permet de standardiser la matrice en ligne. Par exemple, `w_queen$weights[[1]]` renvoie les valeurs des pondérations pour la première entité spatiale, soit `0.25 0.25 0.25 25` (0,25 = 1 / 4 voisins). Pour obtenir une matrice non standardisée, vous devez écrire `style = "B"`, alors `w_queen$weights[[1]]` renverra les valeurs de `1 1 1 1`.
+-   `nb2listw(objet nb, zero.policy = TRUE, style = "W")` crée une matrice de pondération spatiale à partir de n'importe quelle matrice spatiale (de contiguïté ou de distance). Le paramètre `style = "W"`, qui est par défaut, permet de standardiser la matrice en ligne. Par exemple, `w_queen$weights[[1]]` renvoie les valeurs des pondérations pour la première entité spatiale, soit `0.25 0.25 0.25 25` (0,25 = 1 / 4 voisins). Pour obtenir une matrice non standardisée, vous devez écrire `style = "B"`, alors `w_queen$weights[[1]]` renverra les valeurs de `1 1 1 1`.
 
 ```{r}
 #| echo: true
@@ -627,7 +627,7 @@ summary(w_rook)
 
 #### Matrices de pondération spatiale selon la contiguïté et un ordre d'adjacence {#sec-01242}
 
-Le code ci-dessous génère les matrices de pondération spatiale standardisées en ligne selon les ordre d'adjacence de 1 à 3.
+Le code ci-dessous génère les matrices de pondération spatiale standardisées en ligne selon les ordres d'adjacence de 1 à 3.
 
 ```{r}
 #| echo: true
@@ -637,7 +637,7 @@ Le code ci-dessous génère les matrices de pondération spatiale standardisées
 nb_queen1 <- poly2nb(LyonIris, queen = TRUE)
 nb_queen2 <- nblag_cumul(nblag(nb_queen1, 2))
 nb_queen3 <- nblag_cumul(nblag(nb_queen1, 3))
-# Création des matrices de pondération spatiale standardisées en lignes
+# Création des matrices de pondération spatiale standardisées en ligne
 w_queen1 <- nb2listw(nb_queen1, zero.policy = TRUE, style = "W")
 w_queen2 <- nb2listw(nb_queen2, zero.policy = TRUE, style = "W")
 w_queen3 <- nb2listw(nb_queen3, zero.policy = TRUE, style = "W")
@@ -645,7 +645,7 @@ w_queen3 <- nb2listw(nb_queen3, zero.policy = TRUE, style = "W")
 
 #### Matrice de connectivité (matrice distance binaire) {#sec-01243}
 
-La fonction `dnearneigh(sf points, d1=, d2=)` crée une matrice de connectivité à partir d'une couche de points. Les paramètres `d1` et `d2` permettent de spécifier le rayon de recherche (ex. : avec `d1 = 0` et `d2 = 2500`, le seuil maximal de distance est de 2500 mètres). Si votre couche `sf` comprend des `lignes` ou des `polygones`, utilisez la fonction `st_centroid` ou `st_point_on_surface()` pour les convertir en points ([section @sec-0122]).
+La fonction `dnearneigh(sf points, d1 =, d2 =)` crée une matrice de connectivité à partir d'une couche de points. Les paramètres `d1` et `d2` permettent de spécifier le rayon de recherche (ex. : avec `d1 = 0` et `d2 = 2500`, le seuil maximal de distance est de 2500 mètres). Si votre couche `sf` comprend des `lignes` ou des `polygones`, utilisez la fonction `st_centroid` ou `st_point_on_surface()` pour les convertir en points ([section @sec-0122]).
 
 ```{r}
 #| echo: true
@@ -663,7 +663,7 @@ w_connect_2500m <- nb2listw(connect_2500m, zero.policy = TRUE, style = "W")
 
 #### Matrices de pondération spatiale selon l'inverse de la distance et l'inverse de la distance au carré {#sec-01244}
 
-Le code ci-dessous, qui permet de les créer les matrices de l'inverse de la distance et de l'inverse de la distance au carré, comprend les étapes suivantes :
+Le code ci-dessous, qui permet de créer les matrices de l'inverse de la distance et de l'inverse de la distance au carré, comprend les étapes suivantes :
 
 -   Récupération des coordonnées géographiques des entités spatiales.
 
@@ -671,7 +671,7 @@ Le code ci-dessous, qui permet de les créer les matrices de l'inverse de la dis
 
 -   Calcul des matrices d'inverse de la distance et d'inverse de la distance au carré.
 
--   Standardisation de ces deux matrices et transformation dans des objets `listw` avec la fonction `mat2listw`.
+-   Standardisation de ces deux matrices et transformation en objets `listw` avec la fonction `mat2listw`.
 
 ```{r}
 #| echo: true
@@ -683,7 +683,7 @@ coords <- st_coordinates(iris_centroides)
 ## Création de la matrice de distance
 distances <- as.matrix(dist(coords, method = "euclidean"))
 
-# S'assurer que la diagonale de la matrice est à 0
+# S’assurer que la diagonale de la matrice est à 0
 diag(distances) <- 0
 
 ## Matrices inverse de la distance et inverse de la distance au carré
@@ -708,7 +708,7 @@ w_inv_distances2 <- mat2listw(inv_distances2, style = "W")
 
 Pour construire une matrice de distance de Manhattan, vous devez changer la valeur du paramètre `method` de la fonction `dist` comme suit : `as.matrix(dist(coords, method = "manhattan"))`.
 
-Pour intégrer une distance réticulaire, vous devez la calculer, soit [dans R](https://serieboldr.github.io/MethodesAnalyseSpatiale/01-ManipulationDonneesSpatiales.html) [@RBoldAirMethodesAnalysesSpatiales], soit dans un un logiciel de système d'information géographique (QGIS ou ArcGIS Pro avec l'extension *Network Analyst* par exemple) et l'importer dans R. Le reste du code sera alors identique.
+Pour intégrer une distance réticulaire, vous devez la calculer, soit [dans R](https://serieboldr.github.io/MethodesAnalyseSpatiale/01-ManipulationDonneesSpatiales.html) [@RBoldAirMethodesAnalysesSpatiales], soit dans un logiciel de système d'information géographique (QGIS ou ArcGIS Pro avec l'extension *Network Analyst* par exemple) et l'importer dans R. Le reste du code sera alors identique.
 :::
 :::
 
@@ -761,13 +761,13 @@ Plusieurs logiciels (notamment ArcGIS Pro et GeoDa) réduisent par défaut la t
 
 Cette réduction procure deux avantages importants :
 
--   **Une diminution considérable des temps de calcul**, surtout pour les couches géographiques comprenant un nombre très élevé d'entités spatiales. Par exemple, avec une couche de 50 entités spatiales, la matrice des distances comprendra 2500 valeurs (50 $\times$ 50 = 2500) tandis qu'avec 1000 entités spatiales, elle en comprendra un million (1000 $\times$ 1000 = 1 000 000).
+-   **Une diminution considérable des temps de calcul**, surtout pour les couches géographiques comprenant un nombre très élevé d'entités spatiales. Par exemple, avec une couche de 50 entités spatiales, la matrice des distances comprendra 2500 valeurs (50 $\times$ 50 = 2500) tandis qu'avec 1000 entités spatiales, elle en comprendra un million (1000 $\times$ 1000 = 1 000 000).
 
 -   Comme décrit plus haut, il est préférable d'**éviter d'avoir une matrice de distances avec des entités spatiales sans voisins**, puisque cela a un impact négatif sur les mesures d'autocorrélation spatiale.
 :::
 :::
 
-La syntaxe ci-dessous permet ainsi de construire des matrices de pondération (inverse de la distance et inverse de la distance au carré) à partir de la distance maximale et un SR et son voisin le plus proche.
+La syntaxe ci-dessous permet ainsi de construire des matrices de pondération (inverse de la distance et inverse de la distance au carré) à partir de la distance maximale d'un SR et son voisin le plus proche.
 
 ```{r}
 #| echo: true
@@ -787,7 +787,7 @@ plusprochevoisin_max <- max(unlist(nbdists(k1, coords)))
 cat("Distance maximale au plus proche voisin :", round(plusprochevoisin_max, 0), "mètres")
 
 ## Matrice de distance avec la valeur maximale
-# les voisins les plus proches avec le seuil de distance maximal
+# les voisins les plus proches avec le seuil de distance maximale
 voisins_distmax <- dnearneigh(coords, 0, plusprochevoisin_max)
 
 # Distances avec le seuil maximum
@@ -845,13 +845,13 @@ library(dplyr)
 # Nom de la couche sf départ à changer au besoin
 Couche.sf <- LyonIris
 
-# Matrice de contiguité 
+# Matrice de contiguïté 
 nb_queen <- poly2nb(Couche.sf, queen = TRUE)
 nb_rook  <- poly2nb(Couche.sf, queen = FALSE)
 w_queen <- nb2listw(nb_queen, zero.policy = TRUE, style = "W")
 w_rook <- nb2listw(nb_rook, zero.policy = TRUE, style = "W")
 
-# Matrice de contiguité (ordre 2 à 5)
+# Matrice de contiguïté (ordre 2 à 5)
 w_rook2 <- nblag_cumul(nblag(nb_rook, 2)) %>% nb2listw(zero.policy = TRUE, style = "W")
 w_rook3 <- nblag_cumul(nblag(nb_rook, 3)) %>% nb2listw(zero.policy = TRUE, style = "W")
 w_rook4 <- nblag_cumul(nblag(nb_rook, 4)) %>% nb2listw(zero.policy = TRUE, style = "W")
@@ -911,7 +911,7 @@ save(w_queen, w_rook,
 
 ## Variable spatialement décalée {#sec-013}
 
-À partir des matrices de pondérations standardisées en ligne, qu'elles soient de contiguïté ou de proximité, il est possible de calculer pour une version spatialement décalée d'une variable initiale. De la sorte, pour une entité spatiale *i*, il est possible de connaître la valeur moyenne d'une variable pour ses entités voisines ou proches (dépendamment si la matrice est définie selon la contiguïté ou la proximité). Au [chapitre @sec-chap02], nous verrons que ces variables spatiales décalées sont utilisées dans plusieurs modèles d'économétrie spatiale.
+À partir des matrices de pondérations standardisées en ligne, qu'elles soient de contiguïté ou de proximité, il est possible de calculer une version spatialement décalée d'une variable initiale. De la sorte, pour une entité spatiale *i*, il est possible de connaître la valeur moyenne d'une variable pour ses entités voisines ou proches (dépendamment si la matrice est définie selon la contiguïté ou la proximité). Au [chapitre @sec-chap02], nous verrons que ces variables spatiales décalées sont utilisées dans plusieurs modèles d'économétrie spatiale.
 
 ::: bloc_notes
 ::: bloc_notes-header
@@ -994,7 +994,7 @@ On distingue habituellement les statistiques d'autocorrélation spatiale globale
 
 -   Les mesures d'autocorrélation spatiale locales renvoient des valeurs pour chacune des entités spatiales. Succinctement, il s'agit de vérifier si chaque entité spatiale est significativement (dis)semblable de celles voisines ou proches.
 
-Nous aborderons ici uniquement une **statistique d'autocorrélation spatiale globale**, soit le ***I*** **de Moran**, pour évaluer l'autocorrélation spatiale d'une variable continue. Pour aborder une panoplie de mesures globales ou locales, nous invitons à consulter le chapitre intitulé [*Autocorrélation spatiale*](https://serieboldr.github.io/MethodesAnalyseSpatiale/01-ManipulationDonneesSpatiales.html) [@RBoldAirMethodesAnalysesSpatiales].
+Nous aborderons ici uniquement une **statistique d'autocorrélation spatiale globale**, soit le ***I*** **de Moran**, pour évaluer l'autocorrélation spatiale d'une variable continue. Pour aborder une panoplie de mesures globales ou locales, nous vous invitons à consulter le chapitre intitulé [*Autocorrélation spatiale*](https://serieboldr.github.io/MethodesAnalyseSpatiale/01-ManipulationDonneesSpatiales.html) [@RBoldAirMethodesAnalysesSpatiales].
 :::
 :::
 
@@ -1173,7 +1173,7 @@ Les fonctions `moran.test` et `moran.mc` du *package* `spdep` permettent de calc
 
     -   `moran.test(ObjetSf$Variable, listw=MatriceW, zero.policy = TRUE, randomisation = TRUE)`
 
--   selon des permutations Monte-Carlo (ci-dessus avec 999 permutations)
+-   selon des permutations Monte-Carlo (ci-dessous avec 999 permutations)
 
     -   `moran.mc(ObjetSf$Variable, listw=MatriceW, zero.policy = TRUE, nsim=999)`
 
@@ -1183,17 +1183,17 @@ Bien entendu, dans les sorties des trois méthodes, la valeur du *I* de Moran es
 #| echo: true
 #| message: false
 #| warning: false
-moran.test(LyonIris$NO2,          # nom de l'objet sf et de la variable continue
+moran.test(LyonIris$NO2,          # nom de l’objet sf et de la variable continue
            listw=w_queen,         # nom de la matrice de pondération spatiale
            zero.policy = TRUE,    
            randomisation = FALSE) # significativité selon l’hypothèse de la normalité
           
-moran.test(LyonIris$NO2,          # nom de l'objet sf et de la variable continue
+moran.test(LyonIris$NO2,          # nom de l’objet sf et de la variable continue
            listw=w_queen,         # nom de la matrice de pondération spatiale
            zero.policy = TRUE,    
            randomisation = TRUE)  # significativité selon l’hypothèse de la randomisation
            
-moran.mc(LyonIris$NO2,            # nom de l'objet sf et de la variable continue
+moran.mc(LyonIris$NO2,            # nom de l’objet sf et de la variable continue
          listw=w_queen,           # nom de la matrice de pondération spatiale 
          zero.policy = TRUE, 
          nsim=999)                # 999 permutations
@@ -1209,7 +1209,7 @@ La syntaxe ci-dessous permet de calculer la statistique du *I* de Moran avec plu
 #| echo: true
 #| message: false
 #| warning: false
-## Création d'une liste pour toutes les matrices
+## Création d’une liste pour toutes les matrices
 liste_matrices <- list(w_queen = w_queen, 
                        w_rook= w_rook, 
                        w_rook2 = w_rook2, 
@@ -1246,7 +1246,7 @@ for (e in liste_matrices){
    pvalue[i] <- test$p.value
 }
 
-# Création d'un DataFrame avec les valeurs du I de Moran et de p
+# Création d’un DataFrame avec les valeurs du I de Moran et de p
 moran_resultats <- data.frame(Matrices = names(liste_matrices),
                               MoranIs = round(moranI, 4),
                               Pvalues = pvalue)
@@ -1261,7 +1261,7 @@ La lecture détaillée du @tbl-TableauIMoranMatrices permet d'avancer plusieurs 
 
 -   Sans surprise, plus nous ajoutons des **ordres d'adjacence**, plus la valeur de la statistique du *I* de Moran est faible, passant de 0,7174 à 0,4194 du deuxième au cinquième ordre.
 
--   Concernant les **matrices de proximité**, la méthode de l'inverse de la distance au carré, qui accorde un poids plus important aux entités spatiales très proches (comparativement à l'inverse de la distance), renvoie des valeurs toujours plus élevées, et ce, que la matrice soit complète ou réduite. Aussi, les matrices de distance réduites présentent toujours des valeurs plus fortes que celles complètes.
+-   Concernant les **matrices de proximité**, la méthode de l'inverse de la distance au carré, qui accorde un poids plus important aux entités spatiales très proches (comparativement à l'inverse de la distance), renvoie des valeurs toujours plus élevées, et ce, que la matrice soit complète ou réduite. Aussi, les matrices de distance réduites présentent toujours des valeurs plus fortes que les matrices complètes.
 
 -   Concernant les matrices **selon le critère des plus proches voisins**, l'autocorrélation spatiale diminue légèrement de *k* = 2 à *k* = 5. D'ailleurs, la valeur la plus forte est pour deux voisins (*I* = 0,8083).
 
@@ -1373,7 +1373,7 @@ library(ggplot2)
 ```
 ## Bref retour sur la régression linéaire multiple {#sec-015}
 
-À titre de rappel, la régression linéaire multiple permet d'exprimer une variable d'intérêt, habituellement notée par le terme variable dépendante ($y$) en fonction de plusieurs variables que l'on pense liées, théoriquement, à la variable d'intérêt. Celles-ci sont habituellement désignées comme des variables explicatives ou indépendantes (notés $x_k$).
+À titre de rappel, la régression linéaire multiple permet d'exprimer une variable d'intérêt, habituellement notée par le terme variable dépendante ($y$) en fonction de plusieurs variables que l'on pense liées, théoriquement, à la variable d'intérêt. Celles-ci sont habituellement désignées comme des variables explicatives ou indépendantes (notées $x_k$).
 
 L'équation de régression s'écrit alors :
 
@@ -1403,7 +1403,7 @@ $$ {#eq-regmultiple2} $$
 \hat{\varepsilon}_i = y_i - \left[\hat{\alpha} + \hat{\beta}_1 x_{1i} + \hat{\beta}_2 x_{2i} + \cdots + \hat{\beta}_K x_{Ki}\right]
 $$ {#eq-regmultiple3}
 
-Il existe plusieurs manières d'exprimer cette relation sous forme plus compacte. L'une de celle-ci consiste à introduire le terme de sommation dans l'équation :
+Il existe plusieurs manières d'exprimer cette relation sous forme plus compacte. L'une de celles-ci consiste à introduire le terme de sommation dans l'équation :
 
 $$
 y_i = \alpha + \sum_{k=1}^K \beta_k x_{ki} + \varepsilon_i
@@ -1495,20 +1495,20 @@ Ces effets sont habituellement l'essence de l'intérêt des modèles de régress
 :::
 
 ::: bloc_aller_loin-body
-Afin de bien maîtriser les principes de base et les hypothèses de la régression linéaire multiple, mesurer la qualité d'ajustement du modèle, introduire des variables explicatives particulières (variable qualitative dichotomique ou polytomique, variable d'interaction, etc.), interpréter les résultats d'un modèle de régression la mettre en œuvre dans R, nous vous invitons à lire le [chapitre suivant](https://serieboldr.github.io/MethodesQuantitatives/07-regressionlineaire.html) [@RBoldAirMethodesQuanti].
+Afin de bien maîtriser les principes de base et les hypothèses de la régression linéaire multiple, de mesurer la qualité d'ajustement du modèle, d'introduire des variables explicatives particulières (variable qualitative dichotomique ou polytomique, variable d'interaction, etc.), d'interpréter les résultats d'un modèle de régression et de la mettre en œuvre dans R, nous vous invitons à lire le [chapitre suivant](https://serieboldr.github.io/MethodesQuantitatives/07-regressionlineaire.html) [@RBoldAirMethodesQuanti].
 :::
 :::
 
 ## Pourquoi recourir à des régressions spatiales? {#sec-016}
 
-Deux motivations principales peuvent conduire à réaliser des régressions spatiales : la **dépendance spatiale** ou l'**hétérogénéité** du modèle de régression classique appliquées à des données spatiales [@chi2019spatial, p. 41-43].
+Deux motivations principales peuvent conduire à réaliser des régressions spatiales : la **dépendance spatiale** ou l'**hétérogénéité** du modèle de régression classique appliqué à des données spatiales [@chi2019spatial, p. 41-43].
 
 ### Dépendance spatiale {#sec-0171}
 Dans un modèle, les résidus ($\epsilon$) sont la différence entre les valeurs observées ($y_i$) et les valeurs prédites par le modèle ($\widehat{y_i}$). Une des hypothèses de la régression linéaire multiple est que les observations doivent être indépendantes les unes des autres (*indépendance du terme d'erreur*). Le non-respect de cette hypothèse produit des résultats biaisés, notamment pour les coefficients de régression. Un simple test de présence d’autocorrélation spatiale entre les résidus permet de vérifier si cette hypothèse est respectée ([section @sec-014]).
 
 Le rejet de cette hypothèse d’indépendance rend les coefficients estimés, selon la forme fonctionnelle postulée (ou processus générateur des données – PGD), par le modèle biaisés et/ou biaise le calcul des écarts-types, invalidant ainsi les tests de significativité usuels. La présence d’autocorrélation spatiale entre les résidus est donc un premier test nécessaire pour s’assurer de la qualité des résultats issus du modèle de régression linéaire.
 
-À noter qu’une autocorrélation spatiale entre certaines variables observables, dépendante ou indépendantes, est possible sans pour autant que les résidus soient autocorrélés. Dans ce cas, les relations entre les variables indépendantes permettent de capter l’effet spatial contenu dans la variable dépendante et les résultats d’estimations sont valides si les résidus sont homoscédastiques, c’est-à-dire de variance homogène (autrement, le problème peut facilement être réglé par un simple ajout d’option dans la commande du modèle de régression). Ce n’est donc pas sur les variables observables que le test de détection d’autocorrélation spatiale est important, mais bien sur les résidus du modèle.
+À noter qu’une autocorrélation spatiale entre certaines variables observables, dépendantes ou indépendantes est possible sans pour autant que les résidus soient autocorrélés. Dans ce cas, les relations entre les variables indépendantes permettent de capter l’effet spatial contenu dans la variable dépendante et les résultats d’estimations sont valides si les résidus sont homoscédastiques, c’est-à-dire de variance homogène (autrement, le problème peut facilement être réglé par un simple ajout d’option dans la commande du modèle de régression). Ce n’est donc pas sur les variables observables que le test de détection d’autocorrélation spatiale est important, mais bien sur les résidus du modèle.
 
 Pour être valides, les résultats d’un modèle de régression linéaire construit avec des données spatiales ne devraient pas avoir des résidus spatialement autocorrélés. Si c’est le cas, alors certaines options sont envisageables pour tenter de remédier à la situation. La plus simple étant l’ajout de variables indépendantes spatialement structurées, afin de capter l’autocorrélation résiduelle. Les méthodes plus avancées proposent d’intégrer formellement cette relation spatiale dans le PGD.
 
@@ -1525,7 +1525,7 @@ modele_MCO <- lm(PM25 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed, dat
 summary(modele_MCO)
 ``` 
 
-Pour vérifier la dépendance spatiale du modèle, nous calculons le *I* de Moran sur les résidus avec la fonction `lm.morantest` du *package* `spdep` et nous cartographions les résidus avec le package `tmap`. La statistique du *I* de Moran sur les résidus (*I* = 0,66, *p* \< 0,001) indique clairement que le modèle OLS a un problème de dépendance spatiale et que ses coefficients de régression reportés plus haut sont certainement biaisés. Aussi, la cartographie des coefficients de régression montre que des résidus positifs dans les IRIS des quartiers centraux, tandis que les résidus négatifs sont concentrés dans les IRIS des quartiers ou des municipalités périphériques (@fig-ResidusMCOchap1). Par conséquent, le recours à des régressions spatiales est certainement nécessaire pour remédier à ce problème de dépendance spatiale du modèle MCO.
+Pour vérifier la dépendance spatiale du modèle, nous calculons le *I* de Moran sur les résidus avec la fonction `lm.morantest` du *package* `spdep` et nous cartographions les résidus avec le *package* `tmap`. La statistique du *I* de Moran sur les résidus (*I* = 0,66, *p* \< 0,001) indique clairement que le modèle OLS a un problème de dépendance spatiale et que ses coefficients de régression reportés plus haut sont certainement biaisés. Aussi, la cartographie des coefficients de régression montre des résidus positifs dans les IRIS des quartiers centraux, tandis que les résidus négatifs sont concentrés dans les IRIS des quartiers ou des municipalités périphériques (@fig-ResidusMCOchap1). Par conséquent, le recours à des régressions spatiales est certainement nécessaire pour remédier à ce problème de dépendance spatiale du modèle MCO.
 
 ```{r}
 #| echo: true 
@@ -1578,9 +1578,9 @@ tm_shape(LyonIris)+
 :::
 :::
 
-### Hétérogénité spatiale {#sec-0172}
+### Hétérogénéité spatiale {#sec-0172}
 
-L'hétérogénité ou la non-stationnarité (***spatial heterogeneity*** ou ***nonstationarity***) se manifeste quand les relations entre la variables dépendante et indépendantes varient dans l'espace (en d'autres termes à travers les entités spatiales du jeu de données). Cela contrevient ainsi à l'hypothèse de l’homogénéité spatiale ou de stationnarité spatiale selon laquelle les coefficients du modèles doivent être constant dans l'espace.
+L’hétérogénéité ou la non-stationnarité (***spatial heterogeneity*** ou ***nonstationarity***) se manifeste quand les relations entre les variables dépendante et indépendantes varient dans l'espace (en d'autres termes à travers les entités spatiales du jeu de données). Cela contrevient ainsi à l'hypothèse de l’homogénéité spatiale ou de stationnarité spatiale selon laquelle les coefficients du modèle doivent être constant dans l'espace.
 
 ::: bloc_aller_loin
 ::: bloc_aller_loin-header
@@ -1616,7 +1616,7 @@ render_quizz(Chap01Quiz)
 ::: bloc_exercice-header
 ::: bloc_exercice-icon
 :::
-**Exercice 2.** Matrice de contiguïté selon partage d'un segment et I de Moran
+**Exercice 2.** Matrice de contiguïté selon le partage d'un segment et le I de Moran
 :::
 ::: bloc_exercice-body
 ```{r}
@@ -1626,9 +1626,9 @@ render_quizz(Chap01Quiz)
 #| eval: false
 load("data/Lyon.Rdata")
 library(spdep)
-## Matrice de contiguïté selon le partage d'un nœud (Queen)
+## Matrice de contiguïté selon le partage d’un nœud (Queen)
 à compléter
-# I de Moran sur la variable Lden elon l’hypothèse de la normalité
+# I de Moran sur la variable Lden selon l’hypothèse de la normalité
 à compléter)
 # I de Moran sur la variable Lden selon la normalité selon l’hypothèse de la randomisation
 à compléter

@@ -19,11 +19,11 @@ Dans le [chapitre @sec-chap04], nous avons présenté les trois formes classique
 
 À la fin de ce chapitre, vous devriez être en mesure de : 
 
--   Comprendre pourquoi utiliser différentes extensions de la GWR (GWR-mixte, MGWR, GTWR et MGWR-SAR).
--   Assimiler les principes fondamentaux de ces différentes extensions de la GWR.
--   Appréhender les différentes extensions de la GWR (GWR-mixte, MGWR, GTWR et MGWR-SAR).
--   Analyser les résultats produits par ces différentes extensions.
--   Mettre en pratique ces extensions de la GWR dans R.
+-   comprendre pourquoi utiliser différentes extensions de la GWR (GWR-mixte, MGWR, GTWR et MGWR-SAR);
+-   assimiler les principes fondamentaux de ces différentes extensions de la GWR;
+-   appréhender les différentes extensions de la GWR (GWR-mixte, MGWR, GTWR et MGWR-SAR);
+-   analyser les résultats produits par ces différentes extensions;
+-   mettre en pratique ces extensions de la GWR dans R.
 :::
 :::
 

@@ -12,10 +12,10 @@ Dans ce chapitre, nous abordons une extension des modèles autorégressifs, soit
 ::: bloc_objectif-body
 À la fin de ce chapitre, vous devriez être en mesure de : 
 
--   Comprendre les différentes formulations des modèles spatiaux par panel (SLPDM, SEPDM et SEPDM).
--   Assimiler les principes fondamentaux de ces différentes modèles.
--   Identifier le modèle spatial par panel le plus approprié (SLPDM, SEPDM et SEPDM).
--   Analyser les résultats produits par ces différentes modèles.
+-   comprendre les différentes formulations des modèles spatiaux par panel (SLPDM, SEPDM et SEPDM);
+-   assimiler les principes fondamentaux de ces différentes modèles;
+-   identifier le modèle spatial par panel le plus approprié (SLPDM, SEPDM et SEPDM);
+-   analyser les résultats produits par ces différentes modèles;
 -   Mettre en pratique ces modèles spatiaux par panel dans R.
 :::
 :::
