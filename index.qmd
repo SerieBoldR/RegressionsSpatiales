@@ -11,9 +11,9 @@
 
 **Révision linguistique :** Denise Latreille.
 
-© Philippe Apparicio, Jean Dubé, Jérémy Gelb et Joan Carles Martori.
+© Philippe Apparicio, Jérémy Gelb, Jean Dubé et Joan Carles Martori.
 
-**Pour citer cet ouvrage :** Apparicio P., J. Dubé, J. Gelb et J. C. Martori (2025). *Méthodes de régression spatiale : un grand bol d'R*. Université Laval et Université de Sherbrooke. fabriqueREL. Licence CC BY-SA. <br /> <br />
+**Pour citer cet ouvrage :** Apparicio P., J. Gelb, J. Dubé et J. C. Martori (2025). *Méthodes de régression spatiale : un grand bol d'R*. Université Laval et Université de Sherbrooke. fabriqueREL. Licence CC BY-SA. <br /> <br />
 
 ![](images/introduction/CouvertureP2.png){width="80%" fig-align="left"}
 
@@ -37,7 +37,7 @@ Les logiciels libres sont aujourd'hui très répandus. Comparativement aux logic
 
 La licence de ce livre, CC BY-SA (@fig-Licence), oblige donc à :
 
--   Attribuer la paternité de l'auteur dans vos versions dérivées, ainsi qu'une mention concernant les grandes modifications apportées, en utilisant la formulation suivante : Apparicio Philippe et Jérémy Gelb (2024). *Méthodes d'analyses spatiales : un grand bol d'R*. Université de Sherbrooke. fabriqueREL. Licence CC BY-SA.
+-   Attribuer la paternité de l'auteur dans vos versions dérivées, ainsi qu'une mention concernant les grandes modifications apportées, en utilisant la formulation suivante : Apparicio P., J. Gelb, J. Dubé et J. C. Martori (2025). *Méthodes de régression spatiale : un grand bol d'R*. Université Laval et Université de Sherbrooke. fabriqueREL. Licence CC BY-SA.
 
 -   Utiliser la même licence ou une licence similaire à toutes versions dérivées.
 

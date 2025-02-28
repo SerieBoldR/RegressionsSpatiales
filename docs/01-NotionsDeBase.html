@@ -282,7 +282,7 @@ window.Quarto = {
   </ul>
 </li>
   <li>
-<a href="#sec-012" id="toc-sec-012" class="nav-link" data-scroll-target="#sec-012"><span class="header-section-number">1.2</span> Matrices des pondérations spatiales</a>
+<a href="#sec-012" id="toc-sec-012" class="nav-link" data-scroll-target="#sec-012"><span class="header-section-number">1.2</span> Matrices des pondération spatiale</a>
   <ul class="collapse">
 <li><a href="#sec-0121" id="toc-sec-0121" class="nav-link" data-scroll-target="#sec-0121"><span class="header-section-number">1.2.1</span> Matrices de contiguïté</a></li>
   <li><a href="#sec-0122" id="toc-sec-0122" class="nav-link" data-scroll-target="#sec-0122"><span class="header-section-number">1.2.2</span> Matrices de proximité</a></li>
@@ -340,7 +340,7 @@ window.Quarto = {
 <div class="bloc_objectif-body">
 <p>À la fin de ce chapitre, vous devriez être en mesure de&nbsp;:</p>
 <ul>
-<li>connaître les principales matrices de pondérations spatiales;</li>
+<li>connaître les principales matrices de pondération spatiale;</li>
 <li>maîtriser les notions d’autocorrélation spatiale, de dépendance spatiale et d’hétérogénéité spatiale;</li>
 <li>comprendre la notion de variable spatialement décalée;</li>
 <li>calculer une mesure d’autocorrélation spatiale globale (<em>I</em> de Moran) dans R;</li>
@@ -682,13 +682,13 @@ Figure&nbsp;1.2: Parts modales du transport en commun et de l’automobile (prop
 </section><section id="sec-0115" class="level3" data-number="1.1.5"><h3 data-number="1.1.5" class="anchored" data-anchor-id="sec-0115">
 <span class="header-section-number">1.1.5</span> Jeu de données sur la densité pour six régions métropolitaines espagnoles</h3>
 </section></section><section id="sec-012" class="level2" data-number="1.2"><h2 data-number="1.2" class="anchored" data-anchor-id="sec-012">
-<span class="header-section-number">1.2</span> Matrices des pondérations spatiales</h2>
+<span class="header-section-number">1.2</span> Matrices des pondération spatiale</h2>
 <div class="bloc_objectif">
 <div class="bloc_objectif-header">
 <div class="bloc_objectif-icon">
 
 </div>
-<p><strong>Utilité des matrices de pondérations spatiales</strong></p>
+<p><strong>Utilité des matrices de pondération spatiale</strong></p>
 </div>
 <div class="bloc_objectif-body">
 <p>Ces matrices permettent de définir les relations spatiales entre les entités spatiales d’une couche géographique, et plus spécifiquement la manière de mesurer leur relation d’adjacence (voisinage) ou de proximité (distance). Nous verrons qu’elles sont largement utilisées dans les régressions spatiales, notamment dans les modèles d’économétrie spatiale abordés dans la seconde partie du livre. Elles sont aussi nécessaires au calcul des mesures d’autocorrélation globales ou locales (<a href="#sec-0142" class="quarto-xref">section&nbsp;<span>1.4.2</span></a>) et à la construction des variables spatialement décalées (<a href="#sec-013" class="quarto-xref">section&nbsp;<span>1.3</span></a>).</p>
@@ -1322,13 +1322,13 @@ W 506 256036 506 204.0416 2099.405</code></pre>
 </div>
 </section><section id="sec-01242" class="level4" data-number="1.2.4.2"><h4 data-number="1.2.4.2" class="anchored" data-anchor-id="sec-01242">
 <span class="header-section-number">1.2.4.2</span> Matrices de pondération spatiale selon la contiguïté et un ordre d’adjacence</h4>
-<p>Le code ci-dessous génère les matrices de pondération spatiale standardisées en ligne selon les ordres d’adjacence de 1 à 3.</p>
+<p>Le code ci-dessous génère les matrices de pondération spatiale standardisée en ligne selon les ordres d’adjacence de 1 à 3.</p>
 <div class="cell">
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Création des matrices d'ordre 1, 2 et 3</span></span>
 <span><span class="va">nb_queen1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/poly2nb.html">poly2nb</a></span><span class="op">(</span><span class="va">LyonIris</span>, queen <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">nb_queen2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nblag.html">nblag_cumul</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nblag.html">nblag</a></span><span class="op">(</span><span class="va">nb_queen1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">nb_queen3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nblag.html">nblag_cumul</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nblag.html">nblag</a></span><span class="op">(</span><span class="va">nb_queen1</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co"># Création des matrices de pondération spatiale standardisées en ligne</span></span>
+<span><span class="co"># Création des matrices de pondération spatiale standardisée en ligne</span></span>
 <span><span class="va">w_queen1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">nb_queen1</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
 <span><span class="va">w_queen2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">nb_queen2</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
 <span><span class="va">w_queen3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">nb_queen3</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1369,7 +1369,7 @@ W 506 256036 506 204.0416 2099.405</code></pre>
 <span><span class="va">inv_distances</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">distances</span><span class="op">!=</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">/</span><span class="va">distances</span>, <span class="va">distances</span><span class="op">)</span></span>
 <span><span class="va">inv_distances2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">distances</span><span class="op">!=</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">/</span><span class="va">distances</span><span class="op">^</span><span class="fl">2</span>, <span class="va">distances</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">## Matrices de pondération spatiale standardisées en ligne</span></span>
+<span><span class="co">## Matrices de pondération spatiale standardisée en ligne</span></span>
 <span><span class="va">w_inv_distances</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/mat2listw.html">mat2listw</a></span><span class="op">(</span><span class="va">inv_distances</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
 <span><span class="va">w_inv_distances2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/mat2listw.html">mat2listw</a></span><span class="op">(</span><span class="va">inv_distances2</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1386,7 +1386,7 @@ W 506 256036 506 204.0416 2099.405</code></pre>
 <p>Pour intégrer une distance réticulaire, vous devez la calculer, soit <a href="https://serieboldr.github.io/MethodesAnalyseSpatiale/01-ManipulationDonneesSpatiales.html">dans R</a> <span class="citation" data-cites="RBoldAirMethodesAnalysesSpatiales">(<a href="references.html#ref-RBoldAirMethodesAnalysesSpatiales" role="doc-biblioref">Apparicio et Gelb 2024</a>)</span>, soit dans un logiciel de système d’information géographique (QGIS ou ArcGIS&nbsp;Pro avec l’extension <em>Network Analyst</em> par exemple) et l’importer dans R. Le reste du code sera alors identique.</p>
 </div>
 </div>
-<p>Nous avons vu qu’il est possible d’utiliser une matrice de distance en fixant une distance maximale au-delà de laquelle les pondérations sont mises à 0 (<a href="#eq-MatriceDistance2" class="quarto-xref">équation&nbsp;<span>1.8</span></a>). Le code ci-dessous permet de créer des matrices de pondération standardisées avec l’inverse de la distance et l’inverse de la distance au carré avec des seuils de 2500 et de 5000&nbsp;mètres.</p>
+<p>Nous avons vu qu’il est possible d’utiliser une matrice de distance en fixant une distance maximale au-delà de laquelle les pondérations sont mises à 0 (<a href="#eq-MatriceDistance2" class="quarto-xref">équation&nbsp;<span>1.8</span></a>). Le code ci-dessous permet de créer des matrices de pondération standardisée avec l’inverse de la distance et l’inverse de la distance au carré avec des seuils de 2500 et de 5000&nbsp;mètres.</p>
 <div class="cell">
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Coordonnées des centroïdes des entités spatiales</span></span>
 <span><span class="va">coords</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html">st_coordinates</a></span><span class="op">(</span><span class="va">iris_centroides</span><span class="op">)</span></span>
@@ -1401,7 +1401,7 @@ W 506 256036 506 204.0416 2099.405</code></pre>
 <span><span class="va">inv_distances2_2500m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">distances</span><span class="op">&lt;=</span><span class="fl">2500</span> <span class="op">&amp;</span> <span class="va">distances</span><span class="op">!=</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">/</span><span class="va">distances</span><span class="op">^</span><span class="fl">2</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="va">inv_distances2_5000m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">distances</span><span class="op">&lt;=</span><span class="fl">5000</span> <span class="op">&amp;</span> <span class="va">distances</span><span class="op">!=</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">/</span><span class="va">distances</span><span class="op">^</span><span class="fl">2</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">## Matrices de pondération spatiale standardisées en ligne</span></span>
+<span><span class="co">## Matrices de pondération spatiale standardisée en ligne</span></span>
 <span><span class="va">w_inv_distances_1000</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/mat2listw.html">mat2listw</a></span><span class="op">(</span><span class="va">inv_distances_1000m</span>, style <span class="op">=</span> <span class="st">"W"</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">w_inv_distances_2500</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/mat2listw.html">mat2listw</a></span><span class="op">(</span><span class="va">inv_distances_2500m</span>, style <span class="op">=</span> <span class="st">"W"</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">w_inv_distances_5000</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/mat2listw.html">mat2listw</a></span><span class="op">(</span><span class="va">inv_distances_5000m</span>, style <span class="op">=</span> <span class="st">"W"</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -1522,7 +1522,7 @@ W 438 191844 438 203.0076 1789.585</code></pre>
 <span><span class="co"># Inverse de la distance au carré</span></span>
 <span><span class="va">inv_distances2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">distances</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="va">x</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">## Matrices de pondération spatiale standardisées en ligne</span></span>
+<span><span class="co">## Matrices de pondération spatiale standardisée en ligne</span></span>
 <span><span class="va">w_inv_distances</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">voisins_distmax</span>, glist <span class="op">=</span> <span class="va">inv_distances</span>, style <span class="op">=</span> <span class="st">"W"</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">w_inv_distances2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">voisins_distmax</span>, glist <span class="op">=</span> <span class="va">inv_distances2</span>, style <span class="op">=</span> <span class="st">"W"</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1539,7 +1539,7 @@ W 438 191844 438 203.0076 1789.585</code></pre>
 <span><span class="va">k4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/knn2nb.html">knn2nb</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/knearneigh.html">knearneigh</a></span><span class="op">(</span><span class="va">coords</span>, k <span class="op">=</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">k5</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/knn2nb.html">knn2nb</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/knearneigh.html">knearneigh</a></span><span class="op">(</span><span class="va">coords</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">## Matrices de pondération spatiale standardisées en ligne</span></span>
+<span><span class="co">## Matrices de pondération spatiale standardisée en ligne</span></span>
 <span><span class="va">w_k2</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">k2</span>, zero.policy <span class="op">=</span> <span class="cn">FALSE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
 <span><span class="va">w_k3</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">k3</span>, zero.policy <span class="op">=</span> <span class="cn">FALSE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
 <span><span class="va">w_k4</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">k4</span>, zero.policy <span class="op">=</span> <span class="cn">FALSE</span>, style <span class="op">=</span> <span class="st">"W"</span><span class="op">)</span></span>
@@ -1643,7 +1643,7 @@ Figure&nbsp;1.9: Illustration du calcul d’une variable spatialement décalée
 </div>
 </div>
 </div>
-<p>La fonction <code>lag.listw</code> du <em>package</em> <code>spdep</code> permet de créer une variable spatialement décalée en spécifiant la matrice de pondération spatiale et un vecteur numérique&nbsp;: <code>wzx &lt;- lag.listw(listW, zx)</code>. Dans la syntaxe ci-dessous, nous créons une version spatiale décalée de la variable <em>dioxyde d’azote</em> (<code>NO2</code>) de la couche <code>sf</code> <em>LyonIris</em> avec une matrice de pondérations spatiales standardisées en ligne (définie selon la contiguïté avec le partage d’un segment, <code>w_rook</code>), puis nous cartographions les deux versions de la variable (initiale et spatialement décalée) à la <a href="#fig-Chap01FigureVariableSpatialementDecalee2" class="quarto-xref">figure&nbsp;<span>1.10</span></a>.</p>
+<p>La fonction <code>lag.listw</code> du <em>package</em> <code>spdep</code> permet de créer une variable spatialement décalée en spécifiant la matrice de pondération spatiale et un vecteur numérique&nbsp;: <code>wzx &lt;- lag.listw(listW, zx)</code>. Dans la syntaxe ci-dessous, nous créons une version spatiale décalée de la variable <em>dioxyde d’azote</em> (<code>NO2</code>) de la couche <code>sf</code> <em>LyonIris</em> avec une matrice de pondération spatiale standardisée en ligne (définie selon la contiguïté avec le partage d’un segment, <code>w_rook</code>), puis nous cartographions les deux versions de la variable (initiale et spatialement décalée) à la <a href="#fig-Chap01FigureVariableSpatialementDecalee2" class="quarto-xref">figure&nbsp;<span>1.10</span></a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Chargement des données</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/">tmap</a></span><span class="op">)</span></span>
@@ -2161,7 +2161,7 @@ Tableau&nbsp;1.5: Résultats du I de Moran selon les différentes matrices
 </figure>
 </div>
 </div>
-<p><strong>Quelle est la matrice de pondérations spatiales avec laquelle la dépendance spatiale de la variable est la plus forte?</strong></p>
+<p><strong>Quelle est la matrice de pondération spatiale avec laquelle la dépendance spatiale de la variable est la plus forte?</strong></p>
 <p>Pour la trouver, nous construisons un graphique avec les valeurs du <em>I</em> de Moran triées par ordre décroissant. La valeur la plus forte est obtenue avec la matrice de contiguïté selon le partage d’un segment.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
@@ -2334,7 +2334,7 @@ x_{N1} &amp; x_{N2} &amp; x_{N3} &amp; \cdots &amp; x_{Nk} &amp; \cdots &amp; x_
 <p><strong>Régression linéaire multiple</strong></p>
 </div>
 <div class="bloc_aller_loin-body">
-<p>Afin de bien maîtriser les principes de base et les hypothèses de la régression linéaire multiple, de mesurer la qualité d’ajustement du modèle, d’introduire des variables explicatives particulières (variable qualitative dichotomique ou polytomique, variable d’interaction, etc.), d’interpréter les résultats d’un modèle de régression et de la mettre en œuvre dans R, nous vous invitons à lire le <a href="https://serieboldr.github.io/MethodesQuantitatives/07-regressionlineaire.html">chapitre suivant</a> <span class="citation" data-cites="RBoldAirMethodesQuanti">(<a href="references.html#ref-RBoldAirMethodesQuanti" role="doc-biblioref">Apparicio et Gelb 2022</a>)</span>.</p>
+<p>Afin de bien maîtriser les principes de base et les hypothèses de la régression linéaire multiple, de mesurer la qualité d’ajustement du modèle, d’introduire des variables explicatives particulières (variable qualitative dichotomique ou polytomique, variable d’interaction, etc.), d’interpréter les résultats d’un modèle de régression et de le mettre en œuvre dans R, nous vous invitons à lire le <a href="https://serieboldr.github.io/MethodesQuantitatives/07-regressionlineaire.html">chapitre suivant</a> <span class="citation" data-cites="RBoldAirMethodesQuanti">(<a href="references.html#ref-RBoldAirMethodesQuanti" role="doc-biblioref">Apparicio et Gelb 2022</a>)</span>.</p>
 </div>
 </div>
 </section><section id="sec-016" class="level2" data-number="1.6"><h2 data-number="1.6" class="anchored" data-anchor-id="sec-016">
@@ -2440,7 +2440,7 @@ Figure&nbsp;1.13: Cartographie des résidus d’un modèle MCO
 </div>
 <div class="bloc_aller_loin-body">
 <p><strong>Les modèles d’économétrie spatiale</strong> (<a href="02-ModelesEconometrieSpatiale.html" class="quarto-xref">chapitre&nbsp;<span>2</span></a> et <a href="03-ModelesSpatiauxPanel.html" class="quarto-xref">chapitre&nbsp;<span>3</span></a>) sont des solutions particulièrement intéressantes pour remédier au problème de dépendance spatiale d’un modèle et obtenir des coefficients de régression non biaisés.</p>
-<p><strong>Les modèles linéaires généralisés et ceux avec filtrage spatial</strong> (<a href="07-SEM.html" class="quarto-xref">chapitre&nbsp;<span>7</span></a>) permettent de capturer les tendances spatiales en résumant la matrice de pondérations spatiales <span class="math inline">\(W\)</span>.</p>
+<p><strong>Les modèles linéaires généralisés et ceux avec filtrage spatial</strong> (<a href="07-SEM.html" class="quarto-xref">chapitre&nbsp;<span>7</span></a>) permettent de capturer les tendances spatiales en résumant la matrice de pondération spatiale <span class="math inline">\(W\)</span>.</p>
 </div>
 </div>
 </section><section id="sec-0172" class="level3" data-number="1.6.2"><h3 data-number="1.6.2" class="anchored" data-anchor-id="sec-0172">

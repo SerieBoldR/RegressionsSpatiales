@@ -308,7 +308,7 @@ window.Quarto = {
   
 
 
-</header><p>Une autre technique utilisée pour ajouter l’espace dans un modèle a été proposée par Daniel Griffith <span class="citation" data-cites="griffith2019spatial">(<a href="references.html#ref-griffith2019spatial" role="doc-biblioref">2019</a>)</span> et est connue sous le nom du filtrage spatial (<em>spatial filtering</em>). Cette technique est très flexible, car elle s’applique à n’importe quel type de modèle GLM, GLMM et GAM. L’approche est relativement simple&nbsp;: elle consiste à ajouter dans le modèle un ensemble de variables supplémentaires dont le rôle est de capturer des tendances spatiales qui autrement seraient présentes dans les résidus. Ces variables supplémentaires sont appelées des vecteurs propres spatiaux (<em>spatial eigenvectors</em> en anglais, SEV) et sont obtenurs à partir de la matrice de pondérations spatiales décrivant l’espace de nos données. Plus exactement, les SEV sont obtenus en décomposant la matrice spatiale de la même manière que nous décomposons la variance d’un jeu de données lorsque nous réalisons une analyse en composantes principales (ACP). Pour un rappel sur l’ACP, vous pouvez vous référer au <a href="https://serieboldr.github.io/MethodesQuantitatives/12-AnalysesFactorielles.html#sec-122">chapitre sur les analyses factorielles</a> <span class="citation" data-cites="RBoldAirMethodesQuanti">(<a href="references.html#ref-RBoldAirMethodesQuanti" role="doc-biblioref">Apparicio et Gelb 2022</a>)</span>. Ces vecteurs propres sont aussi appelés <em>Moran eigenvectors</em> (MEM).</p>
+</header><p>Une autre technique utilisée pour ajouter l’espace dans un modèle a été proposée par Daniel Griffith <span class="citation" data-cites="griffith2019spatial">(<a href="references.html#ref-griffith2019spatial" role="doc-biblioref">2019</a>)</span> et est connue sous le nom du filtrage spatial (<em>spatial filtering</em>). Cette technique est très flexible, car elle s’applique à n’importe quel type de modèle GLM, GLMM et GAM. L’approche est relativement simple&nbsp;: elle consiste à ajouter dans le modèle un ensemble de variables supplémentaires dont le rôle est de capturer des tendances spatiales qui autrement seraient présentes dans les résidus. Ces variables supplémentaires sont appelées des vecteurs propres spatiaux (<em>spatial eigenvectors</em> en anglais, SEV) et sont obtenurs à partir de la matrice de pondération spatiale décrivant l’espace de nos données. Plus exactement, les SEV sont obtenus en décomposant la matrice spatiale de la même manière que nous décomposons la variance d’un jeu de données lorsque nous réalisons une analyse en composantes principales (ACP). Pour un rappel sur l’ACP, vous pouvez vous référer au <a href="https://serieboldr.github.io/MethodesQuantitatives/12-AnalysesFactorielles.html#sec-122">chapitre sur les analyses factorielles</a> <span class="citation" data-cites="RBoldAirMethodesQuanti">(<a href="references.html#ref-RBoldAirMethodesQuanti" role="doc-biblioref">Apparicio et Gelb 2022</a>)</span>. Ces vecteurs propres sont aussi appelés <em>Moran eigenvectors</em> (MEM).</p>
 <div class="bloc_objectif">
 <div class="bloc_objectif-header">
 <div class="bloc_objectif-icon">
@@ -409,7 +409,7 @@ Figure&nbsp;7.2: Représentation de quatre vecteurs propres issue d’une matric
 </div>
 </div>
 </div>
-<p>Rappelons ici que ces vecteurs sont obtenus pas décomposition de la matrice de pondération spatiale. Il ne s’agit pas de données qui ont été collectées sur le territoire d’étude. Ils représentent des géographies possibles qui peuvent émerger de notre matrice de pondérations spatiales <span class="math inline">\(W\)</span>.</p>
+<p>Rappelons ici que ces vecteurs sont obtenus pas décomposition de la matrice de pondération spatiale. Il ne s’agit pas de données qui ont été collectées sur le territoire d’étude. Ils représentent des géographies possibles qui peuvent émerger de notre matrice de pondération spatiale <span class="math inline">\(W\)</span>.</p>
 </section><section id="sec-072" class="level2" data-number="7.2"><h2 data-number="7.2" class="anchored" data-anchor-id="sec-072">
 <span class="header-section-number">7.2</span> Filtrage spatial</h2>
 <p>Dans un modèle utilisant l’approche du filtrage spatiale, l’idée est d’ajouter dans l’équation une sélection de vecteurs spatiaux permettant de réduire l’autocorrélation spatiale dans les résidus. Pour chaque vecteur spatial ajouté au modèle, un coefficient est ajusté. La somme des vecteurs spatiaux multipliés par leurs coefficients respectifs est donc un terme dans le modèle tentant de capturer des tendances spatiales plus ou moins complexes qui autrement auraient fait partie des résidus.</p>
@@ -1076,7 +1076,7 @@ data:  residuals(res)
 weights: listw  
 number of simulations + 1: 1000 
 
-statistic = 0.040547, observed rank = 978, p-value = 0.022
+statistic = 0.036457, observed rank = 973, p-value = 0.027
 alternative hypothesis: greater</code></pre>
 </div>
 <div class="cell-output-display">

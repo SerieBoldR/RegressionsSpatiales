@@ -15,7 +15,7 @@ Certaines sections de ce chapitre sont adaptées du manuel suivant : Apparicio 
 ::: bloc_objectif-body
 À la fin de ce chapitre, vous devriez être en mesure de :
 
--   connaître les principales matrices de pondérations spatiales;
+-   connaître les principales matrices de pondération spatiale;
 -   maîtriser les notions d'autocorrélation spatiale, de dépendance spatiale et d'hétérogénéité spatiale;
 -   comprendre la notion de variable spatialement décalée;
 -   calculer une mesure d'autocorrélation spatiale globale (*I* de Moran) dans R;
@@ -243,14 +243,14 @@ load("data/Density.RData")
 load("data/ProbitData.RData")
 ```
 
-## Matrices des pondérations spatiales {#sec-012}
+## Matrices des pondération spatiale {#sec-012}
 
 ::: bloc_objectif
 ::: bloc_objectif-header
 ::: bloc_objectif-icon
 :::
 
-**Utilité des matrices de pondérations spatiales**
+**Utilité des matrices de pondération spatiale**
 :::
 
 ::: bloc_objectif-body
@@ -627,7 +627,7 @@ summary(w_rook)
 
 #### Matrices de pondération spatiale selon la contiguïté et un ordre d'adjacence {#sec-01242}
 
-Le code ci-dessous génère les matrices de pondération spatiale standardisées en ligne selon les ordres d'adjacence de 1 à 3.
+Le code ci-dessous génère les matrices de pondération spatiale standardisée en ligne selon les ordres d'adjacence de 1 à 3.
 
 ```{r}
 #| echo: true
@@ -637,7 +637,7 @@ Le code ci-dessous génère les matrices de pondération spatiale standardisées
 nb_queen1 <- poly2nb(LyonIris, queen = TRUE)
 nb_queen2 <- nblag_cumul(nblag(nb_queen1, 2))
 nb_queen3 <- nblag_cumul(nblag(nb_queen1, 3))
-# Création des matrices de pondération spatiale standardisées en ligne
+# Création des matrices de pondération spatiale standardisée en ligne
 w_queen1 <- nb2listw(nb_queen1, zero.policy = TRUE, style = "W")
 w_queen2 <- nb2listw(nb_queen2, zero.policy = TRUE, style = "W")
 w_queen3 <- nb2listw(nb_queen3, zero.policy = TRUE, style = "W")
@@ -690,7 +690,7 @@ diag(distances) <- 0
 inv_distances <- ifelse(distances!=0, 1/distances, distances)
 inv_distances2 <- ifelse(distances!=0, 1/distances^2, distances)
 
-## Matrices de pondération spatiale standardisées en ligne
+## Matrices de pondération spatiale standardisée en ligne
 w_inv_distances  <- mat2listw(inv_distances, style = "W")
 w_inv_distances2 <- mat2listw(inv_distances2, style = "W")
 ```
@@ -712,7 +712,7 @@ Pour intégrer une distance réticulaire, vous devez la calculer, soit [dans R](
 :::
 :::
 
-Nous avons vu qu'il est possible d'utiliser une matrice de distance en fixant une distance maximale au-delà de laquelle les pondérations sont mises à 0 (@eq-MatriceDistance2). Le code ci-dessous permet de créer des matrices de pondération standardisées avec l'inverse de la distance et l'inverse de la distance au carré avec des seuils de 2500 et de 5000 mètres.
+Nous avons vu qu'il est possible d'utiliser une matrice de distance en fixant une distance maximale au-delà de laquelle les pondérations sont mises à 0 (@eq-MatriceDistance2). Le code ci-dessous permet de créer des matrices de pondération standardisée avec l'inverse de la distance et l'inverse de la distance au carré avec des seuils de 2500 et de 5000 mètres.
 
 ```{r}
 #| echo: true
@@ -731,7 +731,7 @@ inv_distances_5000m  <- ifelse(distances<=5000 & distances!=0, 1/distances, 0)
 inv_distances2_2500m <- ifelse(distances<=2500 & distances!=0, 1/distances^2, 0)
 inv_distances2_5000m <- ifelse(distances<=5000 & distances!=0, 1/distances^2, 0)
 
-## Matrices de pondération spatiale standardisées en ligne
+## Matrices de pondération spatiale standardisée en ligne
 w_inv_distances_1000 <- mat2listw(inv_distances_1000m, style = "W", zero.policy = TRUE)
 w_inv_distances_2500 <- mat2listw(inv_distances_2500m, style = "W", zero.policy = TRUE)
 w_inv_distances_5000 <- mat2listw(inv_distances_5000m, style = "W", zero.policy = TRUE)
@@ -799,7 +799,7 @@ inv_distances <- lapply(distances, function(x) (1/x))
 # Inverse de la distance au carré
 inv_distances2 <- lapply(distances, function(x) (1/x^2))
 
-## Matrices de pondération spatiale standardisées en ligne
+## Matrices de pondération spatiale standardisée en ligne
 w_inv_distances  <- nb2listw(voisins_distmax, glist = inv_distances, style = "W", zero.policy = TRUE)
 w_inv_distances2 <- nb2listw(voisins_distmax, glist = inv_distances2, style = "W", zero.policy = TRUE)
 ```
@@ -821,7 +821,7 @@ k3 <- knn2nb(knearneigh(coords, k = 3))
 k4 <- knn2nb(knearneigh(coords, k = 4))
 k5 <- knn2nb(knearneigh(coords, k = 5))
 
-## Matrices de pondération spatiale standardisées en ligne
+## Matrices de pondération spatiale standardisée en ligne
 w_k2 <-  nb2listw(k2, zero.policy = FALSE, style = "W")
 w_k3 <-  nb2listw(k3, zero.policy = FALSE, style = "W")
 w_k4 <-  nb2listw(k4, zero.policy = FALSE, style = "W")
@@ -928,7 +928,7 @@ save(w_queen, w_rook,
 :::
 :::
 
-La fonction `lag.listw` du *package* `spdep` permet de créer une variable spatialement décalée en spécifiant la matrice de pondération spatiale et un vecteur numérique : `wzx <- lag.listw(listW, zx)`. Dans la syntaxe ci-dessous, nous créons une version spatiale décalée de la variable *dioxyde d'azote* (`NO2`) de la couche `sf` *LyonIris* avec une matrice de pondérations spatiales standardisées en ligne (définie selon la contiguïté avec le partage d'un segment, `w_rook`), puis nous cartographions les deux versions de la variable (initiale et spatialement décalée) à la @fig-Chap01FigureVariableSpatialementDecalee2.
+La fonction `lag.listw` du *package* `spdep` permet de créer une variable spatialement décalée en spécifiant la matrice de pondération spatiale et un vecteur numérique : `wzx <- lag.listw(listW, zx)`. Dans la syntaxe ci-dessous, nous créons une version spatiale décalée de la variable *dioxyde d'azote* (`NO2`) de la couche `sf` *LyonIris* avec une matrice de pondération spatiale standardisée en ligne (définie selon la contiguïté avec le partage d'un segment, `w_rook`), puis nous cartographions les deux versions de la variable (initiale et spatialement décalée) à la @fig-Chap01FigureVariableSpatialementDecalee2.
 
 ```{r}
 #| echo: true 
@@ -1301,7 +1301,7 @@ kableExtra::pack_rows(my_table,
   )
 ```
 
-**Quelle est la matrice de pondérations spatiales avec laquelle la dépendance spatiale de la variable est la plus forte?**
+**Quelle est la matrice de pondération spatiale avec laquelle la dépendance spatiale de la variable est la plus forte?**
 
 Pour la trouver, nous construisons un graphique avec les valeurs du *I* de Moran triées par ordre décroissant. La valeur la plus forte est obtenue avec la matrice de contiguïté selon le partage d'un segment.
 
@@ -1495,7 +1495,7 @@ Ces effets sont habituellement l'essence de l'intérêt des modèles de régress
 :::
 
 ::: bloc_aller_loin-body
-Afin de bien maîtriser les principes de base et les hypothèses de la régression linéaire multiple, de mesurer la qualité d'ajustement du modèle, d'introduire des variables explicatives particulières (variable qualitative dichotomique ou polytomique, variable d'interaction, etc.), d'interpréter les résultats d'un modèle de régression et de la mettre en œuvre dans R, nous vous invitons à lire le [chapitre suivant](https://serieboldr.github.io/MethodesQuantitatives/07-regressionlineaire.html) [@RBoldAirMethodesQuanti].
+Afin de bien maîtriser les principes de base et les hypothèses de la régression linéaire multiple, de mesurer la qualité d'ajustement du modèle, d'introduire des variables explicatives particulières (variable qualitative dichotomique ou polytomique, variable d'interaction, etc.), d'interpréter les résultats d'un modèle de régression et de le mettre en œuvre dans R, nous vous invitons à lire le [chapitre suivant](https://serieboldr.github.io/MethodesQuantitatives/07-regressionlineaire.html) [@RBoldAirMethodesQuanti].
 :::
 :::
 
@@ -1574,7 +1574,7 @@ tm_shape(LyonIris)+
 ::: bloc_aller_loin-body
 **Les modèles d'économétrie spatiale** ([chapitre @sec-chap02] et [chapitre @sec-chap03]) sont des solutions particulièrement intéressantes pour remédier au problème de dépendance spatiale d'un modèle et obtenir des coefficients de régression non biaisés.
 
-**Les modèles linéaires généralisés et ceux avec filtrage spatial** ([chapitre @sec-chap07]) permettent de capturer les tendances spatiales en résumant la matrice de pondérations spatiales $W$.
+**Les modèles linéaires généralisés et ceux avec filtrage spatial** ([chapitre @sec-chap07]) permettent de capturer les tendances spatiales en résumant la matrice de pondération spatiale $W$.
 :::
 :::
 

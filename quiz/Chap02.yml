@@ -45,7 +45,7 @@
      - "Terme d'erreur"
   help: "Relisez au besoin la [section @sec-0215]."
 
-- label: "Quelle est la procédure popularisé par Luc Anselin pour discriminer entre les spécifications SAR, SEM et MCO?"
+- label: "Quelle est la procédure popularisée par Luc Anselin pour discriminer entre les spécifications SAR, SEM et MCO?"
   type: uc
   response: 1
   answers:

@@ -1,6 +1,6 @@
 # Filtrage spatial {#sec-chap07}
 
-Une autre technique utilisée pour ajouter l'espace dans un modèle a été proposée par Daniel Griffith [-@griffith2019spatial] et est connue sous le nom du filtrage spatial (*spatial filtering*). Cette technique est très flexible, car elle s'applique à n'importe quel type de modèle GLM, GLMM et GAM. L'approche est relativement simple : elle consiste à ajouter dans le modèle un ensemble de variables supplémentaires dont le rôle est de capturer des tendances spatiales qui autrement seraient présentes dans les résidus. Ces variables supplémentaires sont appelées des vecteurs propres spatiaux (*spatial eigenvectors* en anglais, SEV) et sont obtenurs à partir de la matrice de pondérations spatiales décrivant l'espace de nos données. Plus exactement, les SEV sont obtenus en décomposant la matrice spatiale de la même manière que nous décomposons la variance d'un jeu de données lorsque nous réalisons une analyse en composantes principales (ACP). Pour un rappel sur l'ACP, vous pouvez vous référer au [chapitre sur les analyses factorielles](https://serieboldr.github.io/MethodesQuantitatives/12-AnalysesFactorielles.html#sec-122) [@RBoldAirMethodesQuanti]. Ces vecteurs propres sont aussi appelés *Moran eigenvectors* (MEM).
+Une autre technique utilisée pour ajouter l'espace dans un modèle a été proposée par Daniel Griffith [-@griffith2019spatial] et est connue sous le nom du filtrage spatial (*spatial filtering*). Cette technique est très flexible, car elle s'applique à n'importe quel type de modèle GLM, GLMM et GAM. L'approche est relativement simple : elle consiste à ajouter dans le modèle un ensemble de variables supplémentaires dont le rôle est de capturer des tendances spatiales qui autrement seraient présentes dans les résidus. Ces variables supplémentaires sont appelées des vecteurs propres spatiaux (*spatial eigenvectors* en anglais, SEV) et sont obtenurs à partir de la matrice de pondération spatiale décrivant l'espace de nos données. Plus exactement, les SEV sont obtenus en décomposant la matrice spatiale de la même manière que nous décomposons la variance d'un jeu de données lorsque nous réalisons une analyse en composantes principales (ACP). Pour un rappel sur l'ACP, vous pouvez vous référer au [chapitre sur les analyses factorielles](https://serieboldr.github.io/MethodesQuantitatives/12-AnalysesFactorielles.html#sec-122) [@RBoldAirMethodesQuanti]. Ces vecteurs propres sont aussi appelés *Moran eigenvectors* (MEM).
 
 
 ::: bloc_objectif
@@ -179,7 +179,7 @@ carte4 <- tm_shape(data_mtl)+
 tmap_arrange(carte1, carte2, carte3, carte4, nrow = 2, ncol = 2)
 ```
 
-Rappelons ici que ces vecteurs sont obtenus pas décomposition de la matrice de pondération spatiale. Il ne s'agit pas de données qui ont été collectées sur le territoire d'étude. Ils représentent des géographies possibles qui peuvent émerger de notre matrice de pondérations spatiales $W$.
+Rappelons ici que ces vecteurs sont obtenus pas décomposition de la matrice de pondération spatiale. Il ne s'agit pas de données qui ont été collectées sur le territoire d'étude. Ils représentent des géographies possibles qui peuvent émerger de notre matrice de pondération spatiale $W$.
 
 ## Filtrage spatial {#sec-072}
 

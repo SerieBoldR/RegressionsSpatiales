@@ -27,14 +27,14 @@ book:
       url: https://www.usherbrooke.ca/recherche/fr/specialistes/details/philippe.apparicio
       affiliation: Département de géomatique appliquée<br>Université de Sherbrooke, Canada
       affiliation-url: https://www.usherbrooke.ca/geomatique/
-    - name: Jean Dubé
-      url: https://www.esad.ulaval.ca/personnel/professeurs/jean-dube
-      affiliation: ÉSAD<br>Université Laval, Canada
-      affiliation-url: https://www.ulaval.ca/
     - name: Jérémy Gelb
       url: https://scholar.google.com/citations?user=oFofDScAAAAJ&hl=fr
       affiliation: Autorité régionale de transport métropolitain<br>Montréal, Canada
       affiliation-url: https://www.artm.quebec/
+    - name: Jean Dubé
+      url: https://www.esad.ulaval.ca/personnel/professeurs/jean-dube
+      affiliation: ÉSAD<br>Université Laval, Canada
+      affiliation-url: https://www.ulaval.ca/
     - name: Joan Carles Martori
       url: https://mon.uvic.cat/dam/
       affiliation: Département d'économie<br>Université de Vic, Espagne

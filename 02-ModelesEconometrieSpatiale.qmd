@@ -13,7 +13,7 @@ Dans ce chapitre, nous décrivons uniquement les modèles économétriques spati
 ::: bloc_objectif-body
 À la fin de ce chapitre, vous devriez être en mesure de :
 
--   Saisir les raisons motivant le choix d'un modèle de régression (externalités, effets d’entraînement, effets mixtes, etc.);
+-   saisir les raisons motivant le choix d'un modèle de régression (externalités, effets d’entraînement, effets mixtes, etc.);
 -   comprendre les différents modèles spatiaux autorégressifs (SLX, SAR, SEM, SDM, SDEM, Manski);
 -   utiliser une stratégie pour choisir un modèle (tests du multiplicateur de Lagrange, tests du ratio de vraisemblance, critère d’information d’Akaike);
 -   vérifier si le modèle autorégressif a corrigé ou non la dépendance spatiale du modèle MCO;
@@ -50,17 +50,17 @@ Dans ce chapitre, nous décrivons uniquement les modèles économétriques spati
 :::
 
 ::: bloc_attention-body
-Avant de lire ce chapitre, il convient de bien maîtriser la régression linéaire multiple. Une brève récapitulation est proposée dans la [section @sec-015].
+Avant de lire ce chapitre, il convient de bien maîtriser la régression linéaire multiple. Une brève récapitulation est proposée à la [section @sec-015].
 :::
 :::
 
 ## Les différents modèles spatiaux autorégressifs {#sec-021}
 
-Selon Jean Dubé et Diègo Legros, quelques raisons expliquent « le choix d'un modèle autorégressif : la présence d'externalités, les effets d'entraînement, l'omission de variables importantes, la présence d'hétérogénéité spatiale des comportements, les effets mixtes » [-@dube2014econometrie, p. 120]. Les effets mixtes représentent une combinaison d'effets spatiaux. Dans tous les cas, la prise en compte des effets spatiaux passe par la spécification d'une matrice de pondérations spatiales, notée $W$ et de dimension ($N \times N$). Une synthèse des différents modèles spatiaux autorégressifs, décrits dans les sections suivantes, est présenté au @tbl-synthese, indiquant s'ils sont ou non mixtes, et le type d'effet qu'ils permettent de prendre en compte.
+Selon Jean Dubé et Diègo Legros, quelques raisons expliquent « le choix d'un modèle autorégressif : la présence d'externalités, les effets d'entraînement, l'omission de variables importantes, la présence d'hétérogénéité spatiale des comportements, les effets mixtes » [-@dube2014econometrie, p. 120]. Les effets mixtes représentent une combinaison d'effets spatiaux. Dans tous les cas, la prise en compte des effets spatiaux passe par la spécification d'une matrice de pondération spatiale, notée $W$ et de dimension ($N \times N$). Une synthèse des différents modèles spatiaux autorégressifs, décrits dans les sections suivantes, est présenté au @tbl-synthese, indiquant s'ils sont ou non mixtes, et le type d'effet qu'ils permettent de prendre en compte.
 
 ```{r}
 #| label: tbl-synthese
-#| tbl-cap: Synthèse des différentes modèles d'économétrie spatiale
+#| tbl-cap: Synthèse des différents modèles d'économétrie spatiale
 #| echo: false
 #| message: false
 #| warning: false
@@ -77,14 +77,14 @@ tab_synth <- data.frame(
               )
 rownames(tab_synth) <- c(
                          "Externalités spatiales",
-                         "Effets d'entraînement",
+                         "Effets d’entraînement",
                          "Omission de variables",
                          "Hétérogénéité spatiale",
                          "Effets mixtes",
                          "Application de la matrice de pondération spatiale"
                          )
 
-note <- "VD = Variable dépendante. VI = Variables indépendantes. TE = terme d'erreur."
+note <- "VD = Variable dépendante. VI = Variables indépendantes. TE = terme d’erreur."
 
 kbl(tab_synth,
 			row.names = TRUE,
@@ -101,11 +101,11 @@ kbl(tab_synth,
 
 #### Description du modèle SLX {#sec-02111}
 
-Dans un modèle SLX (***s**patial **l**ag of **X** model*), la dimension spatiale est intégrée par une possible influence des variables indépendantes des observations voisines, ou des caractéristiques des voisins. Cette spécification vise habituellement à intégrer ce que l'on identifie dans la littérature par les effets d'externalités spatiaux, c'est-à-dire capter l'influence des caractéristiques d'un voisin ($\mathbf{W}\Delta x_k$) sur le comportement d'intérêt d'une observation donnée ($\Delta \mathbf{y}$) (@fig-EffetMargSLX).
+Dans un modèle SLX (***s**patial **l**ag of **X** model*), la dimension spatiale est intégrée par une possible influence des variables indépendantes des observations voisines ou des caractéristiques des voisins. Cette spécification vise habituellement à intégrer ce que l'on identifie dans la littérature par les effets d'externalités spatiaux, c'est-à-dire capter l'influence des caractéristiques d'un voisin ($\mathbf{W}\Delta x_k$) sur le comportement d'intérêt d'une observation donnée ($\Delta \mathbf{y}$) (@fig-EffetMargSLX).
 
 ![Effets marginaux dans un modèle SLX](images/Chap02/EffetsMarginaux_SLX.jpg){#fig-EffetMargSLX width="22%" fig-align="center"}
 
-Deux principaux avantages sont liés à cette spécification. Premièrement, cette approche peut se faire simplement en ajoutant des variables à l'équation de départ, soit la spécification du PGD original. La création de variables indépendantes, supposées exogènes, décalées spatialement peut être effectuée de manière simple ([section @sec-013]). Deuxièmement, ce modèle peut être estimé par moindres carrés ordinaires (MCO), ce qui n'est pas possible avec les autres spécifications.
+Deux principaux avantages sont liés à cette spécification. Premièrement, cette approche peut se faire simplement en ajoutant des variables à l'équation de départ, soit la spécification du PGD original. La création de variables indépendantes, supposées exogènes, décalées spatialement peut être effectuée de manière simple ([section @sec-013]). Deuxièmement, ce modèle peut être estimé par la méthode des moindres carrés ordinaires (MCO), ce qui n'est pas possible avec les autres spécifications.
 
 ::: bloc_notes
 ::: bloc_notes-header
@@ -116,7 +116,7 @@ Deux principaux avantages sont liés à cette spécification. Premièrement, cet
 :::
 
 ::: bloc_notes-body
-Dans le premier chapitre ([section @sec-013]), nous avons vu comment calculer une variable spatialement décalée avec une matrice de pondérations spatiales (@fig-Chap01FigureVariableSpatialementDecalee). À titre de rappel, lorsque cette dernière est standardisée en ligne, elle correspond à la valeur moyenne dans les unités voisines ou proches (dépendamment si la matrice est définie selon la contiguïté ou la proximité).
+Dans le premier chapitre ([section @sec-013]), nous avons vu comment calculer une variable spatialement décalée avec une matrice de pondération spatiale (@fig-Chap01FigureVariableSpatialementDecalee). À titre de rappel, lorsque cette dernière est standardisée en ligne, elle correspond à la valeur moyenne dans les unités voisines ou proches (dépendamment si la matrice est définie selon la contiguïté ou la proximité).
 :::
 :::
 
@@ -128,23 +128,23 @@ $$ {#eq-SLX1}
 
 Où :
 
--   $\mathbf{y}$, est la variable dépendante, soit un vecteur de dimension $(N \times 1)$ où N est le nombre total d'observations mobilisées dans l'analyse, avec $i=1,2,\dots,N$.
+-   $\mathbf{y}$ est la variable dépendante, soit un vecteur de dimension $(N \times 1)$ où N est le nombre total d'observations mobilisées dans l'analyse, avec $i=1,2,\dots,N$.
 
 -   $\iota$ est un vecteur de dimension $(N \times 1)$ comportant uniquement des valeurs de 1.
 
--   $\mathbf{X}$, une matrice de dimension $(N \times K)$ renfermant l'ensemble des $K$ vecteurs de variables explicatives en plus d'une colonne de 1, dans la première colonne de la matrice, pour la constante, d'où $(K+1)$.
+-   $\mathbf{X}$ est une matrice de dimension $(N \times K)$ renfermant l'ensemble des $K$ vecteurs de variables explicatives en plus d'une colonne de 1, dans la première colonne de la matrice, pour la constante, d'où $(K+1)$.
 
 -   $\alpha$ est un scalaire identifiant l'ordonnée à l'origine.
 
--   $\beta$, est un vecteur de dimension $(K+1)$ qui renferme l'ensemble des coefficients de régression, pour les $K$ variables indépendantes et la constante.
+-   $\beta$ est un vecteur de dimension $(K+1)$ qui renferme l'ensemble des coefficients de régression, pour les $K$ variables indépendantes et la constante.
 
 -   $\mathbf{WX}$ est une matrice de variables indépendantes décalées spatialement, résultant d'une opération matricielle simple, soit $\mathbf{WX} = \mathbf{W} \times \mathbf{X}$, où $W$ est de dimension $(N×N)$, $\mathbf{X}$ est de dimension $(N \times K)$, d'où $\mathbf{WX}$ est de dimension $(N \times K)$, où chaque observation représente la moyenne des valeurs des variables indépendantes autour d'une observation donnée.
 
 -   $\theta$ est un vecteur de coefficients associés aux valeurs décalées spatialement des variables indépendantes (excluant la constante) de dimension $(K \times 1)$.
 
--   $\varepsilon$, un vecteur de dimension $(N \times 1)$ des termes d'erreurs.
+-   $\varepsilon$ est un vecteur de dimension $(N \times 1)$ des termes d'erreurs.
 
-Le PGD suggère que la valeur de chaque unité spatiale du modèle est ainsi expliquée à la fois par ses propres caractéristiques et celles de ses voisins ou des observations à proximité en fonction de la matrice de pondérations spatiales ($\mathbf{W}$).
+Le PGD suggère que la valeur de chaque unité spatiale du modèle est ainsi expliquée à la fois par ses propres caractéristiques et celles de ses voisins ou des observations à proximité en fonction de la matrice de pondération spatiale ($\mathbf{W}$).
 
 Une des particularités du modèle SLX est qu'il introduit une complexité dans l'interprétation des résultats et le calcul des effets marginaux puisque la variable $x_k$ apparaît à deux endroits dans le modèle : d'abord dans la matrice des variables indépendantes originales ($\mathbf{X}$) et ensuite dans la matrice de variables indépendantes décalées spatialement ($\mathbf{WX}$). Lorsque la matrice de pondérations est standardisée en ligne, le calcul des effets marginaux est alors donné par la dérivée partielle suivante :
 
@@ -152,11 +152,11 @@ $$
 \frac{\partial y}{\partial x_k} = \mathbf{I} \beta_k + \mathbf{W} \theta_k
 $$ {#eq-SLX2}
 
-Pour une matrice de pondérations standardisées en ligne, cette expression se réduit à la valeur du coefficient associé à la variable indépendante originale, $\beta_k$, en plus de la valeur du coefficient associé à la variable décalée spatialement, $\theta_k$. L'expression synthétise l'effet marginal total, alors que le coefficient $\beta_k$ est habituellement désigné par l'effet direct et le coefficient $\theta_k$ synthétise l'effet indirect, puisque venant des voisins.
+Pour une matrice de pondération spatiale standardisée en ligne, cette expression se réduit à la valeur du coefficient associé à la variable indépendante originale, $\beta_k$, en plus de la valeur du coefficient associé à la variable décalée spatialement, $\theta_k$. L'expression synthétise l'effet marginal total, alors que le coefficient $\beta_k$ est habituellement désigné par l'effet direct et le coefficient $\theta_k$ synthétise l'effet indirect, puisque venant des voisins.
 
 C'est d'ailleurs la valeur du coefficient $\theta_k$ qui introduit ce que l'on qualifie d'**externalité spatiale**. Elle exprime comment la variable dépendante varie lorsque les caractéristiques des voisins changent. Les changements dans la variable d'intérêt peuvent ainsi venir d'une variation des caractéristiques des voisins.
 
-Ce modèle est aussi désigné sous le terme d'effet spatial local, par opposition à l'effet global (voir modèle SAR, [section @sec-0212]). La variation des caractéristiques des voisins a une portée limitée sur le changement de valeurs de la variable dépendante. Seulement certaines observations sont affectées : celles dont les caractéristiques des voisins ont changé.
+Ce modèle est aussi désigné sous le terme d'effet spatial local, par opposition à l'effet global (voir modèle SAR, [section @sec-0212]). La variation des caractéristiques des voisins a une portée limitée sur le changement de valeur de la variable dépendante. Seulement certaines observations sont affectées : celles dont les caractéristiques des voisins ont changé.
 
 ::: bloc_attention
 ::: bloc_attention-header
@@ -173,9 +173,9 @@ Si le modèle SLX offre une solution intéressante pour régler le potentiel pro
 
 #### Modèle SLX dans R {#sec-02112}
 
-Pour illustrer la mise en œuvre dans R des différentes modèles d'économétrie spatiale, nous utilisons le jeu de données sur Lyon ([section @sec-0111]). Les modèles seront construits avec comme variable dépendante le dioxyde d'azote (NO~2~) et cinq variables sociodémographiques comme variables indépendantes ([section @sec-0111]). Le modèle MCO (non spatial) a déjà été présenté à la [section @sec-0171].
+Pour illustrer la mise en œuvre dans R des différents modèles d'économétrie spatiale, nous utilisons le jeu de données sur Lyon ([section @sec-0111]). Les modèles seront construits avec comme variable dépendante le dioxyde d'azote (NO~2~) et cinq variables sociodémographiques comme variables indépendantes ([section @sec-0111]). Le modèle MCO (non spatial) a déjà été présenté à la [section @sec-0171].
 
-Le modèle SLX est construit avec la fonction `lmSLX` du *package* `spatialreg` [@bivand2021review]. Dans le code ci-dessous, remarquez le paramètre `listw = w_rook` qui est utilisé pour spécifier la matrice de pondérations spatiales.
+Le modèle SLX est construit avec la fonction `lmSLX` du *package* `spatialreg` [@bivand2021review]. Dans le code ci-dessous, remarquez le paramètre `listw = w_rook` qui est utilisé pour spécifier la matrice de pondération spatiale.
 
 ```{r}
 #| echo: true 
@@ -189,7 +189,7 @@ library(spdep)
 library(spatialreg)
 load("data/Lyon.Rdata")
 
-## Matrice de contiguïté selon le partage d'un segment (Rook)
+## Matrice de contiguïté selon le partage d’un segment (Rook)
 nb_rook <- poly2nb(LyonIris, queen = FALSE)
 w_rook <- nb2listw(nb_rook, zero.policy = TRUE, style = "W")
 
@@ -199,7 +199,7 @@ modele_MCO <- lm(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
 
 ## Construction du modèle SLX
 modele_SLX <- spatialreg::lmSLX(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
-                   listw = w_rook,   # matrice de pondérations spatiales
+                   listw = w_rook,   # matrice de pondération spatiale
                    data = LyonIris)  # dataframe
 
 ## Résultats du modèle
@@ -217,9 +217,9 @@ summary(modele_SLX)
 ::: bloc_attention-body
 La formulation d'un modèle SLX implique deux types d'effets pour les variables indépendantes ($X$) :
 
--   les **effets directs**, soit ceux des caractéristiques des entités spatiales. Ils correspondent aux coefficients $\beta$ des variables indépendantes ($\mathbf{X}$). Autrement dit, pour une observation $i$, à chaque augmentation d'une unité d'une caractéristique $\mathbf{X}$, la valeur de $y_i$ va varier (augmenter ou diminuer) en fonction du coefficient $\beta$.
+-   Les **effets directs**, soit ceux des caractéristiques des entités spatiales. Ils correspondent aux coefficients $\beta$ des variables indépendantes ($\mathbf{X}$). Autrement dit, pour une observation $i$, à chaque augmentation d'une unité d'une caractéristique $\mathbf{X}$, la valeur de $y_i$ va varier (augmenter ou diminuer) en fonction du coefficient $\beta$.
 
--   les **effets indirects**, soit ceux des caractéristiques des entités spatiales voisines ou proches définies selon la matrice de pondérations spatiales. Ils correspondent aux coefficients $\theta$ des variables indépendantes spatialement décalées ($\mathbf{WX}$). Autrement dit, les valeurs de $\mathbf{WX}$ des entités spatiales proches ou voisines $j$ de $i$ vont aussi être amenées à varier, impactant alors les valeurs $y_i$ selon les coefficients $\theta$.
+-   Les **effets indirects**, soit ceux des caractéristiques des entités spatiales voisines ou proches définies selon la matrice de pondération spatiale. Ils correspondent aux coefficients $\theta$ des variables indépendantes spatialement décalées ($\mathbf{WX}$). Autrement dit, les valeurs de $\mathbf{WX}$ des entités spatiales proches ou voisines $j$ de $i$ vont aussi être amenées à varier, impactant alors les valeurs $y_i$ selon les coefficients $\theta$.
 
 -   Pour calculer l'impact total, il suffit de sommer son effet direct ($\beta_k$) et son effet indirect ($\theta_k$) pour obtenir son effet total.
 :::
@@ -237,7 +237,7 @@ impacts(modele_SLX)
 summary(impacts(modele_SLX))
 ```
 
-À la lecture des valeurs de *p*, nous constatons que seule la variable `Pct0_14` a des impacts direct et indirect significatifs au seuil 0,01. L'augmentation d'un point de pourcentage de la population de moins de 15 ans est associé localement à une réduction de 0,20 de la concentration annuelle du dioxyde d'azote. La même augmentation d'un point de pourcentage dans les entités voisines, entraîne une réduction de 0,78. L'effet total est donc une réduction de 0,98.
+À la lecture des valeurs de *p*, nous constatons que seule la variable `Pct0_14` a des impacts direct et indirect significatifs au seuil 0,01. L'augmentation d'un point de pourcentage de la population de moins de 15 ans est associée localement à une réduction de 0,20 de la concentration annuelle du dioxyde d'azote. La même augmentation d'un point de pourcentage dans les entités voisines entraîne une réduction de 0,78. L'effet total est donc une réduction de 0,98.
 
 **Dépendance spatiale du modèle SLX?**
 
@@ -269,7 +269,7 @@ tm_scale_bar(breaks = c(0,5))
 
 #### Description du Modèle SAR {#sec-02121}
 
-Une autre spécification consiste à inclure, comme variable additionnelle au modèle de départ, la variable dépendante spatialement décalée, notée $\mathbf{Wy}$. Le modèle, généralement désigné par le terme SAR (***s**patial **a**uto**r**egressive*), le modèle prend la forme suivante :
+Une autre spécification consiste à inclure, comme variable additionnelle au modèle de départ, la variable dépendante spatialement décalée, notée $\mathbf{Wy}$. Le modèle, généralement désigné par le terme SAR (***s**patial **a**uto**r**egressive*), prend la forme suivante :
 
 $$
 \mathbf{y} = \rho \mathbf{Wy} + \iota \alpha + \mathbf{X} \beta + \epsilon
@@ -277,11 +277,11 @@ $$ {#eq-SAR1}
 
 Où :
 
--   $\mathbf{Wy}$, est un vecteur de la variable dépendante spatialement décalée de dimension $(N \times 1)$.
+-   $\mathbf{Wy}$ est un vecteur de la variable dépendante spatialement décalée de dimension $(N \times 1)$.
 
 -   $\rho$ est un paramètre (scalaire, donc de dimension ($1 \times 1$)) autorégressif, qui varie habituellement entre -1 et 1 (autrement un problème de non-stationnarité survient).
 
-Par opposition au modèle SLX, cet ajout nécessite une autre méthode d'estimation que les moindres carrés ordinaires puisque la variable additionnelle du côté droit de l'équation est endogène, elle dépend des valeurs de la variable dépendante, qui elles, dépendent des valeurs prises par les caractéristiques des observations. La simple construction de variables spatialement décalées ne peut être considérée. Le processus générateur des données (PGD) s'exprime donc sous une forme un peu plus complexe, soit :
+Par opposition au modèle SLX, cet ajout nécessite une autre méthode d'estimation que les moindres carrés ordinaires puisque la variable additionnelle du côté droit de l'équation est endogène et qu'elle dépend des valeurs de la variable dépendante, qui elles, dépendent des valeurs prises par les caractéristiques des observations. La simple construction de variables spatialement décalées ne peut être considérée. Le processus générateur des données (PGD) s'exprime donc sous une forme un peu plus complexe, soit :
 
 $$
 y = (\mathbf{I} - \rho W)^{-1} \left[ \iota \alpha + X \beta + \varepsilon \right]
@@ -289,13 +289,13 @@ $$ {#eq-SAR2}
 
 Où :
 
--   $\mathbf{I}$, est une matrice identité, c'est-à-dire une matrice où la diagonale comporte des 1 et où les autres éléments sont nuls, de dimension $(N \times N)$.
+-   $\mathbf{I}$ est une matrice identité, c'est-à-dire une matrice où la diagonale comporte des 1 et où les autres éléments sont nuls, de dimension $(N \times N)$.
 
 Le modèle nécessite une méthode d'estimation appropriée. La première approche, par maximum de vraisemblance, fut proposée dès le départ par Luc Anselin [-@anselin1988]. Cette approche a été largement mobilisée dans les premières applications. Bien qu'intéressante, cette approche repose sur certaines hypothèses, dont la distribution du terme d'erreur et l'absence d'hétéroscédasticité.
 
-Plus récemment, Kelejian et Prucha [-@kelejian1998generalized] ont proposé une approche basée sur les moindres carrés généralisés (MCG). Cette approche a l'avantage d'être plus rapide en plus de permettre de corriger pour la présence d'hétéroscédasticité. Elle a cependant le désavantage de reposer sur l'hypothèse importante d'exogénéité de la matrice de pondérations spatiales, qui sert d'instrument lors du processus d'estimation.
+Plus récemment, Kelejian et Prucha [-@kelejian1998generalized] ont proposé une approche basée sur les moindres carrés généralisés (MCG). Cette approche a l'avantage d'être plus rapide en plus de permettre de corriger l'absence d'hétéroscédasticité. Elle a cependant le désavantage de reposer sur l'hypothèse importante d'exogénéité de la matrice de pondération spatiale, qui sert d'instrument lors du processus d'estimation.
 
-Ce modèle est habituellement qualifié d'**effet de débordement** ou d'**effet d'entraînement**, puisqu'une variation de la valeur de la variable dépendante d'une observation. Comparativement au modèle SLX, les effets marginaux sont identifiés comme étant globaux puisqu'une variation de la valeur de la variable dépendante, introduit une variation dans la valeur des variables dépendantes décalées spatialement qui, à leur tour, influence la variation dans les valeurs dépendantes des observations voisines et ainsi de suite (@fig-EffetMargSAR). Cette boucle de rétroaction peut être interprétée comme la résultante d'un équilibre général spatial.
+Ce modèle est habituellement qualifié d'**effet de débordement** ou d'**effet d'entraînement**. Comparativement au modèle SLX, les effets marginaux sont identifiés comme étant globaux puisqu'une variation de la valeur de la variable dépendante, introduit une variation dans la valeur des variables dépendantes décalées spatialement qui, à leur tour, influencent la variation dans les valeurs dépendantes des observations voisines et ainsi de suite (@fig-EffetMargSAR). Cette boucle de rétroaction peut être interprétée comme la résultante d'un équilibre général spatial.
 
 ![Effets marginaux dans un modèle SAR](images/Chap02/EffetsMarginaux_SAR.jpg){#fig-EffetMargSAR width="22%" fig-align="center"}
 
@@ -305,11 +305,11 @@ $$
 \frac{\partial \mathbf{y}}{\partial x_k}=\left(\mathbf{I}-\rho\mathbf{W}\right)^{-1}\beta_k
 $$ {#eq-SAR3}
 
-C'est donc dire que les effets marginaux sont un peu plus complexes à analyser et à calculer. Une approche classique, celle proposée par LeSage et Pace [-@lesage2008introduction], consiste à calculer le résultat du produit matriciel, à partir d'une approximation basée sur une somme à perpétuité, et d'extraire la diagonale de la matrice résultante, qui représente l'effet direct, et la somme des éléments hors diagonale, qui représente les effets indirects, afin d'obtenir l'effet marginal total. C'est habituellement cette décomposition qui est proposée par la plupart des logiciels, incluant R. Cette approche peut paraître un peu plus complexe et plus difficilement interprétable puisque les effets marginaux directs ne sont pas définies par les coefficients $\beta_k$.
+C'est donc dire que les effets marginaux sont un peu plus complexes à analyser et à calculer. Une approche classique, celle proposée par LeSage et Pace [-@lesage2008introduction], consiste à calculer le résultat du produit matriciel, à partir d'une approximation basée sur une somme à perpétuité, et à extraire la diagonale de la matrice résultante, qui représente l'effet direct, et la somme des éléments hors diagonale, qui représente les effets indirects, afin d'obtenir l'effet marginal total. C'est habituellement cette décomposition qui est proposée par la plupart des logiciels, incluant R. Cette approche peut paraître un peu plus complexe et plus difficilement interprétable puisque les effets marginaux directs ne sont pas définis par les coefficients $\beta_k$.
 
 Deux autres approches sont également proposées. Une première, proposée par Abreu *et al.* (2004), reprend la sommation matricielle, mais en proposant une décomposition différente sur la base d'un vocabulaire différent également. Les auteurs proposent néanmoins que le coefficient de régression, $\beta_k$, s'interprète comme un effet direct.
 
-Une seconde, proposée par Kim *et al.* [-@kim2003measuring], Steimetz [-@steimetz2010spatial], Dubé et Legros [-@dube2014econometrie] et Dubé *et al.* [-@dube2017measuring] consiste essentiellement à tirer profit des propriétés de la matrice de pondérations standardisées en ligne afin d'y proposer une décomposition simple. Dans ce cas, les auteurs proposent les règles suivantes pour calculer les effets marginaux :
+Une seconde, proposée par Kim *et al.* [-@kim2003measuring], Steimetz [-@steimetz2010spatial], Dubé et Legros [-@dube2014econometrie] et Dubé *et al.* [-@dube2017measuring], consiste essentiellement à tirer profit des propriétés de la matrice de pondération spatiale standardisée en ligne afin d'y proposer une décomposition simple. Dans ce cas, les auteurs proposent les règles suivantes pour calculer les effets marginaux :
 
 -   $\beta_k$ représente l'effet marginal direct.
 
@@ -317,7 +317,7 @@ Une seconde, proposée par Kim *et al.* [-@kim2003measuring], Steimetz [-@steime
 
 -   ${\rho\beta}_k\left(1-\rho\right)^{-1}$, ou encore $\frac{\rho\beta_k}{\left(1-\rho\right)}$, représente l'effet marginal indirect peut être obtenu en retranchant l'effet direct de l'effet total.
 
-Des tests non-linéaires peuvent être mobilisés afin de tester la significativité des effets marginaux indirects et totaux, alors que le test de significativité du paramètre procure une façon simple de vérifier si l'effet direct est statistiquement significatif.
+Des tests non linéaires peuvent être mobilisés afin de tester la significativité des effets marginaux indirects et totaux, alors que le test de significativité du paramètre procure une façon simple de vérifier si l'effet direct est statistiquement significatif.
 
 Tout comme pour la spécification SLX, rien n'indique pour autant que le modèle SAR permet de capter l'essentiel de l'autocorrélation spatiale résiduelle. Un test sur les résidus doit idéalement être mobilisé pour vérifier cette hypothèse critique. La détection d'une autocorrélation spatiale résiduelle significative peut invalider les résultats obtenus par cette approche.
 
@@ -331,7 +331,7 @@ Le modèle SAR est construit avec la fonction `lagsarlm` du *package* `spatialre
 #| eval: true
 ## Construction du modèle
 modele_SAR <- lagsarlm(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
-                       listw = w_rook,  # matrice de pondérations spatiales
+                       listw = w_rook,  # matrice de pondération spatiale
                        data = LyonIris, # dataframe
                        type = 'lag')    # Modèle lag par défaut
 ## Résultats du modèle
@@ -342,7 +342,7 @@ Dans les résultats ci-dessus, la valeur de *Rho* est de 0,88 (LR = 620, *p* 
 
 **Effets directs, indirects et totaux**
 
-À nouveau, il est possible d'utiliser la fonction `impacts` pour obtenir les effets marginaux direct et indirects.
+À nouveau, il est possible d'utiliser la fonction `impacts` pour obtenir les effets marginaux directs et indirects.
 
 ```{r}
 #| echo: true 
@@ -354,7 +354,7 @@ impacts(modele_SAR, listw = w_rook, R = 999)
 summary(impacts(modele_SAR, listw = w_rook, R = 999), zstats = TRUE, short = TRUE)
 ```
 
-L'interprétation des effets directs se rapproche de celle des coefficients classiques. Ainsi, selon ce modèle, l'augmentation du niveau de vie médian de 1000 € dans un IRIS est associée avec une diminution moyenne de la concentration de dioxyde d'azote de 0,14 dans cet IRIS. L'effet total est de -0,82, indiquant qu'en moyenne, l'augmentation de 1000 € du niveau de vie médian dans un IRIS est associée avec une diminution moyenne de 0,82 de la concentration de dioxyde d'azote dans l'ensemble des IRIS. Au final, l'effet indirect est simplement la différence entre l'effet total et l'effet direct. Nous pouvons constater ici que les effets indirects sont plus importants que les effets directs.
+L'interprétation des effets directs se rapproche de celle des coefficients classiques. Ainsi, selon ce modèle, l'augmentation du niveau de vie médian de 1000 € dans un IRIS est associée à une diminution moyenne de la concentration de dioxyde d'azote de 0,14 dans cet IRIS. L'effet total est de -0,82, indiquant qu'en moyenne, l'augmentation de 1000 € du niveau de vie médian dans un IRIS est associée à une diminution moyenne de 0,82 de la concentration de dioxyde d'azote dans l'ensemble des IRIS. Au final, l'effet indirect est simplement la différence entre l'effet total et l'effet direct. Nous pouvons constater ici que les effets indirects sont plus importants que les effets directs.
 
 **Dépendance spatiale du modèle SAR?**
 
@@ -391,9 +391,9 @@ tm_scale_bar(breaks = c(0,5))
 
 #### Description du modèle SEM {#sec-02131}
 
-L'autocorrélation spatiale résiduelle peut être liée à deux explications simples. La première est liée à **l'omission de variables spatiales importantes et significatives**, et pour laquelle on ne dispose d'aucune information spécifique. La seconde peut provenir d'une **forme d'hétérogénéité spatiale** qui n'est, autrement, pas intégrée à l'analyse. On peut ainsi imaginer que les comportements sont liés dans l'espace pour des raisons qui ne sont pas observables, et encore moins mesurables.
+L'autocorrélation spatiale résiduelle peut être liée à deux explications simples. La première est liée à **l'omission de variables spatiales importantes et significatives**, pour laquelle on ne dispose d'aucune information spécifique. La seconde peut provenir d'une **forme d'hétérogénéité spatiale** qui n'est, autrement, pas intégrée à l'analyse. On peut ainsi imaginer que les comportements sont liés dans l'espace pour des raisons qui ne sont pas observables, et encore moins mesurables.
 
-Dans les deux cas, on peut simplement corriger le problème sans pour autant tenter de tirer profit d'une forme spécifique de relations spatiales (externalités, effets d'entraînement). C'est essentiellement dans ces cas que les modèles avec une spécification autorégressive sur les termes d'erreurs (ou SEM -- ***s**patial **e**rror **m**odel*) peuvent être intéressants : ils ne permettent pas d'apporter une richesse supplémentaire à l'analyse et l'interprétation, mais ils permettent vraisemblablement de corriger pour le problème d'interdépendance des termes d'erreurs. Plus spécifiquement, le modèle SEM s'exprime par la spécification suivante :
+Dans les deux cas, on peut simplement corriger le problème sans pour autant tenter de tirer profit d'une forme spécifique de relations spatiales (externalités, effets d'entraînement). C'est essentiellement dans ces cas que les modèles avec une spécification autorégressive sur les termes d'erreurs (ou SEM -- ***s**patial **e**rror **m**odel*) peuvent être intéressants : ils ne permettent pas d'apporter une richesse supplémentaire à l'analyse et à l'interprétation, mais ils permettent vraisemblablement de corriger pour le problème d'interdépendance des termes d'erreurs. Plus spécifiquement, le modèle SEM s'exprime par la spécification suivante :
 
 $$
 \mathbf{y}=\mathbf{\iota}\alpha+\mathbf{X\beta}+\mathbf{\nu}
@@ -405,9 +405,9 @@ $$
 
 Où :
 
--   $\mathbf{W}$ est une matrice de pondérations spatiales, standardisée en ligne, de dimension $\left(N\times N\right)$.
+-   $\mathbf{W}$ est une matrice de pondération spatiale, standardisée en ligne, de dimension $\left(N\times N\right)$.
 
--   $\lambda$ est un paramètre (scalaire, donc de dimension $\left(1\times1\right)$) autorégressif, qui varie habituellement entre -1 et 1 (autrement un problème de non-stationnarité survient).
+-   $\lambda$ est un paramètre (scalaire, donc de dimension $\left(1\times1\right)$) autorégressif qui varie habituellement entre -1 et 1 (autrement un problème de non-stationnarité survient).
 
 -   $\mathbf{\nu}$ est un vecteur de termes d'erreurs spatialement autocorrélés de dimension $\left(N\times1\right)$.
 
@@ -423,7 +423,7 @@ Où :
 
 -   $\mathbf{I}$ est une matrice identité, c'est-à-dire une matrice où la diagonale comporte des 1 et où les autres éléments sont nuls, de dimension $\left(N\times N\right)$.
 
-Tout comme pour le cas du modèle SAR, le modèle SEM ne peut être estimé par moindres carrés ordinaires vu la forme complexe que prend le terme d'erreur dans la forme réduite du PGD. Le modèle est habituellement estimé par maximum de vraisemblance.
+Tout comme pour le cas du modèle SAR, le modèle SEM ne peut être estimé par la méthode des moindres carrés ordinaires vu la forme complexe que prend le terme d'erreur dans la forme réduite du PGD. Le modèle est habituellement estimé par maximum de vraisemblance.
 
 Un des avantages avec le modèle SEM est que l'interprétation des résultats est similaire à celle que l'on retrouve dans les régressions linéaires classiques. La dérivée partielle de la forme réduite du PGD est simplement égale au coefficient lié à la variable souhaitée :
 
@@ -431,9 +431,9 @@ $$
 \frac{\partial\mathbf{y}}{\partial\mathbf{x}_k}=\mathbf{I}\beta_k
 $$ {#eq-SEM3}
 
-Or, l'avantage de la structure spatiale des données est justement d'apporter une richesse supplémentaire à l'analyse que l'on ne peut intégrer avec des données a-spatiales. Pour cette raison, les modèles SEM ne sont pas particulièrement prisés par les chercheuses et chercheurs qui tentent d'intégrer l'espace aux modèles. Ils représentent une forme de solution de dernier recours lorsqu'il est impossible de capter la structure résiduelle spatiale autrement.
+Or, l'avantage de la structure spatiale des données est justement d'apporter une richesse supplémentaire à l'analyse que l'on ne peut intégrer avec des données aspatiales. Pour cette raison, les modèles SEM ne sont pas particulièrement prisés par les chercheuses et chercheurs qui tentent d'intégrer l'espace aux modèles. Ils représentent une forme de solution de dernier recours lorsqu'il est impossible de capter la structure résiduelle spatiale autrement.
 
-Tout comme pour les autres spécifications, il est judicieux de vérifier si le modèle permet adéquatement de contrôler pour l'autocorrélation résiduelle. À noter que le modèle SEM peut également mener à une réécriture qui, elle, permet d'intégrer des effets spatiaux qui permettent d'influencer l'interprétation des résultats. Cette forme est désignée par la spécification du modèle Durbin spatial.
+Tout comme pour les autres spécifications, il est judicieux de vérifier si le modèle permet adéquatement de contrôler l'autocorrélation résiduelle. À noter que le modèle SEM peut également mener à une réécriture qui, elle, permet d'intégrer des effets spatiaux qui permettent d'influencer l'interprétation des résultats. Cette forme est désignée par la spécification du modèle Durbin spatial.
 
 #### Modèle SEM dans R {#sec-02132}
 
@@ -445,7 +445,7 @@ Le modèle SEM est construit avec la fonction `errorsarlm` du *package* `spatial
 #| eval: true
 ## Construction du modèle
 modele_SEM <- errorsarlm(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
-                         listw = w_rook,  # matrice de pondérations spatiales
+                         listw = w_rook,  # matrice de pondération spatiale
                          data = LyonIris) # dataframe
 
 ## Résultats du modèle
@@ -466,13 +466,13 @@ Ce modèle a-t-il corrigé le problème de dépendance spatiale du modèle de r�
 moran.mc(resid(modele_SEM), w_rook, nsim = 999)
 ```
 
-**Les modèles MCO et SEM sont-ils différents**
+**Les modèles MCO et SEM sont-ils différents?**
 
-Pour le vérifier, Pace et Lesage [-@pace2008spatial] propose d'appliquer le test de Hausman qui s'interprète comme suit :
+Pour le vérifier, Pace et Lesage [-@pace2008spatial] proposent d'appliquer le test de Hausman qui s'interprète comme suit :
 
 -   Si *p* \< 0,05, alors les coefficient du modèle MCO sont biaisés par l'erreur spatiale et il est préférable d'utiliser le modèle SEM. Cela est le cas pour notre modèle.
 
--   Si *p* \> 0,05, les résultats des modèles ne sont différents et l'on peut conserver le modèle MCO.
+-   Si *p* \> 0,05, les résultats des modèles ne sont pas différents et l'on peut conserver le modèle MCO.
 
 ```{r}
 #| echo: true 
@@ -485,29 +485,31 @@ Hausman.test(modele_SEM)
 
 #### Description du modèle SDM {#sec-02141}
 
-Le modèle spatial Durbin (SDM - ***S**patial **D**urbin **M**odel*) est un modèle mixte qui permet à la fois d'intégrer la relation spatiale sur la variable dépendante (**effets d'entraînement ou de débordement**) et sur les variables indépendantes (**externalités**). Elle permet, explicitement, de combiner les modèles SLX et SAR bien que son inspiration est issue d'une réécriture de la forme réduite du modèle SEM, où chaque élément est multiplié par le terme $\mathbf{I}-\lambda\mathbf{W}$ :
+Le modèle spatial Durbin (SDM - ***S**patial **D**urbin **M**odel*) est un modèle mixte qui permet à la fois d'intégrer la relation spatiale sur la variable dépendante (**effets d'entraînement ou de débordement**) et sur les variables indépendantes (**externalités**). Elle permet, explicitement, de combiner les modèles SLX et SAR bien que son inspiration soit issue d'une réécriture de la forme réduite du modèle SEM, où chaque élément est multiplié par le terme $\mathbf{I}-\lambda\mathbf{W}$ :
 
 $$
 \mathbf{y}=\lambda\mathbf{Wy}+\mathbf{\iota}\alpha+\mathbf{X\beta}+\mathbf{WX\beta}\lambda+\mathbf{\varepsilon}
-$$
+$$ {#eq-SDM1}
 
 Où :
 
 -   $\mathbf{\beta}\lambda$ est un nouvel ensemble de paramètres liés aux variables indépendantes spatialement décalées, qui est habituellement substitué par $\mathbf{\theta}$.
 
-Tout comme pour le SEM et le SAR, le modèle SDM ne peut être estimé par moindres carrés ordinaires. Il faut recourir à la méthode du maximum de vraisemblance ou encore à la méthode des moments généralisés. Cette dernière approche offrant une flexibilité plus intéressante pour la présence d'hétéroscédasticité.
+Tout comme pour le SEM et le SAR, le modèle SDM ne peut être estimé par la méthode des moindres carrés ordinaires. Il faut recourir à la méthode du maximum de vraisemblance ou encore à la méthode des moments généralisés, cette dernière approche offrant une flexibilité plus intéressante pour la présence d'hétéroscédasticité.
 
 De la même manière, les coefficients estimés par le modèle permettent une décomposition plus sophistiquée des effets marginaux. La forme réduite du PGD est donnée par :
 
 $$
 \mathbf{y}=\left(\mathbf{I}-\lambda\mathbf{W}\right)^{-1}\left[\mathbf{\iota}\alpha+\mathbf{X\beta}+\mathbf{WX\theta}+\mathbf{\varepsilon}\right]
-$$ Ainsi, le calcul des effets marginaux est donné par :
+$$ {#eq-SDM2}
+
+Ainsi, le calcul des effets marginaux est donné par :
 
 $$
 \frac{\partial\mathbf{y}}{\partial\mathbf{x}_k}=\left(\mathbf{I}-\lambda\mathbf{W}\right)^{-1}\left[{\mathbf{I}\beta}_k+\mathbf{W}\theta_k\right]
-$$
+$$ {#eq-SDM3}
 
-En revenant à la proposition de certains auteurs [@kim2003measuring; @steimetz2010spatial; @dube2014econometrie; @dube2017measuring], les effets marginaux (@fig-EffetMargSDM) peuvent être exprimés par la décomposition suivante lorsque la matrice de pondérations en standardisée en ligne :
+En ce qui concerne la proposition de certains auteurs [@kim2003measuring; @steimetz2010spatial; @dube2014econometrie; @dube2017measuring], les effets marginaux (@fig-EffetMargSDM) peuvent être exprimés par la décomposition suivante lorsque la matrice de pondération est standardisée en ligne :
 
 -   Effet direct : $\beta_k$.
 
@@ -517,7 +519,7 @@ En revenant à la proposition de certains auteurs [@kim2003measuring; @steimetz2
 
 ![Effets marginaux dans un modèle SDM](images/Chap02/EffetsMarginaux_SDM.jpg){#fig-EffetMargSDM width="22%" fig-align="center"}
 
-À noter que les logiciels statistiques retournent les effets marginaux sur la base de la décomposition suggérée par LeSage et Pace [-@lesage2008introduction], issue de l'approximiation du produit matriciel. Si l'effet marginal total est identique dans les deux cas, la différence vient essentiellement de la manière de calculer l'effet marginal direct, qui influence également le calcul de l'effet marginal indirect, obtenu par soustraction.
+À noter que les logiciels statistiques retournent les effets marginaux sur la base de la décomposition suggérée par LeSage et Pace [-@lesage2008introduction], issue de l'approximation du produit matriciel. Si l'effet marginal total est identique dans les deux cas, la différence vient essentiellement de la manière de calculer l'effet marginal direct, qui influence également le calcul de l'effet marginal indirect obtenu par soustraction.
 
 #### Modèle SDM dans R {#sec-02142}
 
@@ -529,7 +531,7 @@ Le modèle SDM est construit avec la fonction `lagsarlm` du *package* `spatialre
 #| eval: true
 ## Construction du modèle
 modele_SDM <- lagsarlm(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
-                       listw = w_rook,    # matrice de pondérations spatiales
+                       listw = w_rook,    # matrice de pondération spatiale
                        data = LyonIris,   # dataframe
                        type = "mixed")
 
@@ -584,7 +586,7 @@ $$ {#eq-SDEM2}
 
 ![Effets marginaux dans un modèle SDEM](images/Chap02/EffetsMarginaux_SDEM.jpg){#fig-EffetMargSDEM width="22%" fig-align="center"}
 
-Dans le cas où la matrice de pondérations spatiales, $\mathbf{W}$, est standardisée en ligne, l'interprétation des effets marginaux est plutôt simple et directe :
+Dans le cas où la matrice de pondération spatiale $\mathbf{W}$ est standardisée en ligne, l'interprétation des effets marginaux est plutôt simple et directe :
 
 -   $\beta_k$ est l'effet marginal direct.
 
@@ -606,7 +608,7 @@ Le modèle SDEM est construit avec la fonction `errorsarlm` du *package* `spatia
 #| eval: true
 ## Construction du modèle
 modele_SDEM <- errorsarlm(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
-                          listw = w_rook,  # matrice de pondérations spatiales
+                          listw = w_rook,  # matrice de pondération spatiale
                           data = LyonIris, # dataframe
                           etype = 'emixed')
 
@@ -637,7 +639,7 @@ Avec une valeur du *I* de Moran de -0,010 (*p* = 0,619), les résidus du modè
 moran.mc(resid(modele_SDEM), w_rook, nsim = 999)
 ```
 
-### Modèle généralisé : autocorrélation spatiale de l'ensemble des variables et composantes du modèle {#sec-0216}
+### Modèle généralisé : autocorrélation spatiale de l'ensemble des variables et des composantes du modèle {#sec-0216}
 
 #### Description du modèle généralisé {#sec-02161}
 
@@ -653,9 +655,9 @@ $$
 
 La spécification tient compte, tout comme le modèle SDM, des effets de débordements (ou effets d'entraînement) spatiaux ainsi que des effets d'externalités spatiales.
 
-Le modèle spatial généralisé ne peut être estimé par moindres carrés ordinaires. Il faut recourir à la méthode du maximum de vraisemblance ou encore à la méthode des moments généralisés. Cette dernière approche offrant une flexibilité intéressante pour la présence d'hétéroscédasticité.
+Le modèle spatial généralisé ne peut être estimé par la méthode des moindres carrés ordinaires. Il faut recourir à la méthode du maximum de vraisemblance ou encore à la méthode des moments généralisés, cette dernière approche offrant une flexibilité intéressante pour la présence d'hétéroscédasticité.
 
-D'une part, certains auteurs notent que des problèmes peuvent survenir lorsque les matrices de pondérations spatiales mobilisées pour estimer le modèle sont identiques pour l'ensemble des processus autorégressifs [@Gallo2002; @AnselinBera1998]. D'autre part, Elhorst [-@elhorst2014spatial] suggère d'estimer d'abord cette spécification afin de faire un choix de modèle, puisqu'il procure une structure emboîtée (voir section suivante).
+D'une part, certains auteurs notent que des problèmes peuvent survenir lorsque les matrices de pondération spatiale mobilisées pour estimer le modèle sont identiques pour l'ensemble des processus autorégressifs [@Gallo2002; @AnselinBera1998]. D'autre part, Elhorst [-@elhorst2014spatial] suggère d'estimer d'abord cette spécification afin de faire un choix de modèle, puisqu'il procure une structure emboîtée (voir section suivante).
 
 #### Modèle généralisé (Manski) dans R
 
@@ -665,7 +667,7 @@ D'une part, certains auteurs notent que des problèmes peuvent survenir lorsque 
 #| eval: true
 ## Construction du modèle
 modele_Manski <- sacsarlm(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
-                          listw = w_rook,  # matrice de pondérations spatiales
+                          listw = w_rook,  # matrice de pondération spatiale
                           data = LyonIris, # dataframe
                           type="sacmixed")
 
@@ -682,40 +684,40 @@ moran.mc(resid(modele_Manski), w_rook, nsim = 999)
 
 ## Quel modèle choisir? {#sec-022}
 
-Évidemment, la question qui brûle les lèvres est de savoir quelle spécification devrait-on retenir pour l'analyse empirique et la présentation des résultats? Deux avenues sont possibles.
+Évidemment, la question qui brûle les lèvres est de savoir quelle spécification on devrait retenir pour l'analyse empirique et la présentation des résultats. Deux avenues sont possibles.
 
-D'une part, il est possible que **certains impératifs théoriques guident la chercheuse ou le chercheur vers une spécification particulière**. Ainsi, si l'on souhaite vérifier comment les caractéristiques des milieux avoisinants influencent une variable d'intérêt, alors les spécifications SLX ou SDEM sont à privilégier puisqu'elle permet explicitement d'aborder la question. Si l'intérêt est de voir comment une variation locale d'une variable d'intérêt peut avoir des influences à la grandeur du territoire, alors la spécification SAR est probablement à privilégier puisqu'elle permet d'évaluer l'impact spatial « global » d'un changement à microéchelle. Il est également possible qu'une question de recherche trouve un écho parmi les deux possibilités, dans lequel des cas le modèle SDM d'avère intéressant.
+D'une part, il est possible que **certains impératifs théoriques guident la chercheuse ou le chercheur vers une spécification particulière**. Ainsi, si l'on souhaite vérifier comment les caractéristiques des milieux avoisinants influencent une variable d'intérêt, alors les spécifications SLX ou SDEM sont à privilégier puisqu'elles permettent explicitement d'aborder la question. Si l'intérêt est de voir comment une variation locale d'une variable d'intérêt peut avoir des influences à la grandeur du territoire, alors la spécification SAR est probablement à privilégier puisqu'elle permet d'évaluer l'impact spatial « global » d'un changement à microéchelle. Il est également possible qu'une question de recherche trouve un écho parmi les deux possibilités, dans lequel des cas le modèle SDM s'avère intéressant.
 
-Si une chercheuse ou un chercheur **souhaite essentiellement corriger la présence d'autocorrélation spatiale entre les résidus** sans intégrer explicitement de liens spatiaux dans l'interprétation du modèle, alors la spécification SEM peut s'avérer intéressante. Il faut néanmoins avouer que cette correction de l'autocorrélation spatiale n'apporte que peu d'intérêt au niveau de l'interprétation outre corriger les écarts-types des coefficients estimés.
+Si une chercheuse ou un chercheur **souhaite essentiellement corriger la présence d'autocorrélation spatiale entre les résidus** sans intégrer explicitement de liens spatiaux dans l'interprétation du modèle, alors la spécification SEM peut s'avérer intéressante. Il faut néanmoins avouer que cette correction de l'autocorrélation spatiale n'apporte que peu d'intérêt en ce qui concerne l'interprétation, sauf celui de corriger les écarts-types des coefficients estimés.
 
-D'autre part, **le choix peut également être basé sur des considérations plus statistiques**. En lequel des cas le chercheur souhaite identifier, sur la base de critères préalablement définis, le modèle qui offre la performance la meilleure. Bien que le test de Moran permette de détecter la présence d'autocorrélation spatiale dans les résidus, le test n'est malheureusement pas mobilisable pour tenter d'identifier une spécification préférable.
+D'autre part, **le choix peut également être basé sur des considérations plus statistiques**. Dans ce cas, on souhaite identifier, sur la base de critères préalablement définis, le modèle qui offre la meilleure performance. Bien que le test de Moran permette de détecter la présence d'autocorrélation spatiale dans les résidus, le test n'est malheureusement pas mobilisable pour tenter d'identifier une spécification préférable.
 
-Il existe trois différentes stratégies de tests : les tests de ratio de vraisemblance, qui nécessitent l'estimation des modèles contraints (les spécifications linéaires classiques) et non contraints (les modèles économétriques spatiaux); les tests de Wald, qui nécessitent aussi l'estimation des modèles contraints et non contraints; et les tests du multiplicateur de Lagrange (ou test LM), qui nécessitent uniquement l'estimation des modèles contraints.
+Il existe trois différentes stratégies de tests : les tests de ratio de vraisemblance, qui nécessitent l'estimation des modèles contraints (les spécifications linéaires classiques) et non contraints (les modèles économétriques spatiaux); les tests de Wald, qui nécessitent aussi l'estimation des modèles contraints et non contraints; et les tests du multiplicateur de Lagrange (ou test LM), qui nécessitent uniquement l'estimation des modèles contraints.
 
 ### Tests du multiplicateur de Lagrange (LM) sur le modèle MCO {#sec-0221}
 
 Une procédure relativement simple existe pour discriminer entre les spécifications SAR, SEM et MCO. Puisque les modèles contraints sont relativement simples et directs, les tests LM sont souvent privilégiés en pratique. Ces tests (en version simple et robuste) ont été largement popularisés par Anselin *et al.* [-@anselin1996simple] pour vérifier si le recours à un modèle autorégressif est nécessaire, comparativement à un modèle de régression classique (MCO).  
 
-Les tests sont calculés sur la base des estimations obtenues par MCO pour la spécification linéaire classique et avec l’aide d’une matrice de pondérations spatiales préalablement identifiées et calculées. Pour chaque spécification des modèles économétriques spatiaux, il existe une forme spécifique pour les tests-LM. Comment alors comparer les différentes statistiques pour identifier la spécification à retenir?
+Les tests sont calculés sur la base des estimations obtenues par MCO pour la spécification linéaire classique et avec l’aide d’une matrice de pondération spatiale préalablement identifiées et calculées. Pour chaque spécification des modèles économétriques spatiaux, il existe une forme spécifique pour les tests-LM. Comment alors comparer les différentes statistiques pour identifier la spécification à retenir?
 
-![Démarche pour choisir entre les modèles MCO, SAR et SEM](images/Chap02/SARversusSEM.jpg){#fig-SARversusSEM width="80%" fig-align="center"}
+![Démarche pour choisir entre les modèles MCO, SAR et SEM](images/Chap02/SARversusSEM.jpg){#fig-SARversusSEM width="70%" fig-align="center"}
 
 La démarche générale suivante, schématisée à la @fig-SARversusSEM, peut être utilisée pour guider le choix d’une spécification :
 
 1.  Si toutes les valeurs des tests (simples et robustes) sont non significatives (*p* \> 0,05), alors le recours à un modèle autorégressif n'est pas nécessaire. Nous pouvons conserver le modèle de régression classique (MCO).
 
-2.  Si les valeurs de `LMlag` ou `RLMlag` sont non significatives (*p* \> 0,05), alors le recours au modèle SAR n'est pas nécessaire.
+2.  Si les valeurs de `LMlag` ou de `RLMlag` sont non significatives (*p* \> 0,05), alors le recours au modèle SAR n'est pas nécessaire.
 
-3.  Si les valeurs de `LMerr` ou `RLMerr` sont non significatives (*p* \> 0,05), alors le recours au modèle SEM n'est pas nécessaire.
+3.  Si les valeurs de `LMerr` ou de `RLMerr` sont non significatives (*p* \> 0,05), alors le recours au modèle SEM n'est pas nécessaire.
 
-4.  Si les valeurs de `RLMlag` et `RLMerr` sont significatives (*p* \< 0,001), nous choisissons le modèle ayant la plus forte statistique.
+4.  Si les valeurs de `RLMlag` et de `RLMerr` sont significatives (*p* \< 0,001), nous choisissons le modèle ayant la plus forte statistique.
 
-    -   Si `RLMlag` \> `RLMerr` , il est suggéré d'utiliser la spécification SAR.
+    -   Si `RLMlag` \> `RLMerr`, il est suggéré d'utiliser la spécification SAR.
 
-    -   Si `RLMerr` \> `RLMlag` , il est suggéré d'utiliser la spécification SEM.
+    -   Si `RLMerr` \> `RLMlag`, il est suggéré d'utiliser la spécification SEM.
 
 
-Dans R, ces tests LM sont calculés sur le modèle MCO avec la fonction `lm.LMtests` et une matrice de pondérations spatiales. Dans les résultats ci-dessous, nous ne retenons pas le modèle SEM car la valeur de 0,740 pour le `RLMerr` n'est pas significative (*p* = 0,3898). Par contre, les valeurs de `LMlag` et de `RLMlag` (555 et 123) sont significatives, ce qui justifie la sélection du modèle SAR.
+Dans R, ces tests LM sont calculés sur le modèle MCO avec la fonction `lm.LMtests` et une matrice de pondération spatiale. Dans les résultats ci-dessous, nous ne retenons pas le modèle SEM car la valeur de 0,740 pour le `RLMerr` n'est pas significative (*p* = 0,3898). Par contre, les valeurs de `LMlag` et de `RLMlag` (555 et 123) sont significatives, ce qui justifie la sélection du modèle SAR.
 
 ```{r}
 #| echo: true 
@@ -729,11 +731,11 @@ summary(lm.LMtests(model = modele_MCO,
 ### Tests du ratio de vraisemblance sur les modèles spatiaux {#sec-0222}
 
 
-En partant de la structure emboîtée que représente le modèle spatial généralisé, il est possible de proposer une stratégie qualifiée de « général vers le particulier » à partir de la significativité des différents paramètres associés aux variables décalées spatialement (@fig-ChoixBaseSurManski). Cette stratégie, basée sur les tests de ratios de vraisemblance qui sont issus de l’estimation des modèles non contraints, de la forme la plus générale, et des modèles contraints, la forme la plus spécifique [@elhorst2014spatial]. 
+En partant de la structure emboîtée que représente le modèle spatial généralisé, il est possible de proposer une stratégie qualifiée de « général vers le particulier » à partir de la significativité des différents paramètres associés aux variables décalées spatialement (@fig-ChoixBaseSurManski). Cette stratégie, basée sur les tests du ratio de vraisemblance qui sont issus de l’estimation des modèles non contraints, dans sa forme la plus générale, et des modèles contraints, dans sa forme la plus spécifique [@elhorst2014spatial]. 
 
-En comparant la vraisemblance des modèles, il est possible de vérifier si les deux spécifications sont relativement similaires. Si les vraisemblances sont similaires, la spécification contrainte est préférée à celle non contrainte puisque plus parcimonieuse, c’est-à-dire qu’elle permet d’exprimer le même type de relations avec moins de paramètres. Si les vraisemblances sont trop différentes, la spécification générale est alors préférée puisqu’elle permet de mieux expliquer la variable dépendante.
+En comparant la vraisemblance des modèles, il est possible de vérifier si les deux spécifications sont relativement similaires. Si les vraisemblances sont similaires, la spécification contrainte est préférée à celle non contrainte puisque plus parcimonieuse, c’est-à-dire qu’elle permet d’exprimer le même type de relation avec moins de paramètres. Si les vraisemblances sont trop différentes, la spécification générale est alors préférée puisqu’elle permet de mieux expliquer la variable dépendante.
 
-Cette procédure permet également de discriminer entre certaines spécifications intégrant plusieurs processus autorégressifs, tels que les modèles SDM et SDEM par rapport, respectivement, aux modèles SAR et SLX, et SEM et SLX. Elle permet également d’orienter le choix d’une forme fonctionnel sur un processus de sélection complet puisqu’il considère toutes les formes fonctionnelles et les variantes possibles. 
+Cette procédure permet également de discriminer entre certaines spécifications intégrant plusieurs processus autorégressifs, tels que les modèles SDM et SDEM par rapport, respectivement, aux modèles SAR et SLX, et SEM et SLX. Elle permet également d’orienter le choix d’une forme fonctionnelle sur un processus de sélection complet, puisque celui considère toutes les formes fonctionnelles et les variantes possibles. 
 
 ![Démarche à partir du modèle généralisé (modèle Manski)](images/Chap02/ChoixAPartirDuManski.jpg){#fig-ChoixBaseSurManski width="80%" fig-align="center"}
 
@@ -746,10 +748,10 @@ Cette procédure permet également de discriminer entre certaines spécification
 ::: bloc_notes-body
 Globalement, la procédure est la suivante :
 
-**Étape A. Sélection d'un modèle modèle mixte à partir des coefficients autorégressifs du modèle généralisé** :
+**Étape A. Sélection d'un modèle mixte à partir des coefficients autorégressifs du modèle généralisé** :
 
 
-1.   Si la valeur du coefficient $\rho$ (rho) n'est pas significativement différente de 0, alors nous calculons le modèle mixte SDEM.
+1.   Si la valeur du coefficient $\rho$ (rho) n'est pas significativement différente de 0 alors nous calculons le modèle mixte SDEM.
 
 2.   Si la valeur du coefficient $\lambda$ (lambda) n'est pas significativement différente de 0, alors nous calculons le modèle mixte SDM.
 
@@ -760,13 +762,13 @@ Globalement, la procédure est la suivante :
 
 **Étape C. Sélection d'un modèle sans effets mixtes**
 
-4.   Si la valeur du coefficient $\rho$ du SDM est significativement différente de 0, mais que toutes les coefficients $\theta$ (theta) des variables indépendantes spatialement décalées $\mathbf{WX}$ ne sont pas différentes de 0, alors nous retenons le modèle SAR.
+4.   Si la valeur du coefficient $\rho$ du modèle SDM est significativement différente de 0, mais que tous les coefficients $\theta$ (theta) des variables indépendantes spatialement décalées $\mathbf{WX}$ ne sont pas différents de 0, alors nous retenons le modèle SAR.
 
-5.   Si la valeur du coefficient $\lambda$ du SDEM est significativement différente de 0, mais que toutes les coefficients $\theta$ (theta) des variables indépendantes spatialement décalées $\mathbf{WX}$ ne sont pas différentes de 0, alors nous retenons le modèle SEM.
+5.   Si la valeur du coefficient $\lambda$ du modèle SDEM est significativement différente de 0, mais que tous les coefficients $\theta$ (theta) des variables indépendantes spatialement décalées $\mathbf{WX}$ ne sont pas différents de 0, alors nous retenons le modèle SEM.
 
 **Étape D. Choix du modèle MCO**
 
-6. Si les tous coefficients $\theta$ (theta) des variables indépendantes spatialement décalées $\mathbf{WX}$ du modèle SLX ne sont pas différentes de 0, alors nous retenons le modèle aspatial (MCO).
+6. Si tous les coefficients $\theta$ (theta) des variables indépendantes spatialement décalées $\mathbf{WX}$ du modèle SLX ne sont pas différents de 0, alors nous retenons le modèle aspatial (MCO).
 
 7. Si le coefficient $\rho$ (rho) du modèle SAR n'est pas significativement différent de 0, alors nous retenons le modèle aspatial (MCO).
 
@@ -779,7 +781,7 @@ Appliquons la stratégie « général vers le particulier » à notre jeu de d
 
 ```{r}
 formule <- 'NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed'
-# Étape A. Sélection d’un modèle modèle mixte à partir 
+# Étape A. Sélection d’un modèle mixte à partir 
 # des coefficients autorégressifs du modèle généralisé
 manski <- sacsarlm(formule, listw = w_rook, data = LyonIris, type="sacmixed")
 
@@ -801,13 +803,14 @@ manski_resultats <- data.frame(Parametre = c("lambda", "Rho"),
 
 ```{r}
 #| label: tbl-ChoixManski1
-#| tbl-cap: Résultats des coefficients autorégressifs du modèle généralisés
+#| tbl-cap: Résultats des coefficients autorégressifs du modèle généralisé
 #| echo: false
 #| message: false
 #| warning: false
 #| eval: true
 kbl(manski_resultats,
 		row.names = FALSE,
+		col.names=c("Paramètre", "Coef", "z", "p"),
     digits = 3,
 		format.args = list(decimal.mark = ',', big.mark = " "),
     align= c("l", "c", "c", "c"),
@@ -817,12 +820,11 @@ kbl(manski_resultats,
 
 ```
 
-Les résultats du modèle SDM montre que :
+Les résultats du modèle SDM montrent que :
 
-1. Le coefficient rho ($\rho =$ 0,841, p < 0,001) est différent de 0, nous écartons le modèle SLX.
+1. Le coefficient rho ($\rho =$ 0,841, p < 0,001) est différent de 0, alors nous écartons le modèle SLX.
 
-2. Plusieurs coefficients $\theta$ (theta) des variables indépendantes spatialement décalées $\mathbf{WX}$ sont pas différentes de 0, notamment 
-`lag.Pct_Img` et `lag.Pct_brevet`, nous écartons aussi le modèle SAR.
+2. Plusieurs coefficients $\theta$ (theta) des variables indépendantes spatialement décalées $\mathbf{WX}$ ne sont pas différents de 0, notamment `lag.Pct_Img` et `lag.Pct_brevet`, alors nous écartons aussi le modèle SAR.
 
 3. Au final, nous retenons donc le modèle SDM.
 
@@ -835,7 +837,7 @@ summary(SDM)
 
 ### Comparaison des modèles mixtes et non mixtes {#sec-0223}
 
-Avec les tests du ratio de vraisemblance sur les modèles spatiaux, nous pouvons vérifier dans R de vérifier si le recours d'un modèle mixte est justifié comparativement à un modèle non mixte. Dans le code ci-dessous, nous vérifions si le modèle SDM est statistiquement différent du modèle SAR avec les fonctions `LR.Sarlm` et `anova`. Les résultats signalent un écart significatif des valeurs du log-vraisemblance (26,101, *p* \< 0,001). Par conséquent, ce modèle mixte a un apport significatif.
+Avec les tests du ratio de vraisemblance sur les modèles spatiaux, nous pouvons vérifier dans R si le recours d'un modèle mixte est justifié comparativement à un modèle non mixte. Dans le code ci-dessous, nous vérifions si le modèle SDM est statistiquement différent du modèle SAR avec les fonctions `LR.Sarlm` et `anova`. Les résultats signalent un écart significatif des valeurs du log-vraisemblance (26,101, *p* \< 0,001). Par conséquent, ce modèle mixte a un apport significatif.
 
 ```{r}
 #| echo: true 
@@ -861,7 +863,7 @@ anova(modele_SDEM, modele_SEM)
 
 Bien que la procédure de test précédente soit intéressante, elle peut néanmoins mener à une certaine difficulté dans l'identification de la forme fonctionnelle préférable. Un arbitrage peut alors être mené à partir de statistiques alternatives telles que les critères d'information.
 
-Le critère d'information d'Akaike (AIC) et le critère d'information bayésien (BIC) sont largement utilisés pour évaluer la qualité d'ajustement du modèle. Plus leurs valeurs sont faibles, plus la spécification est intéressante pour expliquer la variabilité de la variable dépendante, et moins la variabilité du terme d'erreur est grande. Il est donc possible de comparer les valeurs des différents critères afin d'orienter le choix de la spécification finales (MCO, SLX, SAR, SEM, SDM et SDEM).
+Le critère d'information d'Akaike (AIC) et le critère d'information bayésien (BIC) sont largement utilisés pour évaluer la qualité d'ajustement du modèle. Plus leurs valeurs sont faibles, plus la spécification est intéressante pour expliquer la variabilité de la variable dépendante, et moins la variabilité du terme d'erreur est grande. Il est donc possible de comparer les valeurs des différents critères afin d'orienter le choix de la spécification finale (MCO, SLX, SAR, SEM, SDM et SDEM).
 
 Nous pouvons aussi comparer l'autocorrélation spatiale des résidus des modèles avec le *I* de Moran.
 
@@ -1003,7 +1005,7 @@ render_quizz(Chap02Quiz)
 #| eval: false
 library(sf)
 library(spatialreg)
-# Matrice de contiguïté selon le partage d'un segment (Rook)
+# Matrice de contiguïté selon le partage d’un segment (Rook)
 load("data/Lyon.Rdata")
 Rook <- poly2nb(LyonIris, queen=FALSE)
 w_rook <- nb2listw(Rook, zero.policy=TRUE, style = "W")
@@ -1052,7 +1054,7 @@ Correction à la [section @sec-08022].
 #| message: false 
 #| warning: false 
 #| eval: false
-## Valeurs d'AIC et de BIC
+## Valeurs d’AIC et de BIC
 à compléter
 ## Autocorrélation spatiale des résidus
 à compléter
