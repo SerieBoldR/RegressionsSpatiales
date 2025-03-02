@@ -1,0 +1,3 @@
+# Modèles des moindres carrés ordinaires (GLS) (en cours de rédaction) {#sec-chap09}
+
+Les modèles des moindres carrés ordinaires (*Generalized least squares*, GLS) peuvent aussi être utilisés quand les termes d'erreur (résidus) du modèle non spatial sont spatialement autocorrélés.

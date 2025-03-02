@@ -1,0 +1,346 @@
+# Autres modèles d'économétrie spatiale {#sec-chap03}
+
+Dans ce chapitre, nous décrivons deux autres types de modèles d'économétrie spatiale. Premièrement, nous abordons le modèle d'autorégression conditionnelle (***c**onditional **a**utoregressive **m**odel*, CAR) qui s'applique à une variable dépendante continue. Nous verrons notamment comment le modèle CAR se distingue du modèle SAR (***s**patial **a**uto**r**egressive*) décrit dans le chapitre précédent ([section @sec-02121]). Deuxièmement, nous décrirons les modèles probit spatiaux, très utiles lorsque la variable dépendante est une variable qualitative binaire.
+
+::: bloc_objectif
+::: bloc_objectif-header
+::: bloc_objectif-icon
+:::
+
+**Objectifs d'apprentissage visés dans ce chapitre**
+:::
+
+::: bloc_objectif-body
+À la fin de ce chapitre, vous devriez être en mesure de :
+
+-   comprendre la différence entre un modèle CAR et un modèle SAR;
+-   comprendre les raisons motivant le choix d'un modèle d'économétrie spatiale avec une variable dépendante qualitative binaire;
+-   mettre en pratique et interprétrer les résultats de ces deux types modèles spatiaux dans R.
+:::
+:::
+
+::: bloc_package
+::: bloc_package-header
+::: bloc_package-icon
+:::
+
+**Liste des *packages* utilisés dans ce chapitre**
+:::
+
+::: bloc_package-body
+-   Pour importer et manipuler des fichiers géographiques :
+    -   `sf` pour importer et manipuler des données vectorielles.
+-   Pour construire des cartes et des graphiques :
+    -   `tmap` est certainement le meilleur *package* pour la cartographie.
+    -   `ggplot2` et `ggpubr` pour construire des graphiques.
+-   Pour construire des modèles spatiaux :
+    -   `spdep` pour construire des matrices de pondération spatiales et calculer le *I* de Moran.
+    -   `Matrix` pour construire des matrices de pondération spatiales peu denses.
+    -   `spatialreg` pour construire des modèles CAR.
+    -   `ProbitSpatial` pour construire des modèles économétriques spatiaux avec variable dépendante binaire.
+:::
+:::
+
+## Modèles d'autorégression conditionnelle (en cours de rédaction) {#sec-031}
+
+## Modèles probit spatial (en cours de rédaction) {#sec-032}
+
+## Bref retour sur le modèle probit {#sec-0321}
+
+Traditionnellement, les décisions de modélisation en géographie quantitative, en théorie économique ou plus généralement en sciences sociales ont été élaborées en considérant des variables quantitatives. Cependant, dans de nombreux contextes économiques et géographiques, la variable dépendante n'est pas quantitative.
+
+-   Un modèle permettant de prédire l'évaluation d'un individu sur un parti politique donné en fonction de ses caractéristiques socio-économiques : la variable endogène peut être définie comme une variable discrète avec des valeurs allant de "1" à "5" (très négatif, négatif, neutre, positif, très positif).
+
+-   Un modèle permettant de prédire la marque de lessive choisie par un individu en fonction de ses caractéristiques socio-économiques : la variable endogène est une variable catégorielle codée avec différentes valeurs numériques, une pour chaque marque de lessive.
+
+-   Un modèle permettant de prédire si un individu remboursera ou non un prêt en fonction de ses caractéristiques socio-économiques : la variable endogène peut être définie comme une variable dichotomique prenant la valeur 1 si l'individu rembourse le prêt et 0 dans le cas contraire.
+
+-   En utilisant le secteur de recensement comme unité spatiale et les données correspondantes, nous pouvons construire une variable dichotomique pour chaque secteur de recensement, attribuant une valeur de 1 si le secteur de recensement est un cluster et 0 dans le cas contraire. Ensuite, nous pouvons modéliser l'appartenance de chaque secteur de recensement à un cluster en fonction de ses caractéristiques socio-économiques.
+
+Lorsque la variable endogène est dichotomique, le modèle est appelé modèle de choix binaire. Ce type de modèles constitue une catégorie spécifique des modèles linéaires généralisés, plus communément appelés GLM (generalized linear models en anglais). Nous vous encourageons à consulter le chapitre intitulé [*Régressions linéaires généralisées (GLM)*](https://serieboldr.github.io/MethodesQuantitatives/08-GLM.html)
+
+Dans ce thème, nous nous concentrerons sur les modèles de choix binaire, Ce modèle est appelé le modèle de probabilité linéaire (MPL) établit une relation linéaire entre la variable endogène dichotomique et les variables explicatives :
+
+$$
+Y^*_i = \beta_1 + \beta_2 X_{2i} + \dots + \beta_k X_{ki} + u_i
+$$ {#eq-Probit01}
+
+Où :
+
+-   $Y^*_i$ est une variable binaire prenant les valeurs 0 ou 1. $u_i$ est un terme d'erreur.
+
+En prenant l'espérance de l'équation du modèle, on obtient:
+
+$$
+E(Y^*_i) = E(\beta_1 + \beta_2 X_{2i} + \dots + \beta_k X_{ki} + u_i)
+$$ {#eq-Probit02}
+
+Puisque $E(u_i)=0$ Le modèle de probabilité linéaire (MPL) établit une relation linéaire entre la variable endogène dichotomique et les variables explicatives :
+
+$$
+Y^*_i = \beta_1 + \beta_2 X_{2i} + \dots + \beta_k X_{ki} + u_i
+$$ {#eq-Probit03}
+
+En prenant l'espérance de l'équation du modèle, on obtient :
+
+$$
+E(Y^*_i) = E(\beta_1 + \beta_2 X_{2i} + \dots + \beta_k X_{ki} + u_i)
+$$ {#eq-Probit04}
+
+Puisque $E(u_i)=0$, cela simplifie à :
+
+$$
+E(Y^*_i) = \beta_1 + \beta_2 X_{2i} + \dots + \beta_k X_{ki}
+$$ {#eq-Probit05}
+
+Or, comme $Y^*_i$ est une variable binaire, son espérance correspond à la probabilité que $Y^*_i=1$:
+
+$$
+E(Y^*_i) = 0 \cdot P(Y^*_i = 0) + 1 \cdot P(Y^*_i = 1) = P(Y^*_i = 1)
+$$ {#eq-Probit06}
+
+On en déduit donc le modèle de probabilité linéaire (MPL):
+
+$$
+p_i = \beta_1 + \beta_2 X_{2i} + \dots + \beta_k X_{ki}
+$$ {#eq-Probit07}
+
+où $p_i=P(Y^*_i)$, c'est-à-dire la probabilité que l'observation $i$ prenne la valeur 1 en fonction de ses caractéristiques $X_i$.
+
+Si nous procédons à l'estimation de ce modèle par moindres carrés ordinaires (MCO), cette méthode d'estimation présente quatre problèmes:
+
+-   Le terme d'erreur suit une distribution discrète et, par conséquent, l'hypothèse de normalité ne s'applique pas.
+-   Le terme d'erreur viole l'hypothèse d'homoscedasticité.
+-   Les valeurs prédites ne sont pas nécessairement comprises entre 0 et 1.
+-   Le coefficient de détermination, $R^2$, n'est pas une bonne mesure de l'ajustement du modèle.
+
+Afin de remédier à ces problèmes dans le cadre des modèles spatiaux, le modèle Probit est utilisé:
+
+$$
+p_i = \Phi(\beta_1 + \beta_2 X_{2i} + \dots + \beta_k X_{ki})
+$$ {#eq-Probit08}
+
+où $\Phi(x)$ est la fonction de répartition de la loi normale standard.
+
+Les modèles Probit spatiaux sont utilisés pour analyser des données échantillonnées associées à des localisations spatiales et présentant des résultats binaires.
+
+## Les différents modèles probit spatiaux {#sec-0322}
+
+Bien que les modèles spatiaux binaires permettent les mêmes spécifications que celles que nous avons vues au chapitre 2, les chercheurs se concentrent habituellement sur trois spécifications :
+
+
+## Modèle probit SAR : autocorrélation spatiale sur la variable dépendante binaire {#sec-03221}
+
+
+### Description du modèle probit SAR {#sec-03221}
+
+
+$$
+\mathbf{y}^{*} = \rho \mathbf{Wy^{*}} + \iota \alpha + \mathbf{X} \beta + \epsilon
+$$  {#eq-Probit09}
+
+Où  maintenant:
+
+-   $\mathbf{y}^{*}$, est la variable dépendante binaire, prenant la valeur 1 si l'observation présente la caractéristique étudiée, et 0 sinon., soit un vecteur de dimension $(N \times 1)$ où N est le nombre total d'observations mobilisées dans l'analyse, avec $i=1,2,\dots,N$.
+-   $\mathbf{Wy^{*}}$, est un vecteur de la variable dépendante spatialement décalée de dimension $(N \times 1)$.
+-   $\rho$ est un paramètre (scalaire, donc de dimension ($1 \times 1$)) autorégressif, qui varie habituellement entre -1 et 1 (autrement un problème de non-stationnarité survient).
+-   $\iota$ est un vecteur de dimension $(N \times 1)$ comportant uniquement des valeurs de 1.
+-   $\mathbf{X}$, une matrice de dimension $(N \times K)$ renfermant l'ensemble des $K$ vecteurs de variables explicatives en plus d'une colonne de 1, dans la première colonne de la matrice, pour la constante, d'où $(K+1)$.
+-   $\alpha$ est un scalaire identifiant l'ordonnée à l'origine.
+-   $\beta$, est un vecteur de dimension $(K+1)$ qui renferme l'ensemble des coefficients de régression, pour les $K$ variables indépendantes et la constante.
+-   $\varepsilon$, un vecteur de dimension $(N \times 1)$ des termes d'erreurs.
+
+#### Modèle SAR avec variable dépendante binaire dans R
+
+Pour illustrer la mise en œuvre dans R des différentes modèles spatiaux binaires, nous utilisons le jeu de données sur Barcelone.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: false
+#| warning: false
+## Chargemement des packages et des données
+library(sf)
+library(tmap)
+library(spdep)
+library(ProbitSpatial)
+library(Matrix)
+library(spatialreg)
+
+load("data/Barcelone.Rdata")
+
+# Matrice de contiguïté selon le partage d'un segment (Rook)
+BCN_rook <- poly2nb(Barcelone, queen = FALSE)
+W1_rook <-  nb2listw(BCN_rook,
+                     glist = NULL,
+                     style = "W",
+                     zero.policy = FALSE)
+
+#Matrice de contiguïté peu dense (Sparse contiguity matrix)
+W2 <- as(W1_rook, "CsparseMatrix")
+
+# Centrage et réduction des variables explicatives
+BCN$Revenu_s <- scale(BCN$Revenu)
+BCN$Densite_s <- scale(BCN$Densite)
+BCN$Distance_s <- scale(BCN$Distance)
+
+# spécification du modèle
+formule <- ClusterUE ~ Revenu_s + Densite_s + Distance_s
+
+# Construction du modèle probit non spatial
+probit_nonspatiale <- glm(formule, 
+                          data = BCN, 
+                          family = binomial(link = "probit"))
+summary(probit_nonspatiale)
+
+moran.mc(residuals(probit_nonspatiale, type = 'pearson'), 
+                   listw = W1_rook, nsim = 999,
+                   zero.policy = TRUE)
+
+res <- simulateResiduals(probit_nonspatiale, plot = FALSE)
+moran.mc(residuals(res, type = 'pearson'), 
+                   listw = W1_rook, nsim = 999,
+                   zero.policy = TRUE)
+
+# Construction matrice de confusion
+tab <- table(Obs = BCN$ClusterUE, 
+             Pred = probit_nonspatiale$fitted.values > 0.5)
+TP <- tab[2, 2]
+TN <- tab[1, 1]
+FP <- tab[2, 1]
+FN <- tab[1, 2]
+Accuracy <- (TP + TN) / length(Barcelone$ClusterUE)
+sensitivity <- TP / (TP + FN)
+specificity <- TN / (TN + FP)
+ppv <- TP / (TP + FP)
+npv <- TN / (TN + FN)
+tab
+cat(
+  "Accuracy:",
+  Accuracy,
+  "| Sensitivity:",
+  sensitivity,
+  "| Specificity:",
+  specificity,
+  "| PPV:",
+  ppv,
+  "| NPV:",
+  npv,
+  "\n"
+)
+# Construction du modèle SAR probit spatial
+Probit_SAR <-
+  ProbitSpatialFit(
+    reg1,
+    BCN,
+    W2,
+    DGP = 'SAR',
+    method = "conditional",
+    varcov = "varcov",
+    M = W2,
+    control = list()
+  )
+summary(Probit_SAR)
+```
+
+Tout d'abord, nous notons que, pour les clusters du les immigrants de l'UE, le revenu présente des coefficients significatifs et positifs. En revanche, la densité et la distance sont également significatives, mais avec un signe opposé.La précision est supérieure à 0.85
+
+L'interprétation des coefficients estimés des variables explicatives dans les modèles avec variables endogènes binaires n'est pas immédiate. Dans les régressions probit non spatiales, une approche courante pour interpréter cette relation consiste à estimer les effets marginaux en évaluant les variables explicatives à des valeurs spécifiques, telles que leur moyenne. Comme nous l'avons vu dans le chapitre précédent les effets marginaux dans les modèles spatiaux sont plus complexes à calculer et à interpréter que les mesures d'impact usuelles dans les modèles non spatiaux.
+
+Conformément aux travaux de LeSage et Pace (2009) ainsi que de Lacombe et LeSage (2018), nous utilisons trois mesures d'impact : les effets directs, les effets indirects et les effets totaux. Dans notre cas, les effets directs capturent l'effet sur la probabilité qu'un secteur de recensement ii soit un cluster, induit par une variation unitaire d'une variable exogène $X_k$ (revenu des ménages, densité de population ou distance au centre-ville) dans le secteur de recensement $i$.
+
+D'autre part, les effets indirects peuvent être interprétés comme l'effet d'une variation unitaire de $X_k$ dans le secteur de recensement $i$ sur la probabilité que tous les autres secteurs $j \neq i$ deviennent des clusters. Toutefois, l'ampleur de ces impacts indirects est plus élevée pour les voisins proches et diminue progressivement avec l'éloignement et le rang des voisins. Ces effets indirects sont souvent qualifiés d'externalités spatiales (spillovers), et leurs valeurs numériques servent de mesures quantitatives de leur intensité.
+
+Enfin, les effets totaux correspondent à la somme des effets directs et indirects. Ils reflètent donc la variation totale (cumulative) de la probabilité qu'un secteur de recensement soit un cluster, résultant d'un changement d'une variable explicative (Lacombe et LeSage, 2018).
+
+Comme dans le cas des modèles spatiaux avec variable dépendante quantitative, dans les modèles probit spatiaux, nous pouvons également estimer les effets directs, indirects et totaux pour chaque variable explicative.
+
+Le code suivant permet de calculer ces effets directs, indirects e totaux.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: false
+#| warning: false
+effects_ProbitSpatial(Probit_SAR)
+```
+
+Il est évident, tant pour Barcelone,que l'effet indirect dépasse l'effet direct. Cela doit être interprété comme signifiant qu'un revenu des ménages plus élevé dans un secteur de recensement $i$i augmente la probabilité que les zones voisines forment un cluster. La densité présente un effet indirect plus marqué; cependant, le signe négatif indique qu'une densité plus élevée dans le secteur de recensement $i$ réduit la probabilité que les secteurs de recensement voisins forment un cluster.
+
+Le même schéma est observé avec la distance.
+
+-   Modèle SEM : autocorrélation spatiale sur le terme d'erreur avec la variable dépendante binaire. 
+
+$$
+\mathbf{y^{*}}=\mathbf{\iota}\alpha+\mathbf{X\beta}+\mathbf{\nu}
+$$  {#eq-Probit10}
+
+$$
+\mathbf{\nu}=\lambda\mathbf{W\nu}+\mathbf{\varepsilon}
+$$  {#eq-Probit11}
+
+Où :
+
+-   $\mathbf{W}$ est une matrice de pondérations spatiales, standardisée en ligne, de dimension $\left(N\times N\right)$.
+
+-   $\lambda$ est un paramètre (scalaire, donc de dimension $\left(1\times1\right)$) autorégressif, qui varie habituellement entre -1 et 1 (autrement un problème de non-stationnarité survient).
+
+-   $\mathbf{\nu}$ est un vecteur de termes d'erreurs spatialement autocorrélés de dimension $\left(N\times1\right)$.
+
+-   $\mathbf{\varepsilon}$ est un vecteur de termes supposés indépendants de dimension $\left(N\times1\right)$.
+
+#### Modèle SEM avec variable dépendante binaire dans R
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: false
+#| warning: false
+Probit_SEM<-ProbitSpatialFit(reg1,BCN,W2,DGP='SEM',method="conditional",varcov="varcov",M=W2,control=list())
+summary(Probit_SEM)
+effects_ProbitSpatial(Probit_SEM)
+```
+
+-   Modèle SARAR : autocorrélation spatiale sur la variable dépendante binaire et sur le terme d'erreur. 
+
+$$
+\mathbf{y}^{*} = \rho \mathbf{Wy^{*}} + \iota \alpha + \mathbf{X} \beta + \epsilon
+$$ {#eq-Probit12}
+
+$$
+\mathbf{\nu}=\lambda\mathbf{W\nu}+\mathbf{\varepsilon}
+$$ {#eq-Probit13}
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: false
+#| warning: false
+Probit_SARAR <- ProbitSpatialFit(reg1,BCN,W2,DGP='SARAR',method="conditional",varcov="varcov",M=W2,control=list())
+summary(Probit_SARAR)
+effects_ProbitSpatial(Probit_SARAR)
+```
+
+#### Bloc pour aller plus loin
+
+Pour résoudre les problèmes du MPL dans le contexte des modèles spatiaux, nous avons utilisé le modèle Probit :
+
+$$
+p_i = \Phi(\beta_1 + \beta_2 X_{2i} + \dots + \beta_k X_{ki})
+$$ {#eq-Probit14}
+
+où $\Phi(x)$ est la fonction de répartition de la loi normale centrée réduite (moyenne = 0 et variance = 1)
+
+La fonction de répartition de la loi normale standard est :
+
+$$
+\Phi(x) = \int_{-\infty}^{x} \frac{1}{\sqrt{2\pi}} \exp\left(-\frac{t^2}{2}\right) dt
+$$ {#eq-Probit15}
+
+Par conséquent, notre modèle Probit s'écrit :
+
+$$p_i = \Phi(\beta_1 + \beta_2 X_{2i} + \dots + \beta_k X_{ki}) = 
+\int_{-\infty}^{\beta_1 + \beta_2 X_{2i} + \dots + \beta_k X_{ki}} 
+\frac{1}{\sqrt{2\pi}} \exp\left(-\frac{t^2}{2}\right) dt
+$$ {#eq-Probit16}
+

@@ -295,7 +295,7 @@ Le modèle nécessite une méthode d'estimation appropriée. La première approc
 
 Plus récemment, Kelejian et Prucha [-@kelejian1998generalized] ont proposé une approche basée sur les moindres carrés généralisés (MCG). Cette approche a l'avantage d'être plus rapide en plus de permettre de corriger l'absence d'hétéroscédasticité. Elle a cependant le désavantage de reposer sur l'hypothèse importante d'exogénéité de la matrice de pondération spatiale, qui sert d'instrument lors du processus d'estimation.
 
-Ce modèle est habituellement qualifié d'**effet de débordement** ou d'**effet d'entraînement**. Comparativement au modèle SLX, les effets marginaux sont identifiés comme étant globaux puisqu'une variation de la valeur de la variable dépendante, introduit une variation dans la valeur des variables dépendantes décalées spatialement qui, à leur tour, influencent la variation dans les valeurs dépendantes des observations voisines et ainsi de suite (@fig-EffetMargSAR). Cette boucle de rétroaction peut être interprétée comme la résultante d'un équilibre général spatial.
+Ce modèle est habituellement qualifié d'**effet de débordement** ou d'**effet d'entraînement**, puisqu’une variation de la valeur de la variable dépendante d’une observation affecte le résultat d’une autre observation. Comparativement au modèle SLX. Comparativement au modèle SLX, les effets marginaux sont identifiés comme étant globaux puisqu'une variation de la valeur de la variable dépendante, introduit une variation dans la valeur des variables dépendantes décalées spatialement qui, à leur tour, influencent la variation dans les valeurs dépendantes des observations voisines et ainsi de suite (@fig-EffetMargSAR). Cette boucle de rétroaction peut être interprétée comme la résultante d'un équilibre général spatial.
 
 ![Effets marginaux dans un modèle SAR](images/Chap02/EffetsMarginaux_SAR.jpg){#fig-EffetMargSAR width="22%" fig-align="center"}
 
@@ -1015,7 +1015,7 @@ formule <- "PM25 ~  Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed"
 à compléter
 ```
 
-Correction à la [section @sec-08021].
+Correction à la [section @sec-10021].
 :::
 :::
 
@@ -1036,7 +1036,7 @@ Correction à la [section @sec-08021].
 à compléter
 ```
 
-Correction à la [section @sec-08022].
+Correction à la [section @sec-10022].
 :::
 :::
 
@@ -1063,6 +1063,6 @@ Comparaison <- à compléter
 Comparaison
 ```
 
-Correction à la [section @sec-08023].
+Correction à la [section @sec-10023].
 :::
 :::

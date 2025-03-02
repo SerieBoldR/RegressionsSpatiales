@@ -1,0 +1,1223 @@
+# Régressions géographiquement pondérées classiques {#sec-chap05}
+
+La régression géographiquement pondérée (*geographically weighted regression* - **GWR**, en anglais) a été formalisée au milieu des années 1990 par Chris Brunsdon, Steward Fotheringham et Martin Charlton [-@brunsdon1996geographically], puis largement décrite dans un ouvrage de référence [@fotheringham2003geographically]. Dans le cadre de ce chapitre, nous abordons uniquement la GWR classique qui s'applique à une variable dépendante continue (GWR gaussienne).
+
+::: bloc_objectif
+::: bloc_objectif-header
+::: bloc_objectif-icon
+:::
+
+**Objectifs d'apprentissage visés dans ce chapitre**
+:::
+
+::: bloc_objectif-body
+À la fin de ce chapitre, vous devriez être en mesure de :
+
+-   comprendre pourquoi utiliser une GWR;
+-   assimiler les principes fondamentaux d'une GWR classique (distribution gaussienne);
+-   analyser les résultats produits par une GWR;
+-   saisir que la GWR est un outil exploratoire intéressant, comprenant toutefois plusieurs limites et critiques importantes;
+-   mettre en pratique une GWR dans R.
+:::
+:::
+
+::: bloc_package
+::: bloc_package-header
+::: bloc_package-icon
+:::
+
+**Liste des *packages* utilisés dans ce chapitre**
+:::
+
+::: bloc_package-body
+-   Pour importer et manipuler des fichiers géographiques :
+    -   `sf` pour importer et manipuler des données vectorielles.
+    -   `dplyr` pour manipuler les données.
+-   Pour construire des cartes et des graphiques :
+    -   `tmap` pour les cartes.
+    -   `ggplot2` et `ggpubr` pour construire des graphiques.
+    -   `corrplot` et `GGally` pour créer des graphiques de matrices de corrélation.
+-   Pour construire des modèles de régressions :
+    -   `spgwr` et `GWmodel` pour construire des GWR gaussienne, logistique et Poisson.
+    -   `spdep` pour construire des matrices de pondération spatiales et calculer le *I* de Moran.
+:::
+:::
+
+## Principe de base {#sec-051}
+
+### Pourquoi recourir à une régression géographiquement pondérée? {#sec-0511}
+
+Dans le [chapitre @sec-chap02], nous avons vu que les modèles d'économétrie spatiale visent à contrôler la **dépendance spatiale** d'un modèle de régression classique (MCO), afin d'améliorer l'estimation des coefficients de régression. L'objectif des modèles de régression géographiquement pondérée est différent : ils visent à analyser les variations spatiales de la relation entre la variable dépendante et les variables indépendantes. Autrement dit, les modèles GWR visent à explorer **l'instabilité spatiale du modèle MCO** afin d'analyser localement la relation entre la variable dépendante et les variables indépendantes. Pour une description détaillée en français de la GWR, consultez Apparicio *et al.* [-@apparicio2007modelisation].
+
+### Formulation de la GWR {#sec-0512}
+
+Contrairement à la régression linéaire classique et aux modèles spatiaux autorégressifs qui produisent une équation pour l'ensemble du tableau de données, la GWR produit une équation pour chaque unité spatiale *i* et ainsi, des valeurs locales de R^2^, $\beta_0$, $\beta_k$, *t* de Student, etc. La résolution de cette équation de régression locale est aussi basée sur la méthode des moindres carrés et sur une matrice de pondération spatiale ($\mathbf{W(i)}$) dont les valeurs décroissent en fonction de la distance séparant les entités spatiales *i* et *j*. Autrement dit, plus *j* est proche de *i*, plus sa pondération est élevée et donc plus son rôle dans la détermination de l'équation de régression locale de *i* est important.
+
+De la sorte, la GWR est une extension de la régression linéaire multiple classique où $(u_i, v_i)$ représente les coordonnées géographiques du centroïde de l'unité spatiale et où les paramètres $\beta_0$ et $\beta_k$ peuvent varier dans l'espace (@eq-GWR).
+
+$$
+y_i = \beta_0(u_i, v_i)+ \sum_{j=1}^k \beta_j(u_i, v_i)x_{ij}+ \epsilon_i
+$$ {#eq-GWR}
+
+avec :
+
+-   $(u_i, v_i)$, les coordonnées géographiques de l'unité spatiale *i*.
+-   $y_i$, la variable dépendante pour l'unité spatiale *i*.
+-   $\beta_0(u_i, v_i)$, la constante pour l'unité spatiale *i* aux coordonnées géographiques $(u_i, v_i)$.
+-   $\beta_j(u_i, v_i)$, le coefficient de régression pour la variable $x_j$ (avec *k* variables indépendantes) pour l'unité spatiale *i* aux coordonnées géographiques $(u_i, v_i)$.
+-   $x_{ij}$, la valeur de la variable indépendante $x_j$ pour l'unité spatiale *i*.
+-   $\epsilon_i$, le terme d'erreur pour l'unité spatiale *i*.
+
+Fotheringham *et al.* [-@fotheringham2003geographically] proposent deux principales fonctions *kernel* pour définir la matrice de pondération spatiale $\mathbf{W(i)}$ dans le modèle GWR : une fonction gaussienne (@eq-kernelgaussien) et une fonction bicarrée (@eq-kernelbicarree) où $d_{ij}$ représente la distance euclidienne entre les points *i* et *j* et *b*, le rayon de zone d'influence autour du point *i* (*bandwidth*). Il existe une différence fondamentale entre les deux : la fonction gaussienne accorde un poids non nul à tous les points de l'espace d'étude aussi loin soient-ils, tandis que la fonction bicarrée ne tient pas compte des points distants à plus de *b* mètres de *i*, tel qu'illustré à la @fig-GWRKernels avec une valeur fixée à 5000 mètres en guise d'exemple.
+
+$$
+w_{ij} = \exp\left(-\frac{1}{2}\left(\frac{d_{ij}}{b}\right)^2\right)
+$$ {#eq-kernelgaussien}
+
+$$
+w_{ij} = \left(1 - \left(\frac{d_{ij}}{b}\right)^2\right)^2 \text{ si } d_{ij}< b \text{, sinon } w_{ij}=0 
+$$ {#eq-kernelbicarree}
+
+::: bloc_aller_loin
+::: bloc_aller_loin-header
+::: bloc_aller_loin-icon
+:::
+
+**Autres fonctions Kernel pour la GWR**
+:::
+
+::: bloc_aller_loin-body
+Outre les fonctions Kernel gaussienne et bicarrée, il est aussi possible d'utiliser des fonctions exponentielle (@eq-kernelexponentielle) et tricube (@eq-kerneltricube), et Boxcar (@eq-kernelboxcar) implémentées dans les fonctions `bw.gw` et `gwr.basic` du *package* `GWmodel`.
+
+$$
+w_{ij} = \exp\left(-\frac{d_{ij}}{b}\right)
+$$ {#eq-kernelexponentielle}
+
+$$
+w_{ij} = \left(1 - \left(\frac{d_{ij}}{b}\right)^3\right)^3 \text{ si } d_{ij}< b \text{, sinon } w_{ij}=0 
+$$ {#eq-kerneltricube}
+
+$$
+w_{ij} = 1 \text{ si } d_{ij}< b \text{, sinon } w_{ij}=0 
+$$ {#eq-kernelboxcar}
+:::
+:::
+
+```{r}
+#| echo: false 
+#| eval: true 
+#| message: false 
+#| warning: false
+#| label: fig-GWRKernels
+#| fig-align: center
+#| fig-cap: "Fonctions kernel pour définir la matrice de pondération W(i)"
+#| out-width: 75%
+library(ggplot2)
+library(ggpubr)
+b <- 5000
+x <- seq(-15000, 15000, 10)
+df <- data.frame(dij = x,
+                 gaussienne = exp(-.5*(abs(x)/b)^2),
+                 exponentielle = exp(-1*abs(x)/b),
+                 bicarrée = ifelse(abs(x)>=b, 0, 1-((abs(x)/b)^2)^2),
+                 tricube = ifelse(abs(x)>b, 0, 1-((abs(x)/b)^3)^3),
+                 boxcar = ifelse(abs(x)>b, 0, 1)
+                 )
+
+ggplot(df, aes(x = dij)) +
+  geom_vline(xintercept = b, linewidth = .5, col="black") +
+  geom_vline(xintercept = -b, linewidth = .5, col="black") +
+  geom_line(aes(y = boxcar,        color = "boxcar"), linewidth = 1.2) +
+  geom_line(aes(y = tricube,       color = "tricube"), linewidth = 1.2) +
+  geom_line(aes(y = bicarrée,      color = "bicarrée"), linewidth = 1.2) +
+  geom_line(aes(y = gaussienne,    color = "gaussienne"), linewidth = 1.2) +
+  geom_line(aes(y = exponentielle, color = "exponentielle"), linewidth = 1.2) +
+  labs(title = "",
+       x = "Distance (en mètres)",
+       y = "Pondération",
+       color = "Fonction kernel") +
+   annotate(geom="text", x = b + 300, y=.80,
+            label=paste0("b = ",as.character(b)), 
+            color="black", hjust = 0, size = 4) +
+     annotate(geom="text", x = -b - 4600, y=.80,
+            label=paste0("b = ",as.character(-b)), 
+            color="black", hjust = 0, size = 4)+
+    scale_color_manual(values = c("gaussienne" = "#fc4e2a", 
+                                  "exponentielle" = "#b10026", 
+                                  "bicarrée" = "#034e7b", 
+                                  "tricube" = "#74a9cf", 
+                                  "boxcar" = "#d0d1e6"), 
+                     breaks = c("gaussienne", "exponentielle", "bicarrée", "tricube", "boxcar"))
+```
+
+Dans le modèle GWR, la valeur de *b* est soit fixée par la personne utilisatrice, soit optimisée avec la valeur de CV (*cross-validation*) ou celle de l'AIC. Notez qu'il est possible d'optimiser la taille de la zone d'influence à partir de la distance (euclidienne le plus souvent, mais d'autres types de distances peuvent être utilisées) ou du nombre de plus proches voisins.
+
+### Exemple applicatif de la GWR {#sec-0513}
+
+Pour démontrer l'utilité de la GWR comme outil d'exploration de l'instabilité spatiale d'un modèle classique, nous utilisons le jeu de données sur Lyon ([section @sec-0111]). Les modèles de régression (global et GWR) sont construits avec comme variable dépendante le dioxyde d'azote (NO~2~) et cinq variables sociodémographiques comme variables indépendantes ([section @sec-0111]).
+
+#### Résultats du modèle global {#sec-05131}
+
+Les résultats de la régression linéaire multiple (modèle global) sont présentés au @tbl-regressionMCO. Les variables sociodémographiques (variables indépendantes) introduites dans le modèle expliquent 28,3 % de la variance du dioxyde d'azote (variable dépendante). La constante et tous les coefficients de régression du modèle sont significatifs (p \< 0,001). Toutes choses étant égales par ailleurs, le pourcentage d'immigrants est associé positivement avec le dioxyde d'azote ($\beta$ = 0,283), ce qui traduit une certaine iniquité environnementale pour ce groupe de population. À l'inverse, toutes les autres variables sont associées négativement.
+
+```{r}
+#| label: tbl-regressionMCO
+#| tbl-cap: Résultats du modèle global (régression linéaire multiple)
+#| echo: false
+#| message: false
+#| warning: false
+library(sf)
+library(stargazer)
+library(knitr)
+library(kableExtra)
+load("data/Lyon.Rdata")
+modele_global <- lm(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed, data = LyonIris)
+tab    <- summary(modele_global)
+tab_reg <- as.data.frame(tab$coefficients)
+tab_reg$Variable <- rownames(tab_reg)
+tab_reg <- tab_reg[, c(5, 1:4)]
+tab_reg[1, 1] <- "Constante"
+R2 <- as.character(round(tab$r.squared,4))
+R2adj <- as.character(round(tab$adj.r.squared,4))
+R2 <- gsub("\\.", ",", R2) 
+R2adj <- gsub("\\.", ",", R2adj)
+note <- paste0("Nombre d'observations = ", nrow(LyonIris), ". ", 
+               "R carré = ", R2, ". ",
+               "R carré ajusté = ", R2adj, ".") 
+
+kbl(tab_reg,
+			digits = 3,
+			row.names = FALSE,
+			format.args = list(decimal.mark = ',', big.mark = " "),
+			c("Variable", "Coef.", "Erreur type", "t", "p"),
+			align= c("l", "r", "r", "r", "r", "r"),
+			format = "markdown",
+			linesep = "") %>%
+      kable_styling() %>%
+      footnote(general_title = "",
+               general = note)
+```
+
+L'objectif de la construction d'un modèle GWR est d'examiner l'instabilité spatiale de ce modèle, en analysant comment les associations observées dans le modèle global entre les cinq variables sociodémographiques et le dioxyde d'azote varient dans l'espace.
+
+#### Résultats du modèle GWR {#sec-05132}
+
+**Définition de la zone d'influence**
+
+Puisque la superficie des 506 IRIS varie considérablement (avec de petits IRIS au centre de l'agglomération et de très grands IRIS en périphérie, @fig-datacarto), nous préférons optimiser la zone d'influence ($b$) avec le nombre de plus proches voisins et non la distance euclidienne avec l'approche *cross-validation*. Le résultat final de l'optimisation du nombre de plus proches voisins est de 92.
+
+**Comparaison des modèle global et GWR**
+
+L'analyse de variance entre les résidus des deux modèles démontre que le modèle GWR améliore de façon significative la capacité prédictive du modèle de régression globale (@tbl-GWRAnova). Les valeurs de R^2^ passent d'ailleurs de 0,283 pour le modèle global à 0,784 pour le modèle GWR.
+
+```{r}
+#| label: tbl-GWRAnova
+#| tbl-cap: Analyse de variance entre les modèles global et GWR
+#| echo: false
+#| message: false
+#| warning: false
+library(spgwr)
+library(tmap)
+load("data/Lyon.Rdata")
+xy <- st_coordinates(st_centroid(LyonIris))
+LyonIris$X <- xy[,1]
+LyonIris$Y <- xy[,2]
+## Optimisation du nombre de voisins avec le CV
+bwCVa_voisins <- gwr.sel(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+                        data = LyonIris,
+                        method = "cv",          # Méthode cv ou AIC
+                        gweight = gwr.bisquare,   # gwr.gauss ou gwr.bisquare
+                        adapt = TRUE,
+                        verbose = FALSE,
+                        RMSE = TRUE,
+                        longlat = FALSE,
+                        coords=cbind(LyonIris$X,LyonIris$Y))
+## Calcul de la GWR
+modele_gwr <- gwr(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+                  data = LyonIris,
+                  adapt = bwCVa_voisins,
+                  gweight = gwr.bisquare,
+                  hatmatrix = TRUE,
+                  se.fit = TRUE,
+                  coords = cbind(LyonIris$X,LyonIris$Y),
+                  longlat = FALSE)
+## R2
+r2_global <- summary(modele_global)$r.squared
+r2_global <- as.character(round(r2_global,4))
+r2_global <- gsub("\\.", ",", r2_global) 
+
+rss <- sum((modele_gwr$lm$y - modele_gwr$SDF$pred)^2) 
+tss <- sum((modele_gwr$lm$y - mean(modele_gwr$SDF$pred))^2) 
+r2_gwr <- 1 - (rss / tss)
+r2_gwr <- as.character(round(r2_gwr,4))
+r2_gwr <- gsub("\\.", ",", r2_gwr) 
+
+note <- paste0("R carré du modèle global = ", r2_global, ". R carré du modèle GWR = ", r2_gwr, ".") 
+## Anova
+gwr_anova <- anova(modele_gwr)
+tableau_anova <- data.frame(Modèle = c("Résidus du modèle global",
+                                      "Modèle GWR",
+                                      "Résidus du modèle GWR"),
+                            dl = gwr_anova$Df,
+                            SumSq = gwr_anova$`Sum Sq`,
+                            MeanSq = gwr_anova$`Mean Sq`,
+                            Fisher = gwr_anova$`F value`)
+options(knitr.kable.NA = '')
+kbl(tableau_anova,
+			digits = 2,
+			row.names = FALSE,
+			format.args = list(decimal.mark = ',', big.mark = " "),
+			c("", "dl", "Somme des carrés", "Moyenne des carrés", "Valeur F"),
+			align= c("l", "r", "r", "r", "r"),
+			format = "markdown",
+			linesep = "") %>%
+      kable_styling() %>%
+      footnote(general_title = "",
+               general = note)
+```
+
+**Cartographie des valeurs de *t***
+
+Afin de décrire les variations spatiales des associations entre les variables dépendantes et indépendantes, nous cartographions les valeurs de *t* pour chacune des cinq variables indépendantes (@fig-CartoR2ValT). Pour ce faire, nous utilisons les seuils de ± 1,96, 2,58 et 3,29, indiquant des seuils de signification à 5 %, 1 % et 0,1 %. La cartographie des valeurs de *t* illustre clairement les variations spatiales de l'association entre les variables indépendantes et le dioxyde d'azote.
+
+Premièrement, le modèle global avait révélé que toutes les variables indépendantes étaient significativement associées au seuil de 0,1 %, toutes choses étant égales par ailleurs. Or, localement certaines variables ne sont plus significatives au seuil de 5 % (valeurs de *t* comprises entre -1,96 et 1,96), soit les IRIS en gris à la @fig-CartoR2ValT. Par exemple, le pourcentage d'enfants de moins de 15 ans est associé négativement au dioxyde d'azote uniquement dans la partie sud de l'agglomération.
+
+Deuxièmement, le sens de la relation, c'est-à-dire du coefficient et de sa valeur de *t* associé, change pour certaines variables indépendantes. Cela est particulièrement le cas de la variable *médiane du niveau de vie (milliers d'euros)* qui affiche des valeurs positives dans le centre-ville, mais des valeurs négatives en périphérie. Autrement dit, une hausse du niveau de vie des résidents est associée à une réduction du dioxyde d'azote dans les quartiers et municipalités périphériques de l'agglomération, mais à une augmentation dans les quartiers centraux.
+
+```{r}
+#| label: fig-CartoR2ValT
+#| fig-cap: "Cartographie des valeurs de t : moins de 15 ans (%)"
+#| fig-align: center
+#| out-width: 100%
+#| echo: false
+#| message: false
+#| warning: false
+## Récupération des coefficients de régression et calcul des valeurs de t locales
+library(tmap)
+LyonIris$GWR.R2 <- modele_gwr$SDF$localR2
+vars_indep <- c("Pct0_14", "Pct_65", "Pct_Img", "Pct_brevet", "NivVieMed")
+
+for(e in vars_indep){
+  # Nom des nouvelles variables
+  var_coef <- paste0("GWR.", "B_", e)
+  var_t    <- paste0("GWR.", "T_", e)
+  # Récupération des coefficients pour les variables indépendantes
+  LyonIris[[var_coef]] <- modele_gwr$SDF[[e]]
+  # Calcul des valeurs de t pour les variables indépendantes
+  LyonIris[[var_t]]    <- modele_gwr$SDF[[e]] / modele_gwr$SDF[[paste0(e, "_se")]]
+}
+
+# Paramètres pour la légende 
+legende_parametres <- list(text.separator = "à",
+                           text.less.than = "Moins de",
+                           text.or.more =  "et plus",
+                           decimal.mark = ",",
+                           big.mark = " ")
+
+# Cartographie du R2
+carte0 <- tm_shape(LyonIris)+
+          tm_borders(col="gray25", lwd=.2)+
+          tm_fill(col="GWR.R2", 
+        		  palette="YlOrBr", 
+        		  n=5, style="quantile",
+        		  legend.format = legende_parametres,
+        		  title = "R2 locaux")+
+          tm_layout(frame=FALSE)+
+          tm_scale_bar(breaks=c(0,5))
+
+classes_intervalles = c(-Inf, -3.29, -2.58, -1.96, 1.96, 2.58, 3.29, Inf)
+carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
+            tm_fill(col="GWR.T_Pct0_14", palette="-RdBu", 
+                  midpoint = NA,
+                  breaks = classes_intervalles,
+                  legend.format = legende_parametres,
+                  title = "Moins de 15 ans (%)")+
+          tm_layout(frame=FALSE, legend.outside = TRUE)
+
+carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
+            tm_fill(col="GWR.T_Pct_65", palette="-RdBu",
+                  midpoint = NA,
+                  breaks = classes_intervalles,
+                  legend.format = legende_parametres,
+                  title = "65 ans et plus (%)")+
+          tm_layout(frame=FALSE, legend.outside = TRUE)
+
+carte3 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
+           tm_fill(col="GWR.T_Pct_Img", palette="-RdBu", 
+                  midpoint = NA,
+                  breaks = classes_intervalles,
+                  legend.format = legende_parametres,
+                  title = "Immigrants (%)")+
+          tm_layout(frame=FALSE, legend.outside = TRUE)
+
+carte4 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
+            tm_fill(col="GWR.T_Pct_brevet", palette="-RdBu", 
+                  midpoint = NA,
+                  breaks = classes_intervalles,
+                  legend.format = legende_parametres,
+                  title = "Faible scolarité (%)")+
+          tm_layout(frame=FALSE, legend.outside = TRUE)
+
+carte5 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
+            tm_fill(col="GWR.T_NivVieMed", palette="-RdBu", 
+                 midpoint = NA,
+                 breaks = classes_intervalles,
+                 legend.format = legende_parametres,
+                 title = "Niveau de vie (€1000)")+
+          tm_layout(frame=FALSE, legend.outside = TRUE)
+
+tmap_arrange(carte0, carte1, carte2, carte3, carte4, carte5, ncol = 2, nrow=3)
+```
+
+**Cartographie du nombre de variables significative et de la variable plus significatives**
+
+Pour compléter l'exploration des résultats de la GWR, il est possible de répondre à deux dernières questions avec de nouvelles analyses cartographiques (@fig-CartoVISignif) :
+
+-   Quelle est la variable indépendante la plus significative localement?
+
+-   Comment de variables indépendantes sont localement significatives (au seuil de 5 %)?
+
+Les deux variables les plus significatives localement sont celles relatives au niveau de vie à la population de moins de 15 ans (toutes deux 124 IRIS). Aussi, 159 modèles locaux ne présentent aucune variable significative au seuil retenu.
+```{r}
+#| label: fig-CartoVISignif
+#| fig-cap: "Variables indépendantes significatives du modèle GWR"
+#| fig-align: center
+#| out-width: 85%
+#| echo: false
+#| message: false
+#| warning: false
+
+## Identifier la variable la plus significative
+Vars_t <- paste0("GWR.T_", c("Pct0_14", "Pct_65", "Pct_Img", "Pct_brevet", "NivVieMed"))
+lyon_df  <- st_drop_geometry(LyonIris)
+lyon_df <- abs(lyon_df[,Vars_t])
+plus_sign <- Vars_t[apply(lyon_df[Vars_t],1,which.max)]
+plus_sign <- substr(plus_sign, 7, nchar(plus_sign))
+max_abs_tvalue <- apply(lyon_df[Vars_t], 1, max)
+plus_sign <- ifelse(max_abs_tvalue<1.96, "Aucune", plus_sign)
+
+## Nombre de variables significatives au seuil de 5%, soit abs(t)= 1,96)
+LyonIris$nb_signif_1.96 <- as.factor(rowSums(lyon_df > 1.96))
+LyonIris$plus_sign      <- as.factor(plus_sign)
+
+LyonIris$plus_sign <-  factor(plus_sign, 
+                             levels = c("Aucune", "NivVieMed", "Pct_65", "Pct_brevet", "Pct_Img", "Pct0_14"),
+                             labels = c("Aucune (159)", 
+                                        "Niveau de vie (124)", 
+                                        "65 ans et plus (13)", 
+                                        "Faible scolarité (59)", 
+                                        "Imigrants (27)", 
+                                        "Moins de 15 ans (124)"))
+
+carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
+            tm_fill(col="nb_signif_1.96", palette="Reds",
+                 title = "Sign. au seuil de 5%")+
+          tm_layout(frame=FALSE)+ tm_scale_bar(breaks=c(0,5))
+
+carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
+            tm_fill(col="plus_sign", palette="Set1", 
+                 title = "Variable la plus significative")+
+          tm_layout(frame=FALSE)
+
+tmap_arrange(carte1, carte2, ncol=2, nrow=1)
+```
+
+## Mise en œuvre et analyse dans R {#sec-052}
+
+Il existe deux principaux *packages* pour mettre en œuvre des modèles GWR, soit `spgwr` [@packagesGWR] et `GWmodel` [@GWModelPackage1; @GWModelPackage2]. La construction d'un modèle GWR comprend les étapes suivantes :
+
+1.  Sélection de la taille de la zone d'influence (*bandwidth*) optimale.
+
+2.  Réalisation de la GWR avec la taille de la zone d'influence optimale.
+
+3.  Comparaison des modèles MCO et GWR.
+
+4.  Cartographie des résultats du modèle GWR (R^2^, coefficients, valeurs de *t*, etc.).
+
+
+### GWR avec le *package* `spgwr` {#sec-0521}
+
+#### Définition de la taille de la zone d'influence {#sec-05211}
+
+La sélection de la taille de la zone d'influence optimale est réalisée avec la fonction `gwr.sel` pour laquelle :
+
+-   le paramètre `gweight` permet de spécifier une fonction *kernel* gaussienne (`gwr.gauss`) ou bicarrée (`gwr.gauss`).
+
+-   le paramètre `adapt` permet de spécifier si vous optimisez le nombre de plus proches voisins (`adapt=TRUE`) ou la distance (`adapt=FALSE`).
+
+```{r}
+#| echo: true 
+#| message: false
+#| warning: false
+#| eval: true
+## Chargement des packages et des données
+library(sf)
+library(tmap)
+library(spgwr)
+load("data/Lyon.Rdata")
+
+## Ajout des coordonnées X et Y dans LyonIris 
+xy <- st_coordinates(st_centroid(LyonIris))
+LyonIris$X <- xy[,1]
+LyonIris$Y <- xy[,2]
+
+## Optimisation du nombre de voisins avec le CV
+bwCVa_voisins <- gwr.sel(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
+                         data = LyonIris,
+                         method = "cv",          # Méthode cv ou AIC
+                         gweight = gwr.bisquare,   # gwr.gauss ou gwr.bisquare
+                         adapt = TRUE,
+                         verbose = FALSE,
+                         RMSE = TRUE,
+                         longlat = FALSE,
+                         coords=cbind(LyonIris$X,LyonIris$Y))
+
+## Optimisation du nombre de voisins avec l'AIC
+bwAICa_voisins <- gwr.sel(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
+                          data = LyonIris,
+                          method = "AIC",          # Méthode cv ou AIC
+                          gweight = gwr.bisquare,    # gwr.gauss ou gwr.bisquare
+                          adapt = TRUE,              # adaptatif
+                          verbose = FALSE,
+                          RMSE = TRUE,
+                          longlat = FALSE,
+                          coords=cbind(LyonIris$X,LyonIris$Y))
+
+## Optimisation de la distance avec le CV
+bwCV_dist <- gwr.sel(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
+                     data = LyonIris,
+                     method = "cv",     # méthode cv ou AIC
+                     gweight=gwr.Gauss, # gwr.gauss ou gwr.bisquare
+                     adapt=FALSE,       # non adaptatif
+                     verbose = FALSE,
+                     RMSE = TRUE,
+                     longlat = FALSE,
+                     coords=cbind(LyonIris$X,LyonIris$Y))
+
+## Optimisation de la distance avec l'AIC
+bwAIC_dist <- gwr.sel(NO2 ~  Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
+                      data = LyonIris,
+                      method = "AIC",      # méthode cv ou AIC
+                      gweight=gwr.Gauss,   # gwr.gauss ou gwr.bisquare
+                      adapt=FALSE,         # non adaptatif
+                      RMSE = TRUE,
+                      verbose = FALSE,
+                      longlat = FALSE,
+                      coords=cbind(LyonIris$X,LyonIris$Y))
+
+## Affichage des résultats d'optimisation 
+cat("Sélection de la taille de la zone optimale (bandwidth)",
+    "\n avec le nombre de plus proches voisins :",
+    "\n  CV =", round(bwCVa_voisins,4), "nombre de voisins =", 
+    round(bwCVa_voisins*nrow(LyonIris)),
+    "\n  AIC =", round(bwAICa_voisins,4), "nombre de voisins =", 
+    round(bwAICa_voisins*nrow(LyonIris)),
+    "\nSélection de la taille de la zone optimale (bandwidth) avec la distance :",
+    "\n  CV =", round(bwCV_dist, 0),  "mètres",
+    "\n  AIC =", round(bwAIC_dist, 0), "mètres")
+```
+
+Les résultats ci-dessus montrent que le nombre de plus proches voisins pourrait être de 92 selon l'approche *cross-validation* et de 54 selon la méthode basée sur l'AIC. Si la valeur de *b* est basée sur la distance, elle serait alors optimale à 1315 et 1662 mètres selon les deux méthodes.
+
+#### Réalisation de la GWR {#sec-05212}
+
+Avec la fonction `gwr`, nous estimons un modèle GWR avec un *kernel* bicarré et un nombre optimisé de plus voisins selon la méthode CV, soit 92.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+
+# Modèle global : régression linéaire multiple
+modele_global <- lm(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed, data = LyonIris)
+
+# Modèle GWR
+modele_gwr <- gwr(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
+                  data = LyonIris,
+                  adapt= bwCVa_voisins,
+                  gweight = gwr.bisquare,
+                  hatmatrix = TRUE,
+                  se.fit = TRUE,
+                  coords = cbind(LyonIris$X,LyonIris$Y),
+                  longlat = FALSE)
+```
+
+Le code ci-dessous permet de renvoyer les statistiques univariées des coefficients des 506 régressions locales, réalisées pour chacune des 506 entités spatiales (IRIS), et les statistiques d'ajustement du modèle du modèle GWR (AIC, R^2^ quasi-global, etc.).
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+modele_gwr
+```
+
+#### Comparaison des modèles MCO et GWR {#sec-05213}
+
+Le R^2^ du modèle GWR est bien supérieur à celui du modèle classique MCO (0,783 contre 0,283). 
+
+```{r}
+#| echo: true 
+#| message: false
+#| warning: false
+#| eval: true
+r2_global <- summary(modele_global)$r.squared
+rss <- sum((modele_gwr$lm$y - modele_gwr$SDF$pred)^2) 
+tss <- sum((modele_gwr$lm$y - mean(modele_gwr$SDF$pred))^2) 
+r2_gwrquasiglobal <- 1 - (rss / tss)
+cat("R2 global (LM) = ", round(r2_global, 3),
+    "\nR2 quasi-global (GWR) : ", round(r2_gwrquasiglobal, 3))
+```
+
+Fotheringham *et al.* [-@fotheringham2003geographically] proposent plusieurs tests pour comparer les modèles GWR et classique qui sont implémentés dans le *package* `spgwr` : fonctions `BFC99.gwr.test(modele_gwr)`, `BFC02.gwr.test(modele_gwr)`, `LMZ.F1GWR.test(modele_gwr)`, `LMZ.F2GWR.test(modele_gwr)`. Si les valeurs de *p* de ces tests sont inférieures à 0,05, alors le modèle GWR améliore de façon significative la capacité prédictive du modèle de régression globale, ce que confirment les résultats ci-dessous.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+anova(modele_gwr)
+BFC99.gwr.test(modele_gwr)
+BFC02.gwr.test(modele_gwr)
+LMZ.F1GWR.test(modele_gwr)
+LMZ.F2GWR.test(modele_gwr)
+```
+
+Un autre test (`LMZ.F3GWR.test`) permet de répondre à la question suivante : est-ce que les coefficients de régression du modèle GWR varient spatialement de façon significative? Les résultats ci-dessous démontrent que c'est le cas pour toutes les variables indépendantes et la constante (*p* \< 0,001).
+
+```{r}
+#| echo: true 
+#| eval: true
+#| message: false 
+LMZ.F3GWR.test(modele_gwr)
+```
+
+
+Pour comparer **la dépendance spatiale** des deux modèles (MCO versus GWR), nous calculons le *I* de Moran sur leurs résidus avec une matrice de contiguïté standardisée selon le partage d'un segment (*Rook*). Avec une valeur du *I* de Moran de 0,587 (*p* < 0,001), les résidus du modèle global (MCO) sont fortement autocorrélés spatialement, traduisant ainsi un problème de dépendance spatiale du modèle. Bien qu'elle soit toujours significative, l'autocorrélation spatiale des résidus du modèle GWR est bien plus faible (0,275, *p* < 0,001). La cartographie des résidus des deux modèles à la @fig-ResidusMCOGWR corrobore ces résultats.
+
+
+```{r}
+#| echo: true 
+#| eval: true
+#| warning: false
+#| message: false 
+library(spdep)
+## Résidus des modèles global (MCO) et GWR
+LyonIris$MCO.Residus <- modele_global$residuals
+LyonIris$GWR.Residus <- modele_gwr$SDF$pred - modele_gwr$lm$y
+## Matrice de contiguïté
+rook_nb <- poly2nb(LyonIris, queen=TRUE)
+rook_w <- nb2listw(rook_nb, zero.policy=TRUE, style = "W")
+# I de Moran sur les résidus du modèle global (MCO)
+moran.test(LyonIris$MCO.Residus, rook_w, randomisation = FALSE)
+# I de Moran sur les résidus du modèle GWR (MCO)
+moran.test(LyonIris$GWR.Residus, rook_w, randomisation = FALSE)
+```
+
+
+```{r}
+#| echo: true 
+#| eval: true 
+#| message: false 
+#| warning: false
+#| label: fig-ResidusMCOGWR
+#| fig-align: center
+#| fig-cap: "Cartographie des résidus des modèles MCO et GWR"
+#| out-width: 85% 
+
+## Cartographie des résidus du modèle MCO
+tmap_mode("plot")
+carte1 <- tm_shape(LyonIris)+
+            tm_borders(col="gray25", lwd=.5)+
+            tm_fill(col="MCO.Residus", n = 6, style = "pretty", 
+                  legend.format = list(text.separator = "à",
+                                       decimal.mark = ","),
+                  midpoint = 0,
+                  palette = "-RdBu", 
+                  title = "MCO") +
+            tm_layout(frame=FALSE)
+
+## Cartographie des résidus du modèle GWR
+carte2 <- tm_shape(LyonIris)+
+            tm_borders(col="gray25", lwd=.5)+
+            tm_fill(col="GWR.Residus", n = 6, style = "pretty", 
+                  legend.format = list(text.separator = "à",
+                                       decimal.mark = ","),
+                  midpoint = 0,
+                  palette = "-RdBu", 
+                  title = "GWR") +
+            tm_layout(frame=FALSE) + 
+            tm_scale_bar(breaks = c(0,5))
+
+tmap_arrange(carte1, carte2, nrow = 1)
+```
+
+#### Cartographie des résultats du modèle GWR {#sec-05214}
+
+Dans un premier temps, nous ajoutons les valeurs locales des R^2^, des coefficients de régression et des valeurs de *t* dans la couche `sf`. Notez que les résultats locaux de la GWR sont stockés dans l'objet `modele_gwr$SDF`.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+## Récupération du R carré local
+LyonIris$GWR.R2 <- modele_gwr$SDF$localR2
+
+## Récupération des coefficients de régression et calcul des valeurs de t locales
+names(modele_gwr$SDF)
+vars_indep <- c("Pct0_14", "Pct_65", "Pct_Img", "Pct_brevet", "NivVieMed")
+
+for(e in vars_indep){
+  # Nom des nouvelles variables
+  var_coef <- paste0("GWR.", "B_", e)
+  var_t    <- paste0("GWR.", "T_", e)
+  # Récupération des coefficients pour les variables indépendantes
+  LyonIris[[var_coef]] <- modele_gwr$SDF[[e]]
+  # Calcul des valeurs de t pour les variables indépendantes
+  LyonIris[[var_t]]    <- modele_gwr$SDF[[e]] / modele_gwr$SDF[[paste0(e, "_se")]]
+}
+```
+
+
+##### Cartographie et analyse des R^2^ locaux {#sec-052141}
+
+Les deux lignes de code ci-dessous permettent d'obtenir un résumé sommaire des statistiques descriptives (minimum, quartiles 1 à 3, moyenne et maximum) des valeurs locales de R^2^, mais aussi de constater qu'elles varient de 0,19 à 0,74 pour 95 % des 506 observations (IRIS). 
+
+```{r}
+#| echo: true 
+#| eval: true 
+summary(LyonIris$GWR.R2)
+round(quantile(LyonIris$GWR.R2, probs = c(0.025, 0.975)), 4)
+```
+
+Le code ci-dessous permet ensuite de cartographier les R^2^ locaux de la GWR (@fig-GWRR2).
+
+```{r}
+#| echo: true 
+#| eval: true 
+#| message: false 
+#| warning: false
+#| label: fig-GWRR2
+#| fig-align: center
+#| fig-cap: "Cartographie des R carrés locaux de la GWR"
+#| out-width: 85%
+
+library(tmap)
+# Paramètres pour la légende 
+legende_parametres <- list(text.separator = "à",
+                           decimal.mark = ",")
+
+tm_shape(LyonIris)+
+  tm_borders(col="gray25", lwd=.5)+
+  tm_fill(col="GWR.R2", 
+		  palette="YlOrBr", 
+		  n=5, style="quantile",
+		  legend.format = legende_parametres,
+		  title = "R2 locaux")+
+tm_layout(frame=FALSE)+
+tm_scale_bar(breaks=c(0,5))
+```
+
+
+
+##### Cartographie des coefficients de régression locaux {#sec-052142}
+
+Le code ci-dessous permet ensuite de cartographier les coefficients locaux de la GWR (@fig-GWRCoeffReg).
+
+```{r}
+#| echo: true 
+#| eval: true 
+#| message: false 
+#| warning: false
+#| label: fig-GWRCoeffReg 
+#| fig-align: center
+#| fig-cap: Cartographie des coefficients de régression de la GWR
+#| out-width: 100%
+# Paramètres pour la légende 
+legende_parametres <- list(text.separator = "à",
+                           decimal.mark = ",",
+                           big.mark = " ")
+
+carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
+            tm_fill(col="GWR.B_Pct0_14", palette="YlOrBr", n=4, style="pretty",
+		              legend.format = legende_parametres,
+                  title = "Moins de 15 ans (%)")+
+          tm_layout(frame=FALSE, legend.outside = TRUE)
+
+carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
+            tm_fill(col="GWR.B_Pct_65", palette="YlOrBr", n=4, style="pretty", 
+		              legend.format = legende_parametres,
+                  title = "65 ans et plus (%)")+
+          tm_layout(frame=FALSE, legend.outside = TRUE)
+
+carte3 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
+            tm_fill(col="GWR.B_Pct_Img", palette="YlOrBr", n=4, style="pretty", 
+		              legend.format = legende_parametres,
+                  title = "Immigrants (%)")+
+          tm_layout(frame=FALSE, legend.outside = TRUE)
+
+carte4 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
+            tm_fill(col="GWR.B_Pct_brevet", palette="YlOrBr", n=4, style="pretty", 
+		              legend.format = legende_parametres,
+                  title = "Faible scolarité (%)")+
+          tm_layout(frame=FALSE, legend.outside = TRUE)
+
+carte5 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5,)+
+            tm_fill(col="GWR.B_NivVieMed", palette="YlOrBr", n=4, style="pretty",
+		              legend.format = legende_parametres,
+                  title = "Niveau de vie (€1000)")+
+          tm_layout(frame=FALSE, legend.outside = TRUE)+
+          tm_scale_bar(breaks=c(0,5))
+
+tmap_arrange(carte1, carte2, carte3, carte4, carte5, ncol = 2, nrow=3)
+```
+
+##### Cartographie des valeurs de *t* locales {#sec-052143}
+
+Pour cartographier les valeurs de *t*, nous utilisons les seuils de ± 1,96, 2,58 et 3,29, indiquant des seuils de signification à 5 %, 1 % et 0,1 % (@fig-GWRValT).
+
+```{r}
+#| echo: true 
+#| eval: true 
+#| message: false 
+#| warning: false
+#| label: fig-GWRValT
+#| fig-align: center
+#| fig-cap: "Cartographie des valeurs de *t* de la GWR"
+#| out-width: 100%
+
+# Paramètres pour la légende 
+legende_parametres <- list(text.separator = "à",
+                           text.less.than = "Moins de",
+                           text.or.more =  "et plus",
+                           decimal.mark = ",",
+                           big.mark = " ")
+
+classes_intervalles = c(-Inf, -3.29, -2.58, -1.96, 1.96, 2.58, 3.29, Inf)
+carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
+            tm_fill(col="GWR.T_Pct0_14", palette="-RdBu", 
+                  midpoint = NA,
+                  breaks = classes_intervalles,
+                  legend.format = legende_parametres,
+                  title = "Moins de 15 ans (%)")+
+          tm_layout(frame=FALSE, legend.outside = TRUE)
+
+carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
+            tm_fill(col="GWR.T_Pct_65", palette="-RdBu",
+                  midpoint = NA,
+                  breaks = classes_intervalles,
+                  legend.format = legende_parametres,
+                  title = "65 ans et plus (%)")+
+          tm_layout(frame=FALSE, legend.outside = TRUE)
+
+carte3 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
+            tm_fill(col="GWR.T_Pct_Img", palette="-RdBu", 
+                  midpoint = NA,
+                  breaks = classes_intervalles,
+                  legend.format = legende_parametres,
+                  title = "Immigrants (%)")+
+          tm_layout(frame=FALSE, legend.outside = TRUE)
+
+carte4 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
+            tm_fill(col="GWR.T_Pct_brevet", palette="-RdBu", 
+                  midpoint = NA,
+                  breaks = classes_intervalles,
+                  legend.format = legende_parametres,
+                  title = "Faible scolarité (%)")+
+          tm_layout(frame=FALSE, legend.outside = TRUE)
+
+carte5 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
+            tm_fill(col="GWR.T_NivVieMed", palette="-RdBu", 
+                 midpoint = NA,
+                 breaks = classes_intervalles,
+                 legend.format = legende_parametres,
+                 title = "Niveau de vie (€1000)")+
+          tm_layout(frame=FALSE, legend.outside = TRUE)+
+          tm_scale_bar(breaks=c(0,5))
+
+tmap_arrange(carte1, carte2, carte3, carte4, carte5, ncol = 2, nrow=3)
+```
+
+##### Cartographie du nombre de variables significatives {#sec-052144}
+
+Nous pouvons aussi cartographier le nombre de variables localement significatives aux seuils de 5 % et 1 %.
+
+```{r}
+#| echo: true 
+#| eval: true 
+#| message: false 
+#| warning: false
+#| label: fig-GWRNNsign
+#| fig-align: center
+#| fig-cap: "Nombre de variables significatives aux seuils de 5% et 1%"
+#| out-width: 85%
+
+## Identifier la variable la plus significative avec les valeurs de t
+Vars_t <- paste0("GWR.T_", c("Pct0_14", "Pct_65", "Pct_Img", "Pct_brevet", "NivVieMed"))
+lyon_df  <- st_drop_geometry(LyonIris)
+lyon_df <- abs(lyon_df[,Vars_t])
+plus_sign <- Vars_t[apply(lyon_df[Vars_t],1,which.max)]
+plus_sign <- substr(plus_sign, 7, nchar(plus_sign))
+max_abs_tvalue <- apply(lyon_df[Vars_t], 1, max)
+plus_sign <- ifelse(max_abs_tvalue<1.96, "Aucune", plus_sign)
+## Nombre de variables significatives au seuil de 5%, soit abs(t)= 1,96)
+LyonIris$nb_signif_1.96 <- as.factor(rowSums(lyon_df > 1.96))
+LyonIris$nb_signif_2.58 <- as.factor(rowSums(lyon_df > 2.58))
+LyonIris$plus_sign      <- as.factor(plus_sign)
+## Cartographie
+carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
+          tm_fill(col="nb_signif_1.96", palette="Reds",
+                 title = "Sign. au seuil de 5%")+
+          tm_layout(frame=FALSE)+ tm_scale_bar(breaks=c(0,5))
+carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
+          tm_fill(col="nb_signif_2.58", palette="Reds", 
+                 title = "Sign. au seuil de 1%")+
+          tm_layout(frame=FALSE)
+tmap_arrange(carte1, carte2, ncol=2, nrow=1)
+```
+
+##### Cartographie de la variable la plus significative avec la valeur de *t* {#sec-052145}
+
+Finalement, le code ci-dessous permet de repérer la variable la plus significative au seuil de 5 %, c'est-à-dire avec la plus forte valeur absolue pour la valeur de *t*.
+
+```{r}
+#| echo: true 
+#| eval: true 
+#| message: false 
+#| warning: false
+#| label: fig-GWRplus_sign
+#| fig-align: center
+#| fig-cap: "Variable indépendante la plus significative au seuil de 5 %"
+#| out-width: 85%
+tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
+  tm_fill(col="plus_sign", palette="Set1", 
+          title = "Variable la plus significative")+
+tm_layout(frame=FALSE)+ tm_scale_bar(breaks=c(0,5))
+```
+
+
+### GWR avec le *package* `GWmodel` {#sec-0522}
+
+La construction d'une régression GWR est certainement plus simple (moins verbeuse) avec les fonctions `bw.gwr` et `gwr.basic` du *package* `GWmodel`.
+
+#### Définition de la taille de la zone d'influence {#sec-05221}
+
+La fonction `bw.gwr` permet de trouver la valeur de la zone d'influence ($b$).
+
+```{r}
+#| echo: true 
+#| message: false
+#| warning: false
+#| eval: true
+library(GWmodel)
+load("data/Lyon.Rdata")
+# Construction de la matrice de distance
+xy <- st_coordinates(st_centroid(LyonIris))
+matrice_distances <- gw.dist(dp.locat=xy, p = 2, longlat = FALSE)
+## Optimisation du nombre de voisins avec le CV
+bwCV_voisins <- bw.gwr(NO2 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed, 
+                       data = LyonIris,
+                       dMat = matrice_distances,
+                       approach="CV", 
+                       kernel="bisquare",
+                       adaptive=TRUE, 
+                       longlat = FALSE)
+## Optimisation du nombre de voisins avec l'AIC
+bwAIC_voisins <- bw.gwr(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed, 
+                        data = LyonIris,
+                        dMat = matrice_distances,
+                        approach="AIC", 
+                        kernel="bisquare",
+                        adaptive=TRUE, 
+                        longlat = FALSE)
+## Optimisation de la distance avec le CV
+bwCV_dist <- bw.gwr(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed, 
+                    data = LyonIris,
+                    dMat = matrice_distances,
+                    approach="CV", 
+                    kernel="gaussian",
+                    adaptive=FALSE, 
+                    longlat = FALSE)
+## Optimisation de la distance avec l'AIC
+bwAIC_dist <- bw.gwr(NO2 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed, 
+                     data = LyonIris,
+                     dMat = matrice_distances,
+                     approach="AIC", 
+                     kernel="gaussian",
+                     adaptive=FALSE, 
+                     longlat = FALSE)
+## Affichage des résultats d'optimisation 
+cat("Sélection de la taille de la zone optimale (bandwidth)",
+    "\n avec le nombre de plus proches voisins :",
+    "\n  CV =", round(bwCV_voisins, 4), "nombre de voisins =",  round(bwCV_voisins*nrow(LyonIris)),
+    "\n  AIC =", round(bwAIC_voisins, 4), "nombre de voisins =", round(bwAIC_voisins*nrow(LyonIris)),
+    "\nSélection de la taille de la zone optimale (bandwidth) avec la distance :",
+    "\n  CV =", round(bwCV_dist, 0),  "mètres",
+    "\n  AIC =", round(bwAIC_dist, 0), "mètres")
+```
+
+
+#### Réalisation de la GWR {#sec-05222}
+
+Comparativement à la fonction `gwr` du *package* `spgwr`, `gwr.basic` du *package* `GWmodel` offre l'avantage de fournir l'ensemble des résultats :
+
+-   Ceux de la régression linéaire multiple (modèle global).
+
+-   Un sommaire statistique des coefficients de régression de la GWR.
+
+-   Les statistiques de la qualité d'ajustement du modèle (AIC, AICc, R^2^, R^2^ ajusté).
+
+-   Les tests pour comparer les modèles global et GWR (tests F1, F2).
+
+-   Le test F3 pour vérifier si les coefficients de régression varient ou non spatialement de façon significative.
+
+
+```{r}
+#| echo: true 
+#| message: false
+#| warning: false
+#| eval: true
+# Calcul de la GWR
+modele_gwr <- gwr.basic(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
+                        data = LyonIris,
+                        dMat = matrice_distances,  # Matrice de distances
+                        bw = bwCV_voisins,       # Zone d'influence
+                        kernel = "bisquare",     # Gaussien ou bicarrée
+                        adaptive=TRUE,           # Nombre de voisins (TRUE) ou distance (FALSE)
+                        F123.test = TRUE,        # Tests F123
+                        longlat = FALSE)
+modele_gwr
+```
+
+
+#### Cartographie des résultats du modèle GWR {#sec-05223}
+
+Une fois le modèle obtenu, nous disposons de l'ensemble des résultats locaux (coefficients, valeur prédite, résidus, valeurs de t et R^2^) dans l'objet `modele_gwr$SDF` qui sera une couche `sf` comme le jeu de données initial. Il est alors aisée de reproduire les cartes présentées à la [section @sec-05214]. En guise d'exemple, dans le code ci-dessous, nous cartographions les valeurs locaux du R^2^ et uniquement celles de *t* pour la variable relative au médiane du niveau de vie (@fig-CartoGWmodel).
+
+```{r}
+#| echo: true 
+#| eval: true 
+#| message: false 
+#| warning: false
+#| label: fig-CartoGWmodel
+#| fig-align: center
+#| fig-cap: "Exemple de cartographie avec les résultats de la GWR obtenus avec le *package* `GWmodel`"
+#| out-width: 85%
+gwr_resultats <- modele_gwr$SDF
+names(gwr_resultats)
+
+legende_parametres <- list(text.separator = "à",
+                           text.less.than = "Moins de",
+                           text.or.more =  "et plus",
+                           decimal.mark = ",",
+                           big.mark = " ")
+
+classes_intervalles = c(-Inf, -3.29, -2.58, -1.96, 1.96, 2.58, 3.29, Inf)
+
+# Cartographie du R2
+carte1 <- tm_shape(gwr_resultats)+
+            tm_borders(col="gray25", lwd=.5)+
+            tm_fill(col="Local_R2",
+                    palette="YlOrBr", 
+                    n=5, 
+                    style="quantile",
+                    legend.format = legende_parametres,
+                    title = "R2 locaux")+
+          tm_layout(frame=FALSE)+
+          tm_scale_bar(breaks=c(0,5))
+
+# Cartographie d'une valeur de t
+carte2 <- tm_shape(gwr_resultats)+ 
+            tm_borders(col="gray25", lwd=.5)+
+            tm_fill(col="NivVieMed_TV", 
+                    palette="-RdBu",
+                    midpoint = NA,
+                    breaks = classes_intervalles,
+                    legend.format = legende_parametres,
+                    title = "Niveau de vie (€1000)")+
+            tm_layout(frame=FALSE)
+
+tmap_arrange(carte1, carte2)
+```
+
+## GWR classiques pour d'autres distributions {#sec-053}
+
+::: bloc_aller_loin
+::: bloc_aller_loin-header
+::: bloc_aller_loin-icon
+:::
+
+**Modèles GWR avec d'autres distributions**
+:::
+
+::: bloc_aller_loin-body
+Dans ce chapitre, nous avons décrit la GWR classique avec une distribution gaussienne qui est une extension de la régression linéaire multiple. Pour construire ce type de GWR classique, nous avons utilisé les fonctions des *packages* `spgwr` (`gwr.sel` et `gwr`) et `GWmodel` (`bw.gwr` et  `gwr.basic`). De la même manière, il est possible des construire des modèles GWR qui sont des extensions des modèles linéaires généralisés (GLM), notamment pour des variables dépendantes qualitatives (modèle logistique binomial), de comptage (Poisson, quasi-poisson), continues (gaussien, inverse gaussienne, Gamma). Pour ce faire, il faut utiliser les fonctions `bw.ggwr` et `ggwr` du *package* `spgwr` et spécifier le type de distribution avec l’argument `family` dont la valeur par défaut est `gaussian()`. Cet argument permet de spécifier la famille de distribution et la fonction de lien en utilisant les familles de distribution disponibles dans la fonction de `glm` (*Generalized Linear Models* pour régressions linéaires généralisées) :
+
+-   `binomial(link = "logit")`
+-   `gaussian(link = "identity")`
+-   `Gamma(link = "inverse")`
+-   `inverse.gaussian(link = "1/mu^2")`
+-   `poisson(link = "log")`
+-   `quasi(link = "identity", variance = "constant")`
+-   `quasibinomial(link = "logit")`
+-   `quasipoisson(link = "log")`
+
+Avec le *package* `GWmodel`, vous pourrez utilisez les fonctions `bw.ggwr` et `gwss` qui permettent de réaliser des régressions linéaires pondérées avec des distributions de Poisson et binomiale (avec l’argument `family = "poisson"` et `family = "binomial"`).
+:::
+:::
+
+
+## Limites et critiques des GWR {#sec-054}
+
+Bien que la GWR classique représente un outil d’exploration de données spatiales particulièrement intéressant pour évaluer l’importance de l'instabilité spatiale d’un modèle de régression [@apparicio2007modelisation; @mennis2005distribution; @calvo2003local], elle comprend  plusieurs limites :
+
+-   **Type de distance**. Dans le cadre de ce chapitre, nous avons calculé la GWR avec la distance euclidienne qui n'est pas adaptée à tous les phénomènes à l'étude. Par exemple, @lu2011geographically utilisent des distances calculées sur un réseau de rues pour modéliser le prix de vente des maisons à Londres avec un modèle GWR. Pour ce faire, il est possible d'utiliser les fonctions `bw.gwr` `gwr.basic` du *package* `GWmodel` dont l'argument `dmat` permet de spécifier une matrice de distance prédéfinie.
+
+-   **Choix du noyau (kernel) et la taille de la zone d'influence**. Ces deux paramètres de la GWR peuvent impactent grandement les résultats. En effet, la zone d'influence (défini avec une distance ou un nombre donné de plus proches voisins) peut entraîner localement un nombre insuffisant d'observations, compromettant ainsi la robustesse des équations de régression locales.
+
+-   **Prédicteurs locaux et globaux**. Nous avons vu que la fonction `LMZ.F3GWR.test` permet de déterminer si les coefficients de régression présentent des variations significatives dans l’espace. Or, certains variables indépendantes peuvent être introduites globalement et non localement, comme nous le verrons dans le prochain chapitre ([section @sec-061]).
+
+La GWR fait face aussi à d'importantes critiques :
+
+-   **Validité des modèles locaux**. Pour une régression linéaire multiple, il est primordial de réaliser un diagnostic pour s'assurer du nombre suffisant d'observations, de l'absence de multicolinéarité excessive et de la normalité et l'homoscédasticité des résidus (lire par exemple la [section suivante](https://serieboldr.github.io/MethodesQuantitatives/07-regressionlineaire.html#sec-076) [@RBoldAirMethodesQuanti]). Or, ce diagnostic devrait être réalisé pour tous les modèles locaux obtenus pour les *n* observations du jeu de données. Par exemple, si le modèle global ne pose pas de problème de multicolinéarité excessive, rien ne garantit qu'elle ne soit pas présente dans plusieurs modèles locaux [@wheeler2005multicollinearity].
+
+- **Corrélation entre les coefficients locaux**. Dans un article intitulé *Multicollinearity and correlation among local regression coefficients in geographically weighted regression*, @wheeler2005multicollinearity signalent les coefficients de régression locaux peuvent être fortement corrélées entre eux, en raison d'un problème de multicolinéarité excessive des modèles locaux. En guise d'exemple, la @fig-CorrelationCoefs montre bien que certaines paires de coefficients locaux sont corrélées fortement.
+
+```{r}
+#| echo: true 
+#| eval: true 
+#| message: false 
+#| warning: false
+#| label: fig-CorrelationCoefs
+#| fig-align: center
+#| fig-cap: "Corrélation de Pearson entre les coefficients de régression locaux de la GWR"
+#| out-width: 85%
+library("GGally")
+
+df <- data.frame(modele_gwr$SDF)
+df <- df[, 2:7]
+names(df) <- c("Constante" , "Pct0_14", "Pct_65", "Pct_Img", "Pct_brevet", "NivVieMed")
+
+# Graphique avec le package GGally
+ggpairs(df, progress = FALSE)
+
+# Il est aussi possible de réaliser un graphique avec le package corrplot
+# library("corrplot")
+# p <- cor(df, method="pearson")
+# couleurs <- colorRampPalette(c("#053061", "#2166AC" , "#4393C3", "#92C5DE",
+#                                "#D1E5F0", "#FFFFFF", "#FDDBC7", "#F4A582",
+#                                "#D6604D", "#B2182B", "#67001F"))
+# corrplot.mixed(p, lower="number", lower.col = "black",
+#                       upper = "ellipse", upper.col=couleurs(100))
+```
+
+
+## Quiz de révision {#sec-055}
+
+```{r}
+#| label: quizChapitre05
+#| echo: false 
+#| eval: true 
+#| message: false 
+#| warning: false 
+#| results: asis
+source("code_complementaire/QuizzFunctions.R")
+Chap05Quiz <- quizz("quiz/Chap05.yml", "Chap05")
+render_quizz(Chap05Quiz)
+```
+
+
+## Exercices de révision {#sec-056}
+
+::: bloc_exercice
+::: bloc_exercice-header
+::: bloc_exercice-icon
+:::
+**Exercice 1.** Réalisation d'un GWR classique
+:::
+::: bloc_exercice-body
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+library(sf)
+library(spgwr)
+load("data/Lyon.Rdata")
+# Ajout des coordonnées x et y
+xy <- à compléter
+LyonIris$X <- à compléter
+LyonIris$Y <- à compléter
+# Optimisation du nombre de voisins avec le CV
+formule <- "PM25 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed"
+bwCV_voisins <- gwr.sel(à compléter)
+# Réalisation de la GWR
+modele_gwr <- gwr(à compléter)
+# Affichage des résultats
+modele_gwr
+```
+Correction à la [section @sec-10051].
+:::
+:::
+
+::: bloc_exercice
+::: bloc_exercice-header
+::: bloc_exercice-icon
+:::
+**Exercice 2.** Comparaison des modèles MCO et GWR
+:::
+::: bloc_exercice-body
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+library(sf)
+library(spgwr)
+# Modèle MCO
+modele_global <- à compléter
+# Comparaison des R2
+r2_global <- à compléter
+rss <- à compléter
+tss <- à compléter
+r2_gwrquasiglobal <- à compléter
+cat("R2 global (LM) = ", round(r2_global, 3),
+    "\nR2 quasi-global (GWR) : ", round(r2_gwrquasiglobal, 3))
+# Comparaison des R2
+à compléter
+# Les coefficients du modèle GWR varient-ils significativement dans l'espace?
+à compléter
+```
+Correction à la [section @sec-10052].
+:::
+:::
+
+::: bloc_exercice
+::: bloc_exercice-header
+::: bloc_exercice-icon
+:::
+**Exercice 3.** Cartographie des R^2^ et des valeurs de *t*
+:::
+::: bloc_exercice-body
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+library(tmap)
+# Récupération du R carré locaux et valeurs de t locales
+à compléter
+## Cartographie des R2 locaux
+à compléter
+
+# Cartographie des valeurs de t locales
+## Paramètres pour la légende 
+legende_parametres <- list(text.separator = "à",
+                           text.less.than = "Moins de",
+                           text.or.more =  "et plus",
+                           decimal.mark = ",",
+                           big.mark = " ")
+## Cartographie
+à compléter
+```
+Correction à la [section @sec-10053].
+:::
+:::

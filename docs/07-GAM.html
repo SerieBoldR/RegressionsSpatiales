@@ -1,0 +1,2098 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.32">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>7&nbsp; Modèles généralisées additifs – Méthodes de régression spatiale : un grand bol d’R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./08-SEM.html" rel="next">
+<link href="./06-GWRExtensions.html" rel="prev">
+<link href="./images/introduction/CouvertureP1.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-2486e1f0a3ee9ee1fc393803a1361cdb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-183e74061cd0fe4872fa4cf166543a55.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Pas de résultats",
+    "search-matching-documents-text": "documents trouvés",
+    "search-copy-link-title": "Copier le lien vers la recherche",
+    "search-hide-matches-text": "Cacher les correspondances additionnelles",
+    "search-more-match-text": "correspondance de plus dans ce document",
+    "search-more-matches-text": "correspondances de plus dans ce document",
+    "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuler",
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
+  }
+}</script><script src="site_libs/kePrint-0.0.1/kePrint.js"></script><link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script><link rel="stylesheet" href="css/quizlib.min.css">
+</head>
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-GAM.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modèles généralisées additifs</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Méthodes de régression spatiale : un grand bol d’R</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/SerieBoldR/RegressionsSpatiales" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
+    <a href="./Méthodes-de-régression-spatiale---un-grand-bol-d’R.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Recherche"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Préface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00-auteurs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">À propos des auteurs</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Partie 1. Notions de base</span></span>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-NotionsDeBase.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Autocorrélation spatiale, dépendance spatiale et hétérogénéité spatiale d’un modèle de régression</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Partie 2. Économétrie spatiale</span></span>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-ModelesEconometrieSpatiale.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-CAR_SpatialProbit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Autres modèles d’économétrie spatiale</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-ModelesSpatiauxPanel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel (en cours de rédaction)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Partie 3. Régressions géographiquement pondérées</span></span>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-GWRClassique.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Régressions géographiquement pondérées classiques</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-GWRExtensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée (en cours de rédaction)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Partie 4. Autres approches de modélisations spatiales</span></span>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-GAM.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modèles généralisées additifs</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-SEM.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Filtrage spatial</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-GLS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modèles des moindres carrés ordinaires (GLS) (en cours de rédaction)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Partie 7. Exercices et bibliographie</span></span>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-Exercices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Correction des exercices</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliographie</span></a>
+  </div>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table des matières</h2>
+   
+  <ul>
+<li><a href="#sec-071" id="toc-sec-071" class="nav-link active" data-scroll-target="#sec-071"><span class="header-section-number">7.1</span> Bref retour sur les GAM</a></li>
+  <li><a href="#sec-072" id="toc-sec-072" class="nav-link" data-scroll-target="#sec-072"><span class="header-section-number">7.2</span> Comment utiliser une spline pour ajouter l’espace dans un modèle GAM?</a></li>
+  <li><a href="#sec-073" id="toc-sec-073" class="nav-link" data-scroll-target="#sec-073"><span class="header-section-number">7.3</span> Pourquoi recourir à un modèle GAM?</a></li>
+  <li><a href="#sec-074" id="toc-sec-074" class="nav-link" data-scroll-target="#sec-074"><span class="header-section-number">7.4</span> <em>Random Markow Field</em> (RFM) ou spline bivariée?</a></li>
+  <li>
+<a href="#sec-075" id="toc-sec-075" class="nav-link" data-scroll-target="#sec-075"><span class="header-section-number">7.5</span> Mise en oeuvre et analyse dans R</a>
+  <ul class="collapse">
+<li><a href="#sec-0751" id="toc-sec-0751" class="nav-link" data-scroll-target="#sec-0751"><span class="header-section-number">7.5.1</span> Modèles GAM sans intégration de l’espace</a></li>
+  <li><a href="#sec-0752" id="toc-sec-0752" class="nav-link" data-scroll-target="#sec-0752"><span class="header-section-number">7.5.2</span> GAM avec spline spatiale bivariée sur les coordonnées géographiques</a></li>
+  <li><a href="#sec-0753" id="toc-sec-0753" class="nav-link" data-scroll-target="#sec-0753"><span class="header-section-number">7.5.3</span> GAM avec spline spatiale de type RMF</a></li>
+  </ul>
+</li>
+  <li><a href="#sec-076" id="toc-sec-076" class="nav-link" data-scroll-target="#sec-076"><span class="header-section-number">7.6</span> Quiz de révision</a></li>
+  <li><a href="#sec-077" id="toc-sec-077" class="nav-link" data-scroll-target="#sec-077"><span class="header-section-number">7.7</span> Exercices de révision</a></li>
+  </ul><div class="toc-actions"><ul><li><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<h1 class="title"><span id="sec-chap07" class="quarto-section-identifier"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modèles généralisées additifs</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header><p>Dans ce chapitre, nous abordons deux formes de modèles généralisées additifs (<em>Generalized additive model</em> en anglais – GAM) qui permettent d’introduire l’espace deux manières différentes&nbsp;: les modèles GAM avec une spline bivariée avec les coordonnées géographiques (x, y) pour capturer les variations continues dans l’espace; les modèles GAM avec un lissage par champ aléatoire de Markov (<em>random markov field</em> – RMF) pour modéliser la dépendance spatiale entre les unités spatiales voisines.</p>
+<div class="bloc_objectif">
+<div class="bloc_objectif-header">
+<div class="bloc_objectif-icon">
+
+</div>
+<p><strong>Objectifs d’apprentissage visés dans ce chapitre</strong></p>
+</div>
+<div class="bloc_objectif-body">
+<p>À la fin de ce chapitre, vous devriez être en mesure de&nbsp;:</p>
+<ul>
+<li>comprendre pourquoi utiliser un modèle GAM avec un spline bivariée sur les coordonnées géographiques ou avec un lissage par champ aléatoire de Markov;</li>
+<li>analyser les résultats produits par ces deux types de modèles GAM;</li>
+<li>les mettre en pratique dans R.</li>
+</ul>
+</div>
+</div>
+<div class="bloc_package">
+<div class="bloc_package-header">
+<div class="bloc_package-icon">
+
+</div>
+<p><strong>Liste des <em>packages</em> utilisés dans ce chapitre</strong></p>
+</div>
+<div class="bloc_package-body">
+<ul>
+<li>Pour importer et manipuler des fichiers géographiques&nbsp;:
+<ul>
+<li>
+<code>sf</code> pour importer et manipuler des données vectorielles.</li>
+</ul>
+</li>
+<li>Pour mesurer l’autocorrélation&nbsp;:
+<ul>
+<li>
+<code>spdep</code> pour construire des matrices de pondération spatiales et calculer le <em>I</em> de Moran.</li>
+</ul>
+</li>
+<li>Pour construire des cartes et des graphiques&nbsp;:
+<ul>
+<li>
+<code>ggplot2</code> pour construire des graphiques.</li>
+<li>
+<code>tmap</code> est certainement le meilleur <em>package</em> pour la cartographie.</li>
+</ul>
+</li>
+<li>Pour construire des modèles GAM&nbsp;:
+<ul>
+<li>
+<code>mcgv</code> le <em>package</em> de référence pour ajuster des modèles GAM. De nombreux autres <em>packages</em> proposent des extensions pour ce type de modèle et se basent principalement sur les outils mis à disposition par <code>mgcv</code> pour créer des bases et leurs matrices de pénalisation (<code>gamm4</code>, <code>brms</code>, <code>gamlss</code>, <code>qgam</code>, etc.).</li>
+<li>
+<code>DHARMa</code> un <em>package</em> permettant d’effectuer des diagnostics sur des résidus de modèles GLM</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<section id="sec-071" class="level2" data-number="7.1"><h2 data-number="7.1" class="anchored" data-anchor-id="sec-071">
+<span class="header-section-number">7.1</span> Bref retour sur les GAM</h2>
+<p>Les modèles généralisés additifs (GAM) constituent une famille de modèles de régression très flexibles permettant notamment de modéliser des relations non paramétriques entre les variables indépendantes et la variable dépendante.</p>
+<p>Dans un modèle de régression classique, nous partons du principe que les variables <span class="math inline">\(\mathbf{X}\)</span> (indépendantes) ont un impact linéaire sur la variable <span class="math inline">\(\mathbf{Y}\)</span> (dépendante). Cette hypothèse simplifie grandement les relations entre les variables observées et permet d’interpréter les résultats plus facilement (analyse des coefficients de régression). Or, cette hypothèse peut être fausse et les relations non linéaires ont plus tendance à être la norme que l’exception.</p>
+<p>Dans un GAM, plutôt que modéliser une relation linéaire, nous partons du principe que la relation modélisée peut être non linéaire et suivre une fonction <em>f</em>. On parle alors de relations non paramétriques, car la forme de cette fonction s’ajuste aux données et ne suit pas une forme prédéterminée.</p>
+<p>Ces fonctions <span class="math inline">\(f\)</span> sont le plus souvent estimées avec des splines. Le fonctionnement de base est assez simple. Pour chaque variable <span class="math inline">\(\mathbf{X}\)</span> devant suivre une relation non linéaire, la variable est remplacée par <span class="math inline">\(k\)</span> sous-variable (<span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span>, …, <span class="math inline">\(x_k\)</span>). <span class="math inline">\(k\)</span> représente le niveau de complexité attendu de la relation&nbsp;: plus il est grand, plus la fonction à ajuster pourra être complexe. Le modèle va estimer un coefficient pour chacune de ces sous-variables, et la somme des effets de ces sous-variables permet de reconstruire la relation non linéaire.</p>
+<p>La <a href="#fig-gam1" class="quarto-xref">figure&nbsp;<span>7.1</span></a> permet d’illustrer ce principe. Les lignes grises représentent les sous-variables, aussi appelées bases, qui sont ensuite multipliées par leur coefficient respectif pour obtenir leurs effets (en couleur), puis la ligne bleue représente leur somme. La ligne bleue capture très efficacement la relation entre les variables <span class="math inline">\(\mathbf{X}\)</span> et <span class="math inline">\(\mathbf{Y}\)</span>.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-gam1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-gam1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="07-GAM_files/figure-html/fig-gam1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gam1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.1: Exemple de spline
+</figcaption></figure>
+</div>
+</div>
+</div>
+<div class="bloc_attention">
+<div class="bloc_attention-header">
+<div class="bloc_attention-icon">
+
+</div>
+<p><strong>Modèles généralisés additifs</strong></p>
+</div>
+<div class="bloc_attention-body">
+<p>Pour une explication détaillée du fonctionnement des <em>splines</em>, vous pouvez consulter le <a href="https://serieboldr.github.io/MethodesQuantitatives/11-GAM.html">chapitre sur les GAM</a> du livre <em>Méthodes quantitatives en sciences sociales&nbsp;: un grand bol d’R</em> <span class="citation" data-cites="RBoldAirMethodesQuanti">(<a href="references.html#ref-RBoldAirMethodesQuanti" role="doc-biblioref">Apparicio et Gelb 2022</a>)</span>.</p>
+</div>
+</div>
+</section><section id="sec-072" class="level2" data-number="7.2"><h2 data-number="7.2" class="anchored" data-anchor-id="sec-072">
+<span class="header-section-number">7.2</span> Comment utiliser une spline pour ajouter l’espace dans un modèle GAM?</h2>
+<p>Nous avons vu qu’une spline permet de modéliser l’impact potentiellement non linéaire d’une variable indépendante sur une variable dépendante. Or, il est possible d’utiliser des splines pour intégrer un effet spatial dans un modèle, et ce, en utilisant un type de spline particulier&nbsp;: les splines bivariées qui capturent l’effet simultané de deux variables indépendantes sur une variable dépendante.</p>
+<p>Dans un contexte spatial, une spline bivariée capture comment un changement dans les coordonnées <em>X</em> et <em>Y</em> impacte la variable dépendante. De plus, compte tenu de la forme des fonctions de base utilisées, les splines sont particulièrement adaptées pour capturer des relations spatiales avec une forte autocorrélation spatiale positive.</p>
+<p>Prenons un exemple avec un jeu de données fictif représentant des mesures de pollution relevées à différentes localisations sur un territoire (<a href="#fig-gam2" class="quarto-xref">figure&nbsp;<span>7.2</span></a>).</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-gam2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-gam2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="07-GAM_files/figure-html/fig-gam2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gam2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.2: Exemple d’un jeu de données fictif avec une forte dépendance spatiale
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Nous pourrions créer des bases d’une spline qui varient à la fois dans les coordonnées spatiales <em>X</em> et <em>Y</em>. L’animation à la <a href="#fig-gam3" class="quarto-xref">figure&nbsp;<span>7.3</span></a> illustre des bases obtenues (k&nbsp;=&nbsp;25) pour les données ci-dessus. La hauteur dans la figure est utilisée pour représenter la variation originale des bases qui sera ensuite ajustée aux données grâce aux coefficients du modèle de régression.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-gam3" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-gam3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/Chap06/spin_gam/anim.gif" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gam3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.3: Représentation des bases d’une spline bivariée
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>En ajustant un coefficient pour chaque base et en combinant leur effets, nous obtenons un effet spatial permettant de prédire la variable de pollution, cartographié à la <a href="#fig-gam4" class="quarto-xref">figure&nbsp;<span>7.4</span></a>. Nous constatons ainsi que le modèle a été capable de reproduire les tendances principales des niveaux de pollution en retrouvant les secteurs avec des valeurs fortes et faibles. Plus l’autocorrélation spatiale est élevée, plus ce type de modèle sera efficace pour capturer l’effet spatial.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-gam4" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-gam4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="07-GAM_files/figure-html/fig-gam4-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gam4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.4: Captation de l’effet spatial par une spline bivariée
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>D’un point de vue plus formel, un modèle GAM peut être décrit par l’équation suivante&nbsp;:</p>
+<p><span id="eq-gam"><span class="math display">\[
+\begin{aligned}
+&amp;y \sim D(\mu,\theta)\\
+&amp;g(\mu) = \beta_0 + \beta X + \sum^{n}_{j=1}(f_j(\zeta_j))\\
+\end{aligned}
+\tag{7.1}\]</span></span></p>
+<p>avec&nbsp;:</p>
+<ul>
+<li>
+<span class="math inline">\(y\)</span>, la variable dépendante.</li>
+<li>
+<span class="math inline">\(D\)</span>, une distribution avec une espérance <span class="math inline">\(\mu\)</span> et ses autres paramètres <span class="math inline">\(\theta\)</span>.</li>
+<li>
+<span class="math inline">\(X\)</span>, les variables indépendantes dont l’effet est supposé linéaire par le modèle.</li>
+<li>
+<span class="math inline">\(\beta\)</span>, les coefficients des variables indépendantes.</li>
+<li>
+<span class="math inline">\(\beta_0\)</span>, la constante.</li>
+<li>
+<span class="math inline">\(\zeta\)</span>, les variables dont l’effet est supposé non linéaire par le modèle.</li>
+<li>
+<span class="math inline">\(f_j\)</span>, une fonction modélisant l’impact de la variable <span class="math inline">\(\zeta_j\)</span>.</li>
+</ul>
+<p>Pour un modèle incluant seulement une spline bivariée sur les coordonnées géographiques des observations, le modèle peut se résumer à l’équation suivante&nbsp;:</p>
+<p><span id="eq-gam2"><span class="math display">\[
+\begin{aligned}
+&amp;y \sim D(\mu,\theta)\\
+&amp;g(\mu) = \beta_0 + \beta X + f(sp)\\
+\end{aligned}
+\tag{7.2}\]</span></span></p>
+<p>avec <span class="math inline">\(sp\)</span> une matrice comprenant de deux colonnes, soit les coordonnées cartésiennes des observations.</p>
+</section><section id="sec-073" class="level2" data-number="7.3"><h2 data-number="7.3" class="anchored" data-anchor-id="sec-073">
+<span class="header-section-number">7.3</span> Pourquoi recourir à un modèle GAM?</h2>
+<p>Les modèles GAM sont très flexibles puisqu’ils sont une extension directe des modèles linéaires généralisés (GLM). Ils peuvent donc être appliqués à des variables dépendantes suivant de nombreuses distributions (normale, gamma, binomiale, poisson, tweedie, log-normal, etc.). Cependant, ils imposent une conceptualisation particulière de l’espace. En effet, un modèle GAM n’inclut pas directement la notion de dépendance spatiale dans sa formulation. L’hypothèse d’indépendance des observations est conservée (contrairement à un modèle des moindres carrés généralisés, GLS). Le modèle intègre simplement un terme flexible correspondant à l’ajout d’un ensemble de nouvelles variables <span class="math inline">\(\mathbf{X}\)</span> structurées afin de capturer un effet spatialement positivement autocorrélé.</p>
+<p>Si nous reprenons l’exemple de la pollution atmosphérique, le modèle est un simple GLM dans lequel on suppose que les niveau de pollution suivent une distribution normale et que les observations sont indépendantes. Cependant, la moyenne de cette distribution peut être prédite avec une spline calculée à partir des coordonnées spatiales des observations. Le modèle ne part donc pas du principe que deux observations proches sont plus similaires, mais plutôt qu’il existe un effet spatial permettant de prédire les niveaux moyens de pollution attendus. Un modèle GAM ne vise donc pas explicitement à corriger l’effet de la dépendance spatiale, mais plutôt à capturer un effet spatialement structuré et non capturé par les variables indépendantes <span class="math inline">\(\mathbf{X}\)</span>. Sans l’ajout de la spline, cet effet se serait retrouvé dans les résidus du modèle.</p>
+<p>La cartographie de l’effet spatial dans un modèle GAM permet de visualiser les secteurs de l’espace d’étude dans lesquels, <strong>toutes choses étant égales par ailleurs</strong>, la variable dépendante est plus forte ou plus faible que la moyenne régionale. Il peut être vu comme un ajustement local de la prédiction. Une forme de malus ou de bonus que le modèle ajoute à sa prédiction pour tenir compte de la variation spatiale de la variable dépendante qui n’a pas été expliquée par les variables indépendantes.</p>
+<p>Puisqu’un modèle GAM ne prend pas directement en compte l’autocorrélation spatiale, il est tout à fait possible qu’il échoue à réduire suffisamment la dépendance spatiale des résidus d’un modèle global (non spatial). Il faudra alors privilégier d’autres formes de modèles. De même, si notre cadre théorique nous amène à penser que nos observations s’influencent mutuellement dans l’espace, il sera beaucoup plus cohérent d’utiliser un modèle économétrique (<a href="02-ModelesEconometrieSpatiale.html" class="quarto-xref">chapitre&nbsp;<span>2</span></a>).</p>
+<p>Prenons un exemple concret pour lequel l’utilisation d’un modèle GAM serait particulièrement pertinente. Dans une étude récente, Gelb et Apparicio <span class="citation" data-cites="gelb2022cyclists">(<a href="references.html#ref-gelb2022cyclists" role="doc-biblioref">2022</a>)</span> cherchent à modéliser les niveaux d’exposition de cyclistes aux pollutions atmosphériques et sonores. Les données utilisées ont été collectées par des cyclistes qui parcouraient différents environnements urbains équipés de capteurs de bruit et de pollution. Plus spécifiquement, l’objectif de l’étude était de déterminer quelles caractéristiques de l’environnement urbain réduisent ou augmentent significativement les niveaux d’exposition des cyclistes. Dans leur cadre théorique (<a href="#fig-cadretheorique" class="quarto-xref">figure&nbsp;<span>7.5</span></a>), les auteurs distinguent&nbsp;:</p>
+<ol type="1">
+<li><p>Les effets du micro-environnement, causés par les caractéristiques locales comme le type de rue utilisé, la densité bâtie, la présence de végétation, etc.</p></li>
+<li><p>La pollution d’arrière-plan, causée par des phénomènes géographiques régionaux comme la localisation des industries, des autoroutes, la topographie, etc.</p></li>
+</ol>
+<div id="fig-cadretheorique" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-cadretheorique-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/Chap06/cadre_theorique_exposition.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cadretheorique-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.5: Cadre théorique de l’exposition des cyclistes
+</figcaption></figure>
+</div>
+<p>L’exposition mesurée pour un cycliste à un endroit <em>t</em> dépend donc des caractéristiques propres de cet endroit, mais aussi de la pollution d’arrière-plan. Par exemple, si nous prenons une rue A, en tous points identique à une rue B, nous pouvons nous attendre à mesurer des niveaux de pollution plus élevés pour B si celle-ci est située dans un secteur plus industrialisé de la ville. Cette différence ne s’explique pas par des caractéristiques propres à A ou B, puisqu’elles sont identiques, mais bien par un effet d’arrière-plan produit par différents phénomènes géographiques et donc spatialement autocorrélé. Par conséquent, dans cet exemple, l’intégration de la pollution d’arrière-plan avec une spline spatiale est particulièrement pertinente, car l’interprétation de l’effet produit par cette spline s’intègre directement dans le cadre théorique.</p>
+</section><section id="sec-074" class="level2" data-number="7.4"><h2 data-number="7.4" class="anchored" data-anchor-id="sec-074">
+<span class="header-section-number">7.4</span> <em>Random Markow Field</em> (RFM) ou spline bivariée?</h2>
+<p>Nous avons vu jusqu’ici qu’il est possible d’incorporer un effet spatial dans un modèle GAM en intégrant une spline bivariée sur les coordonnées spatiales des observations. Cette approche est cependant moins pertinente quand les observations sont des polygones de tailles variées. En effet, intégrer les centroïdes des polygones dans le modèle revient à nettement déformer l’espace de nos données puisque des polygones voisins peuvent avoir des centroïdes très éloignés.</p>
+<p>Lorsque les données ont une géométrie irrégulière et que le voisinage est plus important que la proximité (distance), il est recommandé d’utiliser un autre type de fonction appelée un champ de Markov aléatoire (<em>random Markov field - RMF</em> en anglais).</p>
+<div class="bloc_aller_loin">
+<div class="bloc_aller_loin-header">
+<div class="bloc_aller_loin-icon">
+
+</div>
+<p><strong>Modèle CAR versus GAM avec MRF</strong></p>
+</div>
+<div class="bloc_aller_loin-body">
+<p>Mathématiquement parlant, un modèle de type CAR (<em>conditionnal autoregressive model</em>) est très proche d’un modèle GAM intégrant un MRF puisque la structure spatiale intégrée par un modèle CAR est un MRF&nbsp;: la valeur de la variable dépendante d’une entité est <strong>conditionnée</strong> par la valeur de ses voisins.</p>
+</div>
+</div>
+<p>Dans l’<a href="#eq-gam3" class="quarto-xref">équation&nbsp;<span>7.3</span></a>, le terme <span class="math inline">\(\eta\)</span> représente l’effet spatial. Il est le plus souvent modélisé comme un effet provenant d’une distribution normale multivariée, centrée sur zéro et dont la matrice de covariance est calculée grâce à un terme <span class="math inline">\(\lambda\)</span> et une matrice de pondération spatiale <span class="math inline">\(W\)</span>. Ce type de modèle est communément appelé un modèle à effet mixte, car il combine des effets <strong>fixes</strong> (coefficients <span class="math inline">\(\beta\)</span>) et des effets <strong>aléatoires</strong> (<span class="math inline">\(\lambda\)</span>). Les effets aléatoires ne sont pas estimés de la même façon que les effets fixes&nbsp;: ils sont en effet pénalisés. Pour une introduction sur les modèles à effets mixtes, vous pouvez consulter <a href="https://serieboldr.github.io/MethodesQuantitatives/09-GLMM.html">ce chapitre sur les GLMM</a> du livre <em>Méthodes quantitatives en sciences sociales : un grand bol d’R</em> <span class="citation" data-cites="RBoldAirMethodesQuanti">(<a href="references.html#ref-RBoldAirMethodesQuanti" role="doc-biblioref">Apparicio et Gelb 2022</a>)</span>.</p>
+<p><span id="eq-gam3"><span class="math display">\[
+\begin{aligned}
+&amp;y \sim D(\mu,\theta)\\
+&amp;g(\mu) = \beta_0 + \beta X + \eta \\
+&amp;\eta \sim Normal(0,(I - \lambda W)\sigma^2)
+\end{aligned}
+\tag{7.3}\]</span></span></p>
+<p>Il existe un lien direct entre les modèles à effets mixtes et les GAM. En effet, il est possible de reformuler un GLMM comme un GAM et vice-versa, ce qui signifie qu’une spline pénalisée peut être utilisée pour représenter un effet aléatoire <span class="citation" data-cites="wood2017generalized">(<a href="references.html#ref-wood2017generalized" role="doc-biblioref">Wood 2017</a>)</span>.</p>
+<p>Dans R, avec le <em>package</em> <code>mgcv</code>, il est possible d’utiliser une spline pénalisée par une matrice de pondération spatiale <em>W</em> pour approximer l’effet aléatoire que nous aurions modélisé avec un modèle de type CAR. L’intérêt d’utiliser un GAM plutôt qu’un CAR est que nous pouvons contrôler directement le degré de lissage (autocorrélation spatiale) du terme spatial dans le modèle grâce au nombre de degrés de liberté (<em>k</em>) de la spline. En utilisant un nombre de degrés de liberté maximal (<span class="math inline">\(k = n-1\)</span>), soit une base par observation, alors on obtient un <em>full rank MRF</em>, autorisant de facto la plus grande variance possible du terme spatial. En réduisant <em>k</em>, nous obtenons des modèles d’ordre inférieur (<em>lower rank MRF</em>) dont le terme spatial est plus lisse et moins complexe.</p>
+<p><span id="eq-gam4"><span class="math display">\[
+\begin{aligned}
+&amp;y_i \sim D(\mu_i,\theta)\\
+&amp;g(\mu_i) = \beta_0 + \beta X_i + f(W_i) \\
+\end{aligned}
+\tag{7.4}\]</span></span></p>
+</section><section id="sec-075" class="level2" data-number="7.5"><h2 data-number="7.5" class="anchored" data-anchor-id="sec-075">
+<span class="header-section-number">7.5</span> Mise en oeuvre et analyse dans R</h2>
+<p>Pour illustrer la réalisation des différentes modèles GAM (non spatiale, avec une spline bivariée sur les coordonnées géographiques et avec une spline spatiale de type RMF), nous utilisons le jeu de données sur les parts modales dans la région métropolitaine de Montréal (<a href="01-NotionsDeBase.html#sec-0112" class="quarto-xref">section&nbsp;<span>1.1.2</span></a>). Ce jeu de données comprend trois variables mesurant respectivement la proportion des individus utilisant la voiture, le transport collectif ou un mode actif (marche ou vélo) comme mode de transport principal pour ses déplacements domicile-travail en 2021 pour les secteurs de recensement (<a href="01-NotionsDeBase.html#fig-datamtlCarto" class="quarto-xref">figure&nbsp;<span>1.2</span></a>).</p>
+<p>Lorsqu’un ensemble de variables sont des proportions d’un total (leur somme donne 1 ou 100), alors on désigne l’ensemble de ces variables comme des données compositionnelles. Ces données doivent être analysées avec des méthodes spécifiques, car elles ont un comportement particulier. La diminution de l’une d’entre elle provoque nécessairement l’augmentation d’une autre. Elles ne sont donc pas indépendantes et certaines catégories ont même tendance à exister simultanément ou au contraire se repousser. L’analyse de données compositionnelles est un domaine en soit et sort du matériel que nous souhaitons couvrir dans ce livre. Il existe d’excellentes ressources et <em>packages</em> R sur le sujet <span class="citation" data-cites="van2013analyzing comp_pkg2024 comp_pkg2025">(<a href="references.html#ref-van2013analyzing" role="doc-biblioref">Van den Boogaart et Tolosana-Delgado 2013</a>; <a href="references.html#ref-comp_pkg2024" role="doc-biblioref">van den Boogaart, Tolosana-Delgado et Bren 2024</a>; <a href="references.html#ref-comp_pkg2025" role="doc-biblioref">Tsagris et Athineou 2025</a>)</span>.</p>
+<p>Nous utilisons ici l’approche du log des ratios (<em>alr</em>). Il s’agit d’une transformation que l’on peut appliquer aux données compositionnelles pour pouvoir les analyser avec des méthodes classiques de statistiques. On lui préfère généralement une autre méthode de transformation, soit celle isométrique des log ratios (<em>ilr</em>), mais cette dernière produit des résultats plus difficiles à interpréter <span class="citation" data-cites="greenacre2021compositional">(<a href="references.html#ref-greenacre2021compositional" role="doc-biblioref">Greenacre, Martinez-Alvaro et Blasco 2021</a>)</span>. Nous utiliserons donc l’approche <em>alr</em> dans cet exemple. La transformation <em>alr</em> est décrite par la formule suivante&nbsp;:</p>
+<p><span id="eq-ALR"><span class="math display">\[
+\operatorname{alr}(x)=\left[\log \frac{x_1}{x_D}, \cdots, \log \frac{x_{D-1}}{x_D}\right]
+\tag{7.5}\]</span></span></p>
+<p>Pour une variable compositionnelle <em>x</em> comprenant <em>D</em> dimensions (<em>catégories</em>), la transformation <em>alr</em> consiste à calculer <em>D-1</em> log de ratio entre les différentes dimensions <em>D</em> et une référence parmi <em>D</em>. Ainsi, le nombre de dimensions de la version transformée de <em>x</em> est toujours de <em>D-1</em>.</p>
+<p>Dans cet exemple, nous utilisons le ratio entre utilisateurs du transport collectif (TC) et de l’automobile. Puisque la transformation <em>alr</em> implique une division, puis un log, il est important que ni le numérateur ni le dénominateur ne soit égale à 0. Or, nous avons quelques secteurs de recensement (SR) avec des parts modales TC à 0. Puisqu’il semble peu probable qu’aucune personne dans un SR n’utilise le transport collectif, nous remplaçons les 0 par le plus faible pourcentage trouvé dans les SR avec la valeur supérieure à 0.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/">tmap</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rpkgs.datanovia.com/ggpubr/">ggpubr</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Chargement des données</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"data/Mtl.Rdata"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Nous préparons ici les données en calculant les ratios</span></span>
+<span><span class="co"># remplaçant les 0 et calculant la transformation alr</span></span>
+<span><span class="va">data_mtl</span> <span class="op">&lt;-</span> <span class="va">data_mtl</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>    prt_tc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">prt_tc</span> <span class="op">==</span> <span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">prt_tc</span><span class="op">[</span><span class="va">prt_tc</span><span class="op">&gt;</span><span class="fl">0</span><span class="op">]</span><span class="op">)</span> ,<span class="va">prt_tc</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>    ratio <span class="op">=</span> <span class="op">(</span><span class="va">prt_tc</span> <span class="op">/</span> <span class="va">prt_auto</span><span class="op">)</span>,</span>
+<span>    alr_val <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">prt_tc</span> <span class="op">/</span> <span class="va">prt_auto</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">plot1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">data_mtl</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">ratio</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">'grey'</span>, color <span class="op">=</span> <span class="st">'black'</span>, bins <span class="op">=</span> <span class="fl">30</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">'part modale TC / part modale auto'</span>,</span>
+<span>       y <span class="op">=</span> <span class="st">'effectif'</span></span>
+<span>       <span class="op">)</span></span>
+<span></span>
+<span><span class="va">plot2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">data_mtl</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">alr_val</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">'grey'</span>, color <span class="op">=</span> <span class="st">'black'</span>, bins <span class="op">=</span> <span class="fl">30</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">'log(part modale TC / part modale auto)'</span>,</span>
+<span>       y <span class="op">=</span> <span class="st">'effectif'</span></span>
+<span>       <span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rpkgs.datanovia.com/ggpubr/reference/ggarrange.html">ggarrange</a></span><span class="op">(</span><span class="va">plot1</span>, <span class="va">plot2</span>, nrow <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-gamhist" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-gamhist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="07-GAM_files/figure-html/fig-gamhist-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gamhist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.6: Distributions du ratio et du log ratio entre les parts modales TC et automobile
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>La <a href="#fig-gamhist" class="quarto-xref">figure&nbsp;<span>7.6</span></a> illustre la distribution de la variable que nous souhaitons modéliser. Le simple ratio a des valeurs comprises entre 0 et 2,5. Si sa valeur est de 0, cela signifie que personne dans le secteur de recensement n’utilise le transport collectif comme mode principale pour ses déplacements pendulaires. Une valeur de 1 indique que cette proportion est égale à celle des personnes utilisant la voiture. Une valeur plus grande que 1 indique une dominance du mode TC plutôt qu’automobile. Sans surprise, pour la majorité des secteurs de recensement, la valeur est inférieure à 1. Le log du ratio suit une distribution moins asymétrique qui sera probablement plus facile à modéliser.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/spdep/">spdep</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Matrice de de contiguïté selon le partage d'un nœud </span></span>
+<span><span class="va">queen_nb</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/poly2nb.html">poly2nb</a></span><span class="op">(</span><span class="va">data_mtl</span>, queen <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">queen_w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">queen_nb</span>, style <span class="op">=</span> <span class="st">'W'</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Calcul du I de moran de la variable ratio</span></span>
+<span><span class="va">moran_i</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="va">data_mtl</span><span class="op">$</span><span class="va">alr_val</span>, </span>
+<span>                    listw <span class="op">=</span> <span class="va">queen_w</span>, </span>
+<span>                    zero.policy <span class="op">=</span> <span class="cn">TRUE</span>, nsim <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span>
+<span><span class="va">moran_text</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">moran_i</span><span class="op">$</span><span class="va">statistic</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span> , decimal.mark <span class="op">=</span><span class="st">","</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Cartographie de la variable</span></span>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">data_mtl</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"alr_val"</span>, n <span class="op">=</span> <span class="fl">7</span>,</span>
+<span>          style <span class="op">=</span> <span class="st">"jenks"</span>,</span>
+<span>          midpoint <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>,</span>
+<span>          legend.format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>text.separator <span class="op">=</span> <span class="st">"à"</span>, </span>
+<span>                               decimal.mark <span class="op">=</span> <span class="st">","</span>, </span>
+<span>                               big.mark <span class="op">=</span> <span class="st">" "</span>,</span>
+<span>                               digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
+<span>          palette <span class="op">=</span> <span class="st">"-RdBu"</span>, title <span class="op">=</span> <span class="st">'part modale TC / part modale auto'</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span>, legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span> </span>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_scale_bar.html">tm_scale_bar</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/axis_labels.html">tm_xlab</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'I de Moran = '</span>, <span class="va">moran_text</span>,</span>
+<span>               <span class="st">" (matrice de contiguïté selon le partage d'un nœud)."</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-gammapy" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-gammapy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="07-GAM_files/figure-html/fig-gammapy-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gammapy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.7: Distribution géographique de la variable dépendante
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Sans surprise, notre variable dépendante est fortement spatialement autocorrélée. Plus on s’éloigne du centre-ville, plus le transport collectif est délaissé au profit de la voiture. Les secteurs dans lesquels la part modale du TC est supérieure à celle de l’automobile sont situés au centre de l’île de Montréal, à proximité des lignes de métro.</p>
+<section id="sec-0751" class="level3" data-number="7.5.1"><h3 data-number="7.5.1" class="anchored" data-anchor-id="sec-0751">
+<span class="header-section-number">7.5.1</span> Modèles GAM sans intégration de l’espace</h3>
+<p>Pour modéliser cette variable, nous utilisons deux ensembles de variables indépendantes extraites du recensement de 2021 de Statistique Canada pour les secteurs de recensement de la région métropolitaine de Montréal&nbsp;:</p>
+<ol type="1">
+<li>Des variables sociodémographiques&nbsp;:</li>
+</ol>
+<ul>
+<li>Pourcentage de personnes issues des minorités visibles&nbsp;(<code>prt_minorite_vis</code>).</li>
+<li>Pourcentage de ménages monoparentaux&nbsp;(<code>prt_monoparental</code>).</li>
+<li>Taux de chômage&nbsp;(<code>prt_chomage</code>).</li>
+<li>Revenu médian des ménages en milliers de dollars (<code>revenu_median</code>).</li>
+<li>Pourcentage de personnes à faible revenu (<code>prt_personnes_faibles_revenu</code>).</li>
+</ul>
+<ol start="2" type="1">
+<li>Des variables mesurant les niveaux d’accessibilité&nbsp;:</li>
+</ol>
+<ul>
+<li>Niveau d’accessibilité aux emplois en heure de pointe en transport collectif (<code>acs_idx_emp_tc_peak</code>).</li>
+<li>Niveau d’accessibilité aux emplois à pied&nbsp;: (<code>acs_idx_emp_pieton</code>).</li>
+</ul>
+<p>Les indicateurs d’accessibilité sont exprimés comme un score variant de 0 (pire accessibilité au Canada) à 1 (meilleure accessibilité au Canada). Ils servent à capturer dans quelle mesure le transport collectif ou la marche permet d’atteindre des emplois (lieux d’activités et de consommation). Dans ce modèle relativement simple, nous nous attendons à ce que des secteurs avec des populations plus vulnérables (variables sociodémographiques) présentent une part modale du transport collectif plus élevée que celle de l’automobile (dépendance au TC). Nous souhaitons cependant vérifier si cette relation tient toujours une fois que l’on tient compte de la performance du transport collectif et de la possibilité d’atteindre des activités à pied.</p>
+<div class="cell">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">mgcv</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-forge.r-project.org/projects/car/">car</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Vérification de la multicolinéarité avant d'ajuster un premier modèle</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/car/man/vif.html">vif</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">alr_val</span> <span class="op">~</span> <span class="va">prt_minorite_vis</span> <span class="op">+</span> <span class="va">prt_monoparental</span> <span class="op">+</span> </span>
+<span>         <span class="va">prt_chomage</span> <span class="op">+</span> <span class="va">revenu_median</span> <span class="op">+</span> <span class="va">prt_personnes_faibles_revenu</span> <span class="op">+</span> </span>
+<span>         <span class="va">acs_idx_emp_tc_peak</span> <span class="op">+</span> <span class="va">acs_idx_emp_pieton</span>, </span>
+<span>       data <span class="op">=</span> <span class="va">data_mtl</span></span>
+<span>         <span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            prt_minorite_vis             prt_monoparental 
+                    1.892323                     1.750261 
+                 prt_chomage                revenu_median 
+                    3.007752                     2.227562 
+prt_personnes_faibles_revenu          acs_idx_emp_tc_peak 
+                    5.343381                     2.977366 
+          acs_idx_emp_pieton 
+                    2.760775 </code></pre>
+</div>
+</div>
+<p>Les valeurs du facteur d’inflation de la variance (VIF) sont relativement faibles, excepté celle du pourcentage de personne à faible revenu qui dépasse 5. Par conséquent, nous décidons de la retirer du modèle.</p>
+<p>Nous commençons par ajuster un simple GLM (non spatial), assumant une distribution normale de la variable dépendante, une fois que sont contrôlées les variables indépendantes (<code>family = gaussian</code>). Pour valider les résidus de ce modèle, nous utiliserons la méthode des résidus simulés.</p>
+<div class="bloc_aller_loin">
+<div class="bloc_aller_loin-header">
+<div class="bloc_aller_loin-icon">
+
+</div>
+<p><strong>Les résidus simulés</strong></p>
+</div>
+<div class="bloc_aller_loin-body">
+<p>Pour une description des résidus simulés, vous pourrez consulter <a href="https://serieboldr.github.io/MethodesQuantitatives/09-GLMM.html">ce chapitre sur les GLM du livre</a> du livre <em>Méthodes quantitatives en sciences sociales&nbsp;: un grand bol d’R</em> <span class="citation" data-cites="RBoldAirMethodesQuanti">(<a href="references.html#ref-RBoldAirMethodesQuanti" role="doc-biblioref">Apparicio et Gelb 2022</a>)</span>.</p>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://florianhartig.github.io/DHARMa/">DHARMa</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mfasiolo/mgcViz">mgcViz</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Modèle GLM avec une distribution normale</span></span>
+<span><span class="va">glm_base</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/gam.html">gam</a></span><span class="op">(</span><span class="va">alr_val</span> <span class="op">~</span> <span class="va">prt_minorite_vis</span> <span class="op">+</span> <span class="va">prt_monoparental</span> <span class="op">+</span> <span class="va">revenu_median</span> <span class="op">+</span></span>
+<span>                          <span class="va">acs_idx_emp_tc_peak</span> <span class="op">+</span> <span class="va">acs_idx_emp_pieton</span>,</span>
+<span>                data <span class="op">=</span> <span class="va">data_mtl</span>, </span>
+<span>                family <span class="op">=</span> <span class="va">gaussian</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Validation des résidus</span></span>
+<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DHARMa/man/simulateResiduals.html">simulateResiduals</a></span><span class="op">(</span><span class="va">glm_base</span>, plot <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-gamresidA" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-gamresidA-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="07-GAM_files/figure-html/fig-gamresidA-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gamresidA-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.8: Résidus du simple GLM avec une distribution noramle
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>La <a href="#fig-gamresidA" class="quarto-xref">figure&nbsp;<span>7.8</span></a> indique que les résidus simulés ne suivent pas vraiment une distribution uniforme et sont marqués par des valeurs extrêmes. Pour améliorer ce premier modèle, nous utilisons une distribution de Student (<code>family = scat</code>). Cette dernière ressemble beaucoup à la distribution normale, mais admet davantage de valeurs extrêmes. Autrement dit, elle permet donc de réduire l’impact des valeurs extrêmes dans le modèle.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Modèle GLM avec une distribution normale de Student</span></span>
+<span><span class="va">glm_base</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/gam.html">gam</a></span><span class="op">(</span><span class="va">alr_val</span> <span class="op">~</span> <span class="va">prt_minorite_vis</span> <span class="op">+</span> <span class="va">prt_monoparental</span> <span class="op">+</span> <span class="va">revenu_median</span> <span class="op">+</span></span>
+<span>                          <span class="va">acs_idx_emp_tc_peak</span> <span class="op">+</span> <span class="va">acs_idx_emp_pieton</span>,</span>
+<span>                data <span class="op">=</span> <span class="va">data_mtl</span>, </span>
+<span>                family <span class="op">=</span> <span class="va">scat</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Validation des résidus</span></span>
+<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DHARMa/man/simulateResiduals.html">simulateResiduals</a></span><span class="op">(</span><span class="va">glm_base</span>, plot <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-gamresidB" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-gamresidB-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="07-GAM_files/figure-html/fig-gamresidB-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gamresidB-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.9: Résidus du GLM avec une distribution de Student
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Une nette amélioration est observable à la <a href="#fig-gamresidB" class="quarto-xref">figure&nbsp;<span>7.9</span></a>, bien que les quantiles des résidus tendent encore à dévier des valeurs attendues. Plusieurs raisons pourraient expliquer cette situation, mais il est fort probable qu’elle soit provoquée par l’autocorrélation spatiale dans les résidus.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># I de Moran des résidus des deux modèles (gaussien et Student)</span></span>
+<span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">glm_base</span>, type <span class="op">=</span> <span class="st">'pearson'</span><span class="op">)</span>, </span>
+<span>                   listw <span class="op">=</span> <span class="va">queen_w</span>, nsim <span class="op">=</span> <span class="fl">999</span>,</span>
+<span>                   zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Monte-Carlo simulation of Moran I
+
+data:  residuals(glm_base, type = "pearson") 
+weights: queen_w  
+number of simulations + 1: 1000 
+
+statistic = 0.52098, observed rank = 1000, p-value = 0.001
+alternative hypothesis: greater</code></pre>
+</div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">moran_i</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span>, </span>
+<span>                    listw <span class="op">=</span> <span class="va">queen_w</span>, nsim <span class="op">=</span> <span class="fl">999</span>, </span>
+<span>                    zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">moran_i</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Monte-Carlo simulation of Moran I
+
+data:  residuals(res) 
+weights: queen_w  
+number of simulations + 1: 1000 
+
+statistic = 0.54085, observed rank = 1000, p-value = 0.001
+alternative hypothesis: greater</code></pre>
+</div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">moran_text</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">moran_i</span><span class="op">$</span><span class="va">statistic</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span>, </span>
+<span>                     decimal.mark <span class="op">=</span><span class="st">","</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">data_mtl</span><span class="op">$</span><span class="va">base_residual</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">glm_base</span>, type <span class="op">=</span> <span class="st">'response'</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Cartographie</span></span>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">data_mtl</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"base_residual"</span>, n <span class="op">=</span> <span class="fl">7</span>,</span>
+<span>          style <span class="op">=</span> <span class="st">"jenks"</span>,</span>
+<span>          midpoint <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>          legend.format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>text.separator <span class="op">=</span> <span class="st">"à"</span>, </span>
+<span>                               decimal.mark <span class="op">=</span> <span class="st">","</span>, </span>
+<span>                               big.mark <span class="op">=</span> <span class="st">" "</span>,</span>
+<span>                               digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
+<span>          palette <span class="op">=</span> <span class="st">"-RdBu"</span>, title <span class="op">=</span> <span class="st">'résidus simulés'</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span>, legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span> </span>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_scale_bar.html">tm_scale_bar</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">10</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/axis_labels.html">tm_xlab</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'I de Moran = '</span>, <span class="va">moran_text</span>,</span>
+<span>               <span class="st">" (matrice de contiguïté selon le partage d'un nœud)."</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-gamresid1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-gamresid1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="07-GAM_files/figure-html/fig-gamresid1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gamresid1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.10: Cartographie des résidus du modèle GLM
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>En effet, la <a href="#fig-gamresid1" class="quarto-xref">figure&nbsp;<span>7.10</span></a> démontre clairement que la distribution des résidus du modèle GLM (avec une distribution de Student) n’est pas aléatoire spatialement. Les valeurs négatives indiquent des secteurs dans lesquels le modèle tend à prédire un log ratio trop favorable au transport collectif et inversement dans les secteurs avec des valeurs positives.</p>
+</section><section id="sec-0752" class="level3" data-number="7.5.2"><h3 data-number="7.5.2" class="anchored" data-anchor-id="sec-0752">
+<span class="header-section-number">7.5.2</span> GAM avec spline spatiale bivariée sur les coordonnées géographiques</h3>
+<p>Nous ajustons ici un modèle GAM intégrant une spline bivariée sur les coordonnées des centroïdes des secteurs de recensement. Le rôle de cette spline est de capturer une tendance spatiale à l’utilisation plus ou moins prononcé du transport collectif. Cet effet correspond à l’agrégat d’un ensemble de variables que nous n’avons pas pu mesurer comme par l’exemple la revendication écologique, la difficulté de stationner une voiture, la présence d’autres modes de déplacement durables connecté au transport en commun, la démographie, etc. Notons ici que nous utilisons une spline de type processus gaussien (<code>bs = 'gp', m = 3</code>) avec une structure de covariance Matérn qui est communément utilisée en géostatistique pour le krigeage.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Coordonnées X et Y</span></span>
+<span><span class="va">XY</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html">st_coordinates</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_centroid</a></span><span class="op">(</span><span class="va">data_mtl</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">data_mtl</span><span class="op">$</span><span class="va">X</span> <span class="op">&lt;-</span> <span class="va">XY</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span></span>
+<span><span class="va">data_mtl</span><span class="op">$</span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="va">XY</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span></span>
+<span></span>
+<span><span class="co"># Modèle GAM avec une spline bivariée sur les coordonnées géographiques</span></span>
+<span><span class="va">gam1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/gam.html">gam</a></span><span class="op">(</span><span class="va">alr_val</span> <span class="op">~</span> <span class="va">prt_minorite_vis</span> <span class="op">+</span> <span class="va">prt_monoparental</span> <span class="op">+</span> <span class="va">revenu_median</span> <span class="op">+</span></span>
+<span>                      <span class="va">acs_idx_emp_tc_peak</span> <span class="op">+</span> <span class="va">acs_idx_emp_pieton</span> <span class="op">+</span></span>
+<span>                      <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html">s</a></span><span class="op">(</span><span class="va">X</span>,<span class="va">Y</span>, bs <span class="op">=</span> <span class="st">'gp'</span>, m <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>,</span>
+<span>            data <span class="op">=</span> <span class="va">data_mtl</span>, </span>
+<span>            family <span class="op">=</span> <span class="va">scat</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Résidus du modèle</span></span>
+<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DHARMa/man/simulateResiduals.html">simulateResiduals</a></span><span class="op">(</span><span class="va">gam1</span>, plot <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-gamxy" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-gamxy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="07-GAM_files/figure-html/fig-gamxy-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gamxy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.11: Résidus du modèle GAM avec une spline bivariée sur les coordonnées géographiques
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Les résidus simulés de ce nouveau modèle se comportent bien mieux que les résidus que nous avions obtenus pour les deux modèle GLM n’intégrant pas l’espace (<a href="#fig-gamxy" class="quarto-xref">figure&nbsp;<span>7.11</span></a>). Nous pouvons maintenant nous pencher sur l’autocorrélation spatiale des résidus simulés qui devraient suivre une distribution uniforme et aléatoire spatialement.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">data_mtl</span><span class="op">$</span><span class="va">sim_residual</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
+<span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="va">data_mtl</span><span class="op">$</span><span class="va">sim_residual</span>, listw <span class="op">=</span> <span class="va">queen_w</span>, nsim <span class="op">=</span> <span class="fl">999</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">test</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Monte-Carlo simulation of Moran I
+
+data:  data_mtl$sim_residual 
+weights: queen_w  
+number of simulations + 1: 1000 
+
+statistic = 0.30525, observed rank = 1000, p-value = 0.001
+alternative hypothesis: greater</code></pre>
+</div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">moran_text</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">test</span><span class="op">$</span><span class="va">statistic</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span>, </span>
+<span>                     decimal.mark <span class="op">=</span><span class="st">","</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">data_mtl</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"sim_residual"</span>, n <span class="op">=</span> <span class="fl">7</span>,</span>
+<span>          style <span class="op">=</span> <span class="st">"jenks"</span>,</span>
+<span>          midpoint <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>          legend.format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>text.separator <span class="op">=</span> <span class="st">"à"</span>, </span>
+<span>                               decimal.mark <span class="op">=</span> <span class="st">","</span>, </span>
+<span>                               big.mark <span class="op">=</span> <span class="st">" "</span>,</span>
+<span>                               digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
+<span>          palette <span class="op">=</span> <span class="st">"-RdBu"</span>, </span>
+<span>          title <span class="op">=</span> <span class="st">'résidus simulés'</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span>, legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span> </span>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_scale_bar.html">tm_scale_bar</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">10</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/axis_labels.html">tm_xlab</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'I de Moran = '</span>, <span class="va">moran_text</span>,</span>
+<span>               <span class="st">" (matrice de contiguïté selon le partage d'un nœud)."</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-gamxycarto" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-gamxycarto-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="07-GAM_files/figure-html/fig-gamxycarto-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gamxycarto-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.12: Cartographie des résidus du modèle GAM avec une spline bivariée sur les coordonnées géographiques
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>La valeur du I de Moran (I = 0,305), calculé à partir de la matrice de contiguïté selon le partage d’un nœud (<em>Queen</em>), indique toujours une autocorrélation spatiale non négligeable des résidus (<a href="#fig-gamxycarto" class="quarto-xref">figure&nbsp;<span>7.12</span></a>).</p>
+<p>Toutefois, le modèle GAM n’a pas basé sur les relations de voisinage entre les observations (contiguïté), mais sur la localisation de leurs centroïdes (proximité) pour estimer le terme spatial. Dans ce contexte, il serait plus judicieux d’évaluer l’autocorrélation des résidus du modèle en utilisant une matrice de pondération spatiale basée sur l’inverse des distances.</p>
+<div class="cell">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dists</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html">dist</a></span><span class="op">(</span><span class="va">XY</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">dists</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
+<span><span class="va">dist_w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/mat2listw.html">mat2listw</a></span><span class="op">(</span><span class="va">dists</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="va">data_mtl</span><span class="op">$</span><span class="va">sim_residual</span>, listw <span class="op">=</span> <span class="va">dist_w</span>, nsim <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Monte-Carlo simulation of Moran I
+
+data:  data_mtl$sim_residual 
+weights: dist_w  
+number of simulations + 1: 1000 
+
+statistic = 0.025581, observed rank = 1000, p-value = 0.001
+alternative hypothesis: greater</code></pre>
+</div>
+</div>
+<p>Nous constatons alors que le modèle est parvenu à retirer l’autocorrélation spatiale des résidus (I de Moran de 0,026), si elle est évalué avec la façon dont l’espace est prise en compte dans le modèle. Interprétons maintenant les résultats du modèle avec la fonction <code>summary</code>.</p>
+<div class="cell">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">gam1</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Family: Scaled t(4.458,0.307) 
+Link function: identity 
+
+Formula:
+alr_val ~ prt_minorite_vis + prt_monoparental + revenu_median + 
+    acs_idx_emp_tc_peak + acs_idx_emp_pieton + s(X, Y, bs = "gp", 
+    m = 3)
+
+Parametric coefficients:
+                     Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)         -2.646739   0.121130 -21.850  &lt; 2e-16 ***
+prt_minorite_vis     0.876472   0.100188   8.748  &lt; 2e-16 ***
+prt_monoparental     1.398126   0.277368   5.041 4.64e-07 ***
+revenu_median       -0.010175   0.001691  -6.017 1.78e-09 ***
+acs_idx_emp_tc_peak  3.936414   0.187545  20.989  &lt; 2e-16 ***
+acs_idx_emp_pieton  -1.548512   0.177466  -8.726  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Approximate significance of smooth terms:
+         edf Ref.df Chi.sq p-value    
+s(X,Y) 26.81   28.9  941.5  &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+R-sq.(adj) =  0.902   Deviance explained = 81.4%
+-REML =  543.3  Scale est. = 1         n = 986</code></pre>
+</div>
+</div>
+<p>Le R<sup>2</sup> ajusté est très élevé (0,902), indiquant que le modèle est capable d’expliquer une part significative de la déviance de nos données. Chacune des variables explicatives a un impact significatif sur le ratio entre les parts modales de TC et de l’automobile. Pour interpréter leurs effets, nous devons tenir compte de l’impact de la transformation <em>alr</em>. Pour rappel, notre modèle prédit la moyenne de notre log du ratio entre la part TC et la part automobile. Il est possible de passer de l’échelle log à l’échelle naturelle en utilisant la fonction exponentielle (<code>exp</code>). Si nous transformons les coefficients obtenus avec la fonction <code>exp</code>, alors ils expriment l’impact <strong>multiplicatif</strong> des variables indépendantes sur le ratio entre la part TC et la part automobile. Si ce ratio augmente, c’est que l’automobile est moins utilisée et/ou que le TC est plus utilisé et inversement.</p>
+<div class="cell">
+<div id="tbl-GamSpatialSpline" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-GamSpatialSpline-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tableau&nbsp;7.1: Résultats du modèle GLM avec une spline bivariée sur les coordonnées géographiques
+</figcaption><div aria-describedby="tbl-GamSpatialSpline-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table do-not-create-environment cell caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead><tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Variable</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Coefficient</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">exp(coefficent)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Valeur de p</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Constante</td>
+<td style="text-align: right;">-2,647</td>
+<td style="text-align: right;">0,071</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">prt_minorite_vis</td>
+<td style="text-align: right;">0,876</td>
+<td style="text-align: right;">2,402</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">prt_monoparental</td>
+<td style="text-align: right;">1,398</td>
+<td style="text-align: right;">4,048</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">revenu_median</td>
+<td style="text-align: right;">-0,010</td>
+<td style="text-align: right;">0,990</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">acs_idx_emp_tc_peak</td>
+<td style="text-align: right;">3,936</td>
+<td style="text-align: right;">51,235</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">acs_idx_emp_pieton</td>
+<td style="text-align: right;">-1,549</td>
+<td style="text-align: right;">0,213</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+<tfoot><tr class="odd">
+<td style="text-align: left; padding: 0;">
+<sup></sup> R2 ajusté = 0,9021.</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr></tfoot>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Voici une interprétation des effets obtenus (<a href="#tbl-GamSpatialSpline" class="quarto-xref">tableau&nbsp;<span>7.1</span></a>)&nbsp;:</p>
+<ul>
+<li><p>Comparativement à un SR avec 0&nbsp;% de personnes issues des minorités visible, un SR avec 25&nbsp;% de ce groupe de la population verrait augmenter la moyenne du log du ratio de <span class="math inline">\(0,876 \times 0,25 = 0,219\)</span>, ce qui correspond à une multiplication par 1,245 du ratio, ou encore, une augmentation de 24,5&nbsp;% du ratio. Il semblerait donc que toutes choses étant égales par ailleurs, la concentration des minorités visibles soit associée avec une plus grande proportion d’utilisation du TC et inversement, à une plus faible utilisation de la voiture.</p></li>
+<li><p>Comparativement à un SR avec 0&nbsp;% de ménages monoparentaux, un SR avec 25&nbsp;% de ce groupe de la population verrait augmenter la moyenne du log du ratio de <span class="math inline">\(1,398 \times 0,25 = 0,3495\)</span>, ce qui correspond à une multiplication par 1,418 du ratio, ou encore, une augmentation de 41,8&nbsp;% du ratio. Il semblerait donc que toutes choses étant égales par ailleurs, la concentration des ménages monoparentaux soit associée avec une plus grande proportion d’utilisation du TC et inversement, à une plus faible utilisation de la voiture.</p></li>
+<li><p>Lorsque le revenu médian dans un SR augmente de 1000 dollars, on observe une réduction de la moyenne du log du ratio de -0,01, soit une multiplication du ratio par 0,99. En d’autres termes, le ratio diminue de 1 % à chaque millier de dollars supplémentaire. Il semblerait donc que dans les SR les plus nantis, l’utilisation du TC soit plus délaissée au profit de la voiture.</p></li>
+<li><p>Lorsque que l’accessibilité aux emplois en transport collectif est plus élevée, la moyenne du log du ratio augmente. Dans un SR avec le pire niveau d’accessibilité possible, augmenter l’accessibilité au niveau du premier quartile (au moins mieux que 25% des SR) serait associé avec une augmentation de la moyenne du log du ratio de <span class="math inline">\(3,936 \times 0,25 = 0.984\)</span>, ce qui correspond à une multiplication par 2,675 du ratio.</p></li>
+<li><p>Cependant, lorsque l’accessibilité à pied augmente, nous pouvons observer une réduction de la moyene du log du ratio. Dans un SR avec le pire niveau d’accessibilité possible, augmenter l’accessibilité au niveau du premier quartile (au moins mieux que 25% des SR) serait associé avec une augmentation de la moyenne du log du ratio de <span class="math inline">\(-1,549 \times 0.25 = -0,387\)</span>, ce qui correspond à une multiplication par 0,679 du ratio, ou encore une réduction de 32,1%. Ce résultat s’explique vraisemblablement par l’utilisation des modes de transport actifs plutôt qu’une utilisation accrue de la voiture.</p></li>
+</ul>
+<p>Dans le résumé du modèle, nous pouvons observer que la spline utilisée pour capturer l’effet spatial à un impact significativement différent de 0 et comporte environ 27 degrés de libertés. Afin d’observer l’effet de cette spline, nous utilisons l’approche des effets marginaux. Cette approche consiste à effectuer une prédiction avec le modèle de la valeur attendue de la variable dépendante en conservant identiques toutes les variables indépendantes, sauf la localisation dans l’espace. En d’autres termes, nous essayons de voir comment le modèle s’ajuste quand on lui demande de prédire la valeur <em>Y</em> pour une observation spécifique, mais que celle-ci est déplacée dans l’espace. Ainsi, la variation de la prédiction est affectée uniquement par l’espace.</p>
+<p>Pour obtenir l’effet uniquement spatial, nous pouvons mettre arbitrairement toutes les valeurs à 0 des différentes variables indépendantes du modèle. Ainsi, même multipliées par leurs coefficients, leur contribution dans la prédiction restera 0. Il suffit ensuite de retirer la constante pour ne bien conserver que l’effet de la spline.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#' Nous commençons par construire un dataframe de prédictions. Toutes les </span></span>
+<span><span class="co">#' variables indépendantes sont fixées à 0 et nous allons </span></span>
+<span><span class="co">#' prédire les valeurs tous les 500m</span></span>
+<span></span>
+<span><span class="va">bbox</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html">st_bbox</a></span><span class="op">(</span><span class="va">data_mtl</span><span class="op">)</span></span>
+<span><span class="va">df_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html">expand.grid</a></span><span class="op">(</span></span>
+<span>  prt_minorite_vis <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  prt_monoparental <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  revenu_median <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  acs_idx_emp_tc_peak <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  acs_idx_emp_pieton <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  X <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="va">bbox</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="va">bbox</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>, <span class="fl">500</span><span class="op">)</span>,</span>
+<span>  Y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="va">bbox</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, <span class="va">bbox</span><span class="op">[[</span><span class="fl">4</span><span class="op">]</span><span class="op">]</span>, <span class="fl">500</span><span class="op">)</span></span>
+<span><span class="op">)</span> </span>
+<span></span>
+<span><span class="co"># Nous effectuons ensuite la prédiction sur le prédicteur linéaire</span></span>
+<span><span class="va">df_pred</span><span class="op">$</span><span class="va">pred_log</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/predict.gam.html">predict.gam</a></span><span class="op">(</span><span class="va">gam1</span>, newdata <span class="op">=</span> <span class="va">df_pred</span>, type <span class="op">=</span> <span class="st">'link'</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Nous retirons ensuite la constante pour ne garder que l'effet spatial</span></span>
+<span><span class="va">df_pred</span><span class="op">$</span><span class="va">pred_log_cent</span> <span class="op">&lt;-</span> <span class="va">df_pred</span><span class="op">$</span><span class="va">pred_log</span>  <span class="op">-</span> <span class="va">gam1</span><span class="op">$</span><span class="va">coefficients</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span></span>
+<span><span class="co"># Nous pouvons ensuite utiliser la fonction exp pour faciliter l'interprétation </span></span>
+<span><span class="co"># puisque le ratio sera plus facile à lire que le log ratio</span></span>
+<span><span class="va">df_pred</span><span class="op">$</span><span class="va">pred_exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">df_pred</span><span class="op">$</span><span class="va">pred_log_cent</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Il ne reste ensuite qu'à cartographier notre effet spatial</span></span>
+<span><span class="va">sf_pred</span> <span class="op">&lt;-</span> <span class="va">df_pred</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span>coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'X'</span>, <span class="st">'Y'</span><span class="op">)</span>, crs <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs</a></span><span class="op">(</span><span class="va">data_mtl</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lengths.html">lengths</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_binary_pred.html">st_intersects</a></span><span class="op">(</span><span class="va">.</span>,<span class="va">data_mtl</span><span class="op">)</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">map_spline</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">sf_pred</span><span class="op">)</span> <span class="op">+</span></span>
+<span>                <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_dots</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"pred_exp"</span>, n <span class="op">=</span> <span class="fl">7</span>,</span>
+<span>                        style <span class="op">=</span> <span class="st">"fisher"</span>,</span>
+<span>                        midpoint <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>                        legend.format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>text.separator <span class="op">=</span> <span class="st">"à"</span>, </span>
+<span>                                             decimal.mark <span class="op">=</span> <span class="st">","</span>, </span>
+<span>                                             big.mark <span class="op">=</span> <span class="st">" "</span>,</span>
+<span>                                             digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
+<span>                        palette <span class="op">=</span> <span class="st">"-RdBu"</span>, </span>
+<span>                        title <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'effet de la spline bivariée\n(edf = '</span>, </span>
+<span>                                       <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">edf</span><span class="op">)</span>, <span class="st">')'</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>              <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">data_mtl</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>                <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_borders</a></span><span class="op">(</span><span class="st">'darkgrey'</span>, lwd <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>              <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span>, legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>              <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_scale_bar.html">tm_scale_bar</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">map_spline</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-gamspline1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-gamspline1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="07-GAM_files/figure-html/fig-gamspline1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gamspline1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.13: Représentation de l’impact de la spline spatiale bivariée
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>La <a href="#fig-gamspline1" class="quarto-xref">figure&nbsp;<span>7.13</span></a> permet de visualiser l’effet multiplicatif de la spline spatiale sur le ratio prédit par le modèle. Ainsi, toute chose étant égale par ailleurs, le ratio de part modale TC/auto est entre 30&nbsp;% et 70&nbsp;% plus fort dans les quartiers centraux de Montréal, allant de Lachine à Anjou. L’extrémité Ouest de Longueuil fait aussi partie de cette zone avec le bonus spatial le plus important. Aussi, on constate que l’effet spatial diminue avec la distance au Centre-Vile. Pour la majeure partie de Laval, le ratio est réduit de prêt de 50&nbsp;%.</p>
+</section><section id="sec-0753" class="level3" data-number="7.5.3"><h3 data-number="7.5.3" class="anchored" data-anchor-id="sec-0753">
+<span class="header-section-number">7.5.3</span> GAM avec spline spatiale de type RMF</h3>
+<p>Puisque nos observations sont des polygones, utiliser leurs centroïdes pour représenter l’espace est une approximation maladroite. Nous allons donc opter pour un <em>markov random field</em> afin de modéliser les variations spatiales en fonction du voisinage.</p>
+<p>L’enjeu avec ce type de modèle est de sélectionner son rang (<em>k</em>). Pour cela, nous testons plusieurs valeurs allant de 10 à 250 autorisant une complexité grandissante du terme spatial. Notons d’emblée que notre spline bivariée précédente avait nécessité seulement 25 degrés de liberté supplémentaires. La sélection de <em>k</em> (le nombre de degré de liberté accordé au MRF) reposera sur deux critères&nbsp;: l’autocorrélation spatiale encore présente dans les résidus (<em>I</em> de Moran calculé sur les résidus de Pearson) et l’AIC (pénalisant la complexité des modèles).</p>
+<p>Pour accélérer le calcul, nous réalisation cette opération en traitement parallèle (<em>multiprocessing</em>). Quatre cœurs indépendants s’occuperont d’ajuster les différents modèles.</p>
+<div class="cell">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org">future</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://future.apply.futureverse.org">future.apply</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># nous préparons les informations de voisinage pour le terme MRF</span></span>
+<span><span class="va">nb</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/poly2nb.html">poly2nb</a></span><span class="op">(</span><span class="va">data_mtl</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">nb</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html">as.integer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">nb</span>, <span class="st">"region.id"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">data_mtl</span><span class="op">$</span><span class="va">ID_LOC</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html">as.integer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">nb</span>, <span class="st">"region.id"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">ks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">10</span>,<span class="fl">250</span>,<span class="fl">20</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># nous allons itérer sur les valeurs de ks et ajuster nos modèles</span></span>
+<span><span class="co"># nous récupérons à chaque fois les informations pertinentes dans nos </span></span>
+<span><span class="co"># résidus</span></span>
+<span></span>
+<span><span class="va">S0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="va">queen_w</span><span class="op">$</span><span class="va">weights</span>, <span class="va">sum</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html">plan</a></span><span class="op">(</span><span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://future.futureverse.org/reference/multisession.html">multisession</a></span><span class="op">(</span>workers <span class="op">=</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">resultats</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://future.apply.futureverse.org/reference/future_lapply.html">future_sapply</a></span><span class="op">(</span><span class="va">ks</span>, <span class="kw">function</span><span class="op">(</span><span class="va">k</span><span class="op">)</span><span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/gam.html">gam</a></span><span class="op">(</span><span class="va">alr_val</span> <span class="op">~</span> <span class="va">prt_minorite_vis</span> <span class="op">+</span> <span class="va">prt_monoparental</span> <span class="op">+</span> <span class="va">revenu_median</span> <span class="op">+</span></span>
+<span>                  <span class="va">acs_idx_emp_tc_peak</span> <span class="op">+</span> <span class="va">acs_idx_emp_pieton</span> <span class="op">+</span> </span>
+<span>              <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html">s</a></span><span class="op">(</span><span class="va">ID_LOC</span>, bs <span class="op">=</span> <span class="st">'mrf'</span>, xt <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>nb <span class="op">=</span> <span class="va">nb</span><span class="op">)</span>, k <span class="op">=</span> <span class="va">k</span><span class="op">)</span>,</span>
+<span>         data <span class="op">=</span> <span class="va">data_mtl</span>, family <span class="op">=</span> <span class="va">scat</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="va">resid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/residuals.gam.html">residuals.gam</a></span><span class="op">(</span><span class="va">model</span>, type <span class="op">=</span> <span class="st">'scaled.pearson'</span><span class="op">)</span></span>
+<span>  <span class="va">I</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.html">moran</a></span><span class="op">(</span><span class="va">resid</span>, <span class="va">queen_w</span>, n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">resid</span><span class="op">)</span>, S0 <span class="op">=</span> <span class="va">S0</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="va">aic_score</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html">AIC</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">I</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,<span class="va">aic_score</span>,<span class="va">k</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">df_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">resultats</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">df_plot</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'moranI'</span>, <span class="st">'aic'</span>, <span class="st">'k'</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">plot1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">df_plot</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">k</span>, y <span class="op">=</span> <span class="va">moranI</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">'black'</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">k</span>, y <span class="op">=</span> <span class="va">moranI</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">'red'</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">'k'</span>, y <span class="op">=</span> <span class="st">'I de Moran'</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">plot2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">df_plot</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">k</span>, y <span class="op">=</span> <span class="va">aic</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">'black'</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">k</span>, y <span class="op">=</span> <span class="va">aic</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">'red'</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">'k'</span>, y <span class="op">=</span> <span class="st">'AIC'</span><span class="op">)</span><span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rpkgs.datanovia.com/ggpubr/reference/ggarrange.html">ggarrange</a></span><span class="op">(</span><span class="va">plot1</span>, <span class="va">plot2</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-gammrf1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-gammrf1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="07-GAM_files/figure-html/fig-gammrf1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gammrf1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.14: Critères de sélection de k
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>La <a href="#fig-gammrf1" class="quarto-xref">figure&nbsp;<span>7.14</span></a> permet de constater que le AIC et le <em>I</em> de Moran diminuent à mesure que <em>k</em> augmente. Pour le <em>I</em> de Moran, nous constatons qu’au delà de k&nbsp;=&nbsp;100, nous passons à des valeurs inférieures à 0,05. Aussi le AIC semble se stabiliser lorsque k&nbsp;=&nbsp;150. Nous pourrions donc ajuster un modèle avec k&nbsp;=&nbsp;150 pour avoir un bon compromis entre AIC et réduction du <em>I</em> de Moran des résidus.</p>
+<div class="cell">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">gam2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/gam.html">gam</a></span><span class="op">(</span><span class="va">alr_val</span> <span class="op">~</span> <span class="va">prt_minorite_vis</span> <span class="op">+</span> <span class="va">prt_monoparental</span> <span class="op">+</span> <span class="va">revenu_median</span> <span class="op">+</span></span>
+<span>                  <span class="va">acs_idx_emp_tc_peak</span> <span class="op">+</span> <span class="va">acs_idx_emp_pieton</span> <span class="op">+</span> </span>
+<span>              <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html">s</a></span><span class="op">(</span><span class="va">ID_LOC</span>, bs <span class="op">=</span> <span class="st">'mrf'</span>, xt <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>nb <span class="op">=</span> <span class="va">nb</span><span class="op">)</span>, k <span class="op">=</span> <span class="fl">150</span><span class="op">)</span>,</span>
+<span>         data <span class="op">=</span> <span class="va">data_mtl</span>, family <span class="op">=</span> <span class="va">scat</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DHARMa/man/simulateResiduals.html">simulateResiduals</a></span><span class="op">(</span><span class="va">gam2</span>, plot <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="07-GAM_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">gam2</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Family: Scaled t(3.245,0.22) 
+Link function: identity 
+
+Formula:
+alr_val ~ prt_minorite_vis + prt_monoparental + revenu_median + 
+    acs_idx_emp_tc_peak + acs_idx_emp_pieton + s(ID_LOC, bs = "mrf", 
+    xt = list(nb = nb), k = 150)
+
+Parametric coefficients:
+                     Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)         -2.555219   0.108923 -23.459  &lt; 2e-16 ***
+prt_minorite_vis     1.303376   0.106976  12.184  &lt; 2e-16 ***
+prt_monoparental     0.907048   0.239301   3.790 0.000150 ***
+revenu_median       -0.008566   0.001473  -5.816 6.04e-09 ***
+acs_idx_emp_tc_peak  3.118112   0.199688  15.615  &lt; 2e-16 ***
+acs_idx_emp_pieton  -1.102568   0.288893  -3.817 0.000135 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Approximate significance of smooth terms:
+            edf Ref.df Chi.sq p-value    
+s(ID_LOC) 126.7  144.4   2219  &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+R-sq.(adj) =  0.925   Deviance explained = 83.7%
+-REML = 417.26  Scale est. = 1         n = 986</code></pre>
+</div>
+</div>
+<div class="cell">
+<div id="tbl-GamSpatialRMK" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-GamSpatialRMK-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tableau&nbsp;7.2: Résultats du modèle GLM avec spatiale de type RMK
+</figcaption><div aria-describedby="tbl-GamSpatialRMK-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="table do-not-create-environment cell caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead><tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Variable</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Coefficient</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">exp(coefficent)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Valeur de p</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Constante</td>
+<td style="text-align: right;">-2,555</td>
+<td style="text-align: right;">0,078</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">prt_minorite_vis</td>
+<td style="text-align: right;">1,303</td>
+<td style="text-align: right;">3,682</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">prt_monoparental</td>
+<td style="text-align: right;">0,907</td>
+<td style="text-align: right;">2,477</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">revenu_median</td>
+<td style="text-align: right;">-0,009</td>
+<td style="text-align: right;">0,991</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">acs_idx_emp_tc_peak</td>
+<td style="text-align: right;">3,118</td>
+<td style="text-align: right;">22,604</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">acs_idx_emp_pieton</td>
+<td style="text-align: right;">-1,103</td>
+<td style="text-align: right;">0,332</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+<tfoot><tr class="odd">
+<td style="text-align: left; padding: 0;">
+<sup></sup> R2 ajusté = 0,9255.</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr></tfoot>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Il apparaît que les résidus simulés de ce modèle suivent une distribution assez proche d’une distribution uniforme. Nous constatons aussi que toutes les variables indépendantes sont encore significatives et impactent notre variable dépendante dans la même direction (<a href="#tbl-GamSpatialRMK" class="quarto-xref">tableau&nbsp;<span>7.2</span></a>).</p>
+<div class="cell">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span>, listw <span class="op">=</span> <span class="va">queen_w</span>, nsim <span class="op">=</span> <span class="fl">999</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Monte-Carlo simulation of Moran I
+
+data:  residuals(res) 
+weights: queen_w  
+number of simulations + 1: 1000 
+
+statistic = -0.022059, observed rank = 145, p-value = 0.855
+alternative hypothesis: greater</code></pre>
+</div>
+</div>
+<p>Nous avons bien résolu le problème de l’autocorrélation spatiale de résidus. Nous pouvons donc à présent visualiser l’effet spatial de notre <em>Markov Random Field</em>. Pour cela, nous allons une fois encore appliquer la méthode des effets marginaux.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># on extrait toutes les observations de notre jeu de données</span></span>
+<span><span class="va">pred_df</span> <span class="op">&lt;-</span> <span class="va">data_mtl</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'prt_minorite_vis'</span>, <span class="st">'prt_monoparental'</span>, <span class="st">'revenu_median'</span>,</span>
+<span>                      <span class="st">'acs_idx_emp_tc_peak'</span>, <span class="st">'acs_idx_emp_pieton'</span>, <span class="st">'ID_LOC'</span><span class="op">)</span><span class="op">]</span></span>
+<span></span>
+<span><span class="co"># on met toutes les valeurs à 0 sauf l'identifiant des SR</span></span>
+<span><span class="va">pred_df</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
+<span></span>
+<span><span class="co"># On effectue la prédiction</span></span>
+<span><span class="va">pred_df</span><span class="op">$</span><span class="va">log_ratio</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/predict.gam.html">predict.gam</a></span><span class="op">(</span><span class="va">gam2</span>, newdata <span class="op">=</span> <span class="va">pred_df</span>, type <span class="op">=</span> <span class="st">'link'</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># On retire l'effet de la constante</span></span>
+<span><span class="va">pred_df</span><span class="op">$</span><span class="va">log_ratio</span> <span class="op">&lt;-</span> <span class="va">pred_df</span><span class="op">$</span><span class="va">log_ratio</span> <span class="op">-</span> <span class="va">gam2</span><span class="op">$</span><span class="va">coefficients</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span></span>
+<span><span class="co"># On bascule en exponentiel pour avoir l'effet sur le ratio</span></span>
+<span><span class="va">pred_df</span><span class="op">$</span><span class="va">effet_sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">pred_df</span><span class="op">$</span><span class="va">log_ratio</span><span class="op">)</span></span>
+<span><span class="va">results_mrf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">gam2</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># on peut maintenant cartographier cet effet</span></span>
+<span><span class="va">map_mrf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">pred_df</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"effet_sp"</span>, n <span class="op">=</span> <span class="fl">7</span>,</span>
+<span>          style <span class="op">=</span> <span class="st">"jenks"</span>,</span>
+<span>          midpoint <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>          legend.format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>text.separator <span class="op">=</span> <span class="st">"à"</span>, </span>
+<span>                               decimal.mark <span class="op">=</span> <span class="st">","</span>, </span>
+<span>                               big.mark <span class="op">=</span> <span class="st">" "</span>,digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
+<span>          palette <span class="op">=</span> <span class="st">"-RdBu"</span>, title <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'effet du MRF\n(edf = '</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">results_mrf</span><span class="op">$</span><span class="va">edf</span><span class="op">)</span>, <span class="st">')'</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span>, legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_scale_bar.html">tm_scale_bar</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tmap_arrange.html">tmap_arrange</a></span><span class="op">(</span><span class="va">map_spline</span>, <span class="va">map_mrf</span>, nrow <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-gammrf3" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-gammrf3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="07-GAM_files/figure-html/fig-gammrf3-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gammrf3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.15: Comparaison de la spline bivariée et du MRF
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Ce terme spatial ressemble beaucoup à celui que nous avions obtenu avec la spline bivariée construite avec les coordonnées des centroïdes. Cependant, nous lui avons accordé un plus grand nombre de degrés de liberté et il s’ajuste mieux à la géographie de nos secteurs de recensement (polygones). Il aurait été possible de donner plus de flexibilité à la spline bivariée en utilisant également le paramètre <code>k</code>, elle serait cependant restée moins adaptée que le MRF. Par contre, l’avantage intéressant de l’approche par spline bivariée est qu’elle permet de prédire des valeurs à de nouvelles localisations, ce que ne permet par le MRF.</p>
+</section></section><section id="sec-076" class="level2" data-number="7.6"><h2 data-number="7.6" class="anchored" data-anchor-id="sec-076">
+<span class="header-section-number">7.6</span> Quiz de révision</h2>
+<div id="Chap07" class="card">
+<link type="text/javascript" src="libs/quizlib.1.0.1.min.js">
+<script>var Quiz=function(a,b){this.Classes=Object.freeze({QUESTION:"quizlib-question",QUESTION_TITLE:"quizlib-question-title",QUESTION_ANSWERS:"quizlib-question-answers",QUESTION_WARNING:"quizlib-question-warning",CORRECT:"quizlib-correct",INCORRECT:"quizlib-incorrect",TEMP:"quizlib-temp"}),this.unansweredQuestionText="Question sans réponse !",this.container=document.getElementById(a),this.questions=[],this.result=new QuizResult,this.answers=b;for(var c=0;c<this.container.children.length;c++)this.container.children[c].classList.contains(Quiz.Classes.QUESTION)&&this.questions.push(this.container.children[c]);if(this.answers.length!=this.questions.length)throw new Error("Number of answers does not match number of questions!")};Quiz.Classes=Object.freeze({QUESTION:"quizlib-question",QUESTION_TITLE:"quizlib-question-title",QUESTION_ANSWERS:"quizlib-question-answers",QUESTION_WARNING:"quizlib-question-warning",CORRECT:"quizlib-correct",INCORRECT:"quizlib-incorrect",TEMP:"quizlib-temp"}),Quiz.prototype.checkAnswers=function(a){void 0===a&&(a=!0);for(var b=[],c=[],d=0;d<this.questions.length;d++){var e=this.questions[d],f=this.answers[d],g=[];this.clearHighlights(e);for(var h,i=e.getElementsByClassName(Quiz.Classes.QUESTION_ANSWERS)[0].getElementsByTagName("input"),j=0;j<i.length;j++)h=i[j],"checkbox"===h.type||"radio"===h.type?h.checked&&g.push(h.value):""!==h.value&&g.push(h.value);1!=g.length||Array.isArray(f)?0===g.length&&b.push(e):g=g[0],c.push(Utils.compare(g,f))}if(0===b.length||!a)return this.result.setResults(c),!0;for(d=0;d<b.length;d++){var k=document.createElement("span");k.appendChild(document.createTextNode(this.unansweredQuestionText)),k.className=Quiz.Classes.QUESTION_WARNING,b[d].getElementsByClassName(Quiz.Classes.QUESTION_TITLE)[0].appendChild(k)}return!1},Quiz.prototype.clearHighlights=function(a){for(var b=a.getElementsByClassName(Quiz.Classes.QUESTION_WARNING);b.length>0;)b[0].parentNode.removeChild(b[0]);var c,d=[a.getElementsByClassName(Quiz.Classes.CORRECT),a.getElementsByClassName(this.Classes.INCORRECT)];for(i=0;i<d.length;i++)for(;d[i].length>0;)c=d[i][0],c.classList.remove(Quiz.Classes.CORRECT),c.classList.remove(Quiz.Classes.INCORRECT);for(var e=a.getElementsByClassName(Quiz.Classes.TEMP);e.length>0;)e[0].parentNode.removeChild(e[0])},Quiz.prototype.highlightResults=function(a){for(var b,c=0;c<this.questions.length;c++)b=this.questions[c],b.getElementsByClassName(Quiz.Classes.QUESTION_TITLE)[0].classList.add(this.result.results[c]?Quiz.Classes.CORRECT:Quiz.Classes.INCORRECT),void 0!==a&&a(this,b,c,this.result.results[c])};var QuizResult=function(){this.results=[],this.totalQuestions=0,this.score=0,this.scorePercent=0,this.scorePercentFormatted=0};QuizResult.prototype.setResults=function(a){this.results=a,this.totalQuestions=this.results.length,this.score=0;for(var b=0;b<this.results.length;b++)this.results[b]&&this.score++;this.scorePercent=this.score/this.totalQuestions,this.scorePercentFormatted=Math.floor(100*this.scorePercent)};var Utils=function(){};Utils.compare=function(a,b){if(a.length!=b.length)return!1;if(Array.isArray(a)&&Array.isArray(b)){for(var c=0;c<a.length;c++)if(a[c]!==b[c])return!1;return!0}return a===b};
+
+function showResults(quiz) {
+    // Check answers and continue if all questions have been answered
+    if (quiz.checkAnswers()) {
+        var quizScorePercent = quiz.result.scorePercentFormatted; // The unformatted percentage is a decimal in range 0 - 1
+        var quizResultElement = document.getElementById('quiz-result');
+        quizResultElement.style.display = 'block';
+        document.getElementById('quiz-percent').innerHTML = quizScorePercent.toString();
+
+        // Change background colour of results div according to score percent
+        if (quizScorePercent > 75) quizResultElement.style.backgroundColor = '#4caf50';
+        else if (quizScorePercent > 50) quizResultElement.style.backgroundColor = '#ffc107';
+        else if (quizScorePercent > 25) quizResultElement.style.backgroundColor = '#ff9800';
+        else if (quizScorePercent > 0) quizResultElement.style.backgroundColor = '#f44336';
+
+        // Highlight questions according to whether they were correctly answered. The callback allows us to highlight/show the correct answer
+        quiz.highlightResults(handleAnswers);
+    }
+}
+
+/** Callback for Quiz.highlightResults. Highlights the correct answers of incorrectly answered questions
+ * Parameters are: the quiz object, the question element, question number, correctly answered flag
+ */
+function handleAnswers(quiz, question, no, correct) {
+    if (!correct) {
+        var answers = question.getElementsByTagName('input');
+        for (var i = 0; i < answers.length; i++) {
+            if (answers[i].type === 'checkbox' || answers[i].type === 'radio'){
+                // If the current input element is part of the correct answer, highlight it
+                if (quiz.answers[no].indexOf(answers[i].value) > -1) {
+                    answers[i].parentNode.classList.add(Quiz.Classes.CORRECT);
+                }
+            } else {
+                // If the input is anything other than a checkbox or radio button, show the correct answer next to the element
+                var correctAnswer = document.createElement('span');
+                correctAnswer.classList.add(Quiz.Classes.CORRECT);
+                correctAnswer.classList.add(Quiz.Classes.TEMP); // quiz.checkAnswers will automatically remove elements with the temp class
+                correctAnswer.innerHTML = quiz.answers[no];
+                correctAnswer.style.marginLeft = '10px';
+                answers[i].parentNode.insertBefore(correctAnswer, answers[i].nextSibling);
+            }
+        }
+    }
+}
+
+  var quizz_Chap07;
+  window.onload = function() {
+    quizz_Chap07 = new Quiz('Chap07', ['2',['2', '4'],'1','2',['1', '4']]);
+  };</script><link rel="stylesheet" type="text/css" src="css/quizlib.min.css">
+<div class="card quizlib-question">
+<div class="quizlib-question-title">
+Quelle est l’hypothèse clé des modèles de régression linéaire classique qui est assouplie dans les GAM?
+</div>
+<div>
+Relisez au besoin la <a href="#sec-073" class="quarto-xref">section&nbsp;<span>7.3</span></a>.
+</div>
+<div class="quizlib-question-answers">
+<table class="table table-sm table-striped small">
+<tbody><tr>
+<td>
+<label>Les résidus doivent suivre une distribution normale.</label>
+</td>
+<td>
+<input type="radio" name="q1" value="1">
+</td>
+</tr>
+<tr>
+<td>
+<label>Les relations entre les variables indépendantes et dépendantes doivent être linéaires.</label>
+</td>
+<td>
+<input type="radio" name="q1" value="2">
+</td>
+</tr>
+<tr>
+<td>
+<label>Les variables indépendantes ne doivent pas être corrélées entre-elles.</label>
+</td>
+<td>
+<input type="radio" name="q1" value="3">
+</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+<div class="card quizlib-question">
+<div class="quizlib-question-title">
+Dans un GAM, que représente la fonction f ?
+</div>
+<div>
+Relisez au besoin le début de la <a href="#sec-073" class="quarto-xref">section&nbsp;<span>7.3</span></a>.
+</div>
+<div class="quizlib-question-answers">
+<table class="table table-sm table-striped small">
+<tbody><tr>
+<td>
+<label>Une fonction linéaire fixe.</label>
+</td>
+<td>
+<input type="checkbox" name="q2" value="1">
+</td>
+</tr>
+<tr>
+<td>
+<label>Une fonction non paramétrique ajustée aux données.</label>
+</td>
+<td>
+<input type="checkbox" name="q2" value="2">
+</td>
+</tr>
+<tr>
+<td>
+<label>Une fonction quadratique définie par l’utilisateur.</label>
+</td>
+<td>
+<input type="checkbox" name="q2" value="3">
+</td>
+</tr>
+<tr>
+<td>
+<label>La somme d’un ensemble de bases non linéaires multipliées par leurs coefficients.</label>
+</td>
+<td>
+<input type="checkbox" name="q2" value="4">
+</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+<div class="card quizlib-question">
+<div class="quizlib-question-title">
+Comment un modèle GAM peut-il être utilisé pour intégrer l’espace?
+</div>
+<div>
+Relisez au besoin la <a href="#sec-073" class="quarto-xref">section&nbsp;<span>7.3</span></a>.
+</div>
+<div class="quizlib-question-answers">
+<table class="table table-sm table-striped small">
+<tbody><tr>
+<td>
+<label>Une spline spécialisée est utilisée pour capturer une tendance spatiale d’arrière-plan dans les données</label>
+</td>
+<td>
+<input type="radio" name="q3" value="1">
+</td>
+</tr>
+<tr>
+<td>
+<label>Le modèle intègre directement l’autocorrélation spatiale dans son hypothèse quant à la distribution de ses résidus</label>
+</td>
+<td>
+<input type="radio" name="q3" value="2">
+</td>
+</tr>
+<tr>
+<td>
+<label>Le modèle intègre une version spatialement décalée de la variable Y</label>
+</td>
+<td>
+<input type="radio" name="q3" value="3">
+</td>
+</tr>
+<tr>
+<td>
+<label>Le modèle intègre une version spatialement décalée des variables X</label>
+</td>
+<td>
+<input type="radio" name="q3" value="4">
+</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+<div class="card quizlib-question">
+<div class="quizlib-question-title">
+Dans quel cas préfère-t-on utiliser un MRF plutôt qu’une spline bivariée sur les coordonnées géographiques?
+</div>
+<div>
+Relisez au besoin la <a href="#sec-074" class="quarto-xref">section&nbsp;<span>7.4</span></a>.
+</div>
+<div class="quizlib-question-answers">
+<table class="table table-sm table-striped small">
+<tbody><tr>
+<td>
+<label>Lorsque les données sont représentées dans l’espace comme des points.</label>
+</td>
+<td>
+<input type="radio" name="q4" value="1">
+</td>
+</tr>
+<tr>
+<td>
+<label>Lorsque l’espace est représenté plus adéquatement par une relation de voisinage entre les observations.</label>
+</td>
+<td>
+<input type="radio" name="q4" value="2">
+</td>
+</tr>
+<tr>
+<td>
+<label>Lorsque le terme spatial que l’on espère ajusté doit être moins spatialement autocorrélé</label>
+</td>
+<td>
+<input type="radio" name="q4" value="3">
+</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+<div class="card quizlib-question">
+<div class="quizlib-question-title">
+Pour analyser l’effet spatial modélisé avec une spline, on peut :
+</div>
+<div>
+Relisez au besoin la <a href="#sec-0751" class="quarto-xref">section&nbsp;<span>7.5.1</span></a>.
+</div>
+<div class="quizlib-question-answers">
+<table class="table table-sm table-striped small">
+<tbody><tr>
+<td>
+<label>Regarder le nombre de degrés de liberté (edf) de la spline.</label>
+</td>
+<td>
+<input type="checkbox" name="q5" value="1">
+</td>
+</tr>
+<tr>
+<td>
+<label>Interpréter les coefficients de chacune des bases de la spline.</label>
+</td>
+<td>
+<input type="checkbox" name="q5" value="2">
+</td>
+</tr>
+<tr>
+<td>
+<label>Cartographier les résidus du modèle.</label>
+</td>
+<td>
+<input type="checkbox" name="q5" value="3">
+</td>
+</tr>
+<tr>
+<td>
+<label>Cartographier l’effet de la spline grâce à la méthode des effets marginaux</label>
+</td>
+<td>
+<input type="checkbox" name="q5" value="4">
+</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+<button type="button" onclick="showResults(quizz_Chap07);" id="buttonID">
+Vérifier votre résultat
+</button>
+<div id="quiz-result" class="card">
+<p><span id="quiz-percent"></span></p>
+</div>
+</div>
+</section><section id="sec-077" class="level2" data-number="7.7"><h2 data-number="7.7" class="anchored" data-anchor-id="sec-077">
+<span class="header-section-number">7.7</span> Exercices de révision</h2>
+<div class="bloc_exercice">
+<div class="bloc_exercice-header">
+<div class="bloc_exercice-icon">
+
+</div>
+<p><strong>Exercice 1.</strong> Réalisation d’un modèle GAM aspatiale</p>
+</div>
+<div class="bloc_exercice-body">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mgcv)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DHARMa)</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mgcViz)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Chargement du jeu de données sur l'agglomération Lyonnaise</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/Lyon.Rdata"</span>)</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Vérification de la multicolinéarité (VIF)</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(<span class="fu">lm</span>(NO2 <span class="sc">~</span> Pct0_14<span class="sc">+</span>Pct_65<span class="sc">+</span>Pct_Img<span class="sc">+</span>Pct_brevet<span class="sc">+</span>NivVieMed, <span class="at">data =</span> LyonIris))</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Construction du modèle GLM gaussien</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>Modele.GAM1 <span class="ot">&lt;-</span> <span class="fu">gam</span>(à compléter)</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Résidus simulés du modèle gaussien</span></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>GAM1.res <span class="ot">&lt;-</span> à compléter</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(GAM1.res)</span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Construction du modèle GLM avec une distribution de Student</span></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>Modele.GAM2 <span class="ot">&lt;-</span> <span class="fu">gam</span>(à compléter)</span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Résidus simulés avec une distribution de Student</span></span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>GAM2.res <span class="ot">&lt;-</span> à compléter</span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(GAM2.res)</span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparaison des deux modèles</span></span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(Modele.GAM1, Modele.GAM2)</span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Résultats du modèle gaussien</span></span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(à compléter)</span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Matrice de contiguïté selon le partage d'un nœud </span></span>
+<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a>queen_nb <span class="ot">&lt;-</span> à compléter</span>
+<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a>queen_w <span class="ot">&lt;-</span> à compléter</span>
+<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a><span class="co"># I de Moran sur les résidus gaussiens</span></span>
+<span id="cb29-35"><a href="#cb29-35" aria-hidden="true" tabindex="-1"></a><span class="fu">moran.mc</span>(<span class="fu">residuals</span>(à compléter)</span>
+<span id="cb29-36"><a href="#cb29-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-37"><a href="#cb29-37" aria-hidden="true" tabindex="-1"></a><span class="co"># I de Moran sur les résidus simulés</span></span>
+<span id="cb29-38"><a href="#cb29-38" aria-hidden="true" tabindex="-1"></a><span class="fu">moran.mc</span>(à compléter)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Correction à la <a href="10-Exercices.html#sec-10071" class="quarto-xref">section&nbsp;<span>10.7.1</span></a>.</p>
+</div>
+</div>
+<div class="bloc_exercice">
+<div class="bloc_exercice-header">
+<div class="bloc_exercice-icon">
+
+</div>
+<p><strong>Exercice 2.</strong> Réalisation d’un modèle GAM avec une spline bivariée</p>
+</div>
+<div class="bloc_exercice-body">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Chargement du jeu de données sur l'agglomération Lyonnaise</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/Lyon.Rdata"</span>)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajout des coordonnées x et y dans la couche sf LyonIris</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>à compléter</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Modèle GAM avec la distribution de student et une spline</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co"># sur les coordonnées x et y avec la distribution de Student</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>Modele.GAMSpline <span class="ot">&lt;-</span> à compléter</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(Modele.GAMSpline)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Correction à la <a href="10-Exercices.html#sec-10072" class="quarto-xref">section&nbsp;<span>10.7.2</span></a>.</p>
+</div>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-RBoldAirMethodesQuanti" class="csl-entry" role="listitem">
+Apparicio, Philippe et Jérémy Gelb. 2022. <em>Méthodes quantitatives en sciences sociales : un grand bol d’R</em>. FabriqueREL, Licence CC BY-SA. <a href="https://serieboldr.github.io/MethodesQuantitatives/">https://serieboldr.github.io/MethodesQuantitatives/</a>.
+</div>
+<div id="ref-gelb2022cyclists" class="csl-entry" role="listitem">
+Gelb, Jérémy et Philippe Apparicio. 2022. <span>«&nbsp;Cyclists’ exposure to air and noise pollution, comparative approach in seven cities.&nbsp;»</span> <em>Transportation Research Interdisciplinary Perspectives</em> 14: 100619. <a href="https://doi.org/10.1016/j.trip.2022.100619">https://doi.org/10.1016/j.trip.2022.100619</a>.
+</div>
+<div id="ref-greenacre2021compositional" class="csl-entry" role="listitem">
+Greenacre, Michael, Marina Martinez-Alvaro et Agustin Blasco. 2021. <span>«&nbsp;Compositional data analysis of microbiome and any-omics datasets: a validation of the additive logratio transformation.&nbsp;»</span> <em>Frontiers in microbiology</em> 12: 727398. <a href="https://doi.org/10.3389/fmicb.2021.727398">https://doi.org/10.3389/fmicb.2021.727398</a>.
+</div>
+<div id="ref-comp_pkg2025" class="csl-entry" role="listitem">
+Tsagris, Michail et Giorgos Athineou. 2025. <em>Compositional: Compositional Data Analysis</em>. s.n. <a href="https://CRAN.R-project.org/package=Compositional">https://CRAN.R-project.org/package=Compositional</a>.
+</div>
+<div id="ref-van2013analyzing" class="csl-entry" role="listitem">
+Van den Boogaart, K Gerald et Raimon Tolosana-Delgado. 2013. <em>Analyzing compositional data with R</em>. Vol. 122. Springer.
+</div>
+<div id="ref-comp_pkg2024" class="csl-entry" role="listitem">
+van den Boogaart, K. Gerald, Raimon Tolosana-Delgado et Matevz Bren. 2024. <em>Compositions: Compositional Data Analysis</em>. s.n. <a href="https://CRAN.R-project.org/package=compositions">https://CRAN.R-project.org/package=compositions</a>.
+</div>
+<div id="ref-wood2017generalized" class="csl-entry" role="listitem">
+Wood, Simon N. 2017. <em>Generalized additive models: an introduction with R</em>. Chapman; hall/CRC.
+</div>
+</div>
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copié");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copié");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/serieboldr\.github\.io\/RegressionsSpatiales\/index\.html");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./06-GWRExtensions.html" class="pagination-link" aria-label="Extensions de la régression géographiquement pondérée (en cours de rédaction)">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée (en cours de rédaction)</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./08-SEM.html" class="pagination-link" aria-label="Filtrage spatial">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Filtrage spatial</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Méthodes de régression spatiale : un grand bol d’R.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Ce livre a été réalisé avec <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+</body></html>

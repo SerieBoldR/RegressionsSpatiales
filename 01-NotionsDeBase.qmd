@@ -216,32 +216,61 @@ carte3 <- tm_shape(data_mtl) +
 tmap_arrange(carte1, carte2, carte3, ncol=2, nrow=2)
 ```
 
+
+
+
 ### Jeu de données sur Barcelone {#sec-0113}
 
+Troisièmement, nous utiliserons un jeu de données spatiales (`Barcelone`) pour la ville de Barcelone (Catalogne, Espagne). Ce jeu de données spatiales comprend quatorze variables, dont cinq environnementales (EN), six socioéconomiques (SE), une géographique (GE) et un variable binaire (BI), pour les 1068 entités polygonales de recensement formant la ville de Barcelone (@tbl-Barcelone et @fig-datacarto).
+
 ```{r}
+#| label: tbl-Barcelone
+#| tbl-cap: Statistiques descriptives du jeu de données sur Barcelone
 #| echo: false
 #| message: false
 #| warning: false
-load("data/Bcn.RData")
+#| eval: true
+library(sf)
+load("data/Barcelone.RData")
+donnees <- st_drop_geometry(Barcelone)
+donnees <-  donnees[c("NO2", "PM25", "Arbres","Surf", "Parcs",
+                      "PopTot", "Densite", "Revenu", "Pct_Img", "Pct0_4", "Pct_Plus80", 
+                      "Distance", "ClusterUE")]
+ 
+intitule <- c("Dioxyde d'azote (ug/m^3^)",
+              "Particules fines (PM$_{2,5}$)",
+              "Nombre d'arbres",
+              "Surface bâtie (m^2^)",
+              "Espaces verts (m^2^)",
+              "Population",
+              "Habitants au km^2^",
+              "Revenu des ménages (Euros)",
+              "Immigrants non européens (%)",
+              "Moins de 4 ans (%)",
+              "80 ans et plus (%)",
+              "Distance du centre (m)",
+              "Cluster of UE Immigrants")
+
+stats <- data.frame(variable = names(donnees),
+                    nom = intitule,
+                    type = c("EN", "EN", "EN", "EN", "EN", 
+                             "SE", "SE", "SE", "SE", "SE", "SE", 
+                             "GE", "BI"),
+                    moy = round(sapply(donnees, mean),2),
+                    et = round(sapply(donnees, sd),2),                    
+                    minimum = round(sapply(donnees, min),2), 
+                    maximum = round(sapply(donnees, max),2)
+                    )
+knitr::kable(stats,
+			digits = 1,
+			row.names = FALSE,
+			format.args = list(decimal.mark = ',', big.mark = " "),
+			col.names=c("Nom", "Intitulé", "Type", "Moy.", "E.-T.", "Min.", "Max."),
+			align= c("l", "l", "c", "r", "r", "r", "r"),
+			format = "markdown")
 ```
 
-### Jeu de données sur la densité pour six villes espagnoles {#sec-0114}
-
-```{r}
-#| echo: false
-#| message: false
-#| warning: false
-load("data/Density.RData")
-```
-
-### Jeu de données sur la densité pour six régions métropolitaines espagnoles {#sec-0115}
-
-```{r}
-#| echo: false
-#| message: false
-#| warning: false
-load("data/ProbitData.RData")
-```
+![Cartographie des variables du jeu de données de Barcelone](images/Chap01/FigureDataBarcelone.png){#fig-barceloneCarto width="100%" fig-align="center"}
 
 ## Matrices des pondération spatiale {#sec-012}
 
@@ -1635,7 +1664,7 @@ library(spdep)
 # I de Moran sur la variable Lden selon des permutations Monte-Carlo
 à compléter
 ```
-Correction à la [section @sec-08011].
+Correction à la [section @sec-10011].
 :::
 :::
 
@@ -1667,6 +1696,6 @@ formule <- "Lden ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed"
 # Cartographie des résidus
 à compléter
 ```
-Correction à la [section @sec-08012].
+Correction à la [section @sec-10012].
 :::
 :::

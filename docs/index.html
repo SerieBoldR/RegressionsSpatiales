@@ -8,7 +8,7 @@
 <meta name="author" content="Jérémy Gelb">
 <meta name="author" content="Jean Dubé">
 <meta name="author" content="Joan Carles Martori">
-<meta name="dcterms.date" content="2025-02-27">
+<meta name="dcterms.date" content="2025-03-02">
 <title>Méthodes de régression spatiale : un grand bol d’R</title>
 <style>
 code{white-space: pre-wrap;}
@@ -189,8 +189,14 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03-ModelesSpatiauxPanel.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel (en cours de rédaction)</span></span></a>
+  <a href="./03-CAR_SpatialProbit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Autres modèles d’économétrie spatiale</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-ModelesSpatiauxPanel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel (en cours de rédaction)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -199,14 +205,14 @@ div.csl-indent {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04-GWRClassique.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Régressions géographiquement pondérées classiques</span></span></a>
+  <a href="./05-GWRClassique.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Régressions géographiquement pondérées classiques</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05-GWRExtensions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée (en cours de rédaction)</span></span></a>
+  <a href="./06-GWRExtensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée (en cours de rédaction)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -215,14 +221,20 @@ div.csl-indent {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-GAM.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Modèles généralisées additifs</span></span></a>
+  <a href="./07-GAM.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modèles généralisées additifs</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07-SEM.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Filtrage spatial</span></span></a>
+  <a href="./08-SEM.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Filtrage spatial</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-GLS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modèles des moindres carrés ordinaires (GLS) (en cours de rédaction)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -231,8 +243,8 @@ div.csl-indent {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08-Exercices.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Correction des exercices</span></span></a>
+  <a href="./10-Exercices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Correction des exercices</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -309,7 +321,7 @@ div.csl-indent {
   <div class="quarto-title-meta-contents">
         <p class="affiliation">
             <a href="https://mon.uvic.cat/">
-            Département d’économie<br>Université de Vic, Espagne
+            Département d’économie et de gestion, <br>Université de Vic - UCC, Espagne
             </a>
           </p>
       </div>
@@ -321,7 +333,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Date de publication</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">2025-02-27</p>
+      <p class="date">2025-03-02</p>
     </div>
   </div>
   
@@ -500,10 +512,10 @@ Figure&nbsp;2: Téléchargement de l’intégralité du livre
 <p>En géographie, Daniel Griffith est certainement l’un des géographes les plus actifs dans le domaine des régressions spatiales, y allant de plusieurs propositions dans le but de contrôler pour la présence d’autocorrélation spatiale résiduelle. Ses premiers travaux remontent aux années 1980, et il a publié depuis un grand nombre d’ouvrages <span class="citation" data-cites="Griffith1988 griffith2003spatial griffith2019spatial">(notamment, <a href="references.html#ref-Griffith1988" role="doc-biblioref">Griffith 1988</a>; <a href="references.html#ref-griffith2003spatial" role="doc-biblioref">Griffith 2003</a>; <a href="references.html#ref-griffith2019spatial" role="doc-biblioref">Griffith, Chun et Li 2019</a>)</span>. Puis, dans les années 1990, trois géographes –&nbsp;Stewart Fotheringham, Chris Brunsdon et Martin Charlton&nbsp;– ont introduit la régression géographiquement pondérée (GWR), une méthode permettant d’analyser localement les relations entre la variable dépendante et les variables indépendantes d’un modèle de régression <span class="citation" data-cites="stewart1996geography brunsdon1996geographically brunsdon1998spatial">(<a href="references.html#ref-stewart1996geography" role="doc-biblioref">Fotheringham, Charlton et Brunsdon 1996</a>; <a href="references.html#ref-brunsdon1996geographically" role="doc-biblioref">Brunsdon, Fotheringham et Charlton 1996</a>; <a href="references.html#ref-brunsdon1998spatial" role="doc-biblioref">Brunsdon, Fotheringham et Charlton 1998</a>)</span>. En 2003, la parution de leur ouvrage intitulé <em>Geographically weighted regression: the analysis of spatially varying relationships</em> <span class="citation" data-cites="fotheringham2003geographically">(<a href="references.html#ref-fotheringham2003geographically" role="doc-biblioref">Fotheringham, Brunsdon et Charlton 2003</a>)</span> a largement contribué à la popularisation de cette méthode. Depuis, de nombreuses extensions de la GWR ont été proposées (nous y reviendrons).</p>
 </section><section id="sect006" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="sect006">Structure du livre</h2>
 <p>Depuis une cinquantaine d’années, les économètres, les épidémiologistes et les géographes conçoivent et utilisent largement des méthodes de régression prenant en compte la dimension spatiale, dont les principales sont présentées dans ce manuel. Ce dernier est structuré en quatre parties.</p>
-<p><strong>Partie&nbsp;1. Notions de base.</strong> Dans cette première partie, nous présentons les jeux de données utilisées pour mettre en œuvre les différentes méthodes de régression spatiale présentées dans le livre (<a href="01-NotionsDeBase.html" class="quarto-xref">chapitre&nbsp;<span>1&nbsp; Autocorrélation spatiale, dépendance spatiale et hétérogénéité spatiale d’un modèle de régression</span></a>). Nous discutons aussi de plusieurs notions fondamentales et méthodes qu’il importe de bien maîtriser avant d’aborder les chapitres suivants consacrés aux méthodes de régression spatiale, notamment&nbsp;: l’autocorrélation spatiale (globale et locale), la notion de variable spatialement décalée et la régression linéaire multiple. Nous conclurons ce chapitre en exposant les raisons qui justifient l’utilisation de différentes formes de régressions spatiales pour modéliser des données spatiales ou spatiotemporelles (<a href="02-ModelesEconometrieSpatiale.html" class="quarto-xref">chapitre&nbsp;<span>2&nbsp; Modèles d’économétrie spatiale</span></a>).</p>
-<p><strong>Partie&nbsp;2. Modèles d’économétrie spatiale</strong>. Cette seconde partie est consacrée aux modèles d’économétrie spatiale qui vise à modéliser la <strong>dépendance spatiale</strong>. Dans le <a href="02-ModelesEconometrieSpatiale.html" class="quarto-xref">chapitre&nbsp;<span>2&nbsp; Modèles d’économétrie spatiale</span></a>, nous décrivons ainsi les principaux modèles spatiaux autorégressifs qui permettent d’introduire l’autocorrélation spatiale sur les variables indépendantes (modèle SLX), la variable dépendante (SAR), le terme d’erreur (SEM), à la fois la variable dépendante et les variables indépendantes (SDM) ou à la fois les variables indépendantes et le terme d’erreur (SDEM). Dans le <a href="03-ModelesSpatiauxPanel.html" class="quarto-xref">chapitre&nbsp;<span>3&nbsp; Modèles d’économétrie spatiale par panel (en cours de rédaction)</span></a>, nous abordons une extension des modèles autorégressifs, soit les modèles spatiaux par panel qui permettent de modéliser des données spatiales longitudinales.</p>
-<p><strong>Partie&nbsp;3. Régressions géographiquement pondérées</strong>. Dans cette partie, nous abordons les régressions géographiquement pondérées (GWR) qui permettent de modéliser l’<strong>hétérogénéité spatiale</strong>, soit l’instabilité des relations entre la variable dépendante et les variables indépendantes. Premièrement, nous décrirons les formes dites classiques de la GWR qui s’appliquent à des variables dépendantes continues, dichotomiques (logistique) et de comptage (Poisson) (<a href="04-GWRClassique.html" class="quarto-xref">chapitre&nbsp;<span>4&nbsp; Régressions géographiquement pondérées classiques</span></a>). Deuxièmement, nous abordons des extensions des la GWR, particulièrement la GWR mixte, la GWR multiéchelle et les GWR mixtes avec des variables spatialement décalées (MGWR-SAR) (<a href="05-GWRExtensions.html" class="quarto-xref">chapitre&nbsp;<span>5&nbsp; Extensions de la régression géographiquement pondérée (en cours de rédaction)</span></a>).</p>
-<p><strong>Partie&nbsp;4. Autres modèles de régressions spatiales</strong>. Cette quatrième et dernière partie comprend deux chapitres. Le <a href="06-GAM.html" class="quarto-xref">chapitre&nbsp;<span>6&nbsp; Modèles généralisées additifs</span></a> est consacré aux modèles généralisés additifs qui permettent d’introduire l’espace de deux manières différentes&nbsp;: les modèles GAM avec une <em>spline</em> bivariée avec les coordonnées géographiques (x, y) pour capturer les variations continues dans l’espace; les modèles GAM avec un lissage par champ aléatoire de Markov (<em>random markov field</em> – RMF) pour modéliser la dépendance spatiale entre les unités spatiales voisines. Dans le <a href="07-SEM.html" class="quarto-xref">chapitre&nbsp;<span>7&nbsp; Filtrage spatial</span></a>, nous nous abordons les modèles linéaires généralisés avec des vecteurs spatiaux proposés par Daniel Griffith <span class="citation" data-cites="griffith2003spatial griffith2019spatial">(<a href="references.html#ref-griffith2003spatial" role="doc-biblioref">2003</a>; <a href="references.html#ref-griffith2019spatial" role="doc-biblioref">2019</a>)</span>.</p>
+<p><strong>Partie&nbsp;1. Notions de base.</strong> Dans cette première partie, nous présentons les jeux de données utilisées pour mettre en œuvre les différentes méthodes de régression spatiale présentées dans le livre (<a href="01-NotionsDeBase.html" class="quarto-xref">chapitre&nbsp;<span>1&nbsp; Autocorrélation spatiale, dépendance spatiale et hétérogénéité spatiale d’un modèle de régression</span></a>). Nous discutons aussi de plusieurs notions fondamentales et méthodes qu’il importe de bien maîtriser avant d’aborder les chapitres suivants consacrés aux méthodes de régression spatiale, notamment&nbsp;: l’autocorrélation spatiale (globale et locale), la notion de variable spatialement décalée et la régression linéaire multiple. Nous conclurons ce chapitre en exposant les raisons qui justifient l’utilisation de différentes formes de régressions spatiales pour modéliser des données spatiales ou spatiotemporelles.</p>
+<p><strong>Partie&nbsp;2. Modèles d’économétrie spatiale</strong>. Cette seconde partie comprend trois chapitres. Elle est consacrée aux modèles d’économétrie spatiale qui vise à modéliser la <strong>dépendance spatiale</strong>. Dans le <a href="02-ModelesEconometrieSpatiale.html" class="quarto-xref">chapitre&nbsp;<span>2&nbsp; Modèles d’économétrie spatiale</span></a>, nous décrivons ainsi les principaux modèles spatiaux autorégressifs qui permettent d’introduire l’autocorrélation spatiale sur les variables indépendantes (modèle SLX), la variable dépendante (SAR), le terme d’erreur (SEM), à la fois la variable dépendante et les variables indépendantes (SDM) ou à la fois les variables indépendantes et le terme d’erreur (SDEM). Dans le <a href="03-CAR_SpatialProbit.html" class="quarto-xref">chapitre&nbsp;<span>3&nbsp; Autres modèles d’économétrie spatiale</span></a>, nous abordons deux autres types modèles d’économétrie spatiale&nbsp;: le modèle d’autorégression conditionnelle (<em><strong>c</strong>onditional <strong>a</strong>utoregressive <strong>m</strong>odel</em>, CAR) qui se distingue du modèle SAR; les modèles probit spatiaux pour modéliser une variable qualitative dichotomique (binaire). Finalement, dans le <a href="04-ModelesSpatiauxPanel.html" class="quarto-xref">chapitre&nbsp;<span>4&nbsp; Modèles d’économétrie spatiale par panel (en cours de rédaction)</span></a>, nous abordons une autre extension des modèles autorégressifs, soit les modèles spatiaux par panel qui permettent de modéliser des données spatiales longitudinales.</p>
+<p><strong>Partie&nbsp;3. Régressions géographiquement pondérées</strong>. Dans cette partie, nous abordons les régressions géographiquement pondérées (GWR) qui permettent de modéliser l’<strong>hétérogénéité spatiale</strong>, soit l’instabilité des relations entre la variable dépendante et les variables indépendantes. Premièrement, nous décrirons les formes dites classiques de la GWR qui s’appliquent à des variables dépendantes continues, dichotomiques (logistique) et de comptage (Poisson) (<a href="05-GWRClassique.html" class="quarto-xref">chapitre&nbsp;<span>5&nbsp; Régressions géographiquement pondérées classiques</span></a>). Deuxièmement, nous abordons des extensions des la GWR, particulièrement la GWR mixte, la GWR multiéchelle et les GWR mixtes avec des variables spatialement décalées (MGWR-SAR) (<a href="06-GWRExtensions.html" class="quarto-xref">chapitre&nbsp;<span>6&nbsp; Extensions de la régression géographiquement pondérée (en cours de rédaction)</span></a>).</p>
+<p><strong>Partie&nbsp;4. Autres modèles de régressions spatiales</strong>. Cette quatrième et dernière partie comprend trois chapitres. Le <a href="07-GAM.html" class="quarto-xref">chapitre&nbsp;<span>7&nbsp; Modèles généralisées additifs</span></a> est consacré aux modèles généralisés additifs qui permettent d’introduire l’espace de deux manières différentes&nbsp;: les modèles GAM avec une <em>spline</em> bivariée avec les coordonnées géographiques (x, y) pour capturer les variations continues dans l’espace; les modèles GAM avec un lissage par champ aléatoire de Markov (<em>random markov field</em> – RMF) pour modéliser la dépendance spatiale entre les unités spatiales voisines. Dans le <a href="08-SEM.html" class="quarto-xref">chapitre&nbsp;<span>8&nbsp; Filtrage spatial</span></a>, nous nous abordons les modèles linéaires généralisés avec des vecteurs spatiaux proposés par Daniel Griffith <span class="citation" data-cites="griffith2003spatial griffith2019spatial">(<a href="references.html#ref-griffith2003spatial" role="doc-biblioref">2003</a>; <a href="references.html#ref-griffith2019spatial" role="doc-biblioref">2019</a>)</span>.</p>
 </section><section id="sect007" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="sect007">Remerciements</h2>
 <p>De nombreuses personnes ont contribué à l’élaboration de ce manuel.</p>
 <p>Ce projet a bénéficié du soutien pédagogique et financier de la <a href="https://fabriquerel.org/"><strong><em>fabriqueREL</em></strong></a> (ressources éducatives libres). Les différentes rencontres avec le comité de suivi nous ont permis de comprendre l’univers des ressources éducatives libres (REL) et notamment leurs <a href="https://fabriquerel.org/rel/">fameux 5R</a> (Retenir — Réutiliser — Réviser — Remixer — Redistribuer), de mieux définir le besoin pédagogique visé par ce manuel, d’identifier des ressources pédagogiques et des outils pertinents pour son élaboration. Ainsi, nous remercions chaleureusement les membres de la <em>fabriqueREL</em> pour leur soutien inconditionnel&nbsp;:</p>

@@ -1,44 +1,47 @@
-- label: "Comment un modèle SEVM intègre-t-il les effets spatiaux?"
-  type: uc
-  response: 3
-  answers:
-     - "En ajustant la distribution conditionnelle supposée de la variable dépendante pour intégrer la dépendance spatiale."
-     - "En ajoutant au modèle des variables spatialement décalées."
-     - "En ajoutant au modèle des vecteurs propres spatiaux."
-  help: "Relisez au besoin la [section @sec-072]."
-  
-- label: "Qu’est-ce qu’un vecteur propre spatial?"
-  type: mc
-  response: [1,2]
-  answers:
-     - "Une variable quantitative continue"
-     - "Une variable construite à partir d'une matrice de pondération spatiale"
-     - "Une variable avec une autocorrélation spatiale positive"
-  help: "Relisez au besoin la [section @sec-071]."
-  
-- label: "L'approche classique de construction d'un modèle SEVM consiste à :"
-  type: uc
-  response: 1
-  answers:
-     - "Appliquer un processus itératif de sélection des vecteurs propres à ajouter dans le modèle"
-     - "Sélectionner uniquement les vecteurs propres améliorant le R2 du modèle"
-     - "Sélectionner uniquement les vecteurs propres avec une autocorrélation spatiale positive"
-  help: "Relisez au besoin la [section @sec-0721]."
-  
-- label: "L'approche LASSO et l'approche par effet aléatoire ont un point commun:"
+- label: "Quelle est l'hypothèse clé des modèles de régression linéaire classique qui est assouplie dans les GAM?"
   type: uc
   response: 2
   answers:
-     - "Elles sont plus lentes à calculer que la méthode par sélection"
-     - "Elles retiennent les vecteurs propres pertinents en incluant une pénalisation"
-     - "Elles sont moins efficaces pour capturer la corrélation spatiale dans les résidus"
-  help: "Relisez au besoin la [section @sec-0722] et la [section @sec-0723]."
+     - "Les résidus doivent suivre une distribution normale."
+     - "Les relations entre les variables indépendantes et dépendantes doivent être linéaires."
+     - "Les variables indépendantes ne doivent pas être corrélées entre-elles."
+  help: "Relisez au besoin la [section @sec-073]."
 
-- label: "Comment peut-on interpréter les effets spatiaux dans un modèle SEVM?"
-  type: uc
-  response: 3
+- label: "Dans un GAM, que représente la fonction f ?"
+  type: mc
+  response: [2,4]
   answers:
-     - "En analysant les coefficients des vecteurs spatiaux intégrés au modèle"
-     - "En analyse le degré de pénalisation sélectionné par la méthode GAIC"
-     - "En cartographiant les effets spatiaux par la méthode des effets marginaux"
-  help: "Relisez au besoin la [section @sec-0734]."
+     - "Une fonction linéaire fixe."
+     - "Une fonction non paramétrique ajustée aux données."
+     - "Une fonction quadratique définie par l'utilisateur."
+     - "La somme d'un ensemble de bases non linéaires multipliées par leurs coefficients."
+  help: "Relisez au besoin le début de la [section @sec-073]."
+
+- label: "Comment un modèle GAM peut-il être utilisé pour intégrer l'espace?"
+  type: uc
+  response: 1
+  answers:
+     - "Une spline spécialisée est utilisée pour capturer une tendance spatiale d'arrière-plan dans les données"
+     - "Le modèle intègre directement l'autocorrélation spatiale dans son hypothèse quant à la distribution de ses résidus"
+     - "Le modèle intègre une version spatialement décalée de la variable Y"
+     - "Le modèle intègre une version spatialement décalée des variables X"
+  help: "Relisez au besoin la [section @sec-073]."
+
+- label: "Dans quel cas préfère-t-on utiliser un MRF plutôt qu'une spline bivariée sur les coordonnées géographiques?"
+  type: uc
+  response: 2
+  answers:
+     - "Lorsque les données sont représentées dans l'espace comme des points."
+     - "Lorsque l'espace est représenté plus adéquatement par une relation de voisinage entre les observations."
+     - "Lorsque le terme spatial que l'on espère ajusté doit être moins spatialement autocorrélé"
+  help: "Relisez au besoin la [section @sec-074]."
+
+- label: "Pour analyser l'effet spatial modélisé avec une spline, on peut :"
+  type: mc
+  response: [1,4]
+  answers:
+     - "Regarder le nombre de degrés de liberté (edf) de la spline."
+     - "Interpréter les coefficients de chacune des bases de la spline."
+     - "Cartographier les résidus du modèle."
+     - "Cartographier l'effet de la spline grâce à la méthode des effets marginaux"
+  help: "Relisez au besoin la [section @sec-0751]."

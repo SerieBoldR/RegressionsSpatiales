@@ -1,0 +1,50 @@
+# Autres modèles d'économétrie spatiale {#sec-chap03}
+
+Dans ce chapitre, nous décrivons deux autres types de modèles d'économétrie spatiale. Premièrement, nous abordons le modèle d'autorégression conditionnelle (***c**onditional **a**utoregressive **m**odel*, CAR) qui s'applique à une variable dépendante continue. Nous verrons notamment comment le modèle CAR se distingue du modèle SAR (***s**patial **a**uto**r**egressive*) décrit dans le chapitre précédent ([section @sec-02121]). Deuxièmement, nous décrirons les modèles probit spatiaux, très utiles lorsque la variable dépendante est une variable qualitative binaire.
+
+::: bloc_objectif
+::: bloc_objectif-header
+::: bloc_objectif-icon
+:::
+
+**Objectifs d'apprentissage visés dans ce chapitre**
+:::
+
+::: bloc_objectif-body
+À la fin de ce chapitre, vous devriez être en mesure de :
+
+-   comprendre la différence entre un modèle CAR et un modèle SAR;
+-   comprendre les raisons motivant le choix d'un modèle d'économétrie spatiale avec une variable dépendante qualitative binaire;
+-   mettre en pratique et interprétrer les résultats de ces deux types modèles spatiaux dans R.
+:::
+:::
+
+::: bloc_package
+::: bloc_package-header
+::: bloc_package-icon
+:::
+
+**Liste des *packages* utilisés dans ce chapitre**
+:::
+
+::: bloc_package-body
+-   Pour importer et manipuler des fichiers géographiques :
+    -   `sf` pour importer et manipuler des données vectorielles.
+-   Pour construire des cartes et des graphiques :
+    -   `tmap` est certainement le meilleur *package* pour la cartographie.
+    -   `ggplot2` et `ggpubr` pour construire des graphiques.
+-   Pour construire des modèles spatiaux :
+    -   `spdep` pour construire des matrices de pondération spatiales et calculer le *I* de Moran.
+    -   `Matrix` pour construire des matrices de pondération spatiales peu denses.
+    -   `spatialreg` pour construire des modèles CAR.
+    -   `ProbitSpatial` pour construire des modèles économétriques spatiaux avec variable dépendante binaire.
+:::
+:::
+
+## Modèles d'autorégression conditionnelle (en cours de rédaction) {#sec-031}
+
+## Modèles probit spatial (en cours de rédaction) {#sec-032}
+
+### Bref retour sur le modèle probit {#sec-0321}
+
+### Les différents modèles probit spatiaux {#sec-0322}

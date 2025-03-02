@@ -80,7 +80,7 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./03-ModelesSpatiauxPanel.html" rel="next">
+<link href="./03-CAR_SpatialProbit.html" rel="next">
 <link href="./01-NotionsDeBase.html" rel="prev">
 <link href="./images/introduction/CouvertureP1.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js"></script>
@@ -211,8 +211,14 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03-ModelesSpatiauxPanel.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel (en cours de rédaction)</span></span></a>
+  <a href="./03-CAR_SpatialProbit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Autres modèles d’économétrie spatiale</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-ModelesSpatiauxPanel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel (en cours de rédaction)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -221,14 +227,14 @@ window.Quarto = {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04-GWRClassique.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Régressions géographiquement pondérées classiques</span></span></a>
+  <a href="./05-GWRClassique.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Régressions géographiquement pondérées classiques</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05-GWRExtensions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée (en cours de rédaction)</span></span></a>
+  <a href="./06-GWRExtensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée (en cours de rédaction)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -237,14 +243,20 @@ window.Quarto = {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-GAM.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Modèles généralisées additifs</span></span></a>
+  <a href="./07-GAM.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modèles généralisées additifs</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07-SEM.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Filtrage spatial</span></span></a>
+  <a href="./08-SEM.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Filtrage spatial</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-GLS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modèles des moindres carrés ordinaires (GLS) (en cours de rédaction)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -253,8 +265,8 @@ window.Quarto = {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08-Exercices.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Correction des exercices</span></span></a>
+  <a href="./10-Exercices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Correction des exercices</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -480,7 +492,7 @@ Figure&nbsp;2.1: Effets marginaux dans un modèle SLX
 <p><strong>Rappel sur les variables spatialement décalées</strong></p>
 </div>
 <div class="bloc_notes-body">
-<p>Dans le premier chapitre (<a href="01-NotionsDeBase.html#sec-013" class="quarto-xref">section&nbsp;<span>1.3</span></a>), nous avons vu comment calculer une variable spatialement décalée avec une matrice de pondération spatiale (<a href="01-NotionsDeBase.html#fig-Chap01FigureVariableSpatialementDecalee" class="quarto-xref">figure&nbsp;<span>1.9</span></a>). À titre de rappel, lorsque cette dernière est standardisée en ligne, elle correspond à la valeur moyenne dans les unités voisines ou proches (dépendamment si la matrice est définie selon la contiguïté ou la proximité).</p>
+<p>Dans le premier chapitre (<a href="01-NotionsDeBase.html#sec-013" class="quarto-xref">section&nbsp;<span>1.3</span></a>), nous avons vu comment calculer une variable spatialement décalée avec une matrice de pondération spatiale (<a href="01-NotionsDeBase.html#fig-Chap01FigureVariableSpatialementDecalee" class="quarto-xref">figure&nbsp;<span>1.10</span></a>). À titre de rappel, lorsque cette dernière est standardisée en ligne, elle correspond à la valeur moyenne dans les unités voisines ou proches (dépendamment si la matrice est définie selon la contiguïté ou la proximité).</p>
 </div>
 </div>
 <p>Le modèle SLX prend la spécification suivante&nbsp;:</p>
@@ -695,7 +707,7 @@ y = (\mathbf{I} - \rho W)^{-1} \left[ \iota \alpha + X \beta + \varepsilon \righ
 </ul>
 <p>Le modèle nécessite une méthode d’estimation appropriée. La première approche, par maximum de vraisemblance, fut proposée dès le départ par Luc Anselin <span class="citation" data-cites="anselin1988">(<a href="references.html#ref-anselin1988" role="doc-biblioref">1988</a>)</span>. Cette approche a été largement mobilisée dans les premières applications. Bien qu’intéressante, cette approche repose sur certaines hypothèses, dont la distribution du terme d’erreur et l’absence d’hétéroscédasticité.</p>
 <p>Plus récemment, Kelejian et Prucha <span class="citation" data-cites="kelejian1998generalized">(<a href="references.html#ref-kelejian1998generalized" role="doc-biblioref">1998</a>)</span> ont proposé une approche basée sur les moindres carrés généralisés (MCG). Cette approche a l’avantage d’être plus rapide en plus de permettre de corriger l’absence d’hétéroscédasticité. Elle a cependant le désavantage de reposer sur l’hypothèse importante d’exogénéité de la matrice de pondération spatiale, qui sert d’instrument lors du processus d’estimation.</p>
-<p>Ce modèle est habituellement qualifié d’<strong>effet de débordement</strong> ou d’<strong>effet d’entraînement</strong>. Comparativement au modèle SLX, les effets marginaux sont identifiés comme étant globaux puisqu’une variation de la valeur de la variable dépendante, introduit une variation dans la valeur des variables dépendantes décalées spatialement qui, à leur tour, influencent la variation dans les valeurs dépendantes des observations voisines et ainsi de suite (<a href="#fig-EffetMargSAR" class="quarto-xref">figure&nbsp;<span>2.3</span></a>). Cette boucle de rétroaction peut être interprétée comme la résultante d’un équilibre général spatial.</p>
+<p>Ce modèle est habituellement qualifié d’<strong>effet de débordement</strong> ou d’<strong>effet d’entraînement</strong>, puisqu’une variation de la valeur de la variable dépendante d’une observation affecte le résultat d’une autre observation. Comparativement au modèle SLX. Comparativement au modèle SLX, les effets marginaux sont identifiés comme étant globaux puisqu’une variation de la valeur de la variable dépendante, introduit une variation dans la valeur des variables dépendantes décalées spatialement qui, à leur tour, influencent la variation dans les valeurs dépendantes des observations voisines et ainsi de suite (<a href="#fig-EffetMargSAR" class="quarto-xref">figure&nbsp;<span>2.3</span></a>). Cette boucle de rétroaction peut être interprétée comme la résultante d’un équilibre général spatial.</p>
 <div id="fig-EffetMargSAR" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-EffetMargSAR-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/Chap02/EffetsMarginaux_SAR.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:22.0%">
@@ -793,27 +805,27 @@ Simulation results ( variance matrix):
 ========================================================
 Simulated standard errors
                Direct  Indirect     Total
-Pct0_14    0.04208799 0.2449658 0.2822578
-Pct_65     0.03703474 0.1943510 0.2301989
-Pct_Img    0.03361449 0.1732684 0.2060778
-Pct_brevet 0.02551617 0.1300652 0.1550606
-NivVieMed  0.06890849 0.3633747 0.4284996
+Pct0_14    0.04294571 0.2443744 0.2827530
+Pct_65     0.03836918 0.1985145 0.2359803
+Pct_Img    0.03423038 0.1781287 0.2114355
+Pct_brevet 0.02535992 0.1327710 0.1575117
+NivVieMed  0.06911505 0.3720514 0.4378245
 
 Simulated z-values:
-              Direct   Indirect      Total
-Pct0_14    -3.317629 -2.8502509 -2.9683729
-Pct_65     -1.340263 -1.2725365 -1.2899935
-Pct_Img     1.218734  1.1808589  1.1916501
-Pct_brevet -1.008039 -0.9811743 -0.9888905
-NivVieMed  -2.000584 -1.8915284 -1.9257677
+              Direct  Indirect     Total
+Pct0_14    -3.266743 -2.888225 -2.992368
+Pct_65     -1.209888 -1.168523 -1.179722
+Pct_Img     1.292864  1.240817  1.254664
+Pct_brevet -1.087185 -1.041348 -1.052822
+NivVieMed  -1.964973 -1.836943 -1.871175
 
 Simulated p-values:
-           Direct     Indirect  Total    
-Pct0_14    0.00090785 0.0043685 0.0029938
-Pct_65     0.18015998 0.2031825 0.1970529
-Pct_Img    0.22294515 0.2376588 0.2333985
-Pct_brevet 0.31343597 0.3265068 0.3227167
-NivVieMed  0.04543725 0.0585538 0.0541334</code></pre>
+           Direct    Indirect  Total    
+Pct0_14    0.0010879 0.0038742 0.0027682
+Pct_65     0.2263219 0.2425959 0.2381109
+Pct_Img    0.1960582 0.2146733 0.2096009
+Pct_brevet 0.2769549 0.2977139 0.2924225
+NivVieMed  0.0494174 0.0662184 0.0613208</code></pre>
 </div>
 </div>
 <p>L’interprétation des effets directs se rapproche de celle des coefficients classiques. Ainsi, selon ce modèle, l’augmentation du niveau de vie médian de 1000&nbsp;€ dans un IRIS est associée à une diminution moyenne de la concentration de dioxyde d’azote de 0,14 dans cet IRIS. L’effet total est de -0,82, indiquant qu’en moyenne, l’augmentation de 1000&nbsp;€ du niveau de vie médian dans un IRIS est associée à une diminution moyenne de 0,82 de la concentration de dioxyde d’azote dans l’ensemble des IRIS. Au final, l’effet indirect est simplement la différence entre l’effet total et l’effet direct. Nous pouvons constater ici que les effets indirects sont plus importants que les effets directs.</p>
@@ -830,7 +842,7 @@ data:  resid(modele_SAR)
 weights: w_rook  
 number of simulations + 1: 1000 
 
-statistic = -0.014281, observed rank = 369, p-value = 0.631
+statistic = -0.014281, observed rank = 340, p-value = 0.66
 alternative hypothesis: greater</code></pre>
 </div>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Cartographie des résidus</span></span>
@@ -949,7 +961,7 @@ data:  resid(modele_SEM)
 weights: w_rook  
 number of simulations + 1: 1000 
 
-statistic = -0.011827, observed rank = 366, p-value = 0.634
+statistic = -0.011827, observed rank = 354, p-value = 0.646
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
@@ -1085,27 +1097,27 @@ Simulation results ( variance matrix):
 ========================================================
 Simulated standard errors
                Direct  Indirect     Total
-Pct0_14    0.04299078 0.3398064 0.3684773
-Pct_65     0.03548529 0.2788138 0.3005658
-Pct_Img    0.03254669 0.2738588 0.2926590
-Pct_brevet 0.02498860 0.2057217 0.2223325
-NivVieMed  0.06658704 0.4976965 0.5310541
+Pct0_14    0.04487404 0.3397596 0.3680573
+Pct_65     0.03555319 0.2774625 0.3008845
+Pct_Img    0.03219431 0.2683629 0.2863258
+Pct_brevet 0.02505634 0.2014089 0.2172951
+NivVieMed  0.06762422 0.4973581 0.5332856
 
 Simulated z-values:
                Direct   Indirect       Total
-Pct0_14    -2.8868532 -3.0869512 -3.18357161
-Pct_65     -0.5457588  0.1334406  0.05935029
-Pct_Img     1.9811033  3.4153521  3.41627219
-Pct_brevet -0.7785141 -2.2683292 -2.18635803
-NivVieMed  -2.3546302 -0.2818833 -0.55941607
+Pct0_14    -2.7411246 -3.0506542 -3.15030881
+Pct_65     -0.6605848  0.1443177  0.05502725
+Pct_Img     2.0731300  3.5272316  3.53904983
+Pct_brevet -0.8168622 -2.3461608 -2.26882826
+NivVieMed  -2.3111289 -0.2669956 -0.54207487
 
 Simulated p-values:
-           Direct    Indirect  Total     
-Pct0_14    0.0038912 0.0020222 0.00145470
-Pct_65     0.5852317 0.8938449 0.95267311
-Pct_Img    0.0475797 0.0006370 0.00063485
-Pct_brevet 0.4362660 0.0233091 0.02878942
-NivVieMed  0.0185411 0.7780330 0.57587779</code></pre>
+           Direct    Indirect   Total     
+Pct0_14    0.0061229 0.00228343 0.00163098
+Pct_65     0.5088786 0.88524959 0.95611675
+Pct_Img    0.0381602 0.00041993 0.00040157
+Pct_brevet 0.4140072 0.01896792 0.02327877
+NivVieMed  0.0208257 0.78947253 0.58776693</code></pre>
 </div>
 </div>
 <p><strong>Dépendance spatiale du modèle SDM?</strong></p>
@@ -1120,7 +1132,7 @@ data:  resid(modele_SDM)
 weights: w_rook  
 number of simulations + 1: 1000 
 
-statistic = -0.0046127, observed rank = 485, p-value = 0.515
+statistic = -0.0046127, observed rank = 487, p-value = 0.513
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
@@ -1266,7 +1278,7 @@ data:  resid(modele_SDEM)
 weights: w_rook  
 number of simulations + 1: 1000 
 
-statistic = -0.010362, observed rank = 393, p-value = 0.607
+statistic = -0.010362, observed rank = 369, p-value = 0.631
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
@@ -1368,20 +1380,20 @@ Sample size per chain = 500
    plus standard error of the mean:
 
                Mean      SD Naive SE Time-series SE
-Pct0_14    -0.12168 0.04393 0.001965       0.001965
-Pct_65     -0.02063 0.03709 0.001659       0.001659
-Pct_Img     0.06623 0.03198 0.001430       0.001430
-Pct_brevet -0.01847 0.02623 0.001173       0.001267
-NivVieMed  -0.15264 0.07408 0.003313       0.003313
+Pct0_14    -0.12055 0.04380 0.001959       0.001959
+Pct_65     -0.01723 0.03652 0.001633       0.001633
+Pct_Img     0.06524 0.03130 0.001400       0.001400
+Pct_brevet -0.01927 0.02670 0.001194       0.001194
+NivVieMed  -0.15781 0.07046 0.003151       0.003151
 
 2. Quantiles for each variable:
 
                 2.5%      25%      50%       75%    97.5%
-Pct0_14    -0.205217 -0.15426 -0.12026 -0.091090 -0.03995
-Pct_65     -0.092526 -0.04665 -0.02161  0.003768  0.04878
-Pct_Img     0.007573  0.04506  0.06577  0.087098  0.12810
-Pct_brevet -0.067060 -0.03535 -0.01855 -0.002135  0.03315
-NivVieMed  -0.292098 -0.20146 -0.14971 -0.107200 -0.01042
+Pct0_14    -0.201942 -0.15131 -0.12258 -0.091682 -0.02751
+Pct_65     -0.089173 -0.04130 -0.01788  0.007636  0.05483
+Pct_Img     0.005159  0.04359  0.06576  0.084145  0.12771
+Pct_brevet -0.069236 -0.03825 -0.01972 -0.002242  0.03454
+NivVieMed  -0.292843 -0.20486 -0.15856 -0.106125 -0.03121
 
 ========================================================
 Indirect:
@@ -1394,21 +1406,21 @@ Sample size per chain = 500
 1. Empirical mean and standard deviation for each variable,
    plus standard error of the mean:
 
-               Mean     SD Naive SE Time-series SE
-Pct0_14    -1.08243 0.3926  0.01756       0.017557
-Pct_65      0.04779 0.3154  0.01410       0.014103
-Pct_Img     1.01435 0.3300  0.01476       0.014760
-Pct_brevet -0.47947 0.2276  0.01018       0.009677
-NivVieMed  -0.08899 0.5365  0.02399       0.022447
+              Mean     SD Naive SE Time-series SE
+Pct0_14    -1.0535 0.3953 0.017679       0.013415
+Pct_65      0.0785 0.3198 0.014301       0.014301
+Pct_Img     0.9896 0.3222 0.014408       0.015733
+Pct_brevet -0.4998 0.2182 0.009758       0.009758
+NivVieMed  -0.1608 0.5228 0.023378       0.023378
 
 2. Quantiles for each variable:
 
-              2.5%     25%      50%     75%    97.5%
-Pct0_14    -1.9679 -1.2756 -1.05072 -0.8483 -0.42214
-Pct_65     -0.5123 -0.1381  0.03710  0.2244  0.70076
-Pct_Img     0.4863  0.7916  0.96199  1.1812  1.81551
-Pct_brevet -0.9360 -0.6188 -0.46712 -0.3334 -0.06773
-NivVieMed  -1.0286 -0.4388 -0.09881  0.2107  1.08652
+              2.5%     25%      50%     75%   97.5%
+Pct0_14    -1.9245 -1.2784 -1.03210 -0.7806 -0.3316
+Pct_65     -0.4616 -0.1251  0.06651  0.2405  0.7491
+Pct_Img     0.4419  0.7694  0.96885  1.1639  1.7028
+Pct_brevet -0.9380 -0.6305 -0.48705 -0.3568 -0.1124
+NivVieMed  -1.1629 -0.4918 -0.17286  0.1679  0.8414
 
 ========================================================
 Total:
@@ -1422,45 +1434,45 @@ Sample size per chain = 500
    plus standard error of the mean:
 
                Mean     SD Naive SE Time-series SE
-Pct0_14    -1.20410 0.4184  0.01871        0.01871
-Pct_65      0.02716 0.3367  0.01506        0.01506
-Pct_Img     1.08058 0.3465  0.01550        0.01550
-Pct_brevet -0.49794 0.2446  0.01094        0.01189
-NivVieMed  -0.24163 0.5754  0.02573        0.02573
+Pct0_14    -1.17408 0.4226  0.01890        0.01444
+Pct_65      0.06127 0.3431  0.01534        0.01534
+Pct_Img     1.05481 0.3391  0.01517        0.01649
+Pct_brevet -0.51909 0.2338  0.01046        0.01046
+NivVieMed  -0.31861 0.5591  0.02500        0.02500
 
 2. Quantiles for each variable:
 
-              2.5%     25%       50%      75%    97.5%
-Pct0_14    -2.1466 -1.4291 -1.179378 -0.95032 -0.47040
-Pct_65     -0.5879 -0.1704  0.008247  0.21690  0.74606
-Pct_Img     0.5169  0.8519  1.033204  1.24416  1.92619
-Pct_brevet -0.9750 -0.6482 -0.489815 -0.34599 -0.05824
-NivVieMed  -1.2590 -0.6111 -0.252043  0.06228  0.99640
+              2.5%     25%      50%      75%   97.5%
+Pct0_14    -2.0654 -1.4122 -1.15862 -0.87522 -0.3953
+Pct_65     -0.5126 -0.1583  0.04058  0.23695  0.7841
+Pct_Img     0.4605  0.8332  1.03535  1.24047  1.7825
+Pct_brevet -0.9733 -0.6651 -0.50468 -0.36421 -0.1022
+NivVieMed  -1.3707 -0.6826 -0.34481  0.03063  0.7682
 
 ========================================================
 Simulated standard errors
                Direct  Indirect     Total
-Pct0_14    0.04393302 0.3925758 0.4184054
-Pct_65     0.03708921 0.3153580 0.3367188
-Pct_Img    0.03197802 0.3300331 0.3465193
-Pct_brevet 0.02622900 0.2276029 0.2445962
-NivVieMed  0.07408500 0.5365013 0.5753703
+Pct0_14    0.04380172 0.3953256 0.4225801
+Pct_65     0.03652321 0.3197885 0.3431168
+Pct_Img    0.03129753 0.3221786 0.3391316
+Pct_brevet 0.02669726 0.2182048 0.2338458
+NivVieMed  0.07046027 0.5227574 0.5591273
 
 Simulated z-values:
-               Direct   Indirect       Total
-Pct0_14    -2.7696297 -2.7572418 -2.87784138
-Pct_65     -0.5562553  0.1515459  0.08066119
-Pct_Img     2.0712454  3.0734671  3.11838350
-Pct_brevet -0.7041167 -2.1066004 -2.03575003
-NivVieMed  -2.0603966 -0.1658715 -0.41996391
+               Direct   Indirect      Total
+Pct0_14    -2.7520610 -2.6649875 -2.7783674
+Pct_65     -0.4717215  0.2454612  0.1785598
+Pct_Img     2.0846210  3.0714918  3.1103337
+Pct_brevet -0.7218233 -2.2906099 -2.2198078
+NivVieMed  -2.2397044 -0.3075934 -0.5698289
 
 Simulated p-values:
-           Direct   Indirect  Total    
-Pct0_14    0.005612 0.0058291 0.0040041
-Pct_65     0.578036 0.8795451 0.9357114
-Pct_Img    0.038336 0.0021159 0.0018185
-Pct_brevet 0.481360 0.0351522 0.0417755
-NivVieMed  0.039361 0.8682580 0.6745118</code></pre>
+           Direct    Indirect  Total    
+Pct0_14    0.0059221 0.0076991 0.0054633
+Pct_65     0.6371256 0.8060994 0.8582834
+Pct_Img    0.0371037 0.0021299 0.0018688
+Pct_brevet 0.4704031 0.0219860 0.0264318
+NivVieMed  0.0251101 0.7583918 0.5687938</code></pre>
 </div>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## Autocorrélation spatiale des résidus</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">resid</a></span><span class="op">(</span><span class="va">modele_Manski</span><span class="op">)</span>, <span class="va">w_rook</span>, nsim <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1472,7 +1484,7 @@ data:  resid(modele_Manski)
 weights: w_rook  
 number of simulations + 1: 1000 
 
-statistic = -0.0009215, observed rank = 531, p-value = 0.469
+statistic = -0.0009215, observed rank = 534, p-value = 0.466
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
@@ -1762,10 +1774,10 @@ modele_SEM      2  8 2755.5 -1369.7    2  4.9728  0.4192</code></pre>
 <pre><code>  Modele      AIC      BIC dl       MoranI MoranIp
 1    MCO 3366.626 3396.212  7  0.587312061   0.001
 2    SLX 3222.594 3273.313 12  0.604660275   0.001
-3    SAR 2748.314 2782.126  8 -0.014281059   0.650
-4    SEM 2755.474 2789.286  8 -0.011826605   0.640
-5    SDM 2732.212 2787.157 13 -0.004612686   0.512
-6   SDEM 2760.501 2815.446 13 -0.010361653   0.613</code></pre>
+3    SAR 2748.314 2782.126  8 -0.014281059   0.641
+4    SEM 2755.474 2789.286  8 -0.011826605   0.628
+5    SDM 2732.212 2787.157 13 -0.004612686   0.516
+6   SDEM 2760.501 2815.446 13 -0.010361653   0.582</code></pre>
 </div>
 </div>
 <p>Quelques lignes de code suffisent pour créer deux graphiques permettant de comparer visuellement les résultats des différents modèles (<a href="#fig-GraphComparaison" class="quarto-xref">figure&nbsp;<span>2.9</span></a>). Les résultats démontrent que&nbsp;:</p>
@@ -2153,7 +2165,7 @@ Vérifier votre résultat
 <span id="cb66-9"><a href="#cb66-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Modèles MOC, SLX, SDM, SDEM, SAR, SEM, Manski</span></span>
 <span id="cb66-10"><a href="#cb66-10" aria-hidden="true" tabindex="-1"></a>à compléter</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Correction à la <a href="08-Exercices.html#sec-08021" class="quarto-xref">section&nbsp;<span>8.2.1</span></a>.</p>
+<p>Correction à la <a href="10-Exercices.html#sec-10021" class="quarto-xref">section&nbsp;<span>10.2.1</span></a>.</p>
 </div>
 </div>
 <div class="bloc_exercice">
@@ -2167,7 +2179,7 @@ Vérifier votre résultat
 <div class="cell">
 <div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>à compléter</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Correction à la <a href="08-Exercices.html#sec-08022" class="quarto-xref">section&nbsp;<span>8.2.2</span></a>.</p>
+<p>Correction à la <a href="10-Exercices.html#sec-10022" class="quarto-xref">section&nbsp;<span>10.2.2</span></a>.</p>
 </div>
 </div>
 <div class="bloc_exercice">
@@ -2187,7 +2199,7 @@ Vérifier votre résultat
 <span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>Comparaison <span class="ot">&lt;-</span> à compléter</span>
 <span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a>Comparaison</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Correction à la <a href="08-Exercices.html#sec-08023" class="quarto-xref">section&nbsp;<span>8.2.3</span></a>.</p>
+<p>Correction à la <a href="10-Exercices.html#sec-10023" class="quarto-xref">section&nbsp;<span>10.2.3</span></a>.</p>
 </div>
 </div>
 
@@ -2658,8 +2670,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./03-ModelesSpatiauxPanel.html" class="pagination-link" aria-label="Modèles d'économétrie spatiale par panel (en cours de rédaction)">
-        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel (en cours de rédaction)</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./03-CAR_SpatialProbit.html" class="pagination-link" aria-label="Autres modèles d'économétrie spatiale">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Autres modèles d’économétrie spatiale</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

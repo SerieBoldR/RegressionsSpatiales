@@ -1,51 +1,58 @@
-- label: "Un modèle de régression géographiquement pondérée produit autant de régressions que d'entités spatiales dans le jeu de données à l'étude."
+- label: "Quelle est la différence entre le centre point et le point central?"
   type: uc
-  response: 1
+  response: 2
   answers:
-     - "Vrai"
-     - "Faux"
-  help: "Relisez le deuxième encadré à la [section @sec-0412]."
+     - "Le centre moyen peut être pondéré contrairement au point central."
+     - "Le point central est un point qui fait partie du semis de points initial."
+  help: "Relisez au besoin la [section @sec-03112]."
   
-- label: "Quelles sont les deux principales fonctions Kernel pour définir la pondération W(i) dans un modèle GWR?"
+- label: "Quelles sont les quatre principales manières de représenter graphiquement la dispersion d'un semis de points?"
   type: mc
-  response: [2,3]
+  response: [1,3,4,5]
   answers:
-     - "Fonction quadratique"
-     - "Fonction gaussienne"
-     - "Fonction bicarrée"
-     - "Fonction Epanechnikov"
-     - "Fonction Triangulaire"
-  help: "Relisez au besoin la [section @sec-0412]."
+     - "Enveloppe convexe"
+     - "Centre moyen et point central"
+     - "Rectangle construit avec les déviations standards des X et des Y"     
+     - "Distance standard"
+     - "Ellipse de déviation de distance standard"
+  help: "Relisez au besoin la [section @sec-03131]."
+
+- label: "Quelles sont les trois principales distributions d'un semis de points?"
+  type: mc
+  response: [1,2,3]
+  answers:
+     - "Distribution dispersée"
+     - "Distribution aléatoire"     
+     - "Distribution concentrée"
+     - "Distribution normale"
+  help: "Relisez au besoin la [section @sec-033]."     
   
-- label: "Quelles sont les deux méthodes pour optimiser la zone d’influence optimale avec la fonction gwr.sel?"
+- label: "En analyse des quadrats, quelles sont les trois principales formes utilisées?"
   type: mc
-  response: [2,4]
+  response: [2,3,4]
   answers:
-     - "Méthode des moindres carrés"
-     - "Méthode CV (cross-validation)"
-     - "Méthode basée sur la matrice de corrélation"
-     - "Méthode basée sur l'AIC"
-  help: "Relisez au besoin la [section @sec-0421]."
-
-- label: "Quelles fonctions du package spgwr permettent de comparer les modèles MCO (global)?"
-  type: mc
-  response: [1,2,3,4,5]
-  answers:
-     - "anova(Modele.GWR)"
-     - "BFC99.gwr.test(Modele.GWR)"
-     - "BFC02.gwr.test(Modele.GWR)"
-     - "LMZ.F1GWR.test"
-     - "LMZ.F2GWR.test"
-     - "LMZ.F3GWR.test"
-  help: "Relisez le deuxième encadré à la [section @sec-04213]."
-
-- label: "Quelle fonction du package spgwr permet de vérifier si les coefficients de régression varient significativement dans l'espace?"
+     - "Triangle"
+     - "Carré"
+     - "Hexagone"     
+     - "Cercle"     
+  help: "Relisez au besoin la [section @sec-03231]."       
+     
+- label: "Quel est le paramètre influençant le plus les résultats de la méthode KDE?"
   type: uc
-  response: 4
+  response: 2
   answers:
-     - "gwr.sel"
-     - "LMZ.F1GWR.test"
-     - "LMZ.F2GWR.test"
-     - "LMZ.F3GWR.test"
-  help: "Relisez le deuxième encadré à la [section @sec-04213]."
+     - "La fonction kernel utilisée"     
+     - "La taille du rayon d'influence"     
+  help: "Relisez au besoin la [section @sec-03421]." 
+       
+- label: "Quelles sont les principales fonctions kernel?"
+  type: mc
+  response: [1,2,3,5]
+  answers:
+     - "Gaussienne"
+     - "Quadratique"  
+     - "Uniforme"
+     - "Manhattan"
+     - "Epanechnikov"  
+  help: "Relisez au besoin la [section @sec-03421]."  
   

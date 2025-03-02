@@ -37,7 +37,7 @@ book:
       affiliation-url: https://www.ulaval.ca/
     - name: Joan Carles Martori
       url: https://mon.uvic.cat/dam/
-      affiliation: Département d'économie<br>Université de Vic, Espagne
+      affiliation: Département d'économie et de gestion, <br>Université de Vic - UCC, Espagne
       affiliation-url: https://mon.uvic.cat/
   date: today
   date-format: YYYY-MM-DD
@@ -62,15 +62,17 @@ book:
   - 01-NotionsDeBase.qmd
   - part: Partie 2. Économétrie spatiale
   - 02-ModelesEconometrieSpatiale.qmd
-  - 03-ModelesSpatiauxPanel.qmd
+  - 03-CAR_SpatialProbit.qmd
+  - 04-ModelesSpatiauxPanel.qmd
   - part: Partie 3. Régressions géographiquement pondérées
-  - 04-GWRClassique.qmd
-  - 05-GWRExtensions.qmd
+  - 05-GWRClassique.qmd
+  - 06-GWRExtensions.qmd
   - part: Partie 4. Autres approches de modélisations spatiales
-  - 06-GAM.qmd
-  - 07-SEM.qmd
+  - 07-GAM.qmd
+  - 08-SEM.qmd
+  - 09-GLS.qmd
   - part: Partie 7. Exercices et bibliographie
-  - 08-Exercices.qmd
+  - 10-Exercices.qmd
   - references.qmd
       
 bibliography: references.bib
