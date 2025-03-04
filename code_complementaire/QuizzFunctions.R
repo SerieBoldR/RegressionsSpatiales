@@ -214,7 +214,7 @@ build_html_quizz <- function(myquizz){
 
   # ajouter le bouton de verification
   on_click <- paste0("showResults(quizz_",myquizz$id,");")
-  result <- tags$button("Vérifier votre résultat", type="button", onclick=on_click, id="buttonID")
+  result <- tags$button("Vérifiez votre résultat", type="button", onclick=on_click, id="buttonID")
 
   quizz_div[[length(quizz_div)+1]] <- result
 

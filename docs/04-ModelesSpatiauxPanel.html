@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.32">
+<meta name="generator" content="quarto-1.6.33">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
 <title>4&nbsp; Modèles d’économétrie spatiale par panel (en cours de rédaction) – Méthodes de régression spatiale : un grand bol d’R</title>
 <style>
 code{white-space: pre-wrap;}
@@ -53,6 +56,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }
 </style>
 
+
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
@@ -68,10 +72,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-2486e1f0a3ee9ee1fc393803a1361cdb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-07ba0ad10f5680c660e360ac31d2f3b6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-183e74061cd0fe4872fa4cf166543a55.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap-e7f91c2723297c1dc845c6a220e21f7a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -97,12 +102,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-submit-button-title": "Envoyer",
     "search-label": "Recherche"
   }
-}</script><link rel="stylesheet" href="css/quizlib.min.css">
+}</script>
+
+
+<link rel="stylesheet" href="css/quizlib.min.css">
 </head>
+
 <body class="nav-sidebar floating">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
@@ -113,9 +124,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <i class="bi bi-search"></i>
       </button>
     </div>
-  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Méthodes de régression spatiale : un grand bol d’R</a> 
         <div class="sidebar-tools-main">
@@ -131,7 +146,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-<li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Préface</span></a>
@@ -230,31 +245,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
     </ul>
-</div>
-</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table des matières</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table des matières</h2>
    
   <ul>
-<li><a href="#sec-041" id="toc-sec-041" class="nav-link active" data-scroll-target="#sec-041"><span class="header-section-number">4.1</span> Bref retour sur les modèles en panel</a></li>
-  <li>
-<a href="#sec-042" id="toc-sec-042" class="nav-link" data-scroll-target="#sec-042"><span class="header-section-number">4.2</span> Formulation des différents modèles spatiaux par panel</a>
+  <li><a href="#sec-041" id="toc-sec-041" class="nav-link active" data-scroll-target="#sec-041"><span class="header-section-number">4.1</span> Bref retour sur les modèles en panel</a></li>
+  <li><a href="#sec-042" id="toc-sec-042" class="nav-link" data-scroll-target="#sec-042"><span class="header-section-number">4.2</span> Formulation des différents modèles spatiaux par panel</a>
   <ul class="collapse">
-<li><a href="#sec-0421" id="toc-sec-0421" class="nav-link" data-scroll-target="#sec-0421"><span class="header-section-number">4.2.1</span> Description des différents modèles</a></li>
+  <li><a href="#sec-0421" id="toc-sec-0421" class="nav-link" data-scroll-target="#sec-0421"><span class="header-section-number">4.2.1</span> Description des différents modèles</a></li>
   <li><a href="#sec-0422" id="toc-sec-0422" class="nav-link" data-scroll-target="#sec-0422"><span class="header-section-number">4.2.2</span> Modèle SLPDM : autocorrélation sur la variable dépendante</a></li>
   <li><a href="#sec-0423" id="toc-sec-0423" class="nav-link" data-scroll-target="#sec-0423"><span class="header-section-number">4.2.3</span> Modèle SEPDM : autocorrélation sur le terme d’erreur</a></li>
   <li><a href="#sec-0424" id="toc-sec-0424" class="nav-link" data-scroll-target="#sec-0424"><span class="header-section-number">4.2.4</span> Modèle SEPDM : autocorrélation sur la variable dépendante et les variables indépendantes</a></li>
-  </ul>
-</li>
+  </ul></li>
   <li><a href="#sec-043" id="toc-sec-043" class="nav-link" data-scroll-target="#sec-043"><span class="header-section-number">4.3</span> Sélection du modèle spatial par panel le plus approprié</a></li>
   <li><a href="#sec-044" id="toc-sec-044" class="nav-link" data-scroll-target="#sec-044"><span class="header-section-number">4.4</span> Mise en œuvre dans R</a></li>
   <li><a href="#sec-045" id="toc-sec-045" class="nav-link" data-scroll-target="#sec-045"><span class="header-section-number">4.5</span> Quiz de révision</a></li>
   <li><a href="#sec-046" id="toc-sec-046" class="nav-link" data-scroll-target="#sec-046"><span class="header-section-number">4.6</span> Exercices de révision</a></li>
-  </ul><div class="toc-actions"><ul><li><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></nav>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
 <h1 class="title"><span id="sec-chap04" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel (en cours de rédaction)</span></span></h1>
 </div>
 
@@ -269,7 +288,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   
 
 
-</header><p>Dans ce chapitre, nous abordons une extension des modèles autorégressifs, soit les modèles spatiaux par panel qui permettent de modéliser des données spatiales longitudinales.</p>
+</header>
+
+
+<p>Dans ce chapitre, nous abordons une extension des modèles autorégressifs, soit les modèles spatiaux par panel qui permettent de modéliser des données spatiales longitudinales.</p>
 <div class="bloc_objectif">
 <div class="bloc_objectif-header">
 <div class="bloc_objectif-icon">
@@ -299,51 +321,51 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li>Pour importer et manipuler des fichiers géographiques&nbsp;:
 <ul>
-<li>
-<code>sf</code> pour importer et manipuler des données vectorielles.</li>
-</ul>
-</li>
+<li><code>sf</code> pour importer et manipuler des données vectorielles.</li>
+</ul></li>
 <li>Pour construire des cartes et des graphiques&nbsp;:
 <ul>
-<li>
-<code>tmap</code> pour construire des cartes thématiques.</li>
-<li>
-<code>ggplot2</code> est un <em>package</em> pour construire des graphiques.</li>
-</ul>
-</li>
+<li><code>tmap</code> pour construire des cartes thématiques.</li>
+<li><code>ggplot2</code> est un <em>package</em> pour construire des graphiques.</li>
+</ul></li>
 <li>Pour les régressions&nbsp;:
 <ul>
-<li>
-<code>spdep</code> pour construire des matrices spatiales et calculer des mesures d’autocorrélation spatiale.</li>
-<li>
-<code>plm</code> pour construire des modèles de régression par panel.</li>
-<li>
-<code>splm</code> pour construire des modèles de régression spatiale par panel.</li>
-</ul>
-</li>
+<li><code>spdep</code> pour construire des matrices spatiales et calculer des mesures d’autocorrélation spatiale.</li>
+<li><code>plm</code> pour construire des modèles de régression par panel.</li>
+<li><code>splm</code> pour construire des modèles de régression spatiale par panel.</li>
+</ul></li>
 </ul>
 </div>
 </div>
-<section id="sec-041" class="level2" data-number="4.1"><h2 data-number="4.1" class="anchored" data-anchor-id="sec-041">
-<span class="header-section-number">4.1</span> Bref retour sur les modèles en panel</h2>
-</section><section id="sec-042" class="level2" data-number="4.2"><h2 data-number="4.2" class="anchored" data-anchor-id="sec-042">
-<span class="header-section-number">4.2</span> Formulation des différents modèles spatiaux par panel</h2>
-<section id="sec-0421" class="level3" data-number="4.2.1"><h3 data-number="4.2.1" class="anchored" data-anchor-id="sec-0421">
-<span class="header-section-number">4.2.1</span> Description des différents modèles</h3>
-</section><section id="sec-0422" class="level3" data-number="4.2.2"><h3 data-number="4.2.2" class="anchored" data-anchor-id="sec-0422">
-<span class="header-section-number">4.2.2</span> Modèle SLPDM : autocorrélation sur la variable dépendante</h3>
-</section><section id="sec-0423" class="level3" data-number="4.2.3"><h3 data-number="4.2.3" class="anchored" data-anchor-id="sec-0423">
-<span class="header-section-number">4.2.3</span> Modèle SEPDM : autocorrélation sur le terme d’erreur</h3>
-</section><section id="sec-0424" class="level3" data-number="4.2.4"><h3 data-number="4.2.4" class="anchored" data-anchor-id="sec-0424">
-<span class="header-section-number">4.2.4</span> Modèle SEPDM : autocorrélation sur la variable dépendante et les variables indépendantes</h3>
-</section></section><section id="sec-043" class="level2" data-number="4.3"><h2 data-number="4.3" class="anchored" data-anchor-id="sec-043">
-<span class="header-section-number">4.3</span> Sélection du modèle spatial par panel le plus approprié</h2>
-</section><section id="sec-044" class="level2" data-number="4.4"><h2 data-number="4.4" class="anchored" data-anchor-id="sec-044">
-<span class="header-section-number">4.4</span> Mise en œuvre dans R</h2>
-</section><section id="sec-045" class="level2" data-number="4.5"><h2 data-number="4.5" class="anchored" data-anchor-id="sec-045">
-<span class="header-section-number">4.5</span> Quiz de révision</h2>
-</section><section id="sec-046" class="level2" data-number="4.6"><h2 data-number="4.6" class="anchored" data-anchor-id="sec-046">
-<span class="header-section-number">4.6</span> Exercices de révision</h2>
+<section id="sec-041" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="sec-041"><span class="header-section-number">4.1</span> Bref retour sur les modèles en panel</h2>
+</section>
+<section id="sec-042" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="sec-042"><span class="header-section-number">4.2</span> Formulation des différents modèles spatiaux par panel</h2>
+<section id="sec-0421" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="sec-0421"><span class="header-section-number">4.2.1</span> Description des différents modèles</h3>
+</section>
+<section id="sec-0422" class="level3" data-number="4.2.2">
+<h3 data-number="4.2.2" class="anchored" data-anchor-id="sec-0422"><span class="header-section-number">4.2.2</span> Modèle SLPDM : autocorrélation sur la variable dépendante</h3>
+</section>
+<section id="sec-0423" class="level3" data-number="4.2.3">
+<h3 data-number="4.2.3" class="anchored" data-anchor-id="sec-0423"><span class="header-section-number">4.2.3</span> Modèle SEPDM : autocorrélation sur le terme d’erreur</h3>
+</section>
+<section id="sec-0424" class="level3" data-number="4.2.4">
+<h3 data-number="4.2.4" class="anchored" data-anchor-id="sec-0424"><span class="header-section-number">4.2.4</span> Modèle SEPDM : autocorrélation sur la variable dépendante et les variables indépendantes</h3>
+</section>
+</section>
+<section id="sec-043" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="sec-043"><span class="header-section-number">4.3</span> Sélection du modèle spatial par panel le plus approprié</h2>
+</section>
+<section id="sec-044" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="sec-044"><span class="header-section-number">4.4</span> Mise en œuvre dans R</h2>
+</section>
+<section id="sec-045" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="sec-045"><span class="header-section-number">4.5</span> Quiz de révision</h2>
+</section>
+<section id="sec-046" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="sec-046"><span class="header-section-number">4.6</span> Exercices de révision</h2>
 <div class="bloc_exercice">
 <div class="bloc_exercice-header">
 <div class="bloc_exercice-icon">
@@ -354,8 +376,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="bloc_exercice-body">
 <p>Complétez le code ci-dessous.</p>
 <div class="cell">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/">tmap</a></span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tmap)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Correction à la <a href="10-Exercices.html#sec-10041" class="quarto-xref">section&nbsp;<span>10.4.1</span></a>.</p>
 </div>
@@ -370,8 +392,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="bloc_exercice-body">
 <p>Pour l’année 2021, complétez le code ci-dessous.</p>
 <div class="cell">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/">tmap</a></span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tmap)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Correction à la <a href="10-Exercices.html#sec-10042" class="quarto-xref">section&nbsp;<span>10.4.2</span></a>.</p>
 </div>
@@ -386,16 +408,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="bloc_exercice-body">
 <p>Pour l’année 2021, complétez le code ci-dessous.</p>
 <div class="cell">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://spatstat.org/">spatstat</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/">tmap</a></span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spatstat)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tmap)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Correction à la <a href="10-Exercices.html#sec-10043" class="quarto-xref">section&nbsp;<span>10.4.3</span></a>.</p>
 </div>
 </div>
 
 
-</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -814,7 +839,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
       <a href="./03-CAR_SpatialProbit.html" class="pagination-link" aria-label="Autres modèles d'économétrie spatiale">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Autres modèles d’économétrie spatiale</span></span>
       </a>          
@@ -826,7 +853,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer">
+<footer class="footer">
+  <div class="nav-footer">
     <div class="nav-footer-left">
 <p>Méthodes de régression spatiale : un grand bol d’R.</p>
 </div>   
@@ -838,6 +866,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>
   </div>
 </footer>
+
+
 
 
 </body></html>

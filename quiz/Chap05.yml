@@ -6,7 +6,7 @@
      - "Faux"
   help: "Relisez le deuxième encadré à la [section @sec-0512]."
   
-- label: "Quelles sont les deux principales fonctions Kernel pour définir la pondération W(i) dans un modèle GWR?"
+- label: "Quelles sont les deux principales fonctions noyaux (kernel) pour définir la pondération W(i) dans un modèle GWR?"
   type: mc
   response: [2,3]
   answers:
@@ -14,7 +14,7 @@
      - "Fonction gaussienne"
      - "Fonction bicarrée"
      - "Fonction Epanechnikov"
-     - "Fonction Triangulaire"
+     - "Fonction triangulaire"
   help: "Relisez au besoin la [section @sec-0512]."
   
 - label: "Quelles sont les deux méthodes pour optimiser la zone d’influence optimale avec la fonction gwr.sel?"

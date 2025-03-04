@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.32">
+<meta name="generator" content="quarto-1.6.33">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
 <title>6&nbsp; Extensions de la régression géographiquement pondérée (en cours de rédaction) – Méthodes de régression spatiale : un grand bol d’R</title>
 <style>
 code{white-space: pre-wrap;}
@@ -73,6 +76,7 @@ div.csl-indent {
   margin-left: 2em;
 }</style>
 
+
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
@@ -88,10 +92,11 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-2486e1f0a3ee9ee1fc393803a1361cdb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-07ba0ad10f5680c660e360ac31d2f3b6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-183e74061cd0fe4872fa4cf166543a55.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap-e7f91c2723297c1dc845c6a220e21f7a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -117,12 +122,18 @@ div.csl-indent {
     "search-submit-button-title": "Envoyer",
     "search-label": "Recherche"
   }
-}</script><link rel="stylesheet" href="css/quizlib.min.css">
+}</script>
+
+
+<link rel="stylesheet" href="css/quizlib.min.css">
 </head>
+
 <body class="nav-sidebar floating">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
@@ -133,9 +144,13 @@ div.csl-indent {
         <i class="bi bi-search"></i>
       </button>
     </div>
-  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Méthodes de régression spatiale : un grand bol d’R</a> 
         <div class="sidebar-tools-main">
@@ -151,7 +166,7 @@ div.csl-indent {
         </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-<li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Préface</span></a>
@@ -250,40 +265,40 @@ div.csl-indent {
   </div>
 </li>
     </ul>
-</div>
-</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table des matières</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table des matières</h2>
    
   <ul>
-<li>
-<a href="#sec-061" id="toc-sec-061" class="nav-link active" data-scroll-target="#sec-061"><span class="header-section-number">6.1</span> Régression géographiquement pondérée mixte</a>
+  <li><a href="#sec-061" id="toc-sec-061" class="nav-link active" data-scroll-target="#sec-061"><span class="header-section-number">6.1</span> Régression géographiquement pondérée mixte</a>
   <ul class="collapse">
-<li><a href="#sec-0611" id="toc-sec-0611" class="nav-link" data-scroll-target="#sec-0611"><span class="header-section-number">6.1.1</span> Principe de base de la GWR mixte</a></li>
+  <li><a href="#sec-0611" id="toc-sec-0611" class="nav-link" data-scroll-target="#sec-0611"><span class="header-section-number">6.1.1</span> Principe de base de la GWR mixte</a></li>
   <li><a href="#sec-0612" id="toc-sec-0612" class="nav-link" data-scroll-target="#sec-0612"><span class="header-section-number">6.1.2</span> Mise en oeuvre de la GWR mixte dans R</a></li>
-  </ul>
-</li>
-  <li>
-<a href="#sec-062" id="toc-sec-062" class="nav-link" data-scroll-target="#sec-062"><span class="header-section-number">6.2</span> Régression géographiquement pondérée multiéchelle</a>
+  </ul></li>
+  <li><a href="#sec-062" id="toc-sec-062" class="nav-link" data-scroll-target="#sec-062"><span class="header-section-number">6.2</span> Régression géographiquement pondérée multiéchelle</a>
   <ul class="collapse">
-<li><a href="#sec-0621" id="toc-sec-0621" class="nav-link" data-scroll-target="#sec-0621"><span class="header-section-number">6.2.1</span> Principe de base de la MGWR</a></li>
+  <li><a href="#sec-0621" id="toc-sec-0621" class="nav-link" data-scroll-target="#sec-0621"><span class="header-section-number">6.2.1</span> Principe de base de la MGWR</a></li>
   <li><a href="#sec-0622" id="toc-sec-0622" class="nav-link" data-scroll-target="#sec-0622"><span class="header-section-number">6.2.2</span> Mise en oeuvre de la MGWR dans R</a></li>
-  </ul>
-</li>
-  <li>
-<a href="#sec-063" id="toc-sec-063" class="nav-link" data-scroll-target="#sec-063"><span class="header-section-number">6.3</span> Régression géographiquement pondérée mixte avec des variables spatialement décalée</a>
+  </ul></li>
+  <li><a href="#sec-063" id="toc-sec-063" class="nav-link" data-scroll-target="#sec-063"><span class="header-section-number">6.3</span> Régression géographiquement pondérée mixte avec des variables spatialement décalée</a>
   <ul class="collapse">
-<li><a href="#sec-0631" id="toc-sec-0631" class="nav-link" data-scroll-target="#sec-0631"><span class="header-section-number">6.3.1</span> Principe de base de la MGWR-SAR</a></li>
+  <li><a href="#sec-0631" id="toc-sec-0631" class="nav-link" data-scroll-target="#sec-0631"><span class="header-section-number">6.3.1</span> Principe de base de la MGWR-SAR</a></li>
   <li><a href="#sec-0632" id="toc-sec-0632" class="nav-link" data-scroll-target="#sec-0632"><span class="header-section-number">6.3.2</span> Mise en oeuvre de la MGWR-SAR dans R</a></li>
-  </ul>
-</li>
+  </ul></li>
   <li><a href="#sec-064" id="toc-sec-064" class="nav-link" data-scroll-target="#sec-064"><span class="header-section-number">6.4</span> Quiz de révision</a></li>
   <li><a href="#sec-065" id="toc-sec-065" class="nav-link" data-scroll-target="#sec-065"><span class="header-section-number">6.5</span> Exercices de révision</a></li>
-  </ul><div class="toc-actions"><ul><li><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></nav>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
 <h1 class="title"><span id="sec-chap06" class="quarto-section-identifier"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée (en cours de rédaction)</span></span></h1>
 </div>
 
@@ -298,7 +313,10 @@ div.csl-indent {
   
 
 
-</header><p>Dans le <a href="05-GWRClassique.html" class="quarto-xref">chapitre&nbsp;<span>5</span></a>, nous avons présenté les trois formes classiques de la régression géographiquement pondérée (GWR) qui permettent de modéliser des variables dépendantes continues (GWR gaussienne), dichotomiques (GWR logistique) ou des variables de comptage (GWR Poisson). Depuis la publication de l’ouvrage de référence de Steward Fotheringham, Chris Brunsdon et Martin Charlton <span class="citation" data-cites="fotheringham2003geographically">(<a href="references.html#ref-fotheringham2003geographically" role="doc-biblioref">2003</a>)</span>, plusieurs extensions ont vu le jour. Parmi celles-ci, nous abordons dans ce chapitre&nbsp;:</p>
+</header>
+
+
+<p>Dans le <a href="05-GWRClassique.html" class="quarto-xref">chapitre&nbsp;<span>5</span></a>, nous avons présenté les trois formes classiques de la régression géographiquement pondérée (GWR) qui permettent de modéliser des variables dépendantes continues (GWR gaussienne), dichotomiques (GWR logistique) ou des variables de comptage (GWR Poisson). Depuis la publication de l’ouvrage de référence de Steward Fotheringham, Chris Brunsdon et Martin Charlton <span class="citation" data-cites="fotheringham2003geographically">(<a href="references.html#ref-fotheringham2003geographically" role="doc-biblioref">2003</a>)</span>, plusieurs extensions ont vu le jour. Parmi celles-ci, nous abordons dans ce chapitre&nbsp;:</p>
 <ul>
 <li>la GWR mixte qui permet de spécifier des variables indépendantes variant spatialement et d’autres étant fixes <span class="citation" data-cites="fotheringham2003geographically">(<a href="references.html#ref-fotheringham2003geographically" role="doc-biblioref">Fotheringham, Brunsdon et Charlton 2003</a>)</span>.</li>
 <li>La régression géographiquement pondérée multiéchelle (<em>Multiscale Geographically Weighted Regression</em> – MGWR) <span class="citation" data-cites="fotheringham2017multiscale">(<a href="references.html#ref-fotheringham2017multiscale" role="doc-biblioref">Fotheringham, Yang et Kang 2017</a>)</span>.</li>
@@ -333,67 +351,73 @@ div.csl-indent {
 <ul>
 <li>Pour importer et manipuler des fichiers géographiques&nbsp;:
 <ul>
-<li>
-<code>sf</code> pour importer et manipuler des données vectorielles.</li>
-<li>
-<code>dplyr</code> pour manipuler les données.</li>
-</ul>
-</li>
+<li><code>sf</code> pour importer et manipuler des données vectorielles.</li>
+<li><code>dplyr</code> pour manipuler les données.</li>
+</ul></li>
 <li>Pour construire des cartes et des graphiques&nbsp;:
 <ul>
-<li>
-<code>tmap</code> pour les cartes.</li>
-<li>
-<code>ggplot2</code> pour construire des graphiques.</li>
-</ul>
-</li>
+<li><code>tmap</code> pour les cartes.</li>
+<li><code>ggplot2</code> pour construire des graphiques.</li>
+</ul></li>
 <li>Pour construire différentes extensions de la GWR&nbsp;:
 <ul>
-<li>
-<code>GWmodel</code> pour construire des GWR mixtes, des MGWR et des GTWR.</li>
-<li>
-<code>mgwrsar</code> pour construire des GWR avec des variables spatialement décalées.</li>
-<li>
-<code>spdep</code> pour construire des matrices de pondération spatiales et calculer le <em>I</em> de Moran.</li>
-</ul>
-</li>
+<li><code>GWmodel</code> pour construire des GWR mixtes, des MGWR et des GTWR.</li>
+<li><code>mgwrsar</code> pour construire des GWR avec des variables spatialement décalées.</li>
+<li><code>spdep</code> pour construire des matrices de pondération spatiales et calculer le <em>I</em> de Moran.</li>
+</ul></li>
 </ul>
 </div>
 </div>
-<section id="sec-061" class="level2" data-number="6.1"><h2 data-number="6.1" class="anchored" data-anchor-id="sec-061">
-<span class="header-section-number">6.1</span> Régression géographiquement pondérée mixte</h2>
-<section id="sec-0611" class="level3" data-number="6.1.1"><h3 data-number="6.1.1" class="anchored" data-anchor-id="sec-0611">
-<span class="header-section-number">6.1.1</span> Principe de base de la GWR mixte</h3>
-<section id="sec-06111" class="level4" data-number="6.1.1.1"><h4 data-number="6.1.1.1" class="anchored" data-anchor-id="sec-06111">
-<span class="header-section-number">6.1.1.1</span> Pourquoi recourir à une GWR mixte</h4>
-</section><section id="sec-06112" class="level4" data-number="6.1.1.2"><h4 data-number="6.1.1.2" class="anchored" data-anchor-id="sec-06112">
-<span class="header-section-number">6.1.1.2</span> Formulation de la GWR mixte</h4>
-</section></section><section id="sec-0612" class="level3" data-number="6.1.2"><h3 data-number="6.1.2" class="anchored" data-anchor-id="sec-0612">
-<span class="header-section-number">6.1.2</span> Mise en oeuvre de la GWR mixte dans R</h3>
-</section></section><section id="sec-062" class="level2" data-number="6.2"><h2 data-number="6.2" class="anchored" data-anchor-id="sec-062">
-<span class="header-section-number">6.2</span> Régression géographiquement pondérée multiéchelle</h2>
-<section id="sec-0621" class="level3" data-number="6.2.1"><h3 data-number="6.2.1" class="anchored" data-anchor-id="sec-0621">
-<span class="header-section-number">6.2.1</span> Principe de base de la MGWR</h3>
-<section id="sec-06211" class="level4" data-number="6.2.1.1"><h4 data-number="6.2.1.1" class="anchored" data-anchor-id="sec-06211">
-<span class="header-section-number">6.2.1.1</span> Pourquoi recourir à une GWR mixte</h4>
-</section><section id="sec-06212" class="level4" data-number="6.2.1.2"><h4 data-number="6.2.1.2" class="anchored" data-anchor-id="sec-06212">
-<span class="header-section-number">6.2.1.2</span> Formulation de la GWR mixte</h4>
-</section></section><section id="sec-0622" class="level3" data-number="6.2.2"><h3 data-number="6.2.2" class="anchored" data-anchor-id="sec-0622">
-<span class="header-section-number">6.2.2</span> Mise en oeuvre de la MGWR dans R</h3>
-</section></section><section id="sec-063" class="level2" data-number="6.3"><h2 data-number="6.3" class="anchored" data-anchor-id="sec-063">
-<span class="header-section-number">6.3</span> Régression géographiquement pondérée mixte avec des variables spatialement décalée</h2>
-<section id="sec-0631" class="level3" data-number="6.3.1"><h3 data-number="6.3.1" class="anchored" data-anchor-id="sec-0631">
-<span class="header-section-number">6.3.1</span> Principe de base de la MGWR-SAR</h3>
-<section id="sec-06311" class="level4" data-number="6.3.1.1"><h4 data-number="6.3.1.1" class="anchored" data-anchor-id="sec-06311">
-<span class="header-section-number">6.3.1.1</span> Pourquoi recourir à une MGWR-SAR</h4>
-</section><section id="sec-06312" class="level4" data-number="6.3.1.2"><h4 data-number="6.3.1.2" class="anchored" data-anchor-id="sec-06312">
-<span class="header-section-number">6.3.1.2</span> Formulation de la MGWR-SAR</h4>
-</section></section><section id="sec-0632" class="level3" data-number="6.3.2"><h3 data-number="6.3.2" class="anchored" data-anchor-id="sec-0632">
-<span class="header-section-number">6.3.2</span> Mise en oeuvre de la MGWR-SAR dans R</h3>
-</section></section><section id="sec-064" class="level2" data-number="6.4"><h2 data-number="6.4" class="anchored" data-anchor-id="sec-064">
-<span class="header-section-number">6.4</span> Quiz de révision</h2>
-</section><section id="sec-065" class="level2" data-number="6.5"><h2 data-number="6.5" class="anchored" data-anchor-id="sec-065">
-<span class="header-section-number">6.5</span> Exercices de révision</h2>
+<section id="sec-061" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="sec-061"><span class="header-section-number">6.1</span> Régression géographiquement pondérée mixte</h2>
+<section id="sec-0611" class="level3" data-number="6.1.1">
+<h3 data-number="6.1.1" class="anchored" data-anchor-id="sec-0611"><span class="header-section-number">6.1.1</span> Principe de base de la GWR mixte</h3>
+<section id="sec-06111" class="level4" data-number="6.1.1.1">
+<h4 data-number="6.1.1.1" class="anchored" data-anchor-id="sec-06111"><span class="header-section-number">6.1.1.1</span> Pourquoi recourir à une GWR mixte</h4>
+</section>
+<section id="sec-06112" class="level4" data-number="6.1.1.2">
+<h4 data-number="6.1.1.2" class="anchored" data-anchor-id="sec-06112"><span class="header-section-number">6.1.1.2</span> Formulation de la GWR mixte</h4>
+</section>
+</section>
+<section id="sec-0612" class="level3" data-number="6.1.2">
+<h3 data-number="6.1.2" class="anchored" data-anchor-id="sec-0612"><span class="header-section-number">6.1.2</span> Mise en oeuvre de la GWR mixte dans R</h3>
+</section>
+</section>
+<section id="sec-062" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="sec-062"><span class="header-section-number">6.2</span> Régression géographiquement pondérée multiéchelle</h2>
+<section id="sec-0621" class="level3" data-number="6.2.1">
+<h3 data-number="6.2.1" class="anchored" data-anchor-id="sec-0621"><span class="header-section-number">6.2.1</span> Principe de base de la MGWR</h3>
+<section id="sec-06211" class="level4" data-number="6.2.1.1">
+<h4 data-number="6.2.1.1" class="anchored" data-anchor-id="sec-06211"><span class="header-section-number">6.2.1.1</span> Pourquoi recourir à une GWR mixte</h4>
+</section>
+<section id="sec-06212" class="level4" data-number="6.2.1.2">
+<h4 data-number="6.2.1.2" class="anchored" data-anchor-id="sec-06212"><span class="header-section-number">6.2.1.2</span> Formulation de la GWR mixte</h4>
+</section>
+</section>
+<section id="sec-0622" class="level3" data-number="6.2.2">
+<h3 data-number="6.2.2" class="anchored" data-anchor-id="sec-0622"><span class="header-section-number">6.2.2</span> Mise en oeuvre de la MGWR dans R</h3>
+</section>
+</section>
+<section id="sec-063" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="sec-063"><span class="header-section-number">6.3</span> Régression géographiquement pondérée mixte avec des variables spatialement décalée</h2>
+<section id="sec-0631" class="level3" data-number="6.3.1">
+<h3 data-number="6.3.1" class="anchored" data-anchor-id="sec-0631"><span class="header-section-number">6.3.1</span> Principe de base de la MGWR-SAR</h3>
+<section id="sec-06311" class="level4" data-number="6.3.1.1">
+<h4 data-number="6.3.1.1" class="anchored" data-anchor-id="sec-06311"><span class="header-section-number">6.3.1.1</span> Pourquoi recourir à une MGWR-SAR</h4>
+</section>
+<section id="sec-06312" class="level4" data-number="6.3.1.2">
+<h4 data-number="6.3.1.2" class="anchored" data-anchor-id="sec-06312"><span class="header-section-number">6.3.1.2</span> Formulation de la MGWR-SAR</h4>
+</section>
+</section>
+<section id="sec-0632" class="level3" data-number="6.3.2">
+<h3 data-number="6.3.2" class="anchored" data-anchor-id="sec-0632"><span class="header-section-number">6.3.2</span> Mise en oeuvre de la MGWR-SAR dans R</h3>
+</section>
+</section>
+<section id="sec-064" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="sec-064"><span class="header-section-number">6.4</span> Quiz de révision</h2>
+</section>
+<section id="sec-065" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="sec-065"><span class="header-section-number">6.5</span> Exercices de révision</h2>
 <div class="bloc_exercice">
 <div class="bloc_exercice-header">
 <div class="bloc_exercice-icon">
@@ -403,8 +427,8 @@ div.csl-indent {
 </div>
 <div class="bloc_exercice-body">
 <div class="cell">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rsbivand/spgwr/">spgwr</a></span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spgwr)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Correction à la <a href="10-Exercices.html#sec-10061" class="quarto-xref">section&nbsp;<span>10.6.1</span></a>.</p>
 </div>
@@ -418,8 +442,8 @@ div.csl-indent {
 </div>
 <div class="bloc_exercice-body">
 <div class="cell">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rsbivand/spgwr/">spgwr</a></span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spgwr)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Correction à la <a href="10-Exercices.html#sec-10062" class="quarto-xref">section&nbsp;<span>10.6.2</span></a>.</p>
 </div>
@@ -448,7 +472,10 @@ Fotheringham, A Stewart, Wenbai Yang et Wei Kang. 2017. <span>«&nbsp;Multiscale
 Geniaux, Ghislain et Davide Martinetti. 2018. <span>«&nbsp;A new method for dealing simultaneously with spatial autocorrelation and spatial heterogeneity in regression models.&nbsp;»</span> <em>Regional Science and Urban Economics</em> 72: 74‑85. <a href="https://doi.org/10.1016/j.regsciurbeco.2017.04.001">https://doi.org/10.1016/j.regsciurbeco.2017.04.001</a>.
 </div>
 </div>
-</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -867,7 +894,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
       <a href="./05-GWRClassique.html" class="pagination-link" aria-label="Régressions géographiquement pondérées classiques">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Régressions géographiquement pondérées classiques</span></span>
       </a>          
@@ -879,7 +908,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer">
+<footer class="footer">
+  <div class="nav-footer">
     <div class="nav-footer-left">
 <p>Méthodes de régression spatiale : un grand bol d’R.</p>
 </div>   
@@ -891,6 +921,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>
   </div>
 </footer>
+
+
 
 
 </body></html>

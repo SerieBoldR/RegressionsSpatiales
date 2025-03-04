@@ -2,13 +2,13 @@
 
 Dans ce chapitre, nous décrivons deux autres types de modèles d'économétrie spatiale. Premièrement, nous abordons le modèle d'autorégression conditionnelle (***c**onditional **a**utoregressive **m**odel*, CAR) qui s'applique à une variable dépendante continue. Nous verrons notamment comment le modèle CAR se distingue du modèle SAR (***s**patial **a**uto**r**egressive*) décrit dans le chapitre précédent ([section @sec-02121]). Deuxièmement, nous décrirons les modèles probit spatiaux, très utiles lorsque la variable dépendante est une variable qualitative binaire.
 
-::: bloc_objectif
-::: bloc_objectif-header
+:::::: bloc_objectif
+:::: bloc_objectif-header
 ::: bloc_objectif-icon
 :::
 
 **Objectifs d'apprentissage visés dans ce chapitre**
-:::
+::::
 
 ::: bloc_objectif-body
 À la fin de ce chapitre, vous devriez être en mesure de :
@@ -17,15 +17,15 @@ Dans ce chapitre, nous décrivons deux autres types de modèles d'économétrie 
 -   comprendre les raisons motivant le choix d'un modèle d'économétrie spatiale avec une variable dépendante qualitative binaire;
 -   mettre en pratique et interprétrer les résultats de ces deux types modèles spatiaux dans R.
 :::
-:::
+::::::
 
-::: bloc_package
-::: bloc_package-header
+:::::: bloc_package
+:::: bloc_package-header
 ::: bloc_package-icon
 :::
 
 **Liste des *packages* utilisés dans ce chapitre**
-:::
+::::
 
 ::: bloc_package-body
 -   Pour importer et manipuler des fichiers géographiques :
@@ -39,13 +39,13 @@ Dans ce chapitre, nous décrivons deux autres types de modèles d'économétrie 
     -   `spatialreg` pour construire des modèles CAR.
     -   `ProbitSpatial` pour construire des modèles économétriques spatiaux avec variable dépendante binaire.
 :::
-:::
+::::::
 
 ## Modèles d'autorégression conditionnelle (en cours de rédaction) {#sec-031}
 
 ## Modèles probit spatial (en cours de rédaction) {#sec-032}
 
-## Bref retour sur le modèle probit {#sec-0321}
+### Bref retour sur le modèle probit {#sec-0321}
 
 Traditionnellement, les décisions de modélisation en géographie quantitative, en théorie économique ou plus généralement en sciences sociales ont été élaborées en considérant des variables quantitatives. Cependant, dans de nombreux contextes économiques et géographiques, la variable dépendante n'est pas quantitative.
 
@@ -124,20 +124,109 @@ où $\Phi(x)$ est la fonction de répartition de la loi normale standard.
 
 Les modèles Probit spatiaux sont utilisés pour analyser des données échantillonnées associées à des localisations spatiales et présentant des résultats binaires.
 
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+#| warning: false
+## Chargemement des packages et des données
+library(sf)
+library(tmap)
+library(spdep)
+library(ProbitSpatial)
+library(Matrix)
+library(spatialreg)
+library(DHARMa)
+
+# Chargement des données
+load("data/Barcelone.Rdata")
+
+# Matrice de contiguïté selon le partage d'un segment (Rook)
+bcn_rook <- poly2nb(Barcelone, queen = FALSE)
+W1_rook  <-  nb2listw(bcn_rook,
+                     glist = NULL,
+                     style = "W",
+                     zero.policy = FALSE)
+
+#Matrice de contiguïté peu dense (Sparse contiguity matrix)
+W2 <- as(W1_rook, "CsparseMatrix")
+
+# Centrage et réduction des variables explicatives
+Barcelone$Revenu_s <- scale(Barcelone$Revenu)
+Barcelone$Densite_s <- scale(Barcelone$Densite)
+Barcelone$Distance_s <- scale(Barcelone$Distance)
+
+# spécification du modèle
+formule <- ClusterUE ~ Revenu_s + Densite_s + Distance_s
+
+# Construction du modèle probit non spatial
+probit_nonspatiale <- glm(formule, 
+                          data = Barcelone, 
+                          family = binomial(link = "probit"))
+summary(probit_nonspatiale)
+
+# moran.mc(residuals(probit_nonspatiale, type = 'deviance'), 
+#                    listw = W1_rook, nsim = 999,
+#                    zero.policy = TRUE)
+# 
+# sim_res <- simulateResiduals(probit_nonspatiale, plot = FALSE)
+# moran.mc(residuals(sim_res), 
+#                    listw = W1_rook, nsim = 999,
+#                    zero.policy = TRUE)
+# plot(sim_res)
+
+# Construction matrice de confusion
+tab <- table(Obs = Barcelone$ClusterUE, 
+             Pred = probit_nonspatiale$fitted.values > 0.5)
+TP <- tab[2, 2]
+TN <- tab[1, 1]
+FP <- tab[2, 1]
+FN <- tab[1, 2]
+Accuracy <- (TP + TN) / length(Barcelone$ClusterUE)
+sensitivity <- TP / (TP + FN)
+specificity <- TN / (TN + FP)
+ppv <- TP / (TP + FP)
+npv <- TN / (TN + FN)
+tab
+cat(
+  "Accuracy:",
+  Accuracy,
+  "| Sensitivity:",
+  sensitivity,
+  "| Specificity:",
+  specificity,
+  "| PPV:",
+  ppv,
+  "| NPV:",
+  npv,
+  "\n"
+)
+# # Construction du modèle SAR probit spatial
+# Probit_SAR <-
+#   ProbitSpatialFit(
+#     reg1,
+#     BCN,
+#     W2,
+#     DGP = 'SAR',
+#     method = "conditional",
+#     varcov = "varcov",
+#     M = W2,
+#     control = list()
+#   )
+# summary(Probit_SAR)
+```
+
 ## Les différents modèles probit spatiaux {#sec-0322}
 
 Bien que les modèles spatiaux binaires permettent les mêmes spécifications que celles que nous avons vues au chapitre 2, les chercheurs se concentrent habituellement sur trois spécifications :
 
-
 ## Modèle probit SAR : autocorrélation spatiale sur la variable dépendante binaire {#sec-03221}
 
-
-### Description du modèle probit SAR {#sec-03221}
-
+### Description du modèle probit SAR {#sec-032211}
 
 $$
 \mathbf{y}^{*} = \rho \mathbf{Wy^{*}} + \iota \alpha + \mathbf{X} \beta + \epsilon
-$$  {#eq-Probit09}
+$$ {#eq-Probit09}
 
 Où  maintenant:
 
@@ -269,15 +358,15 @@ Il est évident, tant pour Barcelone,que l'effet indirect dépasse l'effet direc
 
 Le même schéma est observé avec la distance.
 
--   Modèle SEM : autocorrélation spatiale sur le terme d'erreur avec la variable dépendante binaire. 
+-   Modèle SEM : autocorrélation spatiale sur le terme d'erreur avec la variable dépendante binaire.
 
 $$
 \mathbf{y^{*}}=\mathbf{\iota}\alpha+\mathbf{X\beta}+\mathbf{\nu}
-$$  {#eq-Probit10}
+$$ {#eq-Probit10}
 
 $$
 \mathbf{\nu}=\lambda\mathbf{W\nu}+\mathbf{\varepsilon}
-$$  {#eq-Probit11}
+$$ {#eq-Probit11}
 
 Où :
 
@@ -301,7 +390,7 @@ summary(Probit_SEM)
 effects_ProbitSpatial(Probit_SEM)
 ```
 
--   Modèle SARAR : autocorrélation spatiale sur la variable dépendante binaire et sur le terme d'erreur. 
+-   Modèle SARAR : autocorrélation spatiale sur la variable dépendante binaire et sur le terme d'erreur.
 
 $$
 \mathbf{y}^{*} = \rho \mathbf{Wy^{*}} + \iota \alpha + \mathbf{X} \beta + \epsilon
@@ -343,4 +432,3 @@ $$p_i = \Phi(\beta_1 + \beta_2 X_{2i} + \dots + \beta_k X_{ki}) =
 \int_{-\infty}^{\beta_1 + \beta_2 X_{2i} + \dots + \beta_k X_{ki}} 
 \frac{1}{\sqrt{2\pi}} \exp\left(-\frac{t^2}{2}\right) dt
 $$ {#eq-Probit16}
-

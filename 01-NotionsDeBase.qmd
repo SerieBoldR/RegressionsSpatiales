@@ -136,7 +136,7 @@ Deuxièmement, nous utiliserons un jeu de données spatiales sur les parts modal
 
 load("data/Mtl.Rdata")
 donnees <- st_drop_geometry(data_mtl)
-donnees[, c("GeoUID", "Households", "Dwellings", 
+donnees[c("GeoUID", "Households", "Dwellings", 
          "Population", "acs_idx_emp_tc_offpeak")] <- list(NULL)
 intitule <- c("Proportion de familles monoparentales",
               "Proportion de minorités visibles",
@@ -272,7 +272,7 @@ knitr::kable(stats,
 
 ![Cartographie des variables du jeu de données de Barcelone](images/Chap01/FigureDataBarcelone.png){#fig-barceloneCarto width="100%" fig-align="center"}
 
-## Matrices des pondération spatiale {#sec-012}
+## Matrices de pondération spatiale {#sec-012}
 
 ::: bloc_objectif
 ::: bloc_objectif-header
@@ -369,7 +369,7 @@ $$ {#eq-ContiguiteRook}
 
 ### Matrices de proximité {#sec-0122}
 
-Pour construire une matrice de pondération spatiale selon la proximité, nous pouvons utiliser plusieurs types de distance [@ApparicioGelbrevisited] : certaines sont cartésiennes, d'autres, dites réticulaires, sont calculées à partir d'un réseau de rues (@fig-Chap01TypesDistances).
+Pour construire une matrice de pondération spatiale selon la proximité, nous pouvons utiliser plusieurs types de distances [@ApparicioGelbrevisited] : certaines sont cartésiennes, d'autres, dites réticulaires, sont calculées à partir d'un réseau de rues (@fig-Chap01TypesDistances).
 
 Les distances cartésiennes -- euclidienne et de Manhattan (@eq-DistEuc et @eq-DistManh) -- sont facilement calculables à partir des coordonnées géographiques (*x*,*y*) lorsque la couche géographique est dans un système de projection plane (@fig-Chap01TypesDistances, a). Si la projection de la couche est sphérique (longitude/latitude), il convient d'utiliser la formule de haversine (basée sur la trigonométrie sphérique) pour obtenir la distance à vol d'oiseau (@eq-DistLongLat).
 
@@ -591,7 +591,7 @@ kableExtra::pack_rows(my_table,
 ::: bloc_attention-icon
 :::
 
-**Construction des matrices dans R  avec le *package*`spdep`**.
+**Construction des matrices dans R avec le *package* `spdep`**.
 :::
 
 ::: bloc_attention-body
@@ -613,7 +613,7 @@ Le *package* `spdep` dispose de différentes fonctions pour construire des matri
 
 Pour créer des matrices de pondération spatiale selon la contiguïté, nous utilisons deux fonctions du *package* `spdep` :
 
--   `poly2nb(Nom de l'objet sf, queen = TRUE)` crée une matrice de contiguïté sous la forme d'une classe `nb` (*A neighbours list with class nb*). Avec le paramètre `queen = TRUE`, la contiguïté est évaluée selon le partage d'un nœud; avec `queen = FALSE`, la contiguïté est évaluée selon le partage d'un segment (frontière). La matrice spatiale comprend une ligne par polygone avec les index de ceux qui sont adjacents. Par exemple, `Queen[[1]]` renvoie la liste des polygones voisins à la première entité spatiale, soit `24 36 44 73`, c'est-à-dire quatre voisins.
+-   `poly2nb(objet sf, queen = TRUE)` crée une matrice de contiguïté sous la forme d'une classe `nb` (liste de voisins). Avec le paramètre `queen = TRUE`, la contiguïté est évaluée selon le partage d'un nœud; avec `queen = FALSE`, la contiguïté est évaluée selon le partage d'un segment (frontière). La matrice spatiale comprend une ligne par polygone avec les index de ceux qui sont adjacents. Par exemple, `Queen[[1]]` renvoie la liste des polygones voisins à la première entité spatiale, soit `24 36 44 73`, c'est-à-dire quatre voisins.
 
 -   `nb2listw(objet nb, zero.policy = TRUE, style = "W")` crée une matrice de pondération spatiale à partir de n'importe quelle matrice spatiale (de contiguïté ou de distance). Le paramètre `style = "W"`, qui est par défaut, permet de standardiser la matrice en ligne. Par exemple, `w_queen$weights[[1]]` renvoie les valeurs des pondérations pour la première entité spatiale, soit `0.25 0.25 0.25 25` (0,25 = 1 / 4 voisins). Pour obtenir une matrice non standardisée, vous devez écrire `style = "B"`, alors `w_queen$weights[[1]]` renverra les valeurs de `1 1 1 1`.
 
@@ -666,6 +666,7 @@ Le code ci-dessous génère les matrices de pondération spatiale standardisée 
 nb_queen1 <- poly2nb(LyonIris, queen = TRUE)
 nb_queen2 <- nblag_cumul(nblag(nb_queen1, 2))
 nb_queen3 <- nblag_cumul(nblag(nb_queen1, 3))
+
 # Création des matrices de pondération spatiale standardisée en ligne
 w_queen1 <- nb2listw(nb_queen1, zero.policy = TRUE, style = "W")
 w_queen2 <- nb2listw(nb_queen2, zero.policy = TRUE, style = "W")
@@ -674,7 +675,7 @@ w_queen3 <- nb2listw(nb_queen3, zero.policy = TRUE, style = "W")
 
 #### Matrice de connectivité (matrice distance binaire) {#sec-01243}
 
-La fonction `dnearneigh(sf points, d1 =, d2 =)` crée une matrice de connectivité à partir d'une couche de points. Les paramètres `d1` et `d2` permettent de spécifier le rayon de recherche (ex. : avec `d1 = 0` et `d2 = 2500`, le seuil maximal de distance est de 2500 mètres). Si votre couche `sf` comprend des `lignes` ou des `polygones`, utilisez la fonction `st_centroid` ou `st_point_on_surface()` pour les convertir en points ([section @sec-0122]).
+La fonction `dnearneigh(matrice des coordonnées ou points sf, d1 =, d2 =)` crée une matrice de connectivité à partir d'une couche de points. Les paramètres `d1` et `d2` permettent de spécifier le rayon de recherche (ex. : avec `d1 = 0` et `d2 = 2500`, le seuil maximal de distance est de 2500 mètres). Si votre couche `sf` comprend des `lignes` ou des `polygones`, utilisez la fonction `st_centroid` ou `st_point_on_surface()` pour les convertir en points ([section @sec-0122]).
 
 ```{r}
 #| echo: true
@@ -694,9 +695,9 @@ w_connect_2500m <- nb2listw(connect_2500m, zero.policy = TRUE, style = "W")
 
 Le code ci-dessous, qui permet de créer les matrices de l'inverse de la distance et de l'inverse de la distance au carré, comprend les étapes suivantes :
 
--   Récupération des coordonnées géographiques des entités spatiales.
+-   Récupération des coordonnées géographiques des centroïdes des entités spatiales.
 
--   Création de la matrice de distance euclidienne $n \times n$ ($n$ étant le nombre d'entités spatiales de la couche).
+-   Création de la matrice avec la distance euclidienne $n \times n$ ($n$ étant le nombre d'entités spatiales de la couche).
 
 -   Calcul des matrices d'inverse de la distance et d'inverse de la distance au carré.
 
@@ -709,13 +710,13 @@ Le code ci-dessous, qui permet de créer les matrices de l'inverse de la distanc
 ## Coordonnées des centroïdes des entités spatiales
 coords <- st_coordinates(iris_centroides)
 
-## Création de la matrice de distance
+## Création de la matrice avec la distance euclidienne
 distances <- as.matrix(dist(coords, method = "euclidean"))
 
 # S’assurer que la diagonale de la matrice est à 0
 diag(distances) <- 0
 
-## Matrices inverse de la distance et inverse de la distance au carré
+## Matrices d'inverse de la distance et d'inverse de la distance au carré
 inv_distances <- ifelse(distances!=0, 1/distances, distances)
 inv_distances2 <- ifelse(distances!=0, 1/distances^2, distances)
 
@@ -729,19 +730,19 @@ w_inv_distances2 <- mat2listw(inv_distances2, style = "W")
 ::: bloc_astuce-icon
 :::
 
-**Intégration d'autres types de distance**
+**Intégration d'autres types de distances**
 :::
 
 ::: bloc_astuce-body
 À la [section @sec-0122], nous avons vu que plusieurs types de distances peuvent être utilisés : cartésiennes (euclidienne et de Manhattan) et réticulaires (chemin le plus rapide à pied, à vélo, en automobile et en transport en commun).
 
-Pour construire une matrice de distance de Manhattan, vous devez changer la valeur du paramètre `method` de la fonction `dist` comme suit : `as.matrix(dist(coords, method = "manhattan"))`.
+Pour construire une matrice avec la distance de Manhattan, vous devez changer la valeur du paramètre `method` de la fonction `dist` comme suit : `as.matrix(dist(coords, method = "manhattan"))`.
 
 Pour intégrer une distance réticulaire, vous devez la calculer, soit [dans R](https://serieboldr.github.io/MethodesAnalyseSpatiale/01-ManipulationDonneesSpatiales.html) [@RBoldAirMethodesAnalysesSpatiales], soit dans un logiciel de système d'information géographique (QGIS ou ArcGIS Pro avec l'extension *Network Analyst* par exemple) et l'importer dans R. Le reste du code sera alors identique.
 :::
 :::
 
-Nous avons vu qu'il est possible d'utiliser une matrice de distance en fixant une distance maximale au-delà de laquelle les pondérations sont mises à 0 (@eq-MatriceDistance2). Le code ci-dessous permet de créer des matrices de pondération standardisée avec l'inverse de la distance et l'inverse de la distance au carré avec des seuils de 2500 et de 5000 mètres.
+Nous avons vu qu'il est possible d'utiliser une matrice en fixant une distance maximale au-delà de laquelle les pondérations sont mises à 0 (@eq-MatriceDistance2). Le code ci-dessous permet de créer des matrices de pondération standardisée avec l'inverse de la distance et l'inverse de la distance au carré avec des seuils de 2500 et de 5000 mètres.
 
 ```{r}
 #| echo: true

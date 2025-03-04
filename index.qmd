@@ -1,9 +1,9 @@
 ```{=tex}
 \renewcommand{\partname}{} % Réinitialiser partie
 ```
-**Résumé :** Ce livre vise à décrire une panoplie de méthodes de régression spatiale avec le logiciel ouvert R. La philosophie de ce livre est de donner toutes les clefs de compréhension et de mise en œuvre des méthodes abordées dans R. La présentation des méthodes est basée sur une approche compréhensive et intuitive plutôt que mathématique, sans pour autant négliger la rigueur statistique.
+**Résumé :** Ce livre vise à décrire une panoplie de méthodes de régression spatiale avec le logiciel ouvert R. La philosophie de ce livre est de donner toutes les clés de compréhension et de mise en œuvre des méthodes abordées dans R. La présentation des méthodes est basée sur une approche compréhensive et intuitive plutôt que mathématique, sans pour autant négliger la rigueur statistique.
 
-**Remerciements :** Ce manuel a été réalisé avec le soutien de la fabriqueREL. Fondée en 2019, la fabriqueREL est portée par divers établissements d'enseignement supérieur du Québec et agit en collaboration avec les services de soutien pédagogique et les bibliothèques. Son but est de faire des ressources éducatives libres (REL) le matériel privilégié en enseignement supérieur au Québec.
+**Remerciements :** Ce manuel a été réalisé avec le soutien de la [fabriqueREL](https://fabriquerel.org/rel/). Fondée en 2019, la fabriqueREL est portée par divers établissements d'enseignement supérieur du Québec et agit en collaboration avec les services de soutien pédagogique et les bibliothèques. Son but est de faire des ressources éducatives libres (REL) le matériel privilégié en enseignement supérieur au Québec.
 
 **Maquette de la page couverture et identité graphique du livre :** Andrés Henao Florez.
 
@@ -13,7 +13,7 @@
 
 © Philippe Apparicio, Jérémy Gelb, Jean Dubé et Joan Carles Martori.
 
-**Pour citer cet ouvrage :** Apparicio P., J. Gelb, J. Dubé et J. C. Martori (2025). *Méthodes de régression spatiale : un grand bol d'R*. Université Laval et Université de Sherbrooke. fabriqueREL. Licence CC BY-SA. <br /> <br />
+**Pour citer cet ouvrage :** Apparicio Philippe, Jérémy Gelb, Jean Dubé et Joan Carles Martori (2025). *Méthodes de régression spatiale : un grand bol d'R*. Université Laval et Université de Sherbrooke. fabriqueREL. Licence CC BY-SA. <br /> <br />
 
 ![](images/introduction/CouvertureP2.png){width="80%" fig-align="left"}
 
@@ -23,7 +23,7 @@
 
 **Pourquoi un manuel sous licence libre?**
 
-Les logiciels libres sont aujourd'hui très répandus. Comparativement aux logiciels propriétaires, l'accès au code source permet à quiconque de l'utiliser, de le modifier, de le dupliquer et de le partager. Le logiciel R, dans lequel sont mises en œuvre les méthodes de régression spatiale décrites dans ce livre, est d'ailleurs à la fois un langage de programmation et un logiciel libre (sous la licence publique générale [GNU GPL2](https://fr.wikipedia.org/wiki/Licence_publique_g%C3%A9n%C3%A9rale_GNU)). Par analogie aux logiciels libres, il existe aussi des **ressources éducatives libres (REL)** « dont la licence accorde les permissions désignées par les 5R (**Retenir --- Réutiliser --- Réviser --- Remixer --- Redistribuer**) et donc permet nécessairement la modification » ([***fabriqueREL***](https://fabriquerel.org/rel/)). La licence de ce livre, CC BY-SA (@fig-Licence), permet donc de :
+Les logiciels libres sont aujourd'hui très répandus. Comparativement aux logiciels propriétaires, l'accès au code source permet à quiconque de l'utiliser, de le modifier, de le dupliquer et de le partager. Le logiciel R, dans lequel sont mises en œuvre les méthodes de régression spatiale décrites dans ce livre, est d'ailleurs à la fois un langage de programmation et un logiciel libre (sous la licence publique générale [GNU GPL2](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)). Par analogie aux logiciels libres, il existe aussi des **ressources éducatives libres (REL)** « dont la licence accorde les permissions désignées par les 5R (**Retenir --- Réutiliser --- Réviser --- Remixer --- Redistribuer**) et donc permet nécessairement la modification » ([***fabriqueREL***](https://fabriquerel.org/rel/)). La licence de ce livre, CC BY-SA (@fig-Licence), permet donc de :
 
 -   **Retenir**, c'est-à-dire télécharger et imprimer gratuitement le livre. Notez qu'il aurait été plutôt surprenant d'écrire un livre payant sur un logiciel libre et donc gratuit. Aussi, nous aurions été très embarrassés que des personnes étudiantes avec des ressources financières limitées doivent payer pour avoir accès au livre, sans pour autant savoir préalablement si le contenu est réellement adapté à leurs besoins.
 
@@ -37,7 +37,7 @@ Les logiciels libres sont aujourd'hui très répandus. Comparativement aux logic
 
 La licence de ce livre, CC BY-SA (@fig-Licence), oblige donc à :
 
--   Attribuer la paternité de l'auteur dans vos versions dérivées, ainsi qu'une mention concernant les grandes modifications apportées, en utilisant la formulation suivante : Apparicio P., J. Gelb, J. Dubé et J. C. Martori (2025). *Méthodes de régression spatiale : un grand bol d'R*. Université Laval et Université de Sherbrooke. fabriqueREL. Licence CC BY-SA.
+-   Attribuer la paternité de l'auteur dans vos versions dérivées, ainsi qu'une mention concernant les grandes modifications apportées, en utilisant la formulation suivante : Apparicio Philippe, Jérémy Gelb, Jean Dubé et Joan Carles Martori (2025). *Méthodes de régression spatiale : un grand bol d'R*. Université Laval et Université de Sherbrooke. fabriqueREL. Licence CC BY-SA.
 
 -   Utiliser la même licence ou une licence similaire à toutes versions dérivées.
 
@@ -180,7 +180,7 @@ Une autre option est de télécharger le *repo* complet du livre directement sur
 
 ## Liste des *packages* utilisés {#sect004 .unnumbered}
 
-Dans ce livre, nous utilisons de nombreux *packages* R que vous pouvez installer avec le code ci-dessous.
+Dans ce livre, nous utilisons la version 4.4.0 de R avec de nombreux *packages* que vous pouvez installer avec le code ci-dessous.
 
 ```{r}
 #| echo: true
@@ -189,11 +189,11 @@ Dans ce livre, nous utilisons de nombreux *packages* R que vous pouvez installer
 #| warning: false
 
 # Liste des packages
-ListePackages <- c("adespatial", "car", "corrplot", "DHARMa", "dplyr", 
-                   "future", "future.apply",  "GGally", "ggplot2",  "ggpubr", 
-                   "GWmodel", "mcgv", "mgcViz", "mgwrsar", "plm", 
-                   "RColorBrewer", "sf", "spatialreg", "spdep", "spgwr", 
-                  "splm", "spmoran", "tmap") 
+ListePackages <- c("adespatial", "car", "corrplot", "DHARMa", "dplyr", "future", 
+                   "future.apply",  "gamlss", "GGally", "ggplot2", "ggpubr", "geoR",
+                   "GWmodel", "kableExtra", "mcgv", "mgcViz", "mgwrsar", "plm", 
+                   "ProbitSpatial", "randomcoloR", "RColorBrewer", "sf", "spatialreg",
+                   "spdep", "spgwr", "splm", "spmoran", "tmap") 
 # Packages non installés dans la liste
 PackagesNonInstalles <- ListePackages[!(ListePackages %in% installed.packages()[,"Package"])]
 # Installation des packages manquants
@@ -225,7 +225,7 @@ Depuis une cinquantaine d’années, les économètres, les épidémiologistes e
 
 **Partie 3. Régressions géographiquement pondérées**. Dans cette partie, nous abordons les régressions géographiquement pondérées (GWR) qui permettent de modéliser l'**hétérogénéité spatiale**, soit l'instabilité des relations entre la variable dépendante et les variables indépendantes. Premièrement, nous décrirons les formes dites classiques de la GWR qui s'appliquent à des variables dépendantes continues, dichotomiques (logistique) et de comptage (Poisson) ([chapitre @sec-chap05]). Deuxièmement, nous abordons des extensions des la GWR, particulièrement la GWR mixte, la GWR multiéchelle et les GWR mixtes avec des variables spatialement décalées (MGWR-SAR) ([chapitre @sec-chap06]).
 
-**Partie 4. Autres modèles de régressions spatiales**. Cette quatrième et dernière partie comprend trois chapitres. Le [chapitre @sec-chap07] est consacré aux modèles généralisés additifs qui permettent d'introduire l’espace de deux manières différentes : les modèles GAM avec une *spline* bivariée avec les coordonnées géographiques (x, y) pour capturer les variations continues dans l'espace; les modèles GAM avec un lissage par champ aléatoire de Markov (*random markov field* – RMF) pour modéliser la dépendance spatiale entre les unités spatiales voisines. Dans le [chapitre @sec-chap08], nous nous abordons les modèles linéaires généralisés avec des vecteurs spatiaux proposés par Daniel Griffith [-@griffith2003spatial; -@griffith2019spatial].
+**Partie 4. Autres modèles de régressions spatiales**. Cette quatrième et dernière partie comprend trois chapitres. Le [chapitre @sec-chap07] est consacré aux modèles généralisés additifs qui permettent d'introduire l’espace de deux manières différentes : les modèles GAM avec une *spline* bivariée avec les coordonnées géographiques (x, y) pour capturer les variations continues dans l'espace; les modèles GAM avec un lissage par champ aléatoire de Markov (*random markov field* – RMF) pour modéliser la dépendance spatiale entre les unités spatiales voisines. Dans le [chapitre @sec-chap08], nous abordons les modèles linéaires généralisés avec des vecteurs spatiaux proposés par Daniel Griffith [-@griffith2003spatial; -@griffith2019spatial].
 
 ## Remerciements {#sect007 .unnumbered}
 
@@ -247,7 +247,7 @@ Nous remercions aussi les membres du comité de révision pour leurs commentaire
 
 -   Diego Andres Cardenas Morales, [étudiant au doctorat en aménagement du territoire et développement régional](https://www.esad.ulaval.ca/programmes/doctorat-amenagement).
 
--   Marie-Clara Delage, Victor Bibeau, Liam Messier et Jean-Francois Darveau, personnes étudiantes de troisième année au [baccalauréat en géomatique appliquée à l'environnement](https://www.usherbrooke.ca/admission/programme/271/baccalaureat-en-geomatiqueappliquee-a-lenvironnement/).
+-   Marie-Clara Delage, Victor Bibeau, Liam Messier et Jean-François Darveau, personnes étudiantes de troisième année au [baccalauréat en géomatique appliquée à l'environnement](https://www.usherbrooke.ca/admission/programme/271/baccalaureat-en-geomatiqueappliquee-a-lenvironnement/).
 
 Marie-Hélène Gadbois Del Carpio, étudiante à la [maîtrise en géomatique appliquée et télédétection (type recherche)](https://www.usherbrooke.ca/geomatique/etudes/programmes/2e-cycle/maitrise-en-geomatique-appliquee-et-teledetection-type-recherche). Elle a participé activement à la mise en page du manuel; elle est désormais une grande spécialiste des feuilles de style en cascade (CSS), de Quarto et LaTeX.
 
