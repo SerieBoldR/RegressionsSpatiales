@@ -810,7 +810,7 @@ LM test for residual autocorrelation
 test value: 0.6198, p-value: 0.43112</code></pre>
 </div>
 </div>
-<p>Dans les résultats ci-dessus, la valeur de <em>Rho</em> est de 0,88 (LR&nbsp;=&nbsp;620, <em>p</em>&nbsp;&lt;&nbsp;0,001), traduisant un très fort effet d’entraînement. Autrement dit, lorsqu’en moyenne la concentration de dioxyde d’azote augmente dans les IRIS voisines (<span class="math inline">\(\mathbf{Wy}\)</span>), elle augmente aussi fortement chaque IRIS (<span class="math inline">\(\mathbf{y}\)</span>).</p>
+<p>Dans les résultats ci-dessus, la valeur de rho est de 0,88 (LR&nbsp;=&nbsp;620, <em>p</em>&nbsp;&lt;&nbsp;0,001), traduisant un très fort effet d’entraînement. Autrement dit, lorsqu’en moyenne la concentration de dioxyde d’azote augmente dans les IRIS voisines (<span class="math inline">\(\mathbf{Wy}\)</span>), elle augmente aussi fortement chaque IRIS (<span class="math inline">\(\mathbf{y}\)</span>).</p>
 <p><strong>Effets directs, indirects et totaux</strong></p>
 <p>À nouveau, il est possible d’utiliser la fonction <code>impacts</code> pour obtenir les effets marginaux directs et indirects.</p>
 <div class="cell">
@@ -840,27 +840,27 @@ Simulation results ( variance matrix):
 ========================================================
 Simulated standard errors
                Direct  Indirect     Total
-Pct0_14    0.04154021 0.2352951 0.2721764
-Pct_65     0.03801101 0.1939654 0.2309332
-Pct_Img    0.03329947 0.1793008 0.2113705
-Pct_brevet 0.02492162 0.1293497 0.1536355
-NivVieMed  0.06762565 0.3471858 0.4117461
+Pct0_14    0.04215444 0.2407502 0.2781088
+Pct_65     0.03753939 0.1988203 0.2352641
+Pct_Img    0.03404818 0.1800600 0.2132397
+Pct_brevet 0.02433968 0.1261359 0.1500033
+NivVieMed  0.06915851 0.3678133 0.4334706
 
 Simulated z-values:
-              Direct   Indirect     Total
-Pct0_14    -3.367509 -2.9564296 -3.069775
-Pct_65     -1.341956 -1.2961182 -1.309518
-Pct_Img     1.252308  1.1637410  1.184465
-Pct_brevet -1.037194 -0.9926015 -1.003943
-NivVieMed  -2.027311 -1.9507537 -1.977851
+              Direct  Indirect     Total
+Pct0_14    -3.335209 -2.943126 -3.053309
+Pct_65     -1.320981 -1.258524 -1.274350
+Pct_Img     1.241368  1.187129  1.200624
+Pct_brevet -1.070556 -1.032078 -1.041571
+NivVieMed  -1.997108 -1.885791 -1.918783
 
 Simulated p-values:
-           Direct    Indirect  Total    
-Pct0_14    0.0007585 0.0031122 0.0021422
-Pct_65     0.1796102 0.1949348 0.1903588
-Pct_Img    0.2104578 0.2445290 0.2362292
-Pct_brevet 0.2996454 0.3209042 0.3154062
-NivVieMed  0.0426306 0.0510864 0.0479456</code></pre>
+           Direct     Indirect  Total    
+Pct0_14    0.00085235 0.0032492 0.0022633
+Pct_65     0.18650766 0.2082024 0.2025394
+Pct_Img    0.21446993 0.2351767 0.2298969
+Pct_brevet 0.28436926 0.3020355 0.2976107
+NivVieMed  0.04581345 0.0593231 0.0550118</code></pre>
 </div>
 </div>
 <p>L’interprétation des effets directs se rapproche de celle des coefficients classiques. Ainsi, selon ce modèle, l’augmentation du niveau de vie médian de 1000&nbsp;€ dans un IRIS est associée à une diminution moyenne de la concentration de dioxyde d’azote de 0,14 dans cet IRIS. L’effet total est de -0,82, indiquant qu’en moyenne, l’augmentation de 1000&nbsp;€ du niveau de vie médian dans un IRIS est associée à une diminution moyenne de 0,82 de la concentration de dioxyde d’azote dans l’ensemble des IRIS. Au final, l’effet indirect est simplement la différence entre l’effet total et l’effet direct. Nous pouvons constater ici que les effets indirects sont plus importants que les effets directs.</p>
@@ -877,7 +877,7 @@ data:  resid(modele_SAR)
 weights: w_rook  
 number of simulations + 1: 1000 
 
-statistic = -0.014281, observed rank = 315, p-value = 0.685
+statistic = -0.014281, observed rank = 350, p-value = 0.65
 alternative hypothesis: greater</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Cartographie des résidus</span></span>
@@ -1000,7 +1000,7 @@ data:  resid(modele_SEM)
 weights: w_rook  
 number of simulations + 1: 1000 
 
-statistic = -0.011827, observed rank = 384, p-value = 0.616
+statistic = -0.011827, observed rank = 357, p-value = 0.643
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
@@ -1140,27 +1140,27 @@ Simulation results ( variance matrix):
 ========================================================
 Simulated standard errors
                Direct  Indirect     Total
-Pct0_14    0.04412186 0.3369162 0.3654262
-Pct_65     0.03652080 0.2783600 0.3013349
-Pct_Img    0.03192462 0.2885066 0.3071082
-Pct_brevet 0.02477535 0.1940634 0.2104070
-NivVieMed  0.06799939 0.4854964 0.5177743
+Pct0_14    0.04337336 0.3229182 0.3502683
+Pct_65     0.03495446 0.2802962 0.3016382
+Pct_Img    0.03295690 0.2663334 0.2863919
+Pct_brevet 0.02381031 0.1963268 0.2109684
+NivVieMed  0.06804712 0.5045467 0.5397611
 
 Simulated z-values:
                Direct   Indirect       Total
-Pct0_14    -2.8138264 -3.0614605 -3.16235421
-Pct_65     -0.6090739  0.1098640  0.02766981
-Pct_Img     2.0574485  3.3350852  3.34695573
-Pct_brevet -0.7488936 -2.4034174 -2.30491133
-NivVieMed  -2.2478074 -0.2034774 -0.48599768
+Pct0_14    -2.8324831 -3.1551781 -3.25955543
+Pct_65     -0.6379248  0.1219049  0.03935564
+Pct_Img     2.0806968  3.6333684  3.61833114
+Pct_brevet -0.7993008 -2.3942955 -2.31833713
+NivVieMed  -2.2239690 -0.1910692 -0.45897723
 
 Simulated p-values:
            Direct    Indirect   Total     
-Pct0_14    0.0048956 0.00220260 0.00156499
-Pct_65     0.5424755 0.91251725 0.97792550
-Pct_Img    0.0396431 0.00085273 0.00081704
-Pct_brevet 0.4539214 0.01624264 0.02117154
-NivVieMed  0.0245885 0.83876187 0.62696881</code></pre>
+Pct0_14    0.0046188 0.00160400 0.00111587
+Pct_65     0.5235226 0.90297435 0.96860685
+Pct_Img    0.0374617 0.00027975 0.00029651
+Pct_brevet 0.4241160 0.01665233 0.02043101
+NivVieMed  0.0261505 0.84847135 0.64625052</code></pre>
 </div>
 </div>
 <p><strong>Dépendance spatiale du modèle SDM?</strong></p>
@@ -1175,7 +1175,7 @@ data:  resid(modele_SDM)
 weights: w_rook  
 number of simulations + 1: 1000 
 
-statistic = -0.0046127, observed rank = 475, p-value = 0.525
+statistic = -0.0046127, observed rank = 485, p-value = 0.515
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
@@ -1213,7 +1213,7 @@ Figure&nbsp;2.6: Effets marginaux dans un modèle SDEM
 <li><p><span class="math inline">\(\theta_k\)</span> est l’effet marginal indirect et l’effet d’externalité spatiale.</p></li>
 <li><p><span class="math inline">\(\beta_k+\theta_k\)</span> est l’effet marginal total.</p></li>
 </ul>
-<p>Finalement, comme pour les spécifications précédentes, il est sage de vérifier, avec l’aide d’une statistique générale, si les résidus du modèle permettent de ne pas rejeter l’hypothèse d’indépendance entre les termes d’erreurs. Or, puisque la structure spatiale est explicitement intégrée dans le terme d’erreur du modèle, cette spécification réussit à contrôler le problème de manière efficace.</p>
+<p>Finalement, comme pour les spécifications précédentes, il est sage de vérifier, avec l’aide d’une statistique générale, si les résidus du modèle permettent de ne pas rejeter l’hypothèse d’indépendance entre les termes d’erreurs. Or, puisque la structure spatiale est explicitement intégrée dans le terme d’erreur du modèle, cette spécification réussit généralement à contrôler le problème de manière efficace.</p>
 </section>
 <section id="sec-02152" class="level4" data-number="2.1.5.2">
 <h4 data-number="2.1.5.2" class="anchored" data-anchor-id="sec-02152"><span class="header-section-number">2.1.5.2</span> Modèle SDEM dans R</h4>
@@ -1326,7 +1326,7 @@ data:  resid(modele_SDEM)
 weights: w_rook  
 number of simulations + 1: 1000 
 
-statistic = -0.010362, observed rank = 369, p-value = 0.631
+statistic = -0.010362, observed rank = 362, p-value = 0.638
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
@@ -1431,20 +1431,20 @@ Sample size per chain = 500
    plus standard error of the mean:
 
                Mean      SD Naive SE Time-series SE
-Pct0_14    -0.12174 0.04360 0.001950       0.002121
-Pct_65     -0.01924 0.03830 0.001713       0.001713
-Pct_Img     0.06550 0.03476 0.001555       0.001555
-Pct_brevet -0.01770 0.02516 0.001125       0.001125
-NivVieMed  -0.15639 0.06939 0.003103       0.003103
+Pct0_14    -0.12160 0.04471 0.001999       0.001999
+Pct_65     -0.02222 0.03655 0.001635       0.001635
+Pct_Img     0.06626 0.03461 0.001548       0.001548
+Pct_brevet -0.01809 0.02548 0.001140       0.001140
+NivVieMed  -0.15273 0.07348 0.003286       0.003286
 
 2. Quantiles for each variable:
 
-                2.5%      25%      50%        75%    97.5%
-Pct0_14    -0.205080 -0.15264 -0.12147 -0.0900678 -0.03788
-Pct_65     -0.093165 -0.04554 -0.01982  0.0048282  0.05572
-Pct_Img     0.001663  0.04015  0.06399  0.0868536  0.13857
-Pct_brevet -0.062736 -0.03658 -0.01865 -0.0002653  0.03076
-NivVieMed  -0.286452 -0.20580 -0.15730 -0.1113355 -0.01534
+                2.5%      25%      50%       75%     97.5%
+Pct0_14    -0.208890 -0.15105 -0.12070 -0.089716 -0.034440
+Pct_65     -0.093376 -0.04792 -0.02253  0.003527  0.054110
+Pct_Img    -0.003892  0.04272  0.06688  0.090703  0.130740
+Pct_brevet -0.067016 -0.03532 -0.01806 -0.001911  0.034521
+NivVieMed  -0.298371 -0.19708 -0.15325 -0.106370 -0.007582
 
 ========================================================
 Indirect:
@@ -1458,20 +1458,20 @@ Sample size per chain = 500
    plus standard error of the mean:
 
                Mean     SD Naive SE Time-series SE
-Pct0_14    -1.07733 0.4005  0.01791        0.01791
-Pct_65      0.05735 0.3243  0.01450        0.01450
-Pct_Img     1.01376 0.3504  0.01567        0.01567
-Pct_brevet -0.47971 0.2312  0.01034        0.01034
-NivVieMed  -0.09812 0.5845  0.02614        0.01722
+Pct0_14    -1.06092 0.3999 0.017883       0.017883
+Pct_65      0.05917 0.3265 0.014601       0.012145
+Pct_Img     1.00681 0.3573 0.015978       0.015978
+Pct_brevet -0.49399 0.2166 0.009688       0.009688
+NivVieMed  -0.14076 0.5489 0.024549       0.032243
 
 2. Quantiles for each variable:
 
               2.5%     25%      50%     75%   97.5%
-Pct0_14    -1.9332 -1.3059 -1.05655 -0.8001 -0.3715
-Pct_65     -0.5084 -0.1520  0.03812  0.2088  0.7201
-Pct_Img     0.4615  0.7810  0.97486  1.1914  1.8107
-Pct_brevet -1.0104 -0.6029 -0.44964 -0.3335 -0.0920
-NivVieMed  -1.2483 -0.4252 -0.09839  0.2407  1.0424
+Pct0_14    -1.9651 -1.2720 -1.02010 -0.8044 -0.3849
+Pct_65     -0.4711 -0.1501  0.03702  0.2357  0.7581
+Pct_Img     0.4541  0.7813  0.96269  1.1836  1.9209
+Pct_brevet -0.9499 -0.6242 -0.49169 -0.3577 -0.0789
+NivVieMed  -1.2303 -0.4568 -0.14742  0.1581  0.9244
 
 ========================================================
 Total:
@@ -1485,45 +1485,45 @@ Sample size per chain = 500
    plus standard error of the mean:
 
                Mean     SD Naive SE Time-series SE
-Pct0_14    -1.19907 0.4259  0.01905        0.01905
-Pct_65      0.03811 0.3489  0.01561        0.01561
-Pct_Img     1.07927 0.3706  0.01658        0.01658
-Pct_brevet -0.49741 0.2464  0.01102        0.01102
-NivVieMed  -0.25452 0.6235  0.02788        0.01825
+Pct0_14    -1.18252 0.4268  0.01909        0.01909
+Pct_65      0.03696 0.3493  0.01562        0.01304
+Pct_Img     1.07307 0.3778  0.01690        0.01690
+Pct_brevet -0.51208 0.2320  0.01037        0.01037
+NivVieMed  -0.29348 0.5874  0.02627        0.03368
 
 2. Quantiles for each variable:
 
               2.5%     25%      50%     75%    97.5%
-Pct0_14    -2.1048 -1.4507 -1.17876 -0.9137 -0.43787
-Pct_65     -0.5926 -0.1830  0.01542  0.2097  0.73703
-Pct_Img     0.4773  0.8474  1.03763  1.2572  1.94864
-Pct_brevet -1.0447 -0.6281 -0.47402 -0.3427 -0.05234
-NivVieMed  -1.4620 -0.6116 -0.24934  0.1154  0.97250
+Pct0_14    -2.1138 -1.4070 -1.15173 -0.9122 -0.45599
+Pct_65     -0.5456 -0.1899  0.01438  0.2340  0.76818
+Pct_Img     0.4647  0.8409  1.02817  1.2652  2.00028
+Pct_brevet -0.9799 -0.6531 -0.50550 -0.3632 -0.07324
+NivVieMed  -1.4259 -0.6408 -0.29245  0.0587  0.82308
 
 ========================================================
 Simulated standard errors
                Direct  Indirect     Total
-Pct0_14    0.04359683 0.4005435 0.4258706
-Pct_65     0.03830285 0.3242686 0.3489423
-Pct_Img    0.03476059 0.3504231 0.3706348
-Pct_brevet 0.02516097 0.2311934 0.2463794
-NivVieMed  0.06938918 0.5845429 0.6234950
+Pct0_14    0.04470884 0.3998766 0.4268317
+Pct_65     0.03655491 0.3264990 0.3493359
+Pct_Img    0.03461497 0.3572807 0.3778170
+Pct_brevet 0.02548158 0.2166263 0.2319603
+NivVieMed  0.07347799 0.5489225 0.5874301
 
 Simulated z-values:
-               Direct   Indirect      Total
-Pct0_14    -2.7923127 -2.6896812 -2.8155743
-Pct_65     -0.5023623  0.1768670  0.1092172
-Pct_Img     1.8844000  2.8929693  2.9119397
-Pct_brevet -0.7035299 -2.0749433 -2.0188972
-NivVieMed  -2.2538810 -0.1678617 -0.4082107
+              Direct   Indirect      Total
+Pct0_14    -2.719915 -2.6531181 -2.7704695
+Pct_65     -0.607765  0.1812374  0.1057922
+Pct_Img     1.914200  2.8179754  2.8401802
+Pct_brevet -0.710026 -2.2803782 -2.2076298
+NivVieMed  -2.078538 -0.2564238 -0.4996060
 
 Simulated p-values:
            Direct    Indirect  Total    
-Pct0_14    0.0052333 0.0071520 0.0048690
-Pct_65     0.6154127 0.8596129 0.9130302
-Pct_Img    0.0595109 0.0038162 0.0035919
-Pct_brevet 0.4817256 0.0379918 0.0434979
-NivVieMed  0.0242037 0.8666921 0.6831190</code></pre>
+Pct0_14    0.0065299 0.0079752 0.0055976
+Pct_65     0.5433433 0.8561813 0.9157472
+Pct_Img    0.0555947 0.0048328 0.0045088
+Pct_brevet 0.4776880 0.0225853 0.0272701
+NivVieMed  0.0376598 0.7976236 0.6173526</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Autocorrélation spatiale des résidus</span></span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">moran.mc</span>(<span class="fu">resid</span>(modele_Manski), w_rook, <span class="at">nsim =</span> <span class="dv">999</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1535,7 +1535,7 @@ data:  resid(modele_Manski)
 weights: w_rook  
 number of simulations + 1: 1000 
 
-statistic = -0.0009215, observed rank = 509, p-value = 0.491
+statistic = -0.0009215, observed rank = 541, p-value = 0.459
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
@@ -1660,7 +1660,7 @@ Figure&nbsp;2.8: Démarche à partir du modèle généralisé (modèle Manski)
 <span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>                   <span class="at">z   =</span> manski<span class="sc">$</span>rho <span class="sc">/</span> manski<span class="sc">$</span>rho.se,</span>
 <span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a>                   <span class="at">p   =</span> <span class="dv">2</span> <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">pnorm</span>(<span class="fu">abs</span>(manski<span class="sc">$</span>rho <span class="sc">/</span> manski<span class="sc">$</span>rho.se))))</span>
 <span id="cb51-15"><a href="#cb51-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-16"><a href="#cb51-16" aria-hidden="true" tabindex="-1"></a>manski_resultats <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Parametre =</span> <span class="fu">c</span>(<span class="st">"lambda"</span>, <span class="st">"Rho"</span>),</span>
+<span id="cb51-16"><a href="#cb51-16" aria-hidden="true" tabindex="-1"></a>manski_resultats <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Parametre =</span> <span class="fu">c</span>(<span class="st">"lambda"</span>, <span class="st">"rho"</span>),</span>
 <span id="cb51-17"><a href="#cb51-17" aria-hidden="true" tabindex="-1"></a>                               <span class="at">Coef      =</span> <span class="fu">c</span>(manski_lambda<span class="sc">$</span>lambda, manski_rho<span class="sc">$</span>rho),</span>
 <span id="cb51-18"><a href="#cb51-18" aria-hidden="true" tabindex="-1"></a>                               <span class="at">z         =</span> <span class="fu">c</span>(manski_lambda<span class="sc">$</span>z, manski_rho<span class="sc">$</span>z),</span>
 <span id="cb51-19"><a href="#cb51-19" aria-hidden="true" tabindex="-1"></a>                               <span class="at">p         =</span> <span class="fu">c</span>(manski_lambda<span class="sc">$</span>p, manski_rho<span class="sc">$</span>p))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1690,7 +1690,7 @@ Tableau&nbsp;2.2: Résultats des coefficients autorégressifs du modèle génér
 <td style="text-align: center;">0,811</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Rho</td>
+<td style="text-align: left;">rho</td>
 <td style="text-align: center;">0,848</td>
 <td style="text-align: center;">22,832</td>
 <td style="text-align: center;">0,000</td>
@@ -1839,10 +1839,10 @@ modele_SEM      2  8 2755.5 -1369.7    2  4.9728  0.4192</code></pre>
 <pre><code>  Modele      AIC      BIC dl       MoranI MoranIp
 1    MCO 3366.626 3396.212  7  0.587312061   0.001
 2    SLX 3222.594 3273.313 12  0.604660275   0.001
-3    SAR 2748.314 2782.126  8 -0.014281059   0.669
-4    SEM 2755.474 2789.286  8 -0.011826605   0.628
-5    SDM 2732.212 2787.157 13 -0.004612686   0.527
-6   SDEM 2760.501 2815.446 13 -0.010361653   0.605</code></pre>
+3    SAR 2748.314 2782.126  8 -0.014281059   0.685
+4    SEM 2755.474 2789.286  8 -0.011826605   0.610
+5    SDM 2732.212 2787.157 13 -0.004612686   0.567
+6   SDEM 2760.501 2815.446 13 -0.010361653   0.631</code></pre>
 </div>
 </div>
 <p>Quelques lignes de code suffisent pour créer deux graphiques permettant de comparer visuellement les résultats des différents modèles (<a href="#fig-GraphComparaison" class="quarto-xref">figure&nbsp;<span>2.9</span></a>). Les résultats démontrent que&nbsp;:</p>

@@ -338,7 +338,7 @@ modele_SAR <- lagsarlm(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed
 summary(modele_SAR, Nagelkerke = TRUE)
 ```
 
-Dans les résultats ci-dessus, la valeur de *Rho* est de 0,88 (LR = 620, *p* \< 0,001), traduisant un très fort effet d'entraînement. Autrement dit, lorsqu'en moyenne la concentration de dioxyde d'azote augmente dans les IRIS voisines ($\mathbf{Wy}$), elle augmente aussi fortement chaque IRIS ($\mathbf{y}$).
+Dans les résultats ci-dessus, la valeur de rho est de 0,88 (LR = 620, *p* \< 0,001), traduisant un très fort effet d'entraînement. Autrement dit, lorsqu'en moyenne la concentration de dioxyde d'azote augmente dans les IRIS voisines ($\mathbf{Wy}$), elle augmente aussi fortement chaque IRIS ($\mathbf{y}$).
 
 **Effets directs, indirects et totaux**
 
@@ -594,7 +594,7 @@ Dans le cas où la matrice de pondération spatiale $\mathbf{W}$ est standardis�
 
 -   $\beta_k+\theta_k$ est l'effet marginal total.
 
-Finalement, comme pour les spécifications précédentes, il est sage de vérifier, avec l'aide d'une statistique générale, si les résidus du modèle permettent de ne pas rejeter l'hypothèse d'indépendance entre les termes d'erreurs. Or, puisque la structure spatiale est explicitement intégrée dans le terme d'erreur du modèle, cette spécification réussit à contrôler le problème de manière efficace.
+Finalement, comme pour les spécifications précédentes, il est sage de vérifier, avec l'aide d'une statistique générale, si les résidus du modèle permettent de ne pas rejeter l'hypothèse d'indépendance entre les termes d'erreurs. Or, puisque la structure spatiale est explicitement intégrée dans le terme d'erreur du modèle, cette spécification réussit généralement à contrôler le problème de manière efficace.
 
 #### Modèle SDEM dans R {#sec-02152}
 
@@ -795,7 +795,7 @@ manski_rho <- list(rho = manski$rho,
                    z   = manski$rho / manski$rho.se,
                    p   = 2 * (1 - pnorm(abs(manski$rho / manski$rho.se))))
 
-manski_resultats <- data.frame(Parametre = c("lambda", "Rho"),
+manski_resultats <- data.frame(Parametre = c("lambda", "rho"),
                                Coef      = c(manski_lambda$lambda, manski_rho$rho),
                                z         = c(manski_lambda$z, manski_rho$z),
                                p         = c(manski_lambda$p, manski_rho$p))
