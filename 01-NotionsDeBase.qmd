@@ -730,11 +730,11 @@ w_inv_distances2 <- mat2listw(inv_distances2, style = "W")
 ::: bloc_astuce-icon
 :::
 
-**Intégration d'autres types de distances**
+**Intégration d'autres types de distance**
 :::
 
 ::: bloc_astuce-body
-À la [section @sec-0122], nous avons vu que plusieurs types de distances peuvent être utilisés : cartésiennes (euclidienne et de Manhattan) et réticulaires (chemin le plus rapide à pied, à vélo, en automobile et en transport en commun).
+À la [section @sec-0122], nous avons vu que plusieurs types de distance peuvent être utilisés : cartésiennes (euclidienne et de Manhattan) et réticulaires (chemin le plus rapide à pied, à vélo, en automobile et en transport en commun).
 
 Pour construire une matrice avec la distance de Manhattan, vous devez changer la valeur du paramètre `method` de la fonction `dist` comme suit : `as.matrix(dist(coords, method = "manhattan"))`.
 

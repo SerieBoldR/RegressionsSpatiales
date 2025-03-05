@@ -3,7 +3,7 @@
   response: 2
   answers:
      - "Les résidus doivent suivre une distribution normale."
-     - "Les relations entre les variables indépendantes et dépendantes doivent être linéaires."
+     - "Les relations entre les variables indépendantes et la variable dépendante doivent être linéaires."
      - "Les variables indépendantes ne doivent pas être corrélées entre-elles."
   help: "Relisez au besoin la [section @sec-073]."
 
@@ -27,13 +27,13 @@
      - "Le modèle intègre une version spatialement décalée des variables X"
   help: "Relisez au besoin la [section @sec-073]."
 
-- label: "Dans quel cas préfère-t-on utiliser un MRF plutôt qu'une spline bivariée sur les coordonnées géographiques?"
+- label: "Dans quel cas préfère-t-on utiliser un RMF plutôt qu'une spline bivariée sur les coordonnées géographiques?"
   type: uc
   response: 2
   answers:
      - "Lorsque les données sont représentées dans l'espace comme des points."
      - "Lorsque l'espace est représenté plus adéquatement par une relation de voisinage entre les observations."
-     - "Lorsque le terme spatial que l'on espère ajusté doit être moins spatialement autocorrélé"
+     - "Lorsque le terme spatial que l'on espère ajuster doit être moins spatialement autocorrélé"
   help: "Relisez au besoin la [section @sec-074]."
 
 - label: "Pour analyser l'effet spatial modélisé avec une spline, on peut :"

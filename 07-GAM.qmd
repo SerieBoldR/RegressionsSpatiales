@@ -1,6 +1,6 @@
-# Modèles généralisées additifs {#sec-chap07}
+# Modèles généralisés additifs {#sec-chap07}
 
-Dans ce chapitre, nous abordons deux formes de modèles généralisées additifs (*Generalized additive model* en anglais -- GAM) qui permettent d'introduire l'espace deux manières différentes : les modèles GAM avec une spline bivariée avec les coordonnées géographiques (x, y) pour capturer les variations continues dans l'espace; les modèles GAM avec un lissage par champ aléatoire de Markov (*random markov field* -- RMF) pour modéliser la dépendance spatiale entre les unités spatiales voisines.
+Dans ce chapitre, nous abordons deux formes de modèles généralisés additifs (*Generalized additive model* -- GAM) qui permettent d'introduire l'espace de deux manières différentes : les modèles GAM avec une spline bivariée avec les coordonnées géographiques (x, y) pour capturer les variations continues dans l'espace; les modèles GAM avec un lissage par champ aléatoire de Markov (*Markov random field* -- MRF) pour modéliser la dépendance spatiale entre les unités spatiales voisines.
 
 ::: bloc_objectif
 ::: bloc_objectif-header
@@ -13,9 +13,9 @@ Dans ce chapitre, nous abordons deux formes de modèles généralisées additifs
 ::: bloc_objectif-body
 À la fin de ce chapitre, vous devriez être en mesure de :
 
--   comprendre pourquoi utiliser un modèle GAM avec un spline bivariée sur les coordonnées géographiques ou avec un lissage par champ aléatoire de Markov;
+-   comprendre pourquoi utiliser un modèle GAM avec une spline bivariée sur les coordonnées géographiques ou avec un lissage par champ aléatoire de Markov;
 -   analyser les résultats produits par ces deux types de modèles GAM;
--   les mettre en pratique dans R.
+-   mettre en pratique ces modèles dans R.
 :::
 :::
 
@@ -36,8 +36,8 @@ Dans ce chapitre, nous abordons deux formes de modèles généralisées additifs
     -   `ggplot2` pour construire des graphiques.
     -   `tmap` est certainement le meilleur *package* pour la cartographie.
 -   Pour construire des modèles GAM :
-    -   `mcgv` le *package* de référence pour ajuster des modèles GAM. De nombreux autres *packages* proposent des extensions pour ce type de modèle et se basent principalement sur les outils mis à disposition par `mgcv` pour créer des bases et leurs matrices de pénalisation (`gamm4`, `brms`, `gamlss`, `qgam`, etc.).
-    -   `DHARMa` un *package* permettant d'effectuer des diagnostics sur des résidus de modèles GLM
+    -   `mcgv`, le *package* de référence pour ajuster des modèles GAM. De nombreux autres *packages* proposent des extensions pour ce type de modèle et se basent principalement sur les outils mis à disposition par `mgcv` pour créer des bases et leurs matrices de pénalisation (`gamm4`, `brms`, `gamlss`, `qgam`, etc.).
+    -   `DHARMa`, un *package* permettant d'effectuer des diagnostics sur des résidus de modèles GLM.
 :::
 :::
 
@@ -47,9 +47,9 @@ Les modèles généralisés additifs (GAM) constituent une famille de modèles d
 
 Dans un modèle de régression classique, nous partons du principe que les variables $\mathbf{X}$ (indépendantes) ont un impact linéaire sur la variable $\mathbf{Y}$ (dépendante). Cette hypothèse simplifie grandement les relations entre les variables observées et permet d'interpréter les résultats plus facilement (analyse des coefficients de régression). Or, cette hypothèse peut être fausse et les relations non linéaires ont plus tendance à être la norme que l'exception.
 
-Dans un GAM, plutôt que modéliser une relation linéaire, nous partons du principe que la relation modélisée peut être non linéaire et suivre une fonction *f*. On parle alors de relations non paramétriques, car la forme de cette fonction s'ajuste aux données et ne suit pas une forme prédéterminée.
+Dans un GAM, plutôt que modéliser une relation linéaire, nous partons du principe que la relation modélisée peut être non linéaire et suivre une fonction $f$. Il s’agit alors de relations non paramétriques, car la forme de cette fonction s'ajuste aux données et ne suit pas une forme prédéterminée.
 
-Ces fonctions $f$ sont le plus souvent estimées avec des splines. Le fonctionnement de base est assez simple. Pour chaque variable $\mathbf{X}$ devant suivre une relation non linéaire, la variable est remplacée par $k$ sous-variable ($x_1$, $x_2$, ..., $x_k$). $k$ représente le niveau de complexité attendu de la relation : plus il est grand, plus la fonction à ajuster pourra être complexe. Le modèle va estimer un coefficient pour chacune de ces sous-variables, et la somme des effets de ces sous-variables permet de reconstruire la relation non linéaire.
+Ces fonctions $f$ sont le plus souvent estimées avec des splines. Le fonctionnement de base est assez simple. Pour chaque variable $\mathbf{X}$ devant suivre une relation non linéaire, la variable est remplacée par $k$ sous-variable ($x_1$, $x_2$, ..., $x_k$). $k$ représente le niveau de complexité attendu de la relation : plus il est grand, plus l’ajustement de la fonction est complexe. Le modèle estime un coefficient pour chacune de ces sous-variables, et la somme des effets de ces sous-variables permet de reconstruire la relation non linéaire.
 
 La @fig-gam1 permet d'illustrer ce principe. Les lignes grises représentent les sous-variables, aussi appelées bases, qui sont ensuite multipliées par leur coefficient respectif pour obtenir leurs effets (en couleur), puis la ligne bleue représente leur somme. La ligne bleue capture très efficacement la relation entre les variables $\mathbf{X}$ et $\mathbf{Y}$.
 
@@ -97,15 +97,15 @@ ggplot() +
 **Modèles généralisés additifs**
 :::
 ::: bloc_attention-body
-Pour une explication détaillée du fonctionnement des *splines*, vous pouvez consulter le [chapitre sur les GAM](https://serieboldr.github.io/MethodesQuantitatives/11-GAM.html) du livre *Méthodes quantitatives en sciences sociales : un grand bol d'R* [@RBoldAirMethodesQuanti].
+Pour une explication détaillée du fonctionnement des splines, vous pouvez consulter le [chapitre sur les GAM](https://serieboldr.github.io/MethodesQuantitatives/11-GAM.html) du livre *Méthodes quantitatives en sciences sociales : un grand bol d'R* [@RBoldAirMethodesQuanti].
 :::
 :::
 
 ## Comment utiliser une spline pour ajouter l'espace dans un modèle GAM? {#sec-072}
 
-Nous avons vu qu'une spline permet de modéliser l'impact potentiellement non linéaire d'une variable indépendante sur une variable dépendante. Or, il est possible d'utiliser des splines pour intégrer un effet spatial dans un modèle, et ce, en utilisant un type de spline particulier : les splines bivariées qui capturent l'effet simultané de deux variables indépendantes sur une variable dépendante.
+Nous avons vu qu'une spline permet de modéliser l'impact potentiellement non linéaire d'une variable indépendante sur une variable dépendante. Or, il est possible d'utiliser des splines pour intégrer un effet spatial dans un modèle, et ce, en utilisant un type de spline particulier : la spline bivariée qui capture l'effet simultané de deux variables indépendantes sur une variable dépendante.
 
-Dans un contexte spatial, une spline bivariée capture comment un changement dans les coordonnées *X* et *Y* impacte la variable dépendante. De plus, compte tenu de la forme des fonctions de base utilisées, les splines sont particulièrement adaptées pour capturer des relations spatiales avec une forte autocorrélation spatiale positive.
+Dans un contexte spatial, une spline bivariée capture la façon dont un changement dans les coordonnées *X* et *Y* affecte la variable dépendante. De plus, compte tenu de la forme des fonctions de base utilisées, les splines sont particulièrement adaptées pour capturer des relations spatiales avec une forte autocorrélation spatiale positive.
 
 Prenons un exemple avec un jeu de données fictif représentant des mesures de pollution relevées à différentes localisations sur un territoire (@fig-gam2).
 
@@ -242,7 +242,7 @@ if(is_latex_output()) {
 }
 ```
 
-En ajustant un coefficient pour chaque base et en combinant leur effets, nous obtenons un effet spatial permettant de prédire la variable de pollution, cartographié à la @fig-gam4. Nous constatons ainsi que le modèle a été capable de reproduire les tendances principales des niveaux de pollution en retrouvant les secteurs avec des valeurs fortes et faibles. Plus l'autocorrélation spatiale est élevée, plus ce type de modèle sera efficace pour capturer l'effet spatial.
+En ajustant un coefficient pour chaque base et en combinant leurs effets, nous obtenons un effet spatial permettant de prédire la variable de pollution, cartographié à la @fig-gam4. Nous constatons ainsi que le modèle a été capable de reproduire les tendances principales des niveaux de pollution en retrouvant les secteurs avec des valeurs fortes et faibles. Plus l'autocorrélation spatiale est élevée, plus ce type de modèle est efficace pour capturer l'effet spatial.
 
 ```{r}
 #| label: fig-gam4
@@ -299,15 +299,15 @@ $$
 \end{aligned}
 $$ {#eq-gam2}
 
-avec $sp$ une matrice comprenant de deux colonnes, soit les coordonnées cartésiennes des observations.
+avec $sp$ une matrice comprenant deux colonnes, soit les coordonnées cartésiennes des observations.
 
 ## Pourquoi recourir à un modèle GAM? {#sec-073}
 
-Les modèles GAM sont très flexibles puisqu'ils sont une extension directe des modèles linéaires généralisés (GLM). Ils peuvent donc être appliqués à des variables dépendantes suivant de nombreuses distributions (normale, gamma, binomiale, poisson, tweedie, log-normal, etc.). Cependant, ils imposent une conceptualisation particulière de l'espace. En effet, un modèle GAM n'inclut pas directement la notion de dépendance spatiale dans sa formulation. L'hypothèse d'indépendance des observations est conservée (contrairement à un modèle des moindres carrés généralisés, GLS). Le modèle intègre simplement un terme flexible correspondant à l'ajout d'un ensemble de nouvelles variables $\mathbf{X}$ structurées afin de capturer un effet spatialement positivement autocorrélé.
+Les modèles GAM sont très flexibles puisqu'ils sont une extension directe des modèles linéaires généralisés (GLM). Ils peuvent donc être appliqués à des variables dépendantes suivant de nombreuses distributions (normale, gamma, binomiale, Poisson, Tweedie, log-normal, etc.). Cependant, ils imposent une conceptualisation particulière de l'espace. En effet, un modèle GAM n'inclut pas directement la notion de dépendance spatiale dans sa formulation. L'hypothèse d'indépendance des observations est conservée (contrairement à un modèle des moindres carrés généralisés, GLS). Le modèle intègre simplement un terme flexible correspondant à l'ajout d'un ensemble de nouvelles variables $\mathbf{X}$ structurées afin de capturer un effet spatialement positivement autocorrélé.
 
-Si nous reprenons l'exemple de la pollution atmosphérique, le modèle est un simple GLM dans lequel on suppose que les niveau de pollution suivent une distribution normale et que les observations sont indépendantes. Cependant, la moyenne de cette distribution peut être prédite avec une spline calculée à partir des coordonnées spatiales des observations. Le modèle ne part donc pas du principe que deux observations proches sont plus similaires, mais plutôt qu'il existe un effet spatial permettant de prédire les niveaux moyens de pollution attendus. Un modèle GAM ne vise donc pas explicitement à corriger l'effet de la dépendance spatiale, mais plutôt à capturer un effet spatialement structuré et non capturé par les variables indépendantes $\mathbf{X}$. Sans l'ajout de la spline, cet effet se serait retrouvé dans les résidus du modèle.
+Si nous reprenons l'exemple de la pollution atmosphérique, le modèle est un simple GLM dans lequel nous supposons que les niveaux de pollution suivent une distribution normale et que les observations sont indépendantes. Cependant, la moyenne de cette distribution peut être prédite avec une spline calculée à partir des coordonnées spatiales des observations. Le modèle ne part donc pas du principe que deux observations proches sont plus similaires, mais plutôt qu'il existe un effet spatial permettant de prédire les niveaux moyens de pollution attendus. Un modèle GAM ne vise donc pas explicitement à corriger l'effet de la dépendance spatiale, mais plutôt à capturer un effet spatialement structuré et non capturé par les variables indépendantes $\mathbf{X}$. Sans l'ajout de la spline, cet effet se serait retrouvé dans les résidus du modèle.
 
-La cartographie de l'effet spatial dans un modèle GAM permet de visualiser les secteurs de l'espace d'étude dans lesquels, **toutes choses étant égales par ailleurs**, la variable dépendante est plus forte ou plus faible que la moyenne régionale. Il peut être vu comme un ajustement local de la prédiction. Une forme de malus ou de bonus que le modèle ajoute à sa prédiction pour tenir compte de la variation spatiale de la variable dépendante qui n'a pas été expliquée par les variables indépendantes.
+La cartographie de l'effet spatial dans un modèle GAM permet de visualiser les secteurs de l'espace d'étude dans lesquels, **toutes choses étant égales par ailleurs**, la variable dépendante est plus forte ou plus faible que la moyenne régionale. Cet effet spatial peut être vu comme un ajustement local de la prédiction. Une forme de malus ou de bonus que le modèle ajoute à sa prédiction pour tenir compte de la variation spatiale de la variable dépendante qui n'a pas été expliquée par les variables indépendantes.
 
 Puisqu'un modèle GAM ne prend pas directement en compte l'autocorrélation spatiale, il est tout à fait possible qu'il échoue à réduire suffisamment la dépendance spatiale des résidus d'un modèle global (non spatial). Il faudra alors privilégier d'autres formes de modèles. De même, si notre cadre théorique nous amène à penser que nos observations s'influencent mutuellement dans l'espace, il sera beaucoup plus cohérent d'utiliser un modèle économétrique ([chapitre @sec-chap02]).
 
@@ -315,17 +315,17 @@ Prenons un exemple concret pour lequel l'utilisation d'un modèle GAM serait par
 
 1.  Les effets du micro-environnement, causés par les caractéristiques locales comme le type de rue utilisé, la densité bâtie, la présence de végétation, etc.
 
-2.  La pollution d'arrière-plan, causée par des phénomènes géographiques régionaux comme la localisation des industries, des autoroutes, la topographie, etc.
+2.  La pollution d'arrière-plan, causée par des phénomènes géographiques régionaux comme la localisation des industries et des autoroutes, la topographie, etc.
 
 ![Cadre théorique de l'exposition des cyclistes](images/Chap06/cadre_theorique_exposition.png){#fig-cadretheorique width="90%" fig-align="center"}
 
-L'exposition mesurée pour un cycliste à un endroit *t* dépend donc des caractéristiques propres de cet endroit, mais aussi de la pollution d'arrière-plan. Par exemple, si nous prenons une rue A, en tous points identique à une rue B, nous pouvons nous attendre à mesurer des niveaux de pollution plus élevés pour B si celle-ci est située dans un secteur plus industrialisé de la ville. Cette différence ne s'explique pas par des caractéristiques propres à A ou B, puisqu'elles sont identiques, mais bien par un effet d'arrière-plan produit par différents phénomènes géographiques et donc spatialement autocorrélé. Par conséquent, dans cet exemple, l'intégration de la pollution d'arrière-plan avec une spline spatiale est particulièrement pertinente, car l'interprétation de l'effet produit par cette spline s'intègre directement dans le cadre théorique.
+L'exposition mesurée pour un cycliste à un endroit *t* dépend donc des caractéristiques propres de cet endroit, mais aussi de la pollution d'arrière-plan. Par exemple, si nous prenons une rue A, en tous points identique à une rue B, nous pouvons nous attendre à mesurer des niveaux de pollution plus élevés pour B si celle-ci est située dans un secteur plus industrialisé de la ville. Cette différence ne s'explique pas par des caractéristiques propres à A ou à B, puisqu'elles sont identiques, mais bien par un effet d'arrière-plan produit par différents phénomènes géographiques et donc spatialement autocorrélé. Par conséquent, dans cet exemple, l'intégration de la pollution d'arrière-plan avec une spline spatiale est particulièrement pertinente, car l'interprétation de l'effet produit par cette spline s'intègre directement dans le cadre théorique.
 
-## *Random Markow Field* (RFM) ou spline bivariée? {#sec-074}
+## *Markov random field* (MRF) ou spline bivariée? {#sec-074}
 
 Nous avons vu jusqu'ici qu'il est possible d'incorporer un effet spatial dans un modèle GAM en intégrant une spline bivariée sur les coordonnées spatiales des observations. Cette approche est cependant moins pertinente quand les observations sont des polygones de tailles variées. En effet, intégrer les centroïdes des polygones dans le modèle revient à nettement déformer l'espace de nos données puisque des polygones voisins peuvent avoir des centroïdes très éloignés.
 
-Lorsque les données ont une géométrie irrégulière et que le voisinage est plus important que la proximité (distance), il est recommandé d'utiliser un autre type de fonction appelée un champ de Markov aléatoire (*random Markov field - RMF* en anglais).
+Lorsque les données ont une géométrie irrégulière et que le voisinage est plus important que la proximité (distance), il est recommandé d'utiliser un autre type de fonction appelée un champ de Markov aléatoire (*Markov random field, MRF*).
 
 ::: bloc_aller_loin
 ::: bloc_aller_loin-header
@@ -340,7 +340,7 @@ Mathématiquement parlant, un modèle de type CAR (*conditionnal autoregressive 
 :::
 :::
 
-Dans l'@eq-gam3, le terme $\eta$ représente l'effet spatial. Il est le plus souvent modélisé comme un effet provenant d'une distribution normale multivariée, centrée sur zéro et dont la matrice de covariance est calculée grâce à un terme $\lambda$ et une matrice de pondération spatiale $W$. Ce type de modèle est communément appelé un modèle à effet mixte, car il combine des effets **fixes** (coefficients $\beta$) et des effets **aléatoires** ($\lambda$). Les effets aléatoires ne sont pas estimés de la même façon que les effets fixes : ils sont en effet pénalisés. Pour une introduction sur les modèles à effets mixtes, vous pouvez consulter [ce chapitre sur les GLMM](https://serieboldr.github.io/MethodesQuantitatives/09-GLMM.html) du livre *Méthodes quantitatives en sciences sociales : un grand bol d'R* [@RBoldAirMethodesQuanti].
+Dans l'@eq-gam3, le terme $\eta$ représente l'effet spatial. Il est le plus souvent modélisé comme un effet provenant d'une distribution normale multivariée, centrée sur zéro et dont la matrice de covariance est calculée grâce à un terme $\lambda$ et à une matrice de pondération spatiale $W$. Ce type de modèle est communément appelé un modèle à effet mixte, car il combine des effets **fixes** (coefficients $\beta$) et des effets **aléatoires** ($\lambda$). Les effets aléatoires ne sont pas estimés de la même façon que les effets fixes : ils sont en fait pénalisés. Pour une introduction sur les modèles à effets mixtes, vous pouvez consulter [ce chapitre sur les GLMM](https://serieboldr.github.io/MethodesQuantitatives/09-GLMM.html) du livre *Méthodes quantitatives en sciences sociales : un grand bol d'R* [@RBoldAirMethodesQuanti].
 
 $$
 \begin{aligned}
@@ -352,7 +352,7 @@ $$ {#eq-gam3}
 
 Il existe un lien direct entre les modèles à effets mixtes et les GAM. En effet, il est possible de reformuler un GLMM comme un GAM et vice-versa, ce qui signifie qu'une spline pénalisée peut être utilisée pour représenter un effet aléatoire [@wood2017generalized].
 
-Dans R, avec le *package* `mgcv`, il est possible d'utiliser une spline pénalisée par une matrice de pondération spatiale *W* pour approximer l'effet aléatoire que nous aurions modélisé avec un modèle de type CAR. L'intérêt d'utiliser un GAM plutôt qu'un CAR est que nous pouvons contrôler directement le degré de lissage (autocorrélation spatiale) du terme spatial dans le modèle grâce au nombre de degrés de liberté (*k*) de la spline. En utilisant un nombre de degrés de liberté maximal ($k = n-1$), soit une base par observation, alors on obtient un *full rank MRF*, autorisant de facto la plus grande variance possible du terme spatial. En réduisant *k*, nous obtenons des modèles d'ordre inférieur (*lower rank MRF*) dont le terme spatial est plus lisse et moins complexe.
+Dans R, avec le *package* `mgcv`, il est possible d'utiliser une spline pénalisée par une matrice de pondération spatiale *W* pour approximer l'effet aléatoire que nous aurions modélisé avec un modèle de type CAR. L'intérêt d'utiliser un GAM plutôt qu'un CAR est que nous pouvons contrôler directement le degré de lissage (autocorrélation spatiale) du terme spatial dans le modèle grâce au nombre de degrés de liberté (*k*) de la spline. En utilisant un nombre de degrés de liberté maximal ($k = n-1$), soit une base par observation, alors nous obtenons un *full rank MRF*, autorisant de facto la plus grande variance possible du terme spatial. En réduisant *k*, nous obtenons des modèles d'ordre inférieur (*lower rank MRF*) dont le terme spatial est plus lisse et moins complexe.
 
 $$
 \begin{aligned}
@@ -361,13 +361,13 @@ $$
 \end{aligned}
 $$ {#eq-gam4}
 
-## Mise en oeuvre et analyse dans R {#sec-075}
+## Mise en œuvre et analyse dans R {#sec-075}
 
-Pour illustrer la réalisation des différentes modèles GAM (non spatiale, avec une spline bivariée sur les coordonnées géographiques et avec une spline spatiale de type RMF), nous utilisons le jeu de données sur les parts modales dans la région métropolitaine de Montréal ([section @sec-0112]). Ce jeu de données comprend trois variables mesurant respectivement la proportion des individus utilisant la voiture, le transport collectif ou un mode actif (marche ou vélo) comme mode de transport principal pour ses déplacements domicile-travail en 2021 pour les secteurs de recensement (@fig-datamtlCarto).
+Pour illustrer la réalisation des différents modèles GAM (non spatiale, avec une spline bivariée sur les coordonnées géographiques et avec une spline spatiale de type MRF), nous utilisons le jeu de données sur les parts modales dans la région métropolitaine de Montréal ([section @sec-0112]). Ce jeu de données comprend trois variables mesurant respectivement la proportion des individus utilisant la voiture, le transport collectif ou un mode actif (marche ou vélo) comme mode de transport principal pour leurs déplacements domicile-travail en 2021 pour les secteurs de recensement (@fig-datamtlCarto).
 
-Lorsqu'un ensemble de variables sont des proportions d'un total (leur somme donne 1 ou 100), alors on désigne l'ensemble de ces variables comme des données compositionnelles. Ces données doivent être analysées avec des méthodes spécifiques, car elles ont un comportement particulier. La diminution de l'une d'entre elle provoque nécessairement l'augmentation d'une autre. Elles ne sont donc pas indépendantes et certaines catégories ont même tendance à exister simultanément ou au contraire se repousser. L'analyse de données compositionnelles est un domaine en soit et sort du matériel que nous souhaitons couvrir dans ce livre. Il existe d'excellentes ressources et *packages* R sur le sujet [@van2013analyzing; @comp_pkg2024; @comp_pkg2025].
+Lorsqu'un ensemble de variables sont des proportions d'un total (leur somme donne 1 ou 100), alors l'ensemble de ces variables est désigné comme des données compositionnelles. Ces données doivent être analysées avec des méthodes spécifiques, car elles ont un comportement particulier. La diminution de l'une d'entre elles provoque nécessairement l'augmentation d'une autre. Elles ne sont donc pas indépendantes et certaines catégories ont même tendance à exister simultanément ou au contraire à se repousser. L'analyse de données compositionnelles est un domaine en soit et sort du matériel que nous souhaitons couvrir dans ce livre. Il existe d'excellentes ressources et *packages* R sur le sujet [@van2013analyzing; @comp_pkg2024; @comp_pkg2025].
 
-Nous utilisons ici l'approche du log des ratios (*alr*). Il s'agit d'une transformation que l'on peut appliquer aux données compositionnelles pour pouvoir les analyser avec des méthodes classiques de statistiques. On lui préfère généralement une autre méthode de transformation, soit celle isométrique des log ratios (*ilr*), mais cette dernière produit des résultats plus difficiles à interpréter [@greenacre2021compositional]. Nous utiliserons donc l'approche *alr* dans cet exemple. La transformation *alr* est décrite par la formule suivante :
+Nous utilisons ici l'approche du log des ratios (*alr*). Il s'agit d'une transformation qui peut appliquée aux données compositionnelles pour pouvoir les analyser avec des méthodes classiques de statistiques. On lui préfère généralement une autre méthode de transformation, soit celle isométrique des log ratios (*ilr*), mais cette dernière produit des résultats plus difficiles à interpréter [@greenacre2021compositional]. Nous utiliserons donc l'approche *alr* dans cet exemple. La transformation *alr* est décrite par la formule suivante :
 
 $$
 \operatorname{alr}(x)=\left[\log \frac{x_1}{x_D}, \cdots, \log \frac{x_{D-1}}{x_D}\right]
@@ -375,7 +375,7 @@ $$ {#eq-ALR}
 
 Pour une variable compositionnelle *x* comprenant *D* dimensions (*catégories*), la transformation *alr* consiste à calculer *D-1* log de ratio entre les différentes dimensions *D* et une référence parmi *D*. Ainsi, le nombre de dimensions de la version transformée de *x* est toujours de *D-1*.
 
-Dans cet exemple, nous utilisons le ratio entre utilisateurs du transport collectif (TC) et de l'automobile. Puisque la transformation *alr* implique une division, puis un log, il est important que ni le numérateur ni le dénominateur ne soit égale à 0. Or, nous avons quelques secteurs de recensement (SR) avec des parts modales TC à 0. Puisqu'il semble peu probable qu'aucune personne dans un SR n'utilise le transport collectif, nous remplaçons les 0 par le plus faible pourcentage trouvé dans les SR avec la valeur supérieure à 0.
+Dans cet exemple, nous utilisons le ratio entre les personnes utilisatrices du transport collectif (TC) et de l'automobile. Puisque la transformation *alr* implique une division, puis un log, il est important que ni le numérateur ni le dénominateur ne soit égal à 0. Or, nous avons quelques secteurs de recensement (SR) avec des parts modales TC à 0. Puisqu'il semble peu probable qu'aucune personne dans un SR n'utilise le transport collectif, nous remplaçons les 0 par le plus faible pourcentage trouvé dans les SR avec la valeur supérieure à 0.
 
 ```{r}
 #| echo: true 
@@ -423,7 +423,7 @@ ggarrange(plot1, plot2, nrow = 2)
 
 ```
 
-La @fig-gamhist illustre la distribution de la variable que nous souhaitons modéliser. Le simple ratio a des valeurs comprises entre 0 et 2,5. Si sa valeur est de 0, cela signifie que personne dans le secteur de recensement n'utilise le transport collectif comme mode principale pour ses déplacements pendulaires. Une valeur de 1 indique que cette proportion est égale à celle des personnes utilisant la voiture. Une valeur plus grande que 1 indique une dominance du mode TC plutôt qu'automobile. Sans surprise, pour la majorité des secteurs de recensement, la valeur est inférieure à 1. Le log du ratio suit une distribution moins asymétrique qui sera probablement plus facile à modéliser.
+La @fig-gamhist illustre la distribution de la variable que nous souhaitons modéliser. Le simple ratio a des valeurs comprises entre 0 et 2,5. Une valeur de 0 signifie que personne dans le secteur de recensement n'utilise le transport collectif comme mode principal pour ses déplacements pendulaires. Une valeur de 1 indique que cette proportion est égale à celle des personnes utilisant la voiture. Une valeur plus grande que 1 indique une dominance du mode TC plutôt que de l'automobile. Sans surprise, pour la majorité des secteurs de recensement, la valeur est inférieure à 1. Le log du ratio suit une distribution moins asymétrique qui sera probablement plus facile à modéliser.
 
 ```{r}
 #| echo: true 
@@ -459,10 +459,10 @@ tm_shape(data_mtl) +
 tm_layout(frame=FALSE, legend.outside = TRUE) + 
 tm_scale_bar(breaks = c(0,10)) + 
 tm_xlab(paste0('I de Moran = ', moran_text,
-               " (matrice de contiguïté selon le partage d'un nœud)."))
+               " (matrice de contiguïté selon le partage d’un nœud)."))
 ```
 
-Sans surprise, notre variable dépendante est fortement spatialement autocorrélée. Plus on s'éloigne du centre-ville, plus le transport collectif est délaissé au profit de la voiture. Les secteurs dans lesquels la part modale du TC est supérieure à celle de l'automobile sont situés au centre de l'île de Montréal, à proximité des lignes de métro.
+Sans surprise, notre variable dépendante est fortement spatialement autocorrélée. Plus un secteur est éloigné du centre-ville, plus le transport collectif est délaissé au profit de la voiture. Les secteurs dans lesquels la part modale du TC est supérieure à celle de l'automobile sont situés au centre de l'île de Montréal, à proximité des lignes de métro.
 
 
 ### Modèles GAM sans intégration de l'espace {#sec-0751}
@@ -482,7 +482,7 @@ Pour modéliser cette variable, nous utilisons deux ensembles de variables indé
 -   Niveau d'accessibilité aux emplois en heure de pointe en transport collectif (`acs_idx_emp_tc_peak`).
 -   Niveau d'accessibilité aux emplois à pied : (`acs_idx_emp_pieton`).
 
-Les indicateurs d'accessibilité sont exprimés comme un score variant de 0 (pire accessibilité au Canada) à 1 (meilleure accessibilité au Canada). Ils servent à capturer dans quelle mesure le transport collectif ou la marche permet d'atteindre des emplois (lieux d'activités et de consommation). Dans ce modèle relativement simple, nous nous attendons à ce que des secteurs avec des populations plus vulnérables (variables sociodémographiques) présentent une part modale du transport collectif plus élevée que celle de l'automobile (dépendance au TC). Nous souhaitons cependant vérifier si cette relation tient toujours une fois que l'on tient compte de la performance du transport collectif et de la possibilité d'atteindre des activités à pied.
+Les indicateurs d'accessibilité sont exprimés comme un score variant de 0 (pire accessibilité au Canada) à 1 (meilleure accessibilité au Canada). Ils servent à capturer la mesure dans laquelle le transport collectif ou la marche permet d'atteindre des emplois (lieux d'activités et de consommation). Dans ce modèle relativement simple, nous nous attendons à ce que des secteurs avec des populations plus vulnérables (variables sociodémographiques) présentent une part modale du transport collectif plus élevée que celle de l'automobile (dépendance au TC). Nous souhaitons cependant vérifier si cette relation tient toujours une fois que nous prenons en considération la performance du transport collectif et la possibilité d'atteindre des activités à pied.
 
 ```{r}
 #| echo: true 
@@ -492,7 +492,7 @@ Les indicateurs d'accessibilité sont exprimés comme un score variant de 0 (pir
 library(mgcv)
 library(car)
 
-# Vérification de la multicolinéarité avant d'ajuster un premier modèle
+# Vérification de la multicolinéarité avant d’ajuster un premier modèle
 vif(lm(alr_val ~ prt_minorite_vis + prt_monoparental + 
          prt_chomage + revenu_median + prt_personnes_faibles_revenu + 
          acs_idx_emp_tc_peak + acs_idx_emp_pieton, 
@@ -503,7 +503,7 @@ vif(lm(alr_val ~ prt_minorite_vis + prt_monoparental +
 
 Les valeurs du facteur d'inflation de la variance (VIF) sont relativement faibles, excepté celle du pourcentage de personne à faible revenu qui dépasse 5. Par conséquent, nous décidons de la retirer du modèle.
 
-Nous commençons par ajuster un simple GLM (non spatial), assumant une distribution normale de la variable dépendante, une fois que sont contrôlées les variables indépendantes (`family = gaussian`). Pour valider les résidus de ce modèle, nous utiliserons la méthode des résidus simulés.
+Nous commençons par ajuster un simple GLM (non spatial), assumant une distribution normale de la variable dépendante, une fois que sont contrôlées les variables indépendantes (`family = gaussian`). Pour valider les résidus de ce modèle, nous utilisons la méthode des résidus simulés.
 
 ::: bloc_aller_loin
 ::: bloc_aller_loin-header
@@ -514,7 +514,7 @@ Nous commençons par ajuster un simple GLM (non spatial), assumant une distribut
 :::
 
 ::: bloc_aller_loin-body
-Pour une description des résidus simulés, vous pourrez consulter [ce chapitre sur les GLM du livre](https://serieboldr.github.io/MethodesQuantitatives/09-GLMM.html) du livre *Méthodes quantitatives en sciences sociales : un grand bol d'R* [@RBoldAirMethodesQuanti].
+Pour une description des résidus simulés, vous pourrez consulter [ce chapitre sur les GLM](https://serieboldr.github.io/MethodesQuantitatives/09-GLMM.html) du livre *Méthodes quantitatives en sciences sociales : un grand bol d'R* [@RBoldAirMethodesQuanti].
 :::
 :::
 
@@ -524,7 +524,7 @@ Pour une description des résidus simulés, vous pourrez consulter [ce chapitre 
 #| eval: true
 #| warning: false
 #| label: fig-gamresidA
-#| fig-cap: Résidus du simple GLM avec une distribution noramle
+#| fig-cap: Résidus du GLM avec une distribution gaussienne
 #| fig-align: center
 #| out-width: 85%
 library(DHARMa)
@@ -602,14 +602,14 @@ tm_shape(data_mtl) +
 tm_layout(frame=FALSE, legend.outside = TRUE) + 
 tm_scale_bar(breaks = c(0,10))+
 tm_xlab(paste0('I de Moran = ', moran_text,
-               " (matrice de contiguïté selon le partage d'un nœud)."))
+               " (matrice de contiguïté selon le partage d’un nœud)."))
 ```
 
 En effet, la @fig-gamresid1 démontre clairement que la distribution des résidus du modèle GLM (avec une distribution de Student) n'est pas aléatoire spatialement. Les valeurs négatives indiquent des secteurs dans lesquels le modèle tend à prédire un log ratio trop favorable au transport collectif et inversement dans les secteurs avec des valeurs positives.
 
 ### GAM avec spline spatiale bivariée sur les coordonnées géographiques {#sec-0752}
 
-Nous ajustons ici un modèle GAM intégrant une spline bivariée sur les coordonnées des centroïdes des secteurs de recensement. Le rôle de cette spline est de capturer une tendance spatiale à l'utilisation plus ou moins prononcé du transport collectif. Cet effet correspond à l'agrégat d'un ensemble de variables que nous n'avons pas pu mesurer comme par l'exemple la revendication écologique, la difficulté de stationner une voiture, la présence d'autres modes de déplacement durables connecté au transport en commun, la démographie, etc. Notons ici que nous utilisons une spline de type processus gaussien (`bs = 'gp', m = 3`) avec une structure de covariance Matérn qui est communément utilisée en géostatistique pour le krigeage.
+Nous ajustons ici un modèle GAM en y intégrant une spline bivariée sur les coordonnées des centroïdes des secteurs de recensement. Le rôle de cette spline est de capturer une tendance spatiale à l'utilisation plus ou moins prononcée du transport collectif. Cet effet correspond à l'agrégat d'un ensemble de variables que nous n'avons pas pu mesurer, par exemple la revendication écologique, la difficulté de stationner une voiture, la présence d'autres modes de déplacement durables connecté au transport en commun, la démographie, etc. Notons ici que nous utilisons une spline de type processus gaussien (`bs = 'gp', m = 3`) avec une structure de covariance Matérn qui est communément utilisée en géostatistique pour le krigeage.
 
 ```{r}
 #| echo: true 
@@ -666,12 +666,12 @@ tm_shape(data_mtl) +
 tm_layout(frame=FALSE, legend.outside = TRUE) + 
 tm_scale_bar(breaks = c(0,10))+
 tm_xlab(paste0('I de Moran = ', moran_text,
-               " (matrice de contiguïté selon le partage d'un nœud)."))
+               " (matrice de contiguïté selon le partage d’un nœud)."))
 ```
 
-La valeur du I de Moran (I = `r format(round(as.numeric(test$statistic),3), decimal.mark =",")`), calculé à partir de la matrice de contiguïté selon le partage d'un nœud (*Queen*), indique toujours une autocorrélation spatiale non négligeable des résidus (@fig-gamxycarto).
+La valeur du I de Moran (I = `r format(round(as.numeric(test$statistic),3), decimal.mark =",")`), calculée à partir de la matrice de contiguïté selon le partage d'un nœud (*Queen*), indique toujours une autocorrélation spatiale non négligeable des résidus (@fig-gamxycarto).
 
-Toutefois, le modèle GAM n'a pas basé sur les relations de voisinage entre les observations (contiguïté), mais sur la localisation de leurs centroïdes (proximité) pour estimer le terme spatial. Dans ce contexte, il serait plus judicieux d'évaluer l'autocorrélation des résidus du modèle en utilisant une matrice de pondération spatiale basée sur l'inverse des distances.
+Toutefois, le modèle GAM n'est pas basé sur les relations de voisinage entre les observations (contiguïté), mais sur la localisation de leurs centroïdes (proximité) pour estimer le terme spatial. Dans ce contexte, il serait plus judicieux d'évaluer l'autocorrélation des résidus du modèle en utilisant une matrice de pondération spatiale basée sur l'inverse des distances.
 
 ```{r}
 #| echo: true 
@@ -684,7 +684,7 @@ dist_w <- mat2listw(dists)
 moran.mc(data_mtl$sim_residual, listw = dist_w, nsim = 999)
 ```
 
-Nous constatons alors que le modèle est parvenu à retirer l'autocorrélation spatiale des résidus (I de Moran de 0,026), si elle est évalué avec la façon dont l'espace est prise en compte dans le modèle. Interprétons maintenant les résultats du modèle avec la fonction `summary`.
+Nous constatons alors que le modèle est parvenu à retirer l'autocorrélation spatiale des résidus (I de Moran de 0,026), si elle est évalué avec la façon dont l'espace est pris en compte dans le modèle. Interprétons maintenant les résultats du modèle avec la fonction `summary`.
 
 ```{r}
 #| echo: true 
@@ -728,17 +728,17 @@ kbl(tab_coeff,
 
 Voici une interprétation des effets obtenus (@tbl-GamSpatialSpline) :
 
--   Comparativement à un SR avec 0 % de personnes issues des minorités visible, un SR avec 25 % de ce groupe de la population verrait augmenter la moyenne du log du ratio de $0,876 \times 0,25 = 0,219$, ce qui correspond à une multiplication par `r format(round(exp(tab_coeff$coeff[[2]] * 0.25),3), decimal.mark =",")` du ratio, ou encore, une augmentation de 24,5 % du ratio. Il semblerait donc que toutes choses étant égales par ailleurs, la concentration des minorités visibles soit associée avec une plus grande proportion d'utilisation du TC et inversement, à une plus faible utilisation de la voiture.
+-   Comparativement à un SR avec 0 % de personnes issues des minorités visibles, un SR avec 25 % de ce groupe de la population verrait augmenter la moyenne du log du ratio de $0,876 \times 0,25 = 0,219$, ce qui correspond à une multiplication par `r format(round(exp(tab_coeff$coeff[[2]] * 0.25),3), decimal.mark =",")` du ratio, ou encore à une augmentation de 24,5 % du ratio. Il semblerait donc que toutes choses étant égales par ailleurs, la concentration des minorités visibles soit associée à une plus grande proportion d'utilisation du TC et inversement, à une plus faible utilisation de la voiture.
 
--   Comparativement à un SR avec 0 % de ménages monoparentaux, un SR avec 25 % de ce groupe de la population verrait augmenter la moyenne du log du ratio de $1,398 \times 0,25 = 0,3495$, ce qui correspond à une multiplication par 1,418 du ratio, ou encore, une augmentation de 41,8 % du ratio. Il semblerait donc que toutes choses étant égales par ailleurs, la concentration des ménages monoparentaux soit associée avec une plus grande proportion d'utilisation du TC et inversement, à une plus faible utilisation de la voiture.
+-   Comparativement à un SR avec 0 % de ménages monoparentaux, un SR avec 25 % de ce groupe de la population verrait augmenter la moyenne du log du ratio de $1,398 \times 0,25 = 0,3495$, ce qui correspond à une multiplication par 1,418 du ratio, ou encore à une augmentation de 41,8 % du ratio. Il semblerait donc que toutes choses étant égales par ailleurs, la concentration des ménages monoparentaux soit associée à une plus grande proportion d'utilisation du TC et inversement, à une plus faible utilisation de la voiture.
 
--   Lorsque le revenu médian dans un SR augmente de 1000 dollars, on observe une réduction de la moyenne du log du ratio de `r format(round(tab_coeff$coeff[[4]], 3), decimal.mark =",")`, soit une multiplication du ratio par `r format(round(exp(tab_coeff$coeff[[4]]), 3), decimal.mark =",")`. En d'autres termes, le ratio diminue de `r paste0(format((1 - round(exp(tab_coeff$coeff[[4]]), 3)) * 100, decimal.mark =","),' %')` à chaque millier de dollars supplémentaire. Il semblerait donc que dans les SR les plus nantis, l'utilisation du TC soit plus délaissée au profit de la voiture.
+-   Lorsque le revenu médian dans un SR augmente de 1000 dollars, nous observons une réduction de la moyenne du log du ratio de `r format(round(tab_coeff$coeff[[4]], 3), decimal.mark =",")`, soit une multiplication du ratio par `r format(round(exp(tab_coeff$coeff[[4]]), 3), decimal.mark =",")`. En d'autres termes, le ratio diminue de `r paste0(format((1 - round(exp(tab_coeff$coeff[[4]]), 3)) * 100, decimal.mark =","),' %')` à chaque millier de dollars supplémentaire. Il semblerait donc que dans les SR les plus nantis, l'utilisation du TC soit plus délaissée au profit de la voiture.
 
--   Lorsque que l'accessibilité aux emplois en transport collectif est plus élevée, la moyenne du log du ratio augmente. Dans un SR avec le pire niveau d'accessibilité possible, augmenter l'accessibilité au niveau du premier quartile (au moins mieux que 25% des SR) serait associé avec une augmentation de la moyenne du log du ratio de $3,936 \times 0,25 = 0.984$, ce qui correspond à une multiplication par `r format(round(exp(tab_coeff$coeff[[5]] * 0.25),3), decimal.mark =",")` du ratio.
+-   Lorsque l'accessibilité aux emplois en transport collectif est plus élevée, la moyenne du log du ratio augmente. Dans un SR avec le pire niveau d'accessibilité possible, augmenter l'accessibilité au niveau du premier quartile (au moins mieux que 25% des SR) serait associé à une augmentation de la moyenne du log du ratio de $3,936 \times 0,25 = 0,984$, ce qui correspond à une multiplication par `r format(round(exp(tab_coeff$coeff[[5]] * 0.25),3), decimal.mark =",")` du ratio.
 
--   Cependant, lorsque l'accessibilité à pied augmente, nous pouvons observer une réduction de la moyene du log du ratio. Dans un SR avec le pire niveau d'accessibilité possible, augmenter l'accessibilité au niveau du premier quartile (au moins mieux que 25% des SR) serait associé avec une augmentation de la moyenne du log du ratio de $-1,549 \times 0.25 = -0,387$, ce qui correspond à une multiplication par `r format(round(exp(tab_coeff$coeff[[6]] * 0.25),3), decimal.mark =",")` du ratio, ou encore une réduction de `r paste0(format(100*(1 - round(exp(tab_coeff$coeff[[6]] * 0.25),3)), decimal.mark =","),'%')`. Ce résultat s'explique vraisemblablement par l'utilisation des modes de transport actifs plutôt qu'une utilisation accrue de la voiture.
+-   Cependant, lorsque l'accessibilité à pied augmente, nous observons une réduction de la moyenne du log du ratio. Dans un SR avec le pire niveau d'accessibilité possible, augmenter l'accessibilité au niveau du premier quartile (au moins mieux que 25 % des SR) serait associé à une augmentation de la moyenne du log du ratio de $-1,549 \times 0,25 = -0,387$, ce qui correspond à une multiplication par `r format(round(exp(tab_coeff$coeff[[6]] * 0.25),3), decimal.mark =",")` du ratio, ou encore à une réduction de `r paste0(format(100*(1 - round(exp(tab_coeff$coeff[[6]] * 0.25),3)), decimal.mark =","),' %')`. Ce résultat s'explique vraisemblablement par l'utilisation des modes de transport actifs plutôt que par une utilisation accrue de la voiture.
 
-Dans le résumé du modèle, nous pouvons observer que la spline utilisée pour capturer l'effet spatial à un impact significativement différent de 0 et comporte environ `r round(results$edf)` degrés de libertés. Afin d'observer l'effet de cette spline, nous utilisons l'approche des effets marginaux. Cette approche consiste à effectuer une prédiction avec le modèle de la valeur attendue de la variable dépendante en conservant identiques toutes les variables indépendantes, sauf la localisation dans l'espace. En d'autres termes, nous essayons de voir comment le modèle s'ajuste quand on lui demande de prédire la valeur *Y* pour une observation spécifique, mais que celle-ci est déplacée dans l'espace. Ainsi, la variation de la prédiction est affectée uniquement par l'espace.
+Dans le résumé du modèle, nous pouvons observer que la spline utilisée pour capturer l'effet spatial à un impact significativement différent de 0 et comporte environ `r round(results$edf)` degrés de liberté. Afin d'observer l'effet de cette spline, nous utilisons l'approche des effets marginaux. Cette approche consiste à effectuer une prédiction avec le modèle de la valeur attendue de la variable dépendante en conservant identiques toutes les variables indépendantes, sauf la localisation dans l'espace. En d'autres termes, nous essayons de voir comment le modèle s'ajuste lorsque'il doit prédire la valeur *Y* pour une observation spécifique, mais que celle-ci est déplacée dans l'espace. Ainsi, la variation de la prédiction est affectée uniquement par l'espace.
 
 Pour obtenir l'effet uniquement spatial, nous pouvons mettre arbitrairement toutes les valeurs à 0 des différentes variables indépendantes du modèle. Ainsi, même multipliées par leurs coefficients, leur contribution dans la prédiction restera 0. Il suffit ensuite de retirer la constante pour ne bien conserver que l'effet de la spline.
 
@@ -753,7 +753,7 @@ Pour obtenir l'effet uniquement spatial, nous pouvons mettre arbitrairement tout
 
 #' Nous commençons par construire un dataframe de prédictions. Toutes les 
 #' variables indépendantes sont fixées à 0 et nous allons 
-#' prédire les valeurs tous les 500m
+#' prédire les valeurs tous les 500 m
 
 bbox <- st_bbox(data_mtl)
 df_pred <- expand.grid(
@@ -769,14 +769,14 @@ df_pred <- expand.grid(
 # Nous effectuons ensuite la prédiction sur le prédicteur linéaire
 df_pred$pred_log <- predict.gam(gam1, newdata = df_pred, type = 'link')
 
-# Nous retirons ensuite la constante pour ne garder que l'effet spatial
+# Nous retirons ensuite la constante pour ne garder que l’effet spatial
 df_pred$pred_log_cent <- df_pred$pred_log  - gam1$coefficients[[1]]
 
-# Nous pouvons ensuite utiliser la fonction exp pour faciliter l'interprétation 
+# Nous pouvons ensuite utiliser la fonction exp pour faciliter l’interprétation 
 # puisque le ratio sera plus facile à lire que le log ratio
 df_pred$pred_exp <- exp(df_pred$pred_log_cent)
 
-# Il ne reste ensuite qu'à cartographier notre effet spatial
+# Il ne reste ensuite qu’à cartographier notre effet spatial
 sf_pred <- df_pred %>% 
   st_as_sf(coords = c('X', 'Y'), crs = st_crs(data_mtl)) %>% 
   subset(lengths(st_intersects(.,data_mtl)) > 0)
@@ -800,13 +800,13 @@ map_spline <- tm_shape(sf_pred) +
 map_spline
 ```
 
-La @fig-gamspline1 permet de visualiser l'effet multiplicatif de la spline spatiale sur le ratio prédit par le modèle. Ainsi, toute chose étant égale par ailleurs, le ratio de part modale TC/auto est entre 30 % et 70 % plus fort dans les quartiers centraux de Montréal, allant de Lachine à Anjou. L'extrémité Ouest de Longueuil fait aussi partie de cette zone avec le bonus spatial le plus important. Aussi, on constate que l'effet spatial diminue avec la distance au Centre-Vile. Pour la majeure partie de Laval, le ratio est réduit de prêt de 50 %.
+La @fig-gamspline1 permet de visualiser l'effet multiplicatif de la spline spatiale sur le ratio prédit par le modèle. Ainsi, toute chose étant égale par ailleurs, le ratio de part modale TC/auto est de 30 % à 70 % plus fort dans les quartiers centraux de Montréal, allant de Lachine à Anjou. L'extrémité ouest de Longueuil fait aussi partie de cette zone avec le bonus spatial le plus important. Aussi, on constate que l'effet spatial diminue avec la distance au centre-ville. Pour la majeure partie de Laval, le ratio est réduit de près de 50 %.
 
-### GAM avec spline spatiale de type RMF {#sec-0753}
+### GAM avec spline spatiale de type MRF {#sec-0753}
 
-Puisque nos observations sont des polygones, utiliser leurs centroïdes pour représenter l'espace est une approximation maladroite. Nous allons donc opter pour un *markov random field* afin de modéliser les variations spatiales en fonction du voisinage.
+Puisque nos observations sont des polygones, utiliser leurs centroïdes pour représenter l'espace est une approximation maladroite. Nous allons donc opter pour un *Markov random field* afin de modéliser les variations spatiales en fonction du voisinage.
 
-L'enjeu avec ce type de modèle est de sélectionner son rang (*k*). Pour cela, nous testons plusieurs valeurs allant de 10 à 250 autorisant une complexité grandissante du terme spatial. Notons d'emblée que notre spline bivariée précédente avait nécessité seulement 25 degrés de liberté supplémentaires. La sélection de *k* (le nombre de degré de liberté accordé au MRF) reposera sur deux critères : l'autocorrélation spatiale encore présente dans les résidus (*I* de Moran calculé sur les résidus de Pearson) et l'AIC (pénalisant la complexité des modèles).
+L'enjeu avec ce type de modèle est de sélectionner son rang (*k*). Pour cela, nous testons plusieurs valeurs allant de 10 à 250 autorisant une complexité grandissante du terme spatial. Notons d'emblée que notre spline bivariée précédente avait nécessité seulement 25 degrés de liberté supplémentaires. La sélection de *k* (le nombre de degrés de liberté accordé au MRF) reposera sur deux critères : l'autocorrélation spatiale encore présente dans les résidus (*I* de Moran calculé sur les résidus de Pearson) et l'AIC (pénalisant la complexité des modèles).
 
 Pour accélérer le calcul, nous réalisation cette opération en traitement parallèle (*multiprocessing*). Quatre cœurs indépendants s'occuperont d'ajuster les différents modèles.
 
@@ -937,7 +937,7 @@ plot2 <- ggplot(df_plot) +
 ggarrange(plot1, plot2)
 ```
 
-La @fig-gammrf1 permet de constater que le AIC et le *I* de Moran diminuent à mesure que *k* augmente. Pour le *I* de Moran, nous constatons qu'au delà de k = 100, nous passons à des valeurs inférieures à 0,05. Aussi le AIC semble se stabiliser lorsque k = 150. Nous pourrions donc ajuster un modèle avec k = 150 pour avoir un bon compromis entre AIC et réduction du *I* de Moran des résidus.
+La @fig-gammrf1 permet de constater que l'AIC et le *I* de Moran diminuent à mesure que *k* augmente. Pour le *I* de Moran, nous constatons qu'au-delà de k = 100, nous passons à des valeurs inférieures à 0,05. Aussi l'AIC semble se stabiliser lorsque k = 150. Nous pourrions donc ajuster un modèle avec k = 150 pour avoir un bon compromis entre AIC et réduction du *I* de Moran des résidus.
 
 ```{r}
 #| echo: true 
@@ -961,8 +961,8 @@ summary(gam2)
 #| message: false 
 #| warning: false
 #| eval: true
-#| label: tbl-GamSpatialRMK
-#| tbl-cap: Résultats du modèle GLM avec spatiale de type RMK
+#| label: tbl-GamSpatialMRF
+#| tbl-cap: Résultats du modèle GLM avec spatiale de type MRF
 library(knitr)
 library(kableExtra)
 results <- summary(gam2)
@@ -987,7 +987,7 @@ kbl(tab_coeff,
 ```
 
 
-Il apparaît que les résidus simulés de ce modèle suivent une distribution assez proche d'une distribution uniforme. Nous constatons aussi que toutes les variables indépendantes sont encore significatives et impactent notre variable dépendante dans la même direction (@tbl-GamSpatialRMK).
+Il apparaît que les résidus simulés de ce modèle suivent une distribution assez proche d'une distribution uniforme. Nous constatons aussi que toutes les variables indépendantes sont encore significatives et affectent notre variable dépendante dans la même direction (@tbl-GamSpatialMRF).
 
 ```{r}
 #| echo: true 
@@ -997,7 +997,7 @@ Il apparaît que les résidus simulés de ce modèle suivent une distribution as
 moran.mc(residuals(res), listw = queen_w, nsim = 999, zero.policy = TRUE)
 ```
 
-Nous avons bien résolu le problème de l'autocorrélation spatiale de résidus. Nous pouvons donc à présent visualiser l'effet spatial de notre *Markov Random Field*. Pour cela, nous allons une fois encore appliquer la méthode des effets marginaux.
+Nous avons bien résolu le problème de l'autocorrélation spatiale de résidus. Nous pouvons donc à présent visualiser l'effet spatial de notre *Markov random field*. Pour cela, nous allons une fois encore appliquer la méthode des effets marginaux.
 
 ```{r}
 #| echo: true 
@@ -1007,20 +1007,20 @@ Nous avons bien résolu le problème de l'autocorrélation spatiale de résidus.
 #| label: fig-gammrf3
 #| fig-cap: Comparaison de la spline bivariée et du MRF
 #| fig-align: center
-# on extrait toutes les observations de notre jeu de données
+# On extrait toutes les observations du jeu de données
 pred_df <- data_mtl[c('prt_minorite_vis', 'prt_monoparental', 'revenu_median',
                       'acs_idx_emp_tc_peak', 'acs_idx_emp_pieton', 'ID_LOC')]
 
-# on met toutes les valeurs à 0 sauf l'identifiant des SR
+# On met toutes les valeurs à 0 sauf l’identifiant des SR
 pred_df[c(1:5)] <- 0
 
 # On effectue la prédiction
 pred_df$log_ratio <- predict.gam(gam2, newdata = pred_df, type = 'link')
 
-# On retire l'effet de la constante
+# On retire l’effet de la constante
 pred_df$log_ratio <- pred_df$log_ratio - gam2$coefficients[[1]]
 
-# On bascule en exponentiel pour avoir l'effet sur le ratio
+# On bascule en exponentiel pour avoir l’effet sur le ratio
 pred_df$effet_sp <- exp(pred_df$log_ratio)
 results_mrf <- summary(gam2)
 
@@ -1038,7 +1038,7 @@ map_mrf <- tm_shape(pred_df) +
 tmap_arrange(map_spline, map_mrf, nrow = 2)
 ```
 
-Ce terme spatial ressemble beaucoup à celui que nous avions obtenu avec la spline bivariée construite avec les coordonnées des centroïdes. Cependant, nous lui avons accordé un plus grand nombre de degrés de liberté et il s'ajuste mieux à la géographie de nos secteurs de recensement (polygones). Il aurait été possible de donner plus de flexibilité à la spline bivariée en utilisant également le paramètre `k`, elle serait cependant restée moins adaptée que le MRF. Par contre, l'avantage intéressant de l'approche par spline bivariée est qu'elle permet de prédire des valeurs à de nouvelles localisations, ce que ne permet par le MRF.
+Ce terme spatial ressemble beaucoup à celui que nous avions obtenu avec la spline bivariée construite avec les coordonnées des centroïdes. Cependant, nous lui avons accordé un plus grand nombre de degrés de liberté et il s'ajuste mieux à la géographie de nos secteurs de recensement (polygones). Il aurait été possible de donner plus de flexibilité à la spline bivariée en utilisant également le paramètre `k`, elle serait cependant restée moins adaptée que le MRF. Par contre, l'avantage intéressant de l'approche par spline bivariée est qu'elle permet de prédire des valeurs à de nouvelles localisations, ce que ne permet pas le MRF.
 
 ## Quiz de révision {#sec-076}
 
@@ -1075,7 +1075,7 @@ library(mgcv)
 library(car)
 library(DHARMa)
 library(mgcViz)
-# Chargement du jeu de données sur l'agglomération Lyonnaise
+# Chargement du jeu de données sur l’agglomération lyonnaise
 load("data/Lyon.Rdata")
 
 # Vérification de la multicolinéarité (VIF)
@@ -1099,12 +1099,12 @@ AIC(Modele.GAM1, Modele.GAM2)
 # Résultats du modèle gaussien
 summary(à compléter)
 
-# Matrice de contiguïté selon le partage d'un nœud 
+# Matrice de contiguïté selon le partage d’un nœud 
 queen_nb <- à compléter
 queen_w <- à compléter
 
 # I de Moran sur les résidus gaussiens
-moran.mc(residuals(à compléter)
+moran.mc(residuals(à compléter))
 
 # I de Moran sur les résidus simulés
 moran.mc(à compléter)
@@ -1130,7 +1130,7 @@ Correction à la [section @sec-10071].
 #| message: false 
 #| warning: false 
 #| eval: false
-# Chargement du jeu de données sur l'agglomération Lyonnaise
+# Chargement du jeu de données sur l’agglomération lyonnaise
 load("data/Lyon.Rdata")
 # Ajout des coordonnées x et y dans la couche sf LyonIris
 à compléter

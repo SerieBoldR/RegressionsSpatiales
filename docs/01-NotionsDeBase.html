@@ -266,7 +266,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./07-GAM.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modèles généralisées additifs</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modèles généralisés additifs</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -1611,10 +1611,10 @@ W 506 256036 506 204.0416 2099.405</code></pre>
 <div class="bloc_astuce-icon">
 
 </div>
-<p><strong>Intégration d’autres types de distances</strong></p>
+<p><strong>Intégration d’autres types de distance</strong></p>
 </div>
 <div class="bloc_astuce-body">
-<p>À la <a href="#sec-0122" class="quarto-xref">section&nbsp;<span>1.2.2</span></a>, nous avons vu que plusieurs types de distances peuvent être utilisés&nbsp;: cartésiennes (euclidienne et de Manhattan) et réticulaires (chemin le plus rapide à pied, à vélo, en automobile et en transport en commun).</p>
+<p>À la <a href="#sec-0122" class="quarto-xref">section&nbsp;<span>1.2.2</span></a>, nous avons vu que plusieurs types de distance peuvent être utilisés&nbsp;: cartésiennes (euclidienne et de Manhattan) et réticulaires (chemin le plus rapide à pied, à vélo, en automobile et en transport en commun).</p>
 <p>Pour construire une matrice avec la distance de Manhattan, vous devez changer la valeur du paramètre <code>method</code> de la fonction <code>dist</code> comme suit&nbsp;: <code>as.matrix(dist(coords, method = "manhattan"))</code>.</p>
 <p>Pour intégrer une distance réticulaire, vous devez la calculer, soit <a href="https://serieboldr.github.io/MethodesAnalyseSpatiale/01-ManipulationDonneesSpatiales.html">dans R</a> <span class="citation" data-cites="RBoldAirMethodesAnalysesSpatiales">(<a href="references.html#ref-RBoldAirMethodesAnalysesSpatiales" role="doc-biblioref">Apparicio et Gelb 2024</a>)</span>, soit dans un logiciel de système d’information géographique (QGIS ou ArcGIS&nbsp;Pro avec l’extension <em>Network Analyst</em> par exemple) et l’importer dans R. Le reste du code sera alors identique.</p>
 </div>
