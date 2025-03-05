@@ -233,14 +233,14 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03-CAR_SpatialProbit.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Autres modèles d’économétrie spatiale</span></span></a>
+  <a href="./03-SpatialProbit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles probit spatiaux pour une variable dépendante dichtonomique (en cours de rédaction)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./04-ModelesSpatiauxPanel.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel (en cours de rédaction)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale en panel (en cours de rédaction)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -1931,7 +1931,7 @@ Figure&nbsp;1.11: Exemple de variable spatialement décalée
 </section>
 <section id="sec-014" class="level2" data-number="1.4">
 <h2 data-number="1.4" class="anchored" data-anchor-id="sec-014"><span class="header-section-number">1.4</span> Autocorrélation spatiale</h2>
-<p>L’autocorrélation spatiale permet d’estimer la corrélation d’une variable par rapport à sa localisation dans l’espace. Autrement dit, elle permet de vérifier si les entités proches ou voisines ont tendance à être (dis)semblables en fonction d’un phénomène donné (soit une variable). On distingue trois formes d’autocorrélation spatiale&nbsp;:</p>
+<p>L’autocorrélation spatiale permet d’estimer la corrélation d’une variable par rapport à sa localisation dans l’espace. Autrement dit, elle permet de vérifier si les entités proches ou voisines ont tendance à être (dis)semblables en fonction d’un phénomène donné (soit une variable). Nous distinguons trois formes d’autocorrélation spatiale&nbsp;:</p>
 <ul>
 <li><p><strong>(a) Autocorrélation spatiale positive</strong>&nbsp;: lorsque les entités spatiales voisines ou proches se ressemblent davantage que celles non contiguës ou éloignées. Cela renvoie ainsi à la première loi de la géographie&nbsp;: «&nbsp;tout interagit avec tout, mais les objets proches ont plus de chance de le faire que les objets éloignés&nbsp;» (traduction libre) <span class="citation" data-cites="tobler1970computer">(<a href="references.html#ref-tobler1970computer" role="doc-biblioref">Tobler 1970</a>)</span>.</p></li>
 <li><p><strong>(b) Autocorrélation spatiale négative</strong>&nbsp;: lorsque les entités spatiales voisines ou proches ont tendance à être dissemblables, comparativement à celles non contiguës ou éloignées.</p></li>
@@ -1945,7 +1945,7 @@ Figure&nbsp;1.11: Exemple de variable spatialement décalée
 <p><strong>Différentes mesures d’autocorrélation spatiale</strong></p>
 </div>
 <div class="bloc_objectif-body">
-<p>On distingue habituellement les statistiques d’autocorrélation spatiale globales et locales&nbsp;:</p>
+<p>Nous distinguons habituellement les statistiques d’autocorrélation spatiale globales et locales&nbsp;:</p>
 <ul>
 <li><p>Les statistiques d’autocorrélation spatiale globales renvoient une valeur pour l’ensemble de l’espace d’étude. Succinctement, elles permettent de vérifier si les entités proches ou voisines d’une couche géographique ont tendance à être (dis)semblables en fonction d’un phénomène donné (soit une variable).</p></li>
 <li><p>Les mesures d’autocorrélation spatiale locales renvoient des valeurs pour chacune des entités spatiales. Succinctement, il s’agit de vérifier si chaque entité spatiale est significativement (dis)semblable de celles voisines ou proches.</p></li>
@@ -2697,7 +2697,7 @@ Figure&nbsp;1.14: Cartographie des résidus d’un modèle MCO
 <p><strong>Dépendance spatiale et méthodes de régression spatiale&nbsp;: quelles solutions?</strong></p>
 </div>
 <div class="bloc_aller_loin-body">
-<p><strong>Les modèles d’économétrie spatiale</strong> (<a href="02-ModelesEconometrieSpatiale.html" class="quarto-xref">chapitre&nbsp;<span>2</span></a> et <a href="03-CAR_SpatialProbit.html" class="quarto-xref">chapitre&nbsp;<span>3</span></a>) sont des solutions particulièrement intéressantes pour remédier au problème de dépendance spatiale d’un modèle et obtenir des coefficients de régression non biaisés.</p>
+<p><strong>Les modèles d’économétrie spatiale</strong> (<a href="02-ModelesEconometrieSpatiale.html" class="quarto-xref">chapitre&nbsp;<span>2</span></a> et <a href="03-SpatialProbit.html" class="quarto-xref">chapitre&nbsp;<span>3</span></a>) sont des solutions particulièrement intéressantes pour remédier au problème de dépendance spatiale d’un modèle et obtenir des coefficients de régression non biaisés.</p>
 <p><strong>Les modèles linéaires généralisés et ceux avec filtrage spatial</strong> (<a href="07-GAM.html" class="quarto-xref">chapitre&nbsp;<span>7</span></a>) permettent de capturer les tendances spatiales en résumant la matrice de pondération spatiale <span class="math inline">\(W\)</span>.</p>
 </div>
 </div>

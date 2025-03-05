@@ -16,16 +16,16 @@
      - "Une variable avec une autocorrélation spatiale positive"
   help: "Relisez au besoin la [section @sec-081]."
   
-- label: "L'approche classique de construction d'un modèle SEVM consiste à :"
+- label: "En quoi consiste l’approche classique de construction d’un modèle SEVM?"
   type: uc
   response: 1
   answers:
-     - "Appliquer un processus itératif de sélection des vecteurs propres à ajouter dans le modèle"
-     - "Sélectionner uniquement les vecteurs propres améliorant le R2 du modèle"
-     - "Sélectionner uniquement les vecteurs propres avec une autocorrélation spatiale positive"
+     - "Elle applique un processus itératif de sélection des vecteurs propres à ajouter dans le modèle."
+     - "Elle sélectionne uniquement les vecteurs propres améliorant le R2 du modèle."
+     - "Elle sélectionne uniquement les vecteurs propres avec une autocorrélation spatiale positive."
   help: "Relisez au besoin la [section @sec-0821]."
   
-- label: "L'approche LASSO et l'approche par effet aléatoire ont un point commun:"
+- label: "L'approche LASSO et l'approche par effet aléatoire ont un point commun. Lequel?"
   type: uc
   response: 2
   answers:
@@ -38,7 +38,7 @@
   type: uc
   response: 3
   answers:
-     - "En analysant les coefficients des vecteurs spatiaux intégrés au modèle"
-     - "En analyse le degré de pénalisation sélectionné par la méthode GAIC"
-     - "En cartographiant les effets spatiaux par la méthode des effets marginaux"
+     - "En analysant les coefficients des vecteurs spatiaux intégrés au modèle."
+     - "En analysant le degré de pénalisation sélectionné par la méthode GAIC."
+     - "En cartographiant les effets spatiaux par la méthode des effets marginaux."
   help: "Relisez au besoin la [section @sec-0834]."

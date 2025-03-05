@@ -1003,7 +1003,7 @@ tmap_arrange(carte1, carte2, ncol = 2, nrow = 1)
 
 ## Autocorrélation spatiale {#sec-014}
 
-L'autocorrélation spatiale permet d'estimer la corrélation d'une variable par rapport à sa localisation dans l'espace. Autrement dit, elle permet de vérifier si les entités proches ou voisines ont tendance à être (dis)semblables en fonction d'un phénomène donné (soit une variable). On distingue trois formes d'autocorrélation spatiale :
+L'autocorrélation spatiale permet d'estimer la corrélation d'une variable par rapport à sa localisation dans l'espace. Autrement dit, elle permet de vérifier si les entités proches ou voisines ont tendance à être (dis)semblables en fonction d'un phénomène donné (soit une variable). Nous distinguons trois formes d'autocorrélation spatiale :
 
 -   **(a) Autocorrélation spatiale positive** : lorsque les entités spatiales voisines ou proches se ressemblent davantage que celles non contiguës ou éloignées. Cela renvoie ainsi à la première loi de la géographie : « tout interagit avec tout, mais les objets proches ont plus de chance de le faire que les objets éloignés » (traduction libre) [@tobler1970computer].
 
@@ -1018,7 +1018,7 @@ L'autocorrélation spatiale permet d'estimer la corrélation d'une variable par 
 **Différentes mesures d'autocorrélation spatiale**
 :::
 ::: bloc_objectif-body
-On distingue habituellement les statistiques d'autocorrélation spatiale globales et locales :
+Nous distinguons habituellement les statistiques d'autocorrélation spatiale globales et locales :
 
 -   Les statistiques d'autocorrélation spatiale globales renvoient une valeur pour l'ensemble de l'espace d'étude. Succinctement, elles permettent de vérifier si les entités proches ou voisines d'une couche géographique ont tendance à être (dis)semblables en fonction d'un phénomène donné (soit une variable).
 

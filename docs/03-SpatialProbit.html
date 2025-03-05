@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3&nbsp; Autres modèles d’économétrie spatiale – Méthodes de régression spatiale : un grand bol d’R</title>
+<title>3&nbsp; Modèles probit spatiaux pour une variable dépendante dichtonomique (en cours de rédaction) – Méthodes de régression spatiale : un grand bol d’R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -83,7 +83,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-CAR_SpatialProbit.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Autres modèles d’économétrie spatiale</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-SpatialProbit.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles probit spatiaux pour une variable dépendante dichtonomique (en cours de rédaction)</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
@@ -146,14 +146,14 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03-CAR_SpatialProbit.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Autres modèles d’économétrie spatiale</span></span></a>
+  <a href="./03-SpatialProbit.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles probit spatiaux pour une variable dépendante dichtonomique (en cours de rédaction)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./04-ModelesSpatiauxPanel.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel (en cours de rédaction)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale en panel (en cours de rédaction)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -220,12 +220,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table des matières</h2>
    
   <ul>
-  <li><a href="#sec-031" id="toc-sec-031" class="nav-link active" data-scroll-target="#sec-031"><span class="header-section-number">3.1</span> Modèles d’autorégression conditionnelle (en cours de rédaction)</a></li>
-  <li><a href="#sec-032" id="toc-sec-032" class="nav-link" data-scroll-target="#sec-032"><span class="header-section-number">3.2</span> Modèles probit spatial (en cours de rédaction)</a>
-  <ul class="collapse">
-  <li><a href="#sec-0321" id="toc-sec-0321" class="nav-link" data-scroll-target="#sec-0321"><span class="header-section-number">3.2.1</span> Bref retour sur le modèle probit</a></li>
-  <li><a href="#sec-0322" id="toc-sec-0322" class="nav-link" data-scroll-target="#sec-0322"><span class="header-section-number">3.2.2</span> Les différents modèles probit spatiaux</a></li>
-  </ul></li>
+  <li><a href="#sec-032" id="toc-sec-032" class="nav-link active" data-scroll-target="#sec-032"><span class="header-section-number">3.1</span> Bref retour sur le modèle probit</a></li>
+  <li><a href="#sec-032" id="toc-sec-032" class="nav-link" data-scroll-target="#sec-032"><span class="header-section-number">3.2</span> Les différents modèles probit spatiaux</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></nav>
     </div>
@@ -234,7 +230,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-chap03" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Autres modèles d’économétrie spatiale</span></span></h1>
+<h1 class="title"><span id="sec-chap03" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles probit spatiaux pour une variable dépendante dichtonomique (en cours de rédaction)</span></span></h1>
 </div>
 
 
@@ -251,7 +247,7 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Dans ce chapitre, nous décrivons deux autres types de modèles d’économétrie spatiale. Premièrement, nous abordons le modèle d’autorégression conditionnelle (<em><strong>c</strong>onditional <strong>a</strong>utoregressive <strong>m</strong>odel</em>, CAR) qui s’applique à une variable dépendante continue. Nous verrons notamment comment le modèle CAR se distingue du modèle SAR (<em><strong>s</strong>patial <strong>a</strong>uto<strong>r</strong>egressive</em>) décrit dans le chapitre précédent (<a href="02-ModelesEconometrieSpatiale.html#sec-02121" class="quarto-xref">section&nbsp;<span>2.1.2.1</span></a>). Deuxièmement, nous décrirons les modèles probit spatiaux, très utiles lorsque la variable dépendante est une variable qualitative binaire.</p>
+<p>Dans ce chapitre, nous décrirons les modèles probit spatiaux, très utiles lorsque la variable dépendante est une variable qualitative binaire.</p>
 <div class="bloc_objectif">
 <div class="bloc_objectif-header">
 <div class="bloc_objectif-icon">
@@ -262,7 +258,6 @@ ul.task-list li input[type="checkbox"] {
 <div class="bloc_objectif-body">
 <p>À la fin de ce chapitre, vous devriez être en mesure de&nbsp;:</p>
 <ul>
-<li>comprendre la différence entre un modèle CAR et un modèle SAR;</li>
 <li>comprendre les raisons motivant le choix d’un modèle d’économétrie spatiale avec une variable dépendante qualitative binaire;</li>
 <li>mettre en pratique et interprétrer les résultats de ces deux types modèles spatiaux dans R.</li>
 </ul>
@@ -290,25 +285,18 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li><code>spdep</code> pour construire des matrices de pondération spatiales et calculer le <em>I</em> de Moran.</li>
 <li><code>Matrix</code> pour construire des matrices de pondération spatiales peu denses.</li>
-<li><code>spatialreg</code> pour construire des modèles CAR.</li>
 <li><code>ProbitSpatial</code> pour construire des modèles économétriques spatiaux avec variable dépendante binaire.</li>
 </ul></li>
 </ul>
 </div>
 </div>
-<section id="sec-031" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="sec-031"><span class="header-section-number">3.1</span> Modèles d’autorégression conditionnelle (en cours de rédaction)</h2>
+<section id="sec-032" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="sec-032"><span class="header-section-number">3.1</span> Bref retour sur le modèle probit</h2>
 </section>
 <section id="sec-032" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="sec-032"><span class="header-section-number">3.2</span> Modèles probit spatial (en cours de rédaction)</h2>
-<section id="sec-0321" class="level3" data-number="3.2.1">
-<h3 data-number="3.2.1" class="anchored" data-anchor-id="sec-0321"><span class="header-section-number">3.2.1</span> Bref retour sur le modèle probit</h3>
-</section>
-<section id="sec-0322" class="level3" data-number="3.2.2">
-<h3 data-number="3.2.2" class="anchored" data-anchor-id="sec-0322"><span class="header-section-number">3.2.2</span> Les différents modèles probit spatiaux</h3>
+<h2 data-number="3.2" class="anchored" data-anchor-id="sec-032"><span class="header-section-number">3.2</span> Les différents modèles probit spatiaux</h2>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -739,8 +727,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./04-ModelesSpatiauxPanel.html" class="pagination-link" aria-label="Modèles d'économétrie spatiale par panel (en cours de rédaction)">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel (en cours de rédaction)</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./04-ModelesSpatiauxPanel.html" class="pagination-link" aria-label="Modèles d'économétrie spatiale en panel (en cours de rédaction)">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale en panel (en cours de rédaction)</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

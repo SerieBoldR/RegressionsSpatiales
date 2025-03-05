@@ -62,7 +62,7 @@ book:
   - 01-NotionsDeBase.qmd
   - part: Partie 2. Économétrie spatiale
   - 02-ModelesEconometrieSpatiale.qmd
-  - 03-CAR_SpatialProbit.qmd
+  - 03-SpatialProbit.qmd
   - 04-ModelesSpatiauxPanel.qmd
   - part: Partie 3. Régressions géographiquement pondérées
   - 05-GWRClassique.qmd

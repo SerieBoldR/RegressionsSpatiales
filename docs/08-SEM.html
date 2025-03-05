@@ -233,14 +233,14 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03-CAR_SpatialProbit.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Autres modèles d’économétrie spatiale</span></span></a>
+  <a href="./03-SpatialProbit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles probit spatiaux pour une variable dépendante dichtonomique (en cours de rédaction)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./04-ModelesSpatiauxPanel.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel (en cours de rédaction)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale en panel (en cours de rédaction)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -318,7 +318,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#sec-0831" id="toc-sec-0831" class="nav-link" data-scroll-target="#sec-0831"><span class="header-section-number">8.3.1</span> Modèle SEVM par sélection itérative</a></li>
   <li><a href="#sec-0832" id="toc-sec-0832" class="nav-link" data-scroll-target="#sec-0832"><span class="header-section-number">8.3.2</span> Modèle SEVM avec effet aléatoire</a></li>
-  <li><a href="#sec-0833" id="toc-sec-0833" class="nav-link" data-scroll-target="#sec-0833"><span class="header-section-number">8.3.3</span> Modèle SEVM avec pénalisation Lasso</a></li>
+  <li><a href="#sec-0833" id="toc-sec-0833" class="nav-link" data-scroll-target="#sec-0833"><span class="header-section-number">8.3.3</span> Modèle SEVM avec pénalisation lasso</a></li>
   <li><a href="#sec-0834" id="toc-sec-0834" class="nav-link" data-scroll-target="#sec-0834"><span class="header-section-number">8.3.4</span> Comparaison des trois modèles SEVM</a></li>
   </ul></li>
   <li><a href="#sec-084" id="toc-sec-084" class="nav-link" data-scroll-target="#sec-084"><span class="header-section-number">8.4</span> Quiz de révision</a></li>
@@ -347,7 +347,7 @@ window.Quarto = {
 </header>
 
 
-<p>Une autre technique utilisée pour ajouter l’espace dans un modèle a été proposée par Daniel Griffith <span class="citation" data-cites="griffith2019spatial">(<a href="references.html#ref-griffith2019spatial" role="doc-biblioref">2019</a>)</span> et est connue sous le nom du filtrage spatial (<em>spatial filtering</em>). Cette technique est très flexible, car elle s’applique à n’importe quel type de modèle GLM, GLMM et GAM. L’approche est relativement simple&nbsp;: elle consiste à ajouter dans le modèle un ensemble de variables supplémentaires dont le rôle est de capturer des tendances spatiales qui autrement seraient présentes dans les résidus. Ces variables supplémentaires sont appelées des vecteurs propres spatiaux (<em>spatial eigenvectors</em> en anglais, SEV) et sont obtenurs à partir de la matrice de pondération spatiale décrivant l’espace de nos données. Plus exactement, les SEV sont obtenus en décomposant la matrice spatiale de la même manière que nous décomposons la variance d’un jeu de données lorsque nous réalisons une analyse en composantes principales (ACP). Pour un rappel sur l’ACP, vous pouvez vous référer au <a href="https://serieboldr.github.io/MethodesQuantitatives/12-AnalysesFactorielles.html#sec-122">chapitre sur les analyses factorielles</a> <span class="citation" data-cites="RBoldAirMethodesQuanti">(<a href="references.html#ref-RBoldAirMethodesQuanti" role="doc-biblioref">Apparicio et Gelb 2022</a>)</span>. Ces vecteurs propres sont aussi appelés <em>Moran eigenvectors</em> (MEM).</p>
+<p>Daniel Griffith <span class="citation" data-cites="griffith2019spatial">(<a href="references.html#ref-griffith2019spatial" role="doc-biblioref">2019</a>)</span> a proposé une autre technique pour ajouter l’espace dans un modèle, connue sous le nom du filtrage spatial (<em>spatial filtering</em>). Cette technique est très flexible, car elle s’applique à n’importe quel type de modèles GLM, GLMM et GAM. L’approche est relativement simple&nbsp;: elle consiste à ajouter dans le modèle un ensemble de variables supplémentaires dont le rôle est de capturer des tendances spatiales qui autrement seraient présentes dans les résidus. Ces variables supplémentaires sont appelées des vecteurs propres spatiaux (<em>spatial eigenvectors</em>, SEV) et sont obtenues à partir de la matrice de pondération spatiale décrivant l’espace de nos données. Plus exactement, les SEV sont obtenus en décomposant la matrice spatiale de la même manière que nous décomposons la variance d’un jeu de données lorsque nous réalisons une analyse en composantes principales (ACP). Pour un rappel sur l’ACP, vous pouvez vous référer au <a href="https://serieboldr.github.io/MethodesQuantitatives/12-AnalysesFactorielles.html#sec-122">chapitre sur les analyses factorielles</a> <span class="citation" data-cites="RBoldAirMethodesQuanti">(<a href="references.html#ref-RBoldAirMethodesQuanti" role="doc-biblioref">Apparicio et Gelb 2022</a>)</span>. Ces vecteurs propres sont aussi appelés <em>Moran eigenvectors</em> (MEM).</p>
 <div class="bloc_objectif">
 <div class="bloc_objectif-header">
 <div class="bloc_objectif-icon">
@@ -375,7 +375,7 @@ window.Quarto = {
 <ul>
 <li>Pour calculer des vecteurs propres de Moran&nbsp;:
 <ul>
-<li><code>adespatial</code> dédié l’analyse spatiale multidimensionnelle.</li>
+<li><code>adespatial</code> dédié à l’analyse spatiale multidimensionnelle.</li>
 </ul></li>
 <li>Pour ajuster des modèles SEVM&nbsp;:
 <ul>
@@ -397,7 +397,7 @@ window.Quarto = {
 </div>
 <section id="sec-081" class="level2" data-number="8.1">
 <h2 data-number="8.1" class="anchored" data-anchor-id="sec-081"><span class="header-section-number">8.1</span> Les vecteurs propres de Moran</h2>
-<p>À partir d’une matrice spatiale <em>W</em> de taille <em>n x n</em>, il est possible de calculer <em>n-1</em> vecteurs propres de Moran qui représentent chacun un agencement spatial possible. Ces vecteurs propres sont obtenus en décomposant la variance de la matrice spatiale de façon analogue à une analyse en composante principale (ACP).</p>
+<p>À partir d’une matrice spatiale <em>W</em> de taille <em>n x n</em>, il est possible de calculer <em>n-1</em> vecteurs propres de Moran qui représentent chacun un agencement spatial possible. Ces vecteurs propres sont obtenus en décomposant la variance de la matrice spatiale de façon analogue à une analyse en composantes principales (ACP).</p>
 <div class="bloc_aller_loin">
 <div class="bloc_aller_loin-header">
 <div class="bloc_aller_loin-icon">
@@ -407,11 +407,11 @@ window.Quarto = {
 </div>
 <div class="bloc_aller_loin-body">
 <p>Pour un rappel sur l’ACP, nous vous invitons à lire la <a href="https://serieboldr.github.io/MethodesQuantitatives/12-AnalysesFactorielles.html#sec-122">section suivante</a> du livre <em>Méthodes quantitatives en sciences sociales&nbsp;: un grand bol d’R</em> <span class="citation" data-cites="RBoldAirMethodesQuanti">(<a href="references.html#ref-RBoldAirMethodesQuanti" role="doc-biblioref">Apparicio et Gelb 2022</a>)</span>.</p>
-<p>Brièvement, une ACP est une méthode de réduction des données qui permet de résumer la variance d’un jeu de données ayant <span class="math inline">\(k\)</span> colonnes avec un ensemble de <span class="math inline">\(l\)</span> vecteurs propres avec <span class="math inline">\(k &gt; l\)</span>. Les vecteurs propres sont des nouvelles variables obtenues avec une combinaison linéaire des colonnes originales <span class="math inline">\(k\)</span>. Le premier vecteur propre correspond à la tendance principale du jeu de données, formées par les plus importantes corrélations entre les variables originales. Ces vecteurs propres sont orthogonaux, ce qui signifie qu’ils ne sont pas corrélés entre eux.</p>
+<p>Brièvement, une ACP est une méthode de réduction des données qui permet de résumer la variance d’un jeu de données ayant <span class="math inline">\(k\)</span> colonnes avec un ensemble de <span class="math inline">\(l\)</span> vecteurs propres avec <span class="math inline">\(k &gt; l\)</span>. Les vecteurs propres sont des nouvelles variables obtenues avec une combinaison linéaire des colonnes originales <span class="math inline">\(k\)</span>. Le premier vecteur propre correspond à la tendance principale du jeu de données, formée par les plus importantes corrélations entre les variables originales. Ces vecteurs propres sont orthogonaux, ce qui signifie qu’ils ne sont pas corrélés entre eux.</p>
 </div>
 </div>
 <p>Appliquer l’ACP à une matrice spatiale revient à extraire des variables capables de résumer l’organisation spatiale présente dans la matrice de pondération spatiale <em>W</em>. Le premier vecteur propre issu de l’ACP appliquée à <em>W</em> représente alors l’agencement spatial avec la plus forte autocorrélation spatiale positive possible. À l’inverse, le dernier vecteur propre représente l’agencement spatial avec la plus forte autocorrélation spatiale négative possible. Comme pour l’ACP, ces vecteurs propres spatiaux sont non corrélés entre eux. Ils sont aussi appelés les vecteurs propres de Moran du fait du lien entre leur formulation et celle de la mesure d’autocorrélation spatiale du <em>I</em> de Moran.</p>
-<p>Prenons un exemple concret avec les données de secteurs de recensement de Montréal. La <a href="#fig-sevm1" class="quarto-xref">figure&nbsp;<span>8.1</span></a> permet de visualiser la valeur du <em>I</em> de Moran associée avec chacun des vecteurs propres obtenus sur la matrice de contiguïté (<span class="math inline">\(W\)</span>) selon la partage d’une nœud (<em>queen</em>). On constate ainsi que le premier vecteur propre à une valeur de <em>I</em> de Moran proche de 1 et que l’autocorrélation spatiale reste positive jusqu’au vecteur 375 environ. Au-delà de ce seuil, l’autocorrélation spatiale des vecteurs devient négative.</p>
+<p>Prenons un exemple concret avec les données de secteurs de recensement de Montréal. La <a href="#fig-sevm1" class="quarto-xref">figure&nbsp;<span>8.1</span></a> permet de visualiser la valeur du <em>I</em> de Moran associée à chacun des vecteurs propres obtenus sur la matrice de contiguïté (<span class="math inline">\(W\)</span>) selon le partage d’un nœud (<em>Queen</em>). Nous constatons ainsi que le premier vecteur propre a une valeur de <em>I</em> de Moran proche de 1 et que l’autocorrélation spatiale reste positive jusqu’au vecteur&nbsp;375 environ. Au-delà de ce seuil, l’autocorrélation spatiale des vecteurs devient négative.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-sevm1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -445,7 +445,7 @@ Figure&nbsp;8.2: Représentation de quatre vecteurs propres issue d’une matric
 </section>
 <section id="sec-082" class="level2" data-number="8.2">
 <h2 data-number="8.2" class="anchored" data-anchor-id="sec-082"><span class="header-section-number">8.2</span> Filtrage spatial</h2>
-<p>Dans un modèle utilisant l’approche du filtrage spatiale, l’idée est d’ajouter dans l’équation une sélection de vecteurs spatiaux permettant de réduire l’autocorrélation spatiale dans les résidus. Pour chaque vecteur spatial ajouté au modèle, un coefficient est ajusté. La somme des vecteurs spatiaux multipliés par leurs coefficients respectifs est donc un terme dans le modèle tentant de capturer des tendances spatiales plus ou moins complexes qui autrement auraient fait partie des résidus.</p>
+<p>Dans un modèle utilisant l’approche du filtrage spatial, l’idée est d’ajouter dans l’équation une sélection de vecteurs spatiaux permettant de réduire l’autocorrélation spatiale dans les résidus. Pour chaque vecteur spatial ajouté au modèle, un coefficient est ajusté. La somme des vecteurs spatiaux multipliés par leurs coefficients respectifs est donc un terme dans le modèle tentant de capturer des tendances spatiales plus ou moins complexes qui autrement auraient fait partie des résidus.</p>
 <p><span id="eq-sevm"><span class="math display">\[
 \begin{aligned}
 &amp;y \sim D(\mu,\theta)\\
@@ -472,7 +472,7 @@ Figure&nbsp;8.2: Représentation de quatre vecteurs propres issue d’une matric
 <p><strong>Filtrage spatial et GAM</strong></p>
 </div>
 <div class="bloc_notes-body">
-<p>Il existe une forte similarité dans la formulation d’un modèle GAM et d’un modèle utilisant du filtrage spatial. Pour rappel, un modèle GAM introduit l’espace avec une spline. Or, Une spline est une combinaison d’un ensemble de fonctions de base (obtenues sur les coordonnées spatiales ou la matrice de contiguïté) multipliées par des coefficients. Dans un modèle avec filtrage spatial, la logique est similaire, mais les fonctions de base sont cette fois-ci les vecteurs propres spatiaux.</p>
+<p>Il existe une forte similarité dans la formulation d’un modèle GAM et d’un modèle utilisant du filtrage spatial. Pour rappel, un modèle GAM introduit l’espace avec une spline. Or, une spline est une combinaison d’un ensemble de fonctions de base (obtenues sur les coordonnées spatiales ou la matrice de contiguïté) multipliées par des coefficients. Dans un modèle avec filtrage spatial, la logique est similaire, mais les fonctions de base sont cette fois-ci les vecteurs propres spatiaux.</p>
 </div>
 </div>
 <p>L’enjeu principal avec la méthode du filtrage spatial est de sélectionner adéquatement les vecteurs propres à intégrer dans le modèle. En effet, il n’est pas possible de tous les sélectionner, car nous aurions alors plus de coefficients à estimer que d’observations dans les données. Le choix des vecteurs propres doit valider les critères suivants&nbsp;:</p>
@@ -481,7 +481,7 @@ Figure&nbsp;8.2: Représentation de quatre vecteurs propres issue d’une matric
 <li><p>Améliorer l’ajustement du modèle (<strong>contribution à la prédiction</strong>).</p></li>
 <li><p>Ne pas complexifier indûment le modèle (<strong>principe de parcimonie</strong>).</p></li>
 </ol>
-<p>Il existe actuellement trois approches permettant de sélectionner les vecteurs propres spatiaux à intégrer dans un modèle. Ces trois approches partent de postulats différents et ont chacune leurs avantages et inconvénients que nous décrirons dans les trois prochaines sous-sections.</p>
+<p>Il existe actuellement trois approches permettant de sélectionner les vecteurs propres spatiaux à intégrer dans un modèle. Ces trois approches partent de postulats différents et ont chacune leurs avantages et inconvénients que nous décrivons dans les trois prochaines sous-sections.</p>
 <section id="sec-0821" class="level3" data-number="8.2.1">
 <h3 data-number="8.2.1" class="anchored" data-anchor-id="sec-0821"><span class="header-section-number">8.2.1</span> Sélection itérative</h3>
 <p>La première approche proposée <span class="citation" data-cites="griffith2003spatial">(<a href="references.html#ref-griffith2003spatial" role="doc-biblioref">Griffith 2003</a>)</span> consiste à appliquer une procédure itérative de sélection des vecteurs propres spatiaux, à la manière d’une régression pas à pas (<em>stepwise regression</em>). Elle ajoute un vecteur propre spatial au modèle s’il vérifie les trois critères suivants&nbsp;:</p>
@@ -491,8 +491,8 @@ Figure&nbsp;8.2: Représentation de quatre vecteurs propres issue d’une matric
 <li><p>Il existe une corrélation significative entre le vecteur propre et la variable dépendante.</p></li>
 </ol>
 <p>Puisque les vecteurs propres sont non corrélés, leur ordre d’ajout dans le modèle n’a pas d’importance. Il est donc conseillé d’ordonner les vecteurs propres en fonction de leur corrélation avec la variable dépendante pour effectuer leur sélection.</p>
-<p>Il est assez simple d’étendre cette approche à des GLM ou même des GLMM. Pour ces modèles, l’objectif ne sera pas de maximiser le R<sup>2</sup>, mais plutôt d’obtenir une réduction significative de la déviance (<em>likelihood ratio test</em>). Notons que pour ce type de modèle, il est important de vérifier l’autocorrélation spatiale des résidus standardisés ou simulés, car de nombreux GLM assument une hétéroscédasticité des résidus. Pour un rappel sur le <em>likelihood ratio test</em>, vous pouvez vous référer à [cette section] (https://serieboldr.github.io/MethodesQuantitatives/08-GLM.html#sec-0816) du livre <em>Méthodes quantitatives en sciences sociales&nbsp;: un grand bol d’R</em> <span class="citation" data-cites="RBoldAirMethodesQuanti">(<a href="references.html#ref-RBoldAirMethodesQuanti" role="doc-biblioref">Apparicio et Gelb 2022</a>)</span>.</p>
-<p>L’approche par sélection itérative est très intuitive et relativement facile à mettre en œuvre. Cependant, elle comporte plusieurs défauts. Lorsque le jeu de donnée est grand, elle devient extrêmement coûteuse en temps de calcul, car le modèle doit être ajusté un grand nombre de fois. Aussi, bien l’ordre d’ajout des vecteurs propres n’est pas important, leur ajout séquentiel peut poser un problème. En effet, des combinaisons de vecteurs propres peuvent être particulièrement efficaces pour effectuer le filtrage spatial, ce qui n’est pas permis par la procédure pas à pas (<em>stepwise</em>). Notons ici que des approches alternatives utilisant par exemple des algorithmes génétiques ont été proposées <span class="citation" data-cites="helbich2016spatially">(<a href="references.html#ref-helbich2016spatially" role="doc-biblioref">Helbich et Griffith 2016</a>)</span>, bien qu’elles ne soient pas communément utilisées.</p>
+<p>Il est assez simple d’étendre cette approche à des GLM ou même à des GLMM. Pour ces modèles, l’objectif ne sera pas de maximiser le R<sup>2</sup>, mais plutôt d’obtenir une réduction significative de la déviance (<em>likelihood ratio test</em>). Notons que pour ce type de modèle, il est important de vérifier l’autocorrélation spatiale des résidus standardisés ou simulés, car de nombreux GLM supposent une hétéroscédasticité des résidus. Pour un rappel sur le <em>likelihood ratio test</em>, vous pouvez vous référer à <a href="https://serieboldr.github.io/MethodesQuantitatives/08-GLM.html#sec-0816">cette section</a> du livre <em>Méthodes quantitatives en sciences sociales&nbsp;: un grand bol d’R</em> <span class="citation" data-cites="RBoldAirMethodesQuanti">(<a href="references.html#ref-RBoldAirMethodesQuanti" role="doc-biblioref">Apparicio et Gelb 2022</a>)</span>.</p>
+<p>L’approche par sélection itérative est très intuitive et relativement facile à mettre en œuvre. Cependant, elle comporte plusieurs défauts. Lorsque le jeu de données est grand, elle devient extrêmement coûteuse en temps de calcul, car le modèle doit être ajusté un grand nombre de fois. Aussi, bien que l’ordre d’ajout des vecteurs propres ne soit pas important, leur ajout séquentiel peut poser un problème. En effet, des combinaisons de vecteurs propres peuvent être particulièrement efficaces pour effectuer le filtrage spatial, ce qui n’est pas permis par la procédure pas à pas (<em>stepwise</em>). Notons ici que des approches alternatives utilisant par exemple des algorithmes génétiques ont été proposées <span class="citation" data-cites="helbich2016spatially">(<a href="references.html#ref-helbich2016spatially" role="doc-biblioref">Helbich et Griffith 2016</a>)</span>, bien qu’elles ne soient pas communément utilisées.</p>
 </section>
 <section id="sec-0822" class="level3" data-number="8.2.2">
 <h3 data-number="8.2.2" class="anchored" data-anchor-id="sec-0822"><span class="header-section-number">8.2.2</span> Effet aléatoire</h3>
@@ -506,16 +506,16 @@ Figure&nbsp;8.2: Représentation de quatre vecteurs propres issue d’une matric
 \tag{8.2}\]</span></span></p>
 <p>avec&nbsp;:</p>
 <ul>
-<li><span class="math inline">\(\sigma\)</span>, un terme de variance estimé par le modèle contrôlant la variation des coefficients des vecteurs propres spatiaux <span class="math inline">\(\alpha\)</span> à s’écarter de 0.</li>
+<li><span class="math inline">\(\sigma\)</span>, un terme de variance estimé par le modèle contrôlant la variation des coefficients des vecteurs propres spatiaux <span class="math inline">\(\alpha\)</span> qui tend à s’écarter de 0.</li>
 </ul>
-<p>L’estimation des coefficients comme des effets aléatoires entraîne une pénalisation de leur estimation. Ainsi, le modèle devient capable de retirer de lui-même les vecteurs propres non pertinents. Habituellement, les vecteurs propres inclus dans ce modèle sont les vecteurs propres ayant une autocorrélation spatiale positive, car dans la vaste majorité des cas, les résidus sont positivement spatialement autocorrélés.</p>
-<p>Fait intéressant, cette approche pénalisée par effets aléatoires revient à imposer une pénalité de type <em>ridge</em> (<span class="math inline">\(l2\)</span>) aux coefficients des vecteurs spatiaux. L’objectif des régressions pénalisées est de faire tendre vers zéro les coefficients les moins importants d’un modèle afin de le rendre plus parcimonieux. Dans une formulation utilisant la pénalisation <em>ridge</em>, un paramètre d’intensité de la pénalisation doit être sélectionné, <span class="math inline">\(\lambda\)</span>. Ce paramètre joue le même rôle que <span class="math inline">\(\sigma\)</span> qui contrôle la dispersion des coefficients dans la formulation par effet aléatoire. <span class="math inline">\(\lambda\)</span> et <span class="math inline">\(\sigma\)</span> sont conceptuellement équivalents.</p>
+<p>L’estimation des coefficients comme des effets aléatoires entraîne une pénalisation de leur estimation. Ainsi, le modèle devient capable de retirer de lui-même les vecteurs propres non pertinents. Habituellement, les vecteurs propres inclus dans ce modèle sont les vecteurs propres ayant une autocorrélation spatiale positive, car, dans la vaste majorité des cas, les résidus sont positivement spatialement autocorrélés.</p>
+<p>Fait intéressant, cette approche pénalisée par effets aléatoires revient à imposer une pénalité de type <em>ridge</em> (<span class="math inline">\(l2\)</span>) aux coefficients des vecteurs spatiaux. L’objectif des régressions pénalisées est de faire tendre vers zéro les coefficients les moins importants d’un modèle afin de le rendre plus parcimonieux. Dans une formulation utilisant la pénalisation <em>ridge</em>, un paramètre d’intensité de la pénalisation doit être sélectionné, <span class="math inline">\(\lambda\)</span>. Ce paramètre joue le même rôle que <span class="math inline">\(\sigma\)</span> qui contrôle la dispersion des coefficients dans la formulation par effet aléatoire.&nbsp;<span class="math inline">\(\lambda\)</span> et <span class="math inline">\(\sigma\)</span> sont conceptuellement équivalents.</p>
 <p>Notez que cette approche exclut les vecteurs propres présentant une autocorrélation spatiale négative. De plus, contrairement à l’approche par sélection itérative, elle n’a pas pour objectif de retirer l’autocorrélation spatiale des résidus, bien qu’elle y parvienne souvent. Aussi, la pénalisation des coefficients par la méthode des effets aléatoires ne constitue pas une technique de sélection de variables. Elle permet de réduire le nombre de degrés de liberté effectifs du modèle (un effet aléatoire ne représentant pas exactement un effet fixe), sans pour autant retirer réellement les vecteurs propres les moins pertinents.</p>
 </section>
 <section id="sec-0823" class="level3" data-number="8.2.3">
 <h3 data-number="8.2.3" class="anchored" data-anchor-id="sec-0823"><span class="header-section-number">8.2.3</span> Sélection par lasso</h3>
-<p>Les régressions de type <em>lasso</em> intègrent une pénalité de type <span class="math inline">\(l1\)</span> lors de l’estimation des coefficients du modèle afin de forcer ceux ayant le moins d’impact lors de l’ajustement du modèle à avoir une valeur de zéro. Contrairement à la pénalisation de type <span class="math inline">\(l2\)</span> (<em>ridge</em>) mentionnée plus haut, la méthode <em>lasso</em> peut plus directement contraindre un coefficient à avoir une valeur nulle.</p>
-<p>La méthode par <em>lasso</em> a été proposée comme alternative à la sélection pas à pas (<em>step-wise</em>), notamment pour réduire le temps de calcul <span class="citation" data-cites="seya2015application">(<a href="references.html#ref-seya2015application" role="doc-biblioref">Seya et al. 2015</a>)</span>. Contrairement à l’approche pas à pas, l’approche <em>lasso</em> permet d’ajuster une seule fois le modèle, tout en sélectionnant directement les vecteurs propres pertinents. Notez que la pénalisation par <em>lasso</em> n’est appliquée qu’aux coefficients des vecteurs propres spatiaux.</p>
+<p>Les régressions de type lasso intègrent une pénalité de type <span class="math inline">\(l1\)</span> lors de l’estimation des coefficients du modèle afin de forcer ceux ayant le moins d’impact lors de l’ajustement du modèle à avoir une valeur de zéro. Contrairement à la pénalisation de type <span class="math inline">\(l2\)</span> (<em>ridge</em>) mentionnée plus haut, la méthode lasso peut plus directement contraindre un coefficient à avoir une valeur nulle.</p>
+<p>La méthode par lasso a été proposée comme alternative à la sélection pas à pas (<em>step-wise</em>), notamment pour réduire le temps de calcul <span class="citation" data-cites="seya2015application">(<a href="references.html#ref-seya2015application" role="doc-biblioref">Seya et al. 2015</a>)</span>. Contrairement à l’approche pas à pas, l’approche lasso permet d’ajuster une seule fois le modèle, tout en sélectionnant directement les vecteurs propres pertinents. Notez que la pénalisation par lasso n’est appliquée qu’aux coefficients des vecteurs propres spatiaux.</p>
 </section>
 </section>
 <section id="sec-083" class="level2" data-number="8.3">
@@ -542,8 +542,8 @@ Figure&nbsp;8.2: Représentation de quatre vecteurs propres issue d’une matric
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Chargement des données</span></span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>data_mtl <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">'data/chap06/data_sr_access.gpkg'</span>, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># les variables d'accessibilités sont multipliées par 100 pour s'exprimer </span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># sur l'échelle 0-100 plutôt que 0-1</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># les variables d’accessibilité sont multipliées par 100 pour s’exprimer </span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># sur l’échelle 0-100 plutôt que 0-1</span></span>
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>data_mtl<span class="sc">$</span>acs_idx_emp_pieton <span class="ot">&lt;-</span> data_mtl<span class="sc">$</span>acs_idx_emp_pieton <span class="sc">*</span> <span class="dv">100</span></span>
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>data_mtl<span class="sc">$</span>acs_idx_emp_tc_peak <span class="ot">&lt;-</span> data_mtl<span class="sc">$</span>acs_idx_emp_tc_peak <span class="sc">*</span> <span class="dv">100</span></span>
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
@@ -627,7 +627,7 @@ Figure&nbsp;8.3: Résidus simulés du modèle SEVM par sélection
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>data_mtl2 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(data_mtl, moran_ev)</span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcul de la corrélation entre Y et les vecteurs propres pour les intégrer</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># selon l'ordre de leur corrélation avec Y</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># selon l’ordre de leur corrélation avec Y</span></span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>corr_vals <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">names</span>(moran_ev), <span class="cf">function</span>(x){</span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>(</span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> data_mtl2<span class="sc">$</span>alr_val,</span>
@@ -638,14 +638,14 @@ Figure&nbsp;8.3: Résidus simulés du modèle SEVM par sélection
 <span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>vector_names <span class="ot">&lt;-</span> <span class="fu">names</span>(moran_ev)</span>
 <span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>vector_names <span class="ot">&lt;-</span> vector_names[<span class="fu">order</span>(corr_vals, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)]</span>
 <span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Préparation de l'équation de base de notre modèle</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Préparation de l’équation de base de notre modèle</span></span>
 <span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>base_formula <span class="ot">&lt;-</span> <span class="st">"alr_val ~ prt_minorite_vis +</span></span>
 <span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="st">                           prt_monoparental + revenu_median +</span></span>
 <span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="st">                           acs_idx_emp_tc_peak + acs_idx_emp_pieton"</span></span>
 <span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Nous ajustons aussi un modèle de base de référence</span></span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="co"># qui sera comparé aux  différentes propositions</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="co"># qui sera comparé aux différentes propositions</span></span>
 <span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>base_model <span class="ot">&lt;-</span> <span class="fu">gam</span>(alr_val <span class="sc">~</span> prt_minorite_vis <span class="sc">+</span></span>
 <span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>                            prt_monoparental <span class="sc">+</span> revenu_median <span class="sc">+</span></span>
 <span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>                            acs_idx_emp_tc_peak <span class="sc">+</span> acs_idx_emp_pieton,</span>
@@ -658,7 +658,7 @@ Figure&nbsp;8.3: Résidus simulés du modèle SEVM par sélection
 <span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>moran_ref <span class="ot">&lt;-</span> <span class="fu">moran</span>(resid, listw, </span>
 <span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>                   <span class="at">n =</span> <span class="fu">length</span>(resid), <span class="at">S0 =</span> S0, <span class="at">zero.policy =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>I</span>
 <span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Préparation d'une liste vide dans laquelle nous stockerons les </span></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Préparation d’une liste vide dans laquelle nous stockerons les </span></span>
 <span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a><span class="co"># noms des vecteurs propres à ajouter</span></span>
 <span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>vecteurs_retenus <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
 <span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a></span>
@@ -701,7 +701,7 @@ Figure&nbsp;8.3: Résidus simulés du modèle SEVM par sélection
 <span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a>      <span class="co"># on met à jour notre modèle de base</span></span>
 <span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a>      base_model <span class="ot">&lt;&lt;-</span> model</span>
 <span id="cb7-81"><a href="#cb7-81" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb7-82"><a href="#cb7-82" aria-hidden="true" tabindex="-1"></a>      <span class="co"># on met à jour notre valeur de I de Moran de référence</span></span>
+<span id="cb7-82"><a href="#cb7-82" aria-hidden="true" tabindex="-1"></a>      <span class="co"># on met à jour la valeur de I de Moran de référence</span></span>
 <span id="cb7-83"><a href="#cb7-83" aria-hidden="true" tabindex="-1"></a>      moran_ref <span class="ot">&lt;&lt;-</span> moran_value</span>
 <span id="cb7-84"><a href="#cb7-84" aria-hidden="true" tabindex="-1"></a>      </span>
 <span id="cb7-85"><a href="#cb7-85" aria-hidden="true" tabindex="-1"></a>      <span class="co"># on va aussi stocker quelques informations sur les vecteurs ajoutés</span></span>
@@ -990,7 +990,7 @@ alternative hypothesis: greater</code></pre>
 <img src="08-SEM_files/figure-html/fig-ressev2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ressev2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8.4: Résidus simulé du modèle SEVM avec distribution de Student par sélection pas à pas
+Figure&nbsp;8.4: Résidus simulés du modèle SEVM avec distribution de Student par sélection pas à pas
 </figcaption>
 </figure>
 </div>
@@ -1000,8 +1000,8 @@ Figure&nbsp;8.4: Résidus simulé du modèle SEVM avec distribution de Student p
 </section>
 <section id="sec-0832" class="level3" data-number="8.3.2">
 <h3 data-number="8.3.2" class="anchored" data-anchor-id="sec-0832"><span class="header-section-number">8.3.2</span> Modèle SEVM avec effet aléatoire</h3>
-<p>Pour rappel, le modèle SEVM par effet aléatoire consiste à ne retenir que les vecteurs propres avec de l’autocorrélation positive et à pénaliser les coefficients des vecteurs propres en les modélisant comme un effet aléatoire provenant d’une distribution normale centrée sur 0. Cette approche est plus difficile à appliquer dans R, notamment parce qu’elle relève intrinsèquement d’une conception bayésienne du modèle. Le <em>package</em> <code>spmoran</code> offre une implémentation, mais elle se limite principalement sur le modèle linéaire classique (distribution gaussienne des résidus). Toutefois, <code>spmoran</code> peut être utilisé pour modéliser d’autres types de distribution, mais il utilise pour cela des fonctions de lien complexe transformant la variable dépendante pour garantir qu’elle suit une distribution normale. Cette approche rend l’interprétation des effets des variables indépendantes très difficile.</p>
-<p>Cependant, comme nous l’avons mentionné plus haut (<a href="#sec-0822" class="quarto-xref">section&nbsp;<span>8.2.2</span></a>), la pénalisation des coefficients d’un modèle induite par leur introduction comme un effet aléatoire est équivalente à leur pénalisation par la méthode <em>ridge</em> (<em>l1 regularization</em>). Il existe plusieurs <em>packages</em> dans R permettant d’implémenter ce type de pénalisation dans des GLM dont <code>glmnet</code>, <code>ridge</code>, et <code>gamlss</code>. Le package <code>mgcv</code> que nous avons présenté dans la section sur les modèles GAM est également capable d’inclure une pénalité de type <em>ridge</em> sur les coefficients des termes linéaires. Il faut pour cela utiliser un paramètre méconnu appelé <code>paraPen</code>. Considérant que la distribution de Student a donné des bons résultats jusqu’ici avec la fonction <code>gam</code> et le paramètre <code>family = scat</code>, nous allons continuer à l’utiliser. De plus, le package <code>mgcv</code> est capable de déterminer automatiquement le paramètre <span class="math inline">\(\lambda\)</span> calibrant la force de la pénalisation.</p>
+<p>Pour rappel, le modèle SEVM par effet aléatoire consiste à ne retenir que les vecteurs propres avec de l’autocorrélation positive et à pénaliser les coefficients des vecteurs propres en les modélisant comme un effet aléatoire provenant d’une distribution normale centrée sur 0. Cette approche est plus difficile à appliquer dans R, notamment parce qu’elle relève intrinsèquement d’une conception bayésienne du modèle. Le <em>package</em> <code>spmoran</code> offre une implémentation, mais celle-ci se limite principalement sur le modèle linéaire classique (distribution gaussienne des résidus). Toutefois, <code>spmoran</code> peut être utilisé pour modéliser d’autres types de distribution, mais il utilise pour cela des fonctions de lien complexes transformant la variable dépendante pour garantir qu’elle suit une distribution normale. Cette approche rend l’interprétation des effets des variables indépendantes très difficile.</p>
+<p>Cependant, comme nous l’avons mentionné plus haut (<a href="#sec-0822" class="quarto-xref">section&nbsp;<span>8.2.2</span></a>), la pénalisation des coefficients d’un modèle induite par leur introduction comme un effet aléatoire est équivalente à leur pénalisation par la méthode <em>ridge</em> (<em>l1 regularization</em>). Il existe plusieurs <em>packages</em> dans R permettant d’implémenter ce type de pénalisation dans des GLM, dont <code>glmnet</code>, <code>ridge</code>, et <code>gamlss</code>. Le package <code>mgcv</code> que nous avons présenté dans la section sur les modèles GAM est également capable d’inclure une pénalité de type <em>ridge</em> sur les coefficients des termes linéaires. Il faut pour cela utiliser un paramètre méconnu appelé <code>paraPen</code>. Considérant que la distribution de Student a donné de bons résultats jusqu’ici avec la fonction <code>gam</code> et le paramètre <code>family = scat</code>, nous allons continuer à l’utiliser. De plus, le package <code>mgcv</code> est capable de déterminer automatiquement le paramètre <span class="math inline">\(\lambda\)</span> calibrant la force de la pénalisation.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Nous devons commencer par sélectionner tous les vecteurs avec un I de Moran positif</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Précalcul des vecteurs propres</span></span>
@@ -1037,7 +1037,7 @@ data:  residuals(res)
 weights: listw  
 number of simulations + 1: 1000 
 
-statistic = 0.054179, observed rank = 1000, p-value = 0.001
+statistic = 0.054179, observed rank = 994, p-value = 0.006
 alternative hypothesis: greater</code></pre>
 </div>
 <div class="cell-output-display">
@@ -1056,8 +1056,8 @@ Figure&nbsp;8.5: Résidus du modèle RE-SEVM
 <p>Les résidus du modèle SEVM (<a href="#fig-ressev3" class="quarto-xref">figure&nbsp;<span>8.5</span></a>) avec effets aléatoires sont assez proches d’une distribution uniforme et n’ont plus d’autocorrélation spatiale (I&nbsp;=&nbsp;0,054).</p>
 </section>
 <section id="sec-0833" class="level3" data-number="8.3.3">
-<h3 data-number="8.3.3" class="anchored" data-anchor-id="sec-0833"><span class="header-section-number">8.3.3</span> Modèle SEVM avec pénalisation Lasso</h3>
-<p>Le <em>package</em> de prédilection pour créer des modèles avec des pénalisations est <code>glmnet</code>, car il permet notamment d’intégrer des pénalisations de type <em>lasso</em>, <em>ridge</em>, et <em>elastic-net</em>. Cependant, les distributions supportées par <code>glmnet</code> sont assez limitées. Il est aussi possible d’utiliser le <em>package</em> <code>gamlss</code> qui est beaucoup plus flexible et il peut utiliser les fonctions de <code>glmnet</code> pour introduire des pénalités. L’approche ici est similaire à celle présentée dans la section précédente. Nous commençons par précalculer les vecteurs propres et retenir uniquement les vecteurs avec une autocorrélation spatiale positive. Nous introduisons ensuite ces vecteurs avec une pénalisation sur leurs coefficients dans le modèle. Dans le package <code>gamlss</code>, la famille <code>TF</code> est comparable à la famille <code>scat</code> de <code>mgcv</code>. Aussi, <code>gamlss</code> est capable de choisir le meilleur degré de pénalisation selon un critère (<code>ML</code> pour maximum de vraisemblance et <code>GAIC</code> pour AIC généralisé) sélectionné par la personne utilisatrice. Notez que la fonction <code>ri</code> utilisée ici permet aussi d’ajuster une pénalisation de type <em>ridge</em> avec le paramètre <code>Lp = 2</code>.</p>
+<h3 data-number="8.3.3" class="anchored" data-anchor-id="sec-0833"><span class="header-section-number">8.3.3</span> Modèle SEVM avec pénalisation lasso</h3>
+<p>Le <em>package</em> de prédilection pour créer des modèles avec des pénalisations est <code>glmnet</code>, car il permet notamment d’intégrer des pénalisations de type lasso, <em>ridge</em>, et <em>elastic-net</em>. Cependant, les distributions supportées par <code>glmnet</code> sont assez limitées. Il est aussi possible d’utiliser le <em>package</em> <code>gamlss</code> qui est beaucoup plus flexible et qui peut utiliser les fonctions de <code>glmnet</code> pour introduire des pénalités. L’approche ici est similaire à celle présentée dans la section précédente. Nous commençons par précalculer les vecteurs propres et retenir uniquement les vecteurs avec une autocorrélation spatiale positive. Nous introduisons ensuite ces vecteurs avec une pénalisation sur leurs coefficients dans le modèle. Dans le package <code>gamlss</code>, la famille <code>TF</code> est comparable à la famille <code>scat</code> de <code>mgcv</code>. Aussi, <code>gamlss</code> est capable de choisir le meilleur degré de pénalisation selon un critère (<code>ML</code> pour maximum de vraisemblance et <code>GAIC</code> pour AIC généralisé) sélectionné par la personne utilisatrice. Notez que la fonction <code>ri</code> utilisée ici permet aussi d’ajuster une pénalisation de type <em>ridge</em> avec le paramètre <code>Lp = 2</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Nous devons commencer par sélectionner tous les vecteurs </span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># avec un I de Moran positif</span></span>
@@ -1116,7 +1116,7 @@ data:  residuals(res)
 weights: listw  
 number of simulations + 1: 1000 
 
-statistic = 0.039717, observed rank = 986, p-value = 0.014
+statistic = 0.03938, observed rank = 970, p-value = 0.03
 alternative hypothesis: greater</code></pre>
 </div>
 <div class="cell-output-display">
@@ -1253,12 +1253,12 @@ Lasso
 </figure>
 </div>
 </div>
-<p>Il est intéressant de noter que les trois modèles ne produisent pas exactement les mêmes résultats. Bien qu’ils renvoient des effets sensiblement de mêmes ordres de grandeur et directions, nous observons en particulier que&nbsp;:</p>
+<p>Il est intéressant de noter que les trois modèles ne produisent pas exactement les mêmes résultats. Bien qu’ils renvoient des effets sensiblement de mêmes ordres de grandeur et de mêmes directions, nous observons en particulier que&nbsp;:</p>
 <ul>
-<li><p>Le modèle utilisant la méthode des effets aléatoires indique que l’accessibilité aux emplois à pied n’a pas d’effet significatif. Le modèle utilisant la pénalisation lasso indique une faible significativité (&lt;0,05) et un coefficient deux fois plus petit que le modèle par sélection itérative.</p></li>
-<li><p>Le modèle par sélection itérative indique un effet du pourcentage de minorités visibles beaucoup plus faible que les deux autres modèles. Une augmentation de 10&nbsp;points de pourcentage des minorités visibles est associée avec une multiplication par 1,096 du ratio entre les parts modales du transport en commun et de l’automobile. Pour le modèle lasso, la multiplication serait de 1,144.</p></li>
-<li><p>Les trois modèles s’accordent globalement sur l’impact du revenu médian. Une augmentation de 1000&nbsp;$ de ce dernier dans un secteur de recensement (SR) est associé avec une réduction de 0,73 % du ratio les parts modales du transport en commun et de l’automobile pour le premier modèle et 0,72 % et 0,78 % pour les deux autres modèles.</p></li>
-<li><p>Sans surprise, l’accessibilité aux emplois en transport collectif a un impact important et significatif dans les trois modèles. Une augmentation de 10 points de cet indicateurs (allant de 0 à 100) est associée avec une augmentation de la moyenne du ratio entre part modale TC et automobile de 65,9 %, 50,7 % et 44,8 % respectivement.</p></li>
+<li><p>Le modèle utilisant la méthode des effets aléatoires indique que l’accessibilité aux emplois à pied n’a pas d’effet significatif. Le modèle utilisant la pénalisation lasso indique une faible significativité (&lt;&nbsp;0,05) et un coefficient deux fois plus petit que le modèle par sélection itérative.</p></li>
+<li><p>Le modèle par sélection itérative indique un effet du pourcentage de minorités visibles beaucoup plus faible que les deux autres modèles. Une augmentation de 10&nbsp;points de pourcentage des minorités visibles est associée à une multiplication par 1,096 du ratio entre les parts modales du transport en commun et de l’automobile. Pour le modèle lasso, la multiplication serait de 1,144.</p></li>
+<li><p>Les trois modèles s’accordent globalement sur l’impact du revenu médian. Une augmentation de 1000&nbsp;$ de ce dernier dans un secteur de recensement (SR) est associé à une réduction de 0,73 % du ratio des parts modales du transport en commun et de l’automobile pour le premier modèle et de 0,72 % et 0,78 % pour les deux autres modèles.</p></li>
+<li><p>Sans surprise, l’accessibilité aux emplois en transport collectif a un impact important et significatif dans les trois modèles. Une augmentation de 10 points de cet indicateurs (allant de 0 à 100) est associée à une augmentation de la moyenne du ratio entre part modale TC et automobile de 65,9 %, 50,7 % et 44,8 % respectivement.</p></li>
 </ul>
 <p>Une partie des différences dans les résultats obtenus s’explique par une prise en compte différente de l’espace par les trois modèles. Nous pouvons représenter les trois termes spatiaux en utilisant la méthode des effets marginaux. Afin de comparer facilement les trois effets, nous représentons les trois cartes avec la même légende.</p>
 <div class="cell">
@@ -1381,8 +1381,8 @@ Figure&nbsp;8.7: Comparaison des termes spatiaux des trois modèles SEVM
 </div>
 </div>
 </div>
-<p>Les effets spatiaux capturés par les trois modèles sont très similaires (<a href="#fig-sevm6" class="quarto-xref">figure&nbsp;<span>8.7</span></a>). La corrélation est cependant beaucoup plus élevée entre le terme spatial du modèle RE-SEVM et LASSO-SEVM (0,98) qu’avec le modèle SEL-SEVM (0,8). Une différence notable s’observe pour l’arrondissement du Plateau-Mont-Royal&nbsp;: les modèles RE-SEVM et LASSO-SEVM ont des termes spatiaux avec des valeurs bien plus élevées pour ce secteur dans lequel la part modale active (marche + vélo) est très élevée. Ceci explique probablement la réduction de l’effet de la variance indépendante d’accessibilité à pied aux emplois dans ces modèles.</p>
-<p>Les conclusions que nous pouvons tirer des trois modèles sont donc similaires, mais avec tout de même des différences non négligeables. Ces différences s’expliquent par la façon dont les vecteurs propres spatiaux ont été intégrés dans le modèle. Notons que les approches par effets aléatoires et pénalisation lasso ont tendance à être plus rapide à estimer et repose sur un fondement théorique plus défendable. En effet, leurs pénalisations respectives peuvent être interprétées comme des à priori bayésiens utilisés pour réguler le modèle. La méthode par sélection correspond plus à une démarche ad hoc, mais qui a été utilisée à de nombreuses reprises et est relativement facile à implémenter avec n’importe quel type de modèle puisque les vecteurs propres spatiaux sont introduits comme de simples effets fixes.</p>
+<p>Les effets spatiaux capturés par les trois modèles sont très similaires (<a href="#fig-sevm6" class="quarto-xref">figure&nbsp;<span>8.7</span></a>). La corrélation est cependant beaucoup plus élevée entre le terme spatial des modèles RE-SEVM et LASSO-SEVM (0,98) qu’avec le modèle SEL-SEVM (0,8). Une différence notable s’observe pour l’arrondissement du Plateau-Mont-Royal&nbsp;: les modèles RE-SEVM et LASSO-SEVM ont des termes spatiaux avec des valeurs bien plus élevées pour ce secteur dans lequel la part modale active (marche + vélo) est très élevée. Cela explique probablement la réduction de l’effet de la variance indépendante d’accessibilité à pied aux emplois dans ces modèles.</p>
+<p>Les conclusions que nous pouvons tirer des trois modèles sont donc similaires, mais avec tout de même des différences non négligeables. Ces différences s’expliquent par la façon dont les vecteurs propres spatiaux ont été intégrés dans le modèle. Notons que les approches par effets aléatoires et pénalisation lasso ont tendance à être plus rapides à estimer et reposent sur un fondement théorique plus défendable. En effet, leurs pénalisations respectives peuvent être interprétées comme des a priori bayésiens utilisés pour réguler le modèle. La méthode par sélection correspond plus à une démarche ad hoc, mais qui a été utilisée à de nombreuses reprises et est relativement facile à implémenter avec n’importe quel type de modèle puisque les vecteurs propres spatiaux sont introduits comme de simples effets fixes.</p>
 </section>
 </section>
 <section id="sec-084" class="level2" data-number="8.4">
@@ -1514,7 +1514,7 @@ Relisez au besoin la <a href="#sec-081" class="quarto-xref">section&nbsp;<span>8
 </div>
 <div class="card quizlib-question">
 <div class="quizlib-question-title">
-L’approche classique de construction d’un modèle SEVM consiste à :
+En quoi consiste l’approche classique de construction d’un modèle SEVM?
 </div>
 <div>
 Relisez au besoin la <a href="#sec-0821" class="quarto-xref">section&nbsp;<span>8.2.1</span></a>.
@@ -1523,7 +1523,7 @@ Relisez au besoin la <a href="#sec-0821" class="quarto-xref">section&nbsp;<span>
 <table class="table table-sm table-striped small">
 <tbody><tr>
 <td>
-<label>Appliquer un processus itératif de sélection des vecteurs propres à ajouter dans le modèle</label>
+<label>Elle applique un processus itératif de sélection des vecteurs propres à ajouter dans le modèle.</label>
 </td>
 <td>
 <input type="radio" name="q3" value="1">
@@ -1531,7 +1531,7 @@ Relisez au besoin la <a href="#sec-0821" class="quarto-xref">section&nbsp;<span>
 </tr>
 <tr>
 <td>
-<label>Sélectionner uniquement les vecteurs propres améliorant le R2 du modèle</label>
+<label>Elle sélectionne uniquement les vecteurs propres améliorant le R2 du modèle.</label>
 </td>
 <td>
 <input type="radio" name="q3" value="2">
@@ -1539,7 +1539,7 @@ Relisez au besoin la <a href="#sec-0821" class="quarto-xref">section&nbsp;<span>
 </tr>
 <tr>
 <td>
-<label>Sélectionner uniquement les vecteurs propres avec une autocorrélation spatiale positive</label>
+<label>Elle sélectionne uniquement les vecteurs propres avec une autocorrélation spatiale positive.</label>
 </td>
 <td>
 <input type="radio" name="q3" value="3">
@@ -1550,7 +1550,7 @@ Relisez au besoin la <a href="#sec-0821" class="quarto-xref">section&nbsp;<span>
 </div>
 <div class="card quizlib-question">
 <div class="quizlib-question-title">
-L’approche LASSO et l’approche par effet aléatoire ont un point commun:
+L’approche LASSO et l’approche par effet aléatoire ont un point commun. Lequel?
 </div>
 <div>
 Relisez au besoin la <a href="#sec-0822" class="quarto-xref">section&nbsp;<span>8.2.2</span></a> et la <a href="#sec-0823" class="quarto-xref">section&nbsp;<span>8.2.3</span></a>.
@@ -1595,7 +1595,7 @@ Relisez au besoin la <a href="#sec-0834" class="quarto-xref">section&nbsp;<span>
 <table class="table table-sm table-striped small">
 <tbody><tr>
 <td>
-<label>En analysant les coefficients des vecteurs spatiaux intégrés au modèle</label>
+<label>En analysant les coefficients des vecteurs spatiaux intégrés au modèle.</label>
 </td>
 <td>
 <input type="radio" name="q5" value="1">
@@ -1603,7 +1603,7 @@ Relisez au besoin la <a href="#sec-0834" class="quarto-xref">section&nbsp;<span>
 </tr>
 <tr>
 <td>
-<label>En analyse le degré de pénalisation sélectionné par la méthode GAIC</label>
+<label>En analysant le degré de pénalisation sélectionné par la méthode GAIC.</label>
 </td>
 <td>
 <input type="radio" name="q5" value="2">
@@ -1611,7 +1611,7 @@ Relisez au besoin la <a href="#sec-0834" class="quarto-xref">section&nbsp;<span>
 </tr>
 <tr>
 <td>
-<label>En cartographiant les effets spatiaux par la méthode des effets marginaux</label>
+<label>En cartographiant les effets spatiaux par la méthode des effets marginaux.</label>
 </td>
 <td>
 <input type="radio" name="q5" value="3">

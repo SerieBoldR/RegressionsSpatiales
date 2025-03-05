@@ -84,7 +84,7 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./03-CAR_SpatialProbit.html" rel="next">
+<link href="./03-SpatialProbit.html" rel="next">
 <link href="./01-NotionsDeBase.html" rel="prev">
 <link href="./images/introduction/CouvertureP1.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js"></script>
@@ -233,14 +233,14 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03-CAR_SpatialProbit.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Autres modèles d’économétrie spatiale</span></span></a>
+  <a href="./03-SpatialProbit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles probit spatiaux pour une variable dépendante dichtonomique (en cours de rédaction)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./04-ModelesSpatiauxPanel.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel (en cours de rédaction)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale en panel (en cours de rédaction)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -350,7 +350,7 @@ window.Quarto = {
 </header>
 
 
-<p>Dans ce chapitre, nous décrivons uniquement les modèles économétriques spatiaux dont la variable dépendante est continue. Sommairement, ces modèles sont des extensions de la régression linéaire multiple, mais dans lequel une spécification explicite des relations spatiales entre les observations est introduite. Cette spécification vise ultimement à capter des effets spatiaux qui influencent le processus générateur de données (PGD), c’est-à-dire le modèle économétrique que l’on spécifie.</p>
+<p>Dans ce chapitre, nous décrivons uniquement les modèles économétriques spatiaux dont la variable dépendante est continue. Sommairement, ces modèles sont des extensions de la régression linéaire multiple, mais dans lequel une spécification explicite des relations spatiales entre les observations est introduite. Cette spécification vise ultimement à capter des effets spatiaux qui influencent le processus générateur de données (PGD), c’est-à-dire le modèle économétrique que nous spécifions.</p>
 <div class="bloc_objectif">
 <div class="bloc_objectif-header">
 <div class="bloc_objectif-icon">
@@ -400,7 +400,7 @@ window.Quarto = {
 <div class="bloc_attention-icon">
 
 </div>
-<p><strong>Régression linéaire multiple et modèles économétriques spatiaux</strong></p>
+<p><strong>Modèles d’économétrie spatiale pour une variable dépendante continue</strong></p>
 </div>
 <div class="bloc_attention-body">
 <p>Avant de lire ce chapitre, il convient de bien maîtriser la régression linéaire multiple. Une brève récapitulation est proposée à la <a href="01-NotionsDeBase.html#sec-015" class="quarto-xref">section&nbsp;<span>1.5</span></a>.</p>
@@ -840,27 +840,27 @@ Simulation results ( variance matrix):
 ========================================================
 Simulated standard errors
                Direct  Indirect     Total
-Pct0_14    0.04215444 0.2407502 0.2781088
-Pct_65     0.03753939 0.1988203 0.2352641
-Pct_Img    0.03404818 0.1800600 0.2132397
-Pct_brevet 0.02433968 0.1261359 0.1500033
-NivVieMed  0.06915851 0.3678133 0.4334706
+Pct0_14    0.04367864 0.2440584 0.2823522
+Pct_65     0.03806954 0.2041161 0.2409601
+Pct_Img    0.03408310 0.1797080 0.2128326
+Pct_brevet 0.02496430 0.1337409 0.1581139
+NivVieMed  0.07000989 0.3819925 0.4479587
 
 Simulated z-values:
-              Direct  Indirect     Total
-Pct0_14    -3.335209 -2.943126 -3.053309
-Pct_65     -1.320981 -1.258524 -1.274350
-Pct_Img     1.241368  1.187129  1.200624
-Pct_brevet -1.070556 -1.032078 -1.041571
-NivVieMed  -1.997108 -1.885791 -1.918783
+              Direct   Indirect     Total
+Pct0_14    -3.224653 -2.9106543 -3.014739
+Pct_65     -1.271213 -1.1986384 -1.216201
+Pct_Img     1.237160  1.1837027  1.197594
+Pct_brevet -1.046380 -0.9879288 -1.000852
+NivVieMed  -1.982569 -1.8348942 -1.874537
 
 Simulated p-values:
-           Direct     Indirect  Total    
-Pct0_14    0.00085235 0.0032492 0.0022633
-Pct_65     0.18650766 0.2082024 0.2025394
-Pct_Img    0.21446993 0.2351767 0.2298969
-Pct_brevet 0.28436926 0.3020355 0.2976107
-NivVieMed  0.04581345 0.0593231 0.0550118</code></pre>
+           Direct    Indirect  Total   
+Pct0_14    0.0012613 0.0036067 0.002572
+Pct_65     0.2036529 0.2306686 0.223908
+Pct_Img    0.2160276 0.2365308 0.231075
+Pct_brevet 0.2953857 0.3231875 0.316898
+NivVieMed  0.0474156 0.0665214 0.060856</code></pre>
 </div>
 </div>
 <p>L’interprétation des effets directs se rapproche de celle des coefficients classiques. Ainsi, selon ce modèle, l’augmentation du niveau de vie médian de 1000&nbsp;€ dans un IRIS est associée à une diminution moyenne de la concentration de dioxyde d’azote de 0,14 dans cet IRIS. L’effet total est de -0,82, indiquant qu’en moyenne, l’augmentation de 1000&nbsp;€ du niveau de vie médian dans un IRIS est associée à une diminution moyenne de 0,82 de la concentration de dioxyde d’azote dans l’ensemble des IRIS. Au final, l’effet indirect est simplement la différence entre l’effet total et l’effet direct. Nous pouvons constater ici que les effets indirects sont plus importants que les effets directs.</p>
@@ -877,7 +877,7 @@ data:  resid(modele_SAR)
 weights: w_rook  
 number of simulations + 1: 1000 
 
-statistic = -0.014281, observed rank = 350, p-value = 0.65
+statistic = -0.014281, observed rank = 366, p-value = 0.634
 alternative hypothesis: greater</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Cartographie des résidus</span></span>
@@ -912,8 +912,8 @@ Figure&nbsp;2.4: Cartographie des résidus du modèle SAR
 <h3 data-number="2.1.3" class="anchored" data-anchor-id="sec-0213"><span class="header-section-number">2.1.3</span> Modèle SEM&nbsp;: autocorrélation spatiale sur le terme d’erreur</h3>
 <section id="sec-02131" class="level4" data-number="2.1.3.1">
 <h4 data-number="2.1.3.1" class="anchored" data-anchor-id="sec-02131"><span class="header-section-number">2.1.3.1</span> Description du modèle SEM</h4>
-<p>L’autocorrélation spatiale résiduelle peut être liée à deux explications simples. La première est liée à <strong>l’omission de variables spatiales importantes et significatives</strong>, pour laquelle on ne dispose d’aucune information spécifique. La seconde peut provenir d’une <strong>forme d’hétérogénéité spatiale</strong> qui n’est, autrement, pas intégrée à l’analyse. On peut ainsi imaginer que les comportements sont liés dans l’espace pour des raisons qui ne sont pas observables, et encore moins mesurables.</p>
-<p>Dans les deux cas, on peut simplement corriger le problème sans pour autant tenter de tirer profit d’une forme spécifique de relations spatiales (externalités, effets d’entraînement). C’est essentiellement dans ces cas que les modèles avec une spécification autorégressive sur les termes d’erreurs (ou SEM – <em><strong>s</strong>patial <strong>e</strong>rror <strong>m</strong>odel</em>) peuvent être intéressants&nbsp;: ils ne permettent pas d’apporter une richesse supplémentaire à l’analyse et à l’interprétation, mais ils permettent vraisemblablement de corriger pour le problème d’interdépendance des termes d’erreurs. Plus spécifiquement, le modèle SEM s’exprime par la spécification suivante&nbsp;:</p>
+<p>L’autocorrélation spatiale résiduelle peut être liée à deux explications simples. La première est liée à <strong>l’omission de variables spatiales importantes et significatives</strong>, pour laquelle nous ne disposons d’aucune information spécifique. La seconde peut provenir d’une <strong>forme d’hétérogénéité spatiale</strong> qui n’est, autrement, pas intégrée à l’analyse. Nous pouvons ainsi imaginer que les comportements sont liés dans l’espace pour des raisons qui ne sont pas observables, et encore moins mesurables.</p>
+<p>Dans les deux cas, nous pouvons simplement corriger le problème sans pour autant tenter de tirer profit d’une forme spécifique de relations spatiales (externalités, effets d’entraînement). C’est essentiellement dans ces cas que les modèles avec une spécification autorégressive sur les termes d’erreurs (ou SEM – <em><strong>s</strong>patial <strong>e</strong>rror <strong>m</strong>odel</em>) peuvent être intéressants&nbsp;: ils ne permettent pas d’apporter une richesse supplémentaire à l’analyse et à l’interprétation, mais ils permettent vraisemblablement de corriger pour le problème d’interdépendance des termes d’erreurs. Plus spécifiquement, le modèle SEM s’exprime par la spécification suivante&nbsp;:</p>
 <p><span id="eq-SEM1"><span class="math display">\[
 \mathbf{y}=\mathbf{\iota}\alpha+\mathbf{X\beta}+\mathbf{\nu}
 \tag{2.6}\]</span></span></p>
@@ -1000,7 +1000,7 @@ data:  resid(modele_SEM)
 weights: w_rook  
 number of simulations + 1: 1000 
 
-statistic = -0.011827, observed rank = 357, p-value = 0.643
+statistic = -0.011827, observed rank = 373, p-value = 0.627
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
@@ -1008,7 +1008,7 @@ alternative hypothesis: greater</code></pre>
 <p>Pour le vérifier, Pace et Lesage <span class="citation" data-cites="pace2008spatial">(<a href="references.html#ref-pace2008spatial" role="doc-biblioref">2008</a>)</span> proposent d’appliquer le test de Hausman qui s’interprète comme suit&nbsp;:</p>
 <ul>
 <li><p>Si <em>p</em>&nbsp;&lt;&nbsp;0,05, alors les coefficient du modèle MCO sont biaisés par l’erreur spatiale et il est préférable d’utiliser le modèle SEM. Cela est le cas pour notre modèle.</p></li>
-<li><p>Si <em>p</em>&nbsp;&gt;&nbsp;0,05, les résultats des modèles ne sont pas différents et l’on peut conserver le modèle MCO.</p></li>
+<li><p>Si <em>p</em>&nbsp;&gt;&nbsp;0,05, les résultats des modèles ne sont pas différents et nous pouvons conserver le modèle MCO.</p></li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Hausman.test</span>(modele_SEM)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1140,27 +1140,27 @@ Simulation results ( variance matrix):
 ========================================================
 Simulated standard errors
                Direct  Indirect     Total
-Pct0_14    0.04337336 0.3229182 0.3502683
-Pct_65     0.03495446 0.2802962 0.3016382
-Pct_Img    0.03295690 0.2663334 0.2863919
-Pct_brevet 0.02381031 0.1963268 0.2109684
-NivVieMed  0.06804712 0.5045467 0.5397611
+Pct0_14    0.04315807 0.3382423 0.3655962
+Pct_65     0.03651549 0.2751088 0.2984331
+Pct_Img    0.03381127 0.2893428 0.3099095
+Pct_brevet 0.02502269 0.2027008 0.2187666
+NivVieMed  0.06991391 0.4930329 0.5295443
 
 Simulated z-values:
                Direct   Indirect       Total
-Pct0_14    -2.8324831 -3.1551781 -3.25955543
-Pct_65     -0.6379248  0.1219049  0.03935564
-Pct_Img     2.0806968  3.6333684  3.61833114
-Pct_brevet -0.7993008 -2.3942955 -2.31833713
-NivVieMed  -2.2239690 -0.1910692 -0.45897723
+Pct0_14    -2.8670783 -3.0593156 -3.16887159
+Pct_65     -0.6033401  0.1384451  0.05380169
+Pct_Img     1.9673722  3.3263609  3.32025268
+Pct_brevet -0.7529129 -2.3187589 -2.23459225
+NivVieMed  -2.1472911 -0.2181480 -0.48660649
 
 Simulated p-values:
            Direct    Indirect   Total     
-Pct0_14    0.0046188 0.00160400 0.00111587
-Pct_65     0.5235226 0.90297435 0.96860685
-Pct_Img    0.0374617 0.00027975 0.00029651
-Pct_brevet 0.4241160 0.01665233 0.02043101
-NivVieMed  0.0261505 0.84847135 0.64625052</code></pre>
+Pct0_14    0.0041428 0.00221843 0.00153032
+Pct_65     0.5462825 0.88988868 0.95709316
+Pct_Img    0.0491403 0.00087988 0.00089936
+Pct_brevet 0.4515023 0.02040811 0.02544413
+NivVieMed  0.0317701 0.82731376 0.62653722</code></pre>
 </div>
 </div>
 <p><strong>Dépendance spatiale du modèle SDM?</strong></p>
@@ -1175,7 +1175,7 @@ data:  resid(modele_SDM)
 weights: w_rook  
 number of simulations + 1: 1000 
 
-statistic = -0.0046127, observed rank = 485, p-value = 0.515
+statistic = -0.0046127, observed rank = 461, p-value = 0.539
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
@@ -1326,7 +1326,7 @@ data:  resid(modele_SDEM)
 weights: w_rook  
 number of simulations + 1: 1000 
 
-statistic = -0.010362, observed rank = 362, p-value = 0.638
+statistic = -0.010362, observed rank = 391, p-value = 0.609
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
@@ -1431,20 +1431,20 @@ Sample size per chain = 500
    plus standard error of the mean:
 
                Mean      SD Naive SE Time-series SE
-Pct0_14    -0.12160 0.04471 0.001999       0.001999
-Pct_65     -0.02222 0.03655 0.001635       0.001635
-Pct_Img     0.06626 0.03461 0.001548       0.001548
-Pct_brevet -0.01809 0.02548 0.001140       0.001140
-NivVieMed  -0.15273 0.07348 0.003286       0.003286
+Pct0_14    -0.11977 0.04226 0.001890       0.001890
+Pct_65     -0.01831 0.03643 0.001629       0.001629
+Pct_Img     0.06621 0.03284 0.001468       0.001468
+Pct_brevet -0.01987 0.02527 0.001130       0.001130
+NivVieMed  -0.15552 0.07030 0.003144       0.003372
 
 2. Quantiles for each variable:
 
-                2.5%      25%      50%       75%     97.5%
-Pct0_14    -0.208890 -0.15105 -0.12070 -0.089716 -0.034440
-Pct_65     -0.093376 -0.04792 -0.02253  0.003527  0.054110
-Pct_Img    -0.003892  0.04272  0.06688  0.090703  0.130740
-Pct_brevet -0.067016 -0.03532 -0.01806 -0.001911  0.034521
-NivVieMed  -0.298371 -0.19708 -0.15325 -0.106370 -0.007582
+               2.5%      25%      50%       75%    97.5%
+Pct0_14    -0.20535 -0.14614 -0.12115 -0.089271 -0.03690
+Pct_65     -0.08632 -0.04559 -0.01799  0.006882  0.05478
+Pct_Img     0.00285  0.04432  0.06572  0.087088  0.13767
+Pct_brevet -0.06806 -0.03650 -0.02016 -0.003717  0.02948
+NivVieMed  -0.29138 -0.20344 -0.15411 -0.109954 -0.01879
 
 ========================================================
 Indirect:
@@ -1458,20 +1458,20 @@ Sample size per chain = 500
    plus standard error of the mean:
 
                Mean     SD Naive SE Time-series SE
-Pct0_14    -1.06092 0.3999 0.017883       0.017883
-Pct_65      0.05917 0.3265 0.014601       0.012145
-Pct_Img     1.00681 0.3573 0.015978       0.015978
-Pct_brevet -0.49399 0.2166 0.009688       0.009688
-NivVieMed  -0.14076 0.5489 0.024549       0.032243
+Pct0_14    -1.06751 0.4332  0.01937        0.01937
+Pct_65      0.03933 0.3177  0.01421        0.01421
+Pct_Img     1.00943 0.3500  0.01565        0.01565
+Pct_brevet -0.50035 0.2295  0.01026        0.01026
+NivVieMed  -0.11342 0.5813  0.02600        0.02600
 
 2. Quantiles for each variable:
 
-              2.5%     25%      50%     75%   97.5%
-Pct0_14    -1.9651 -1.2720 -1.02010 -0.8044 -0.3849
-Pct_65     -0.4711 -0.1501  0.03702  0.2357  0.7581
-Pct_Img     0.4541  0.7813  0.96269  1.1836  1.9209
-Pct_brevet -0.9499 -0.6242 -0.49169 -0.3577 -0.0789
-NivVieMed  -1.2303 -0.4568 -0.14742  0.1581  0.9244
+              2.5%     25%      50%     75%    97.5%
+Pct0_14    -1.9051 -1.2939 -1.04306 -0.8197 -0.38265
+Pct_65     -0.5425 -0.1736  0.03361  0.2366  0.74072
+Pct_Img     0.4034  0.7959  0.98141  1.1968  1.79532
+Pct_brevet -0.9510 -0.6358 -0.48800 -0.3607 -0.08895
+NivVieMed  -1.1892 -0.4291 -0.13609  0.2037  1.00371
 
 ========================================================
 Total:
@@ -1485,45 +1485,45 @@ Sample size per chain = 500
    plus standard error of the mean:
 
                Mean     SD Naive SE Time-series SE
-Pct0_14    -1.18252 0.4268  0.01909        0.01909
-Pct_65      0.03696 0.3493  0.01562        0.01304
-Pct_Img     1.07307 0.3778  0.01690        0.01690
-Pct_brevet -0.51208 0.2320  0.01037        0.01037
-NivVieMed  -0.29348 0.5874  0.02627        0.03368
+Pct0_14    -1.18728 0.4563  0.02040        0.02040
+Pct_65      0.02102 0.3413  0.01526        0.01526
+Pct_Img     1.07565 0.3670  0.01641        0.01641
+Pct_brevet -0.52022 0.2453  0.01097        0.01097
+NivVieMed  -0.26893 0.6163  0.02756        0.02756
 
 2. Quantiles for each variable:
 
-              2.5%     25%      50%     75%    97.5%
-Pct0_14    -2.1138 -1.4070 -1.15173 -0.9122 -0.45599
-Pct_65     -0.5456 -0.1899  0.01438  0.2340  0.76818
-Pct_Img     0.4647  0.8409  1.02817  1.2652  2.00028
-Pct_brevet -0.9799 -0.6531 -0.50550 -0.3632 -0.07324
-NivVieMed  -1.4259 -0.6408 -0.29245  0.0587  0.82308
+              2.5%     25%      50%      75%    97.5%
+Pct0_14    -2.0447 -1.4211 -1.16064 -0.89942 -0.45255
+Pct_65     -0.5988 -0.2116  0.01005  0.24654  0.76472
+Pct_Img     0.4326  0.8602  1.04014  1.27212  1.89296
+Pct_brevet -0.9927 -0.6598 -0.50781 -0.37082 -0.06955
+NivVieMed  -1.4444 -0.6122 -0.30715  0.06203  0.89691
 
 ========================================================
 Simulated standard errors
                Direct  Indirect     Total
-Pct0_14    0.04470884 0.3998766 0.4268317
-Pct_65     0.03655491 0.3264990 0.3493359
-Pct_Img    0.03461497 0.3572807 0.3778170
-Pct_brevet 0.02548158 0.2166263 0.2319603
-NivVieMed  0.07347799 0.5489225 0.5874301
+Pct0_14    0.04226198 0.4332088 0.4562516
+Pct_65     0.03642907 0.3177166 0.3412615
+Pct_Img    0.03283651 0.3500163 0.3670058
+Pct_brevet 0.02527493 0.2295271 0.2452785
+NivVieMed  0.07030431 0.5812866 0.6163479
 
 Simulated z-values:
-              Direct   Indirect      Total
-Pct0_14    -2.719915 -2.6531181 -2.7704695
-Pct_65     -0.607765  0.1812374  0.1057922
-Pct_Img     1.914200  2.8179754  2.8401802
-Pct_brevet -0.710026 -2.2803782 -2.2076298
-NivVieMed  -2.078538 -0.2564238 -0.4996060
+               Direct   Indirect       Total
+Pct0_14    -2.8340627 -2.4641817 -2.60224445
+Pct_65     -0.5025054  0.1237832  0.06160141
+Pct_Img     2.0164810  2.8839566  2.93086887
+Pct_brevet -0.7859582 -2.1799276 -2.12092553
+NivVieMed  -2.2120465 -0.1951156 -0.43633552
 
 Simulated p-values:
-           Direct    Indirect  Total    
-Pct0_14    0.0065299 0.0079752 0.0055976
-Pct_65     0.5433433 0.8561813 0.9157472
-Pct_Img    0.0555947 0.0048328 0.0045088
-Pct_brevet 0.4776880 0.0225853 0.0272701
-NivVieMed  0.0376598 0.7976236 0.6173526</code></pre>
+           Direct   Indirect  Total    
+Pct0_14    0.004596 0.0137326 0.0092616
+Pct_65     0.615312 0.9014869 0.9508803
+Pct_Img    0.043750 0.0039271 0.0033802
+Pct_brevet 0.431892 0.0292628 0.0339281
+NivVieMed  0.026963 0.8453025 0.6625933</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Autocorrélation spatiale des résidus</span></span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">moran.mc</span>(<span class="fu">resid</span>(modele_Manski), w_rook, <span class="at">nsim =</span> <span class="dv">999</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1535,7 +1535,7 @@ data:  resid(modele_Manski)
 weights: w_rook  
 number of simulations + 1: 1000 
 
-statistic = -0.0009215, observed rank = 541, p-value = 0.459
+statistic = -0.0009215, observed rank = 526, p-value = 0.474
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
@@ -1544,7 +1544,7 @@ alternative hypothesis: greater</code></pre>
 </section>
 <section id="sec-022" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="sec-022"><span class="header-section-number">2.2</span> Quel modèle choisir?</h2>
-<p>Évidemment, la question qui brûle les lèvres est de savoir quelle spécification on devrait retenir pour l’analyse empirique et la présentation des résultats. Deux avenues sont possibles.</p>
+<p>Évidemment, la question qui brûle les lèvres est de savoir quelle spécification nous devrions retenir pour l’analyse empirique et la présentation des résultats. Deux avenues sont possibles.</p>
 <p>D’une part, il est possible que <strong>certains impératifs théoriques guident la chercheuse ou le chercheur vers une spécification particulière</strong>. Ainsi, si l’on souhaite vérifier comment les caractéristiques des milieux avoisinants influencent une variable d’intérêt, alors les spécifications SLX ou SDEM sont à privilégier puisqu’elles permettent explicitement d’aborder la question. Si l’intérêt est de voir comment une variation locale d’une variable d’intérêt peut avoir des influences à la grandeur du territoire, alors la spécification SAR est probablement à privilégier puisqu’elle permet d’évaluer l’impact spatial «&nbsp;global&nbsp;» d’un changement à microéchelle. Il est également possible qu’une question de recherche trouve un écho parmi les deux possibilités, dans lequel des cas le modèle SDM s’avère intéressant.</p>
 <p>Si une chercheuse ou un chercheur <strong>souhaite essentiellement corriger la présence d’autocorrélation spatiale entre les résidus</strong> sans intégrer explicitement de liens spatiaux dans l’interprétation du modèle, alors la spécification SEM peut s’avérer intéressante. Il faut néanmoins avouer que cette correction de l’autocorrélation spatiale n’apporte que peu d’intérêt en ce qui concerne l’interprétation, sauf celui de corriger les écarts-types des coefficients estimés.</p>
 <p>D’autre part, <strong>le choix peut également être basé sur des considérations plus statistiques</strong>. Dans ce cas, on souhaite identifier, sur la base de critères préalablement définis, le modèle qui offre la meilleure performance. Bien que le test de Moran permette de détecter la présence d’autocorrélation spatiale dans les résidus, le test n’est malheureusement pas mobilisable pour tenter d’identifier une spécification préférable.</p>
@@ -1839,10 +1839,10 @@ modele_SEM      2  8 2755.5 -1369.7    2  4.9728  0.4192</code></pre>
 <pre><code>  Modele      AIC      BIC dl       MoranI MoranIp
 1    MCO 3366.626 3396.212  7  0.587312061   0.001
 2    SLX 3222.594 3273.313 12  0.604660275   0.001
-3    SAR 2748.314 2782.126  8 -0.014281059   0.685
-4    SEM 2755.474 2789.286  8 -0.011826605   0.610
-5    SDM 2732.212 2787.157 13 -0.004612686   0.567
-6   SDEM 2760.501 2815.446 13 -0.010361653   0.631</code></pre>
+3    SAR 2748.314 2782.126  8 -0.014281059   0.652
+4    SEM 2755.474 2789.286  8 -0.011826605   0.640
+5    SDM 2732.212 2787.157 13 -0.004612686   0.529
+6   SDEM 2760.501 2815.446 13 -0.010361653   0.612</code></pre>
 </div>
 </div>
 <p>Quelques lignes de code suffisent pour créer deux graphiques permettant de comparer visuellement les résultats des différents modèles (<a href="#fig-GraphComparaison" class="quarto-xref">figure&nbsp;<span>2.9</span></a>). Les résultats démontrent que&nbsp;:</p>
@@ -2746,8 +2746,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./03-CAR_SpatialProbit.html" class="pagination-link" aria-label="Autres modèles d'économétrie spatiale">
-        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Autres modèles d’économétrie spatiale</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./03-SpatialProbit.html" class="pagination-link" aria-label="Modèles probit spatiaux pour une variable dépendante dichtonomique (en cours de rédaction)">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles probit spatiaux pour une variable dépendante dichtonomique (en cours de rédaction)</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

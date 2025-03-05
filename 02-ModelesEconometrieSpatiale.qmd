@@ -1,6 +1,6 @@
 # Modèles d'économétrie spatiale {#sec-chap02}
 
-Dans ce chapitre, nous décrivons uniquement les modèles économétriques spatiaux dont la variable dépendante est continue. Sommairement, ces modèles sont des extensions de la régression linéaire multiple, mais dans lequel une spécification explicite des relations spatiales entre les observations est introduite. Cette spécification vise ultimement à capter des effets spatiaux qui influencent le processus générateur de données (PGD), c'est-à-dire le modèle économétrique que l'on spécifie.
+Dans ce chapitre, nous décrivons uniquement les modèles économétriques spatiaux dont la variable dépendante est continue. Sommairement, ces modèles sont des extensions de la régression linéaire multiple, mais dans lequel une spécification explicite des relations spatiales entre les observations est introduite. Cette spécification vise ultimement à capter des effets spatiaux qui influencent le processus générateur de données (PGD), c'est-à-dire le modèle économétrique que nous spécifions.
 
 ::: bloc_objectif
 ::: bloc_objectif-header
@@ -46,7 +46,7 @@ Dans ce chapitre, nous décrivons uniquement les modèles économétriques spati
 ::: bloc_attention-icon
 :::
 
-**Régression linéaire multiple et modèles économétriques spatiaux**
+**Modèles d'économétrie spatiale pour une variable dépendante continue**
 :::
 
 ::: bloc_attention-body
@@ -391,9 +391,9 @@ tm_scale_bar(breaks = c(0,5))
 
 #### Description du modèle SEM {#sec-02131}
 
-L'autocorrélation spatiale résiduelle peut être liée à deux explications simples. La première est liée à **l'omission de variables spatiales importantes et significatives**, pour laquelle on ne dispose d'aucune information spécifique. La seconde peut provenir d'une **forme d'hétérogénéité spatiale** qui n'est, autrement, pas intégrée à l'analyse. On peut ainsi imaginer que les comportements sont liés dans l'espace pour des raisons qui ne sont pas observables, et encore moins mesurables.
+L'autocorrélation spatiale résiduelle peut être liée à deux explications simples. La première est liée à **l'omission de variables spatiales importantes et significatives**, pour laquelle nous ne disposons d'aucune information spécifique. La seconde peut provenir d'une **forme d'hétérogénéité spatiale** qui n'est, autrement, pas intégrée à l'analyse. Nous pouvons ainsi imaginer que les comportements sont liés dans l'espace pour des raisons qui ne sont pas observables, et encore moins mesurables.
 
-Dans les deux cas, on peut simplement corriger le problème sans pour autant tenter de tirer profit d'une forme spécifique de relations spatiales (externalités, effets d'entraînement). C'est essentiellement dans ces cas que les modèles avec une spécification autorégressive sur les termes d'erreurs (ou SEM -- ***s**patial **e**rror **m**odel*) peuvent être intéressants : ils ne permettent pas d'apporter une richesse supplémentaire à l'analyse et à l'interprétation, mais ils permettent vraisemblablement de corriger pour le problème d'interdépendance des termes d'erreurs. Plus spécifiquement, le modèle SEM s'exprime par la spécification suivante :
+Dans les deux cas, nous pouvons simplement corriger le problème sans pour autant tenter de tirer profit d'une forme spécifique de relations spatiales (externalités, effets d'entraînement). C'est essentiellement dans ces cas que les modèles avec une spécification autorégressive sur les termes d'erreurs (ou SEM -- ***s**patial **e**rror **m**odel*) peuvent être intéressants : ils ne permettent pas d'apporter une richesse supplémentaire à l'analyse et à l'interprétation, mais ils permettent vraisemblablement de corriger pour le problème d'interdépendance des termes d'erreurs. Plus spécifiquement, le modèle SEM s'exprime par la spécification suivante :
 
 $$
 \mathbf{y}=\mathbf{\iota}\alpha+\mathbf{X\beta}+\mathbf{\nu}
@@ -472,7 +472,7 @@ Pour le vérifier, Pace et Lesage [-@pace2008spatial] proposent d'appliquer le t
 
 -   Si *p* \< 0,05, alors les coefficient du modèle MCO sont biaisés par l'erreur spatiale et il est préférable d'utiliser le modèle SEM. Cela est le cas pour notre modèle.
 
--   Si *p* \> 0,05, les résultats des modèles ne sont pas différents et l'on peut conserver le modèle MCO.
+-   Si *p* \> 0,05, les résultats des modèles ne sont pas différents et nous pouvons conserver le modèle MCO.
 
 ```{r}
 #| echo: true 
@@ -684,7 +684,7 @@ moran.mc(resid(modele_Manski), w_rook, nsim = 999)
 
 ## Quel modèle choisir? {#sec-022}
 
-Évidemment, la question qui brûle les lèvres est de savoir quelle spécification on devrait retenir pour l'analyse empirique et la présentation des résultats. Deux avenues sont possibles.
+Évidemment, la question qui brûle les lèvres est de savoir quelle spécification nous devrions retenir pour l'analyse empirique et la présentation des résultats. Deux avenues sont possibles.
 
 D'une part, il est possible que **certains impératifs théoriques guident la chercheuse ou le chercheur vers une spécification particulière**. Ainsi, si l'on souhaite vérifier comment les caractéristiques des milieux avoisinants influencent une variable d'intérêt, alors les spécifications SLX ou SDEM sont à privilégier puisqu'elles permettent explicitement d'aborder la question. Si l'intérêt est de voir comment une variation locale d'une variable d'intérêt peut avoir des influences à la grandeur du territoire, alors la spécification SAR est probablement à privilégier puisqu'elle permet d'évaluer l'impact spatial « global » d'un changement à microéchelle. Il est également possible qu'une question de recherche trouve un écho parmi les deux possibilités, dans lequel des cas le modèle SDM s'avère intéressant.
 

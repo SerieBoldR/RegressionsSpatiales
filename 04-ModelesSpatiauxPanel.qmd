@@ -1,4 +1,4 @@
-# Modèles d'économétrie spatiale par panel (en cours de rédaction) {#sec-chap04}
+# Modèles d'économétrie spatiale en panel (en cours de rédaction) {#sec-chap04}
 
 Dans ce chapitre, nous abordons une extension des modèles autorégressifs, soit les modèles spatiaux par panel qui permettent de modéliser des données spatiales longitudinales.
 
