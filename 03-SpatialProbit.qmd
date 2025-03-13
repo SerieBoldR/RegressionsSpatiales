@@ -39,7 +39,7 @@ Dans ce chapitre, nous décrirons les modèles probit spatiaux, très utiles lor
 :::
 :::
 
-## Bref retour sur le modèle probit {#sec-032}
+## Bref retour sur le modèle probit {#sec-031}
 
 ## Les différents modèles probit spatiaux {#sec-032}
 

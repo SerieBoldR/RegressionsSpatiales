@@ -2,15 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://serieboldr.github.io/RegressionsSpatiales/index.html/index.html</loc>
-    <lastmod>2025-03-04T21:31:28.183Z</lastmod>
+    <lastmod>2025-03-07T17:00:58.000Z</lastmod>
   </url>
   <url>
     <loc>https://serieboldr.github.io/RegressionsSpatiales/index.html/00-auteurs.html</loc>
-    <lastmod>2025-03-03T14:38:19.266Z</lastmod>
+    <lastmod>2025-03-12T18:32:32.222Z</lastmod>
   </url>
   <url>
     <loc>https://serieboldr.github.io/RegressionsSpatiales/index.html/01-NotionsDeBase.html</loc>
-    <lastmod>2025-03-05T20:30:35.119Z</lastmod>
+    <lastmod>2025-03-12T18:45:04.295Z</lastmod>
   </url>
   <url>
     <loc>https://serieboldr.github.io/RegressionsSpatiales/index.html/02-ModelesEconometrieSpatiale.html</loc>
@@ -18,7 +18,7 @@
   </url>
   <url>
     <loc>https://serieboldr.github.io/RegressionsSpatiales/index.html/03-SpatialProbit.html</loc>
-    <lastmod>2025-03-05T14:42:15.673Z</lastmod>
+    <lastmod>2025-03-12T20:25:12.533Z</lastmod>
   </url>
   <url>
     <loc>https://serieboldr.github.io/RegressionsSpatiales/index.html/04-ModelesSpatiauxPanel.html</loc>
@@ -26,7 +26,7 @@
   </url>
   <url>
     <loc>https://serieboldr.github.io/RegressionsSpatiales/index.html/05-GWRClassique.html</loc>
-    <lastmod>2025-03-03T23:48:20.859Z</lastmod>
+    <lastmod>2025-03-12T20:16:08.776Z</lastmod>
   </url>
   <url>
     <loc>https://serieboldr.github.io/RegressionsSpatiales/index.html/06-GWRExtensions.html</loc>
@@ -34,11 +34,11 @@
   </url>
   <url>
     <loc>https://serieboldr.github.io/RegressionsSpatiales/index.html/07-GAM.html</loc>
-    <lastmod>2025-03-04T22:12:14.508Z</lastmod>
+    <lastmod>2025-03-12T20:38:23.620Z</lastmod>
   </url>
   <url>
     <loc>https://serieboldr.github.io/RegressionsSpatiales/index.html/08-SEM.html</loc>
-    <lastmod>2025-03-05T20:21:45.636Z</lastmod>
+    <lastmod>2025-03-12T19:57:22.818Z</lastmod>
   </url>
   <url>
     <loc>https://serieboldr.github.io/RegressionsSpatiales/index.html/09-GLS.html</loc>
@@ -54,6 +54,6 @@
   </url>
   <url>
     <loc>https://serieboldr.github.io/RegressionsSpatiales/index.html/Méthodes-de-régression-spatiale---un-grand-bol-d’R.pdf</loc>
-    <lastmod>2025-03-05T20:51:14.758Z</lastmod>
+    <lastmod>2025-03-13T01:37:25.907Z</lastmod>
   </url>
 </urlset>

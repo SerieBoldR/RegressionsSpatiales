@@ -307,7 +307,7 @@ Les modèles GAM sont très flexibles puisqu'ils sont une extension directe des 
 
 Si nous reprenons l'exemple de la pollution atmosphérique, le modèle est un simple GLM dans lequel nous supposons que les niveaux de pollution suivent une distribution normale et que les observations sont indépendantes. Cependant, la moyenne de cette distribution peut être prédite avec une spline calculée à partir des coordonnées spatiales des observations. Le modèle ne part donc pas du principe que deux observations proches sont plus similaires, mais plutôt qu'il existe un effet spatial permettant de prédire les niveaux moyens de pollution attendus. Un modèle GAM ne vise donc pas explicitement à corriger l'effet de la dépendance spatiale, mais plutôt à capturer un effet spatialement structuré et non capturé par les variables indépendantes $\mathbf{X}$. Sans l'ajout de la spline, cet effet se serait retrouvé dans les résidus du modèle.
 
-La cartographie de l'effet spatial dans un modèle GAM permet de visualiser les secteurs de l'espace d'étude dans lesquels, **toutes choses étant égales par ailleurs**, la variable dépendante est plus forte ou plus faible que la moyenne régionale. Cet effet spatial peut être vu comme un ajustement local de la prédiction. Une forme de malus ou de bonus que le modèle ajoute à sa prédiction pour tenir compte de la variation spatiale de la variable dépendante qui n'a pas été expliquée par les variables indépendantes.
+La cartographie de l'effet spatial dans un modèle GAM permet de visualiser les secteurs de l'espace d'étude dans lesquels, toutes choses étant égales par ailleurs, la variable dépendante est plus forte ou plus faible que la moyenne régionale. Cet effet spatial peut être vu comme un ajustement local de la prédiction. Une forme de malus ou de bonus que le modèle ajoute à sa prédiction pour tenir compte de la variation spatiale de la variable dépendante qui n'a pas été expliquée par les variables indépendantes.
 
 Puisqu'un modèle GAM ne prend pas directement en compte l'autocorrélation spatiale, il est tout à fait possible qu'il échoue à réduire suffisamment la dépendance spatiale des résidus d'un modèle global (non spatial). Il faudra alors privilégier d'autres formes de modèles. De même, si notre cadre théorique nous amène à penser que nos observations s'influencent mutuellement dans l'espace, il sera beaucoup plus cohérent d'utiliser un modèle économétrique ([chapitre @sec-chap02]).
 
@@ -363,11 +363,11 @@ $$ {#eq-gam4}
 
 ## Mise en œuvre et analyse dans R {#sec-075}
 
-Pour illustrer la réalisation des différents modèles GAM (non spatiale, avec une spline bivariée sur les coordonnées géographiques et avec une spline spatiale de type MRF), nous utilisons le jeu de données sur les parts modales dans la région métropolitaine de Montréal ([section @sec-0112]). Ce jeu de données comprend trois variables mesurant respectivement la proportion des individus utilisant la voiture, le transport collectif ou un mode actif (marche ou vélo) comme mode de transport principal pour leurs déplacements domicile-travail en 2021 pour les secteurs de recensement (@fig-datamtlCarto).
+Pour illustrer la réalisation des différents modèles GAM (non spatial, avec une spline bivariée sur les coordonnées géographiques et avec une spline spatiale de type MRF), nous utilisons le jeu de données sur les parts modales dans la région métropolitaine de Montréal ([section @sec-0112]). Ce jeu de données comprend trois variables mesurant respectivement la proportion des individus utilisant la voiture, le transport collectif ou un mode actif (marche ou vélo) comme mode de transport principal pour leurs déplacements domicile-travail en 2021 pour les secteurs de recensement (@fig-datamtlCarto).
 
 Lorsqu'un ensemble de variables sont des proportions d'un total (leur somme donne 1 ou 100), alors l'ensemble de ces variables est désigné comme des données compositionnelles. Ces données doivent être analysées avec des méthodes spécifiques, car elles ont un comportement particulier. La diminution de l'une d'entre elles provoque nécessairement l'augmentation d'une autre. Elles ne sont donc pas indépendantes et certaines catégories ont même tendance à exister simultanément ou au contraire à se repousser. L'analyse de données compositionnelles est un domaine en soit et sort du matériel que nous souhaitons couvrir dans ce livre. Il existe d'excellentes ressources et *packages* R sur le sujet [@van2013analyzing; @comp_pkg2024; @comp_pkg2025].
 
-Nous utilisons ici l'approche du log des ratios (*alr*). Il s'agit d'une transformation qui peut appliquée aux données compositionnelles pour pouvoir les analyser avec des méthodes classiques de statistiques. On lui préfère généralement une autre méthode de transformation, soit celle isométrique des log ratios (*ilr*), mais cette dernière produit des résultats plus difficiles à interpréter [@greenacre2021compositional]. Nous utiliserons donc l'approche *alr* dans cet exemple. La transformation *alr* est décrite par la formule suivante :
+Nous utilisons ici l'approche du log des ratios (*alr*). Il s'agit d'une transformation qui peut être appliquée aux données compositionnelles pour pouvoir les analyser avec des méthodes classiques de statistiques. Une autre méthode de transformation est habituellement privilégié, soit celle isométrique des log ratios (*ilr*), mais cette dernière produit des résultats plus difficiles à interpréter [@greenacre2021compositional]. Nous utiliserons donc l'approche *alr* dans cet exemple. La transformation *alr* est décrite par la formule suivante :
 
 $$
 \operatorname{alr}(x)=\left[\log \frac{x_1}{x_D}, \cdots, \log \frac{x_{D-1}}{x_D}\right]
@@ -503,7 +503,7 @@ vif(lm(alr_val ~ prt_minorite_vis + prt_monoparental +
 
 Les valeurs du facteur d'inflation de la variance (VIF) sont relativement faibles, excepté celle du pourcentage de personne à faible revenu qui dépasse 5. Par conséquent, nous décidons de la retirer du modèle.
 
-Nous commençons par ajuster un simple GLM (non spatial), assumant une distribution normale de la variable dépendante, une fois que sont contrôlées les variables indépendantes (`family = gaussian`). Pour valider les résidus de ce modèle, nous utilisons la méthode des résidus simulés.
+Nous commençons par ajuster un simple GLM (non spatial), assumant une distribution normale de la variable dépendante, une fois contrôlées les variables indépendantes (`family = gaussian`). Pour valider les résidus de ce modèle, nous utilisons la méthode des résidus simulés.
 
 ::: bloc_aller_loin
 ::: bloc_aller_loin-header
@@ -684,7 +684,7 @@ dist_w <- mat2listw(dists)
 moran.mc(data_mtl$sim_residual, listw = dist_w, nsim = 999)
 ```
 
-Nous constatons alors que le modèle est parvenu à retirer l'autocorrélation spatiale des résidus (I de Moran de 0,026), si elle est évalué avec la façon dont l'espace est pris en compte dans le modèle. Interprétons maintenant les résultats du modèle avec la fonction `summary`.
+Nous constatons alors que le modèle est parvenu à retirer l'autocorrélation spatiale des résidus (I de Moran de 0,026), si elle est évaluée avec la façon dont l'espace est pris en compte dans le modèle. Interprétons maintenant les résultats du modèle avec la fonction `summary`.
 
 ```{r}
 #| echo: true 
@@ -738,9 +738,9 @@ Voici une interprétation des effets obtenus (@tbl-GamSpatialSpline) :
 
 -   Cependant, lorsque l'accessibilité à pied augmente, nous observons une réduction de la moyenne du log du ratio. Dans un SR avec le pire niveau d'accessibilité possible, augmenter l'accessibilité au niveau du premier quartile (au moins mieux que 25 % des SR) serait associé à une augmentation de la moyenne du log du ratio de $-1,549 \times 0,25 = -0,387$, ce qui correspond à une multiplication par `r format(round(exp(tab_coeff$coeff[[6]] * 0.25),3), decimal.mark =",")` du ratio, ou encore à une réduction de `r paste0(format(100*(1 - round(exp(tab_coeff$coeff[[6]] * 0.25),3)), decimal.mark =","),' %')`. Ce résultat s'explique vraisemblablement par l'utilisation des modes de transport actifs plutôt que par une utilisation accrue de la voiture.
 
-Dans le résumé du modèle, nous pouvons observer que la spline utilisée pour capturer l'effet spatial à un impact significativement différent de 0 et comporte environ `r round(results$edf)` degrés de liberté. Afin d'observer l'effet de cette spline, nous utilisons l'approche des effets marginaux. Cette approche consiste à effectuer une prédiction avec le modèle de la valeur attendue de la variable dépendante en conservant identiques toutes les variables indépendantes, sauf la localisation dans l'espace. En d'autres termes, nous essayons de voir comment le modèle s'ajuste lorsque'il doit prédire la valeur *Y* pour une observation spécifique, mais que celle-ci est déplacée dans l'espace. Ainsi, la variation de la prédiction est affectée uniquement par l'espace.
+Dans le résumé du modèle, nous pouvons observer que la spline utilisée pour capturer l'effet spatial à un impact significativement différent de 0 et comporte environ `r round(results$edf)` degrés de liberté. Afin d'observer l'effet de cette spline, nous utilisons l'approche des effets marginaux. Cette approche consiste à effectuer une prédiction avec le modèle de la valeur attendue de la variable dépendante en conservant identiques toutes les variables indépendantes, sauf la localisation dans l'espace. En d'autres termes, nous essayons de voir comment le modèle s'ajuste lorsqu'il doit prédire la valeur *Y* pour une observation spécifique, mais que celle-ci est déplacée dans l'espace. Ainsi, la variation de la prédiction est affectée uniquement par l'espace.
 
-Pour obtenir l'effet uniquement spatial, nous pouvons mettre arbitrairement toutes les valeurs à 0 des différentes variables indépendantes du modèle. Ainsi, même multipliées par leurs coefficients, leur contribution dans la prédiction restera 0. Il suffit ensuite de retirer la constante pour ne bien conserver que l'effet de la spline.
+Pour obtenir l'effet uniquement spatial, nous pouvons mettre arbitrairement toutes les valeurs à 0 des différentes variables indépendantes du modèle. Ainsi, même multipliées par leurs coefficients, leur contribution dans la prédiction restera 0. Il suffit ensuite de retirer la constante pour ne conserver que l'effet de la spline.
 
 ```{r}
 #| echo: true 
@@ -808,7 +808,7 @@ Puisque nos observations sont des polygones, utiliser leurs centroïdes pour rep
 
 L'enjeu avec ce type de modèle est de sélectionner son rang (*k*). Pour cela, nous testons plusieurs valeurs allant de 10 à 250 autorisant une complexité grandissante du terme spatial. Notons d'emblée que notre spline bivariée précédente avait nécessité seulement 25 degrés de liberté supplémentaires. La sélection de *k* (le nombre de degrés de liberté accordé au MRF) reposera sur deux critères : l'autocorrélation spatiale encore présente dans les résidus (*I* de Moran calculé sur les résidus de Pearson) et l'AIC (pénalisant la complexité des modèles).
 
-Pour accélérer le calcul, nous réalisation cette opération en traitement parallèle (*multiprocessing*). Quatre cœurs indépendants s'occuperont d'ajuster les différents modèles.
+Pour accélérer le calcul, nous réalisons cette opération en traitement parallèle (*multiprocessing*). Quatre cœurs indépendants s'occuperont d'ajuster les différents modèles.
 
 ```{r}
 #| echo: false 
@@ -944,6 +944,10 @@ La @fig-gammrf1 permet de constater que l'AIC et le *I* de Moran diminuent à me
 #| message: false 
 #| eval: true
 #| warning: false
+#| label: fig-gam2_k150_res
+#| fig-cap: Résidus du modèle GAM avec une spline de type MRF avec k = 150
+#| fig-align: center
+#| out-width: 85%
 
 gam2 <- gam(alr_val ~ prt_minorite_vis + prt_monoparental + revenu_median +
                   acs_idx_emp_tc_peak + acs_idx_emp_pieton + 
@@ -962,7 +966,7 @@ summary(gam2)
 #| warning: false
 #| eval: true
 #| label: tbl-GamSpatialMRF
-#| tbl-cap: Résultats du modèle GLM avec spatiale de type MRF
+#| tbl-cap: Résultats du modèle GLM avec une spline spatiale de type MRF
 library(knitr)
 library(kableExtra)
 results <- summary(gam2)

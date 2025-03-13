@@ -4,7 +4,7 @@
   answers:
      - "Vrai"
      - "Faux"
-  help: "Relisez le deuxième encadré à la [section @sec-0512]."
+  help: "Relisez au besoin la [section @sec-0521]."
   
 - label: "Quelles sont les deux principales fonctions noyaux (kernel) pour définir la pondération W(i) dans un modèle GWR?"
   type: mc
@@ -37,7 +37,7 @@
      - "LMZ.F1GWR.test"
      - "LMZ.F2GWR.test"
      - "LMZ.F3GWR.test"
-  help: "Relisez le deuxième encadré à la [section @sec-05213]."
+  help: "Relisez au besoin la [section @sec-05213]."
 
 - label: "Quelle fonction du package spgwr permet de vérifier si les coefficients de régression varient significativement dans l'espace?"
   type: uc
@@ -47,5 +47,5 @@
      - "LMZ.F1GWR.test"
      - "LMZ.F2GWR.test"
      - "LMZ.F3GWR.test"
-  help: "Relisez le deuxième encadré à la [section @sec-05213]."
+  help: "Relisez au besoin la [section @sec-05213]."
   

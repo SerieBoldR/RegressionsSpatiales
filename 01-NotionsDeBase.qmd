@@ -177,7 +177,7 @@ knitr::kable(stats,
 #| eval: true
 #| warning: false
 #| label: fig-datamtlCarto
-#| fig-cap: Parts modales du transport en commun et de l'automobile (proportion)
+#| fig-cap: Parts modales du transport en commun, de l'automobile et du transport actif (proportion)
 #| fig-align: center
 library(tmap, quietly = TRUE)
 legende_parametres <- list(text.separator = "à",
@@ -221,7 +221,7 @@ tmap_arrange(carte1, carte2, carte3, ncol=2, nrow=2)
 
 ### Jeu de données sur Barcelone {#sec-0113}
 
-Troisièmement, nous utiliserons un jeu de données spatiales (`Barcelone`) pour la ville de Barcelone (Catalogne, Espagne). Ce jeu de données spatiales comprend quatorze variables, dont cinq environnementales (EN), six socioéconomiques (SE), une géographique (GE) et un variable binaire (BI), pour les 1068 entités polygonales de recensement formant la ville de Barcelone (@tbl-Barcelone et @fig-datacarto).
+Troisièmement, nous utiliserons un jeu de données spatiales (`Barcelone`) pour la ville de Barcelone (Catalogne, Espagne). Ce jeu de données spatiales comprend 14 variables, dont cinq environnementales (EN), six socioéconomiques (SE), une géographique (GE) et un variable binaire (BI), pour les 1068 entités polygonales de recensement formant la ville de Barcelone (@tbl-Barcelone et @fig-datacarto).
 
 ```{r}
 #| label: tbl-Barcelone
@@ -349,7 +349,7 @@ Bien entendu, les ordres d'adjacence peuvent être également définis selon le 
 
 ![Relations de voisinage et évaluation de la contiguïté](images/Chap01/FigureAdjacence.png){#fig-Chap01Contiguity2 width="60%" fig-align="center"}
 
-Habituellement appelée $\mathbf{W}$, la matrice de contiguïté est binaire selon le partage tant d'un nœud (*Queen* en anglais) (@eq-ContiguiteQueen) que d'un segment commun (*Rook* en anglais) (@eq-ContiguiteRook).
+Habituellement appelée $\mathbf{W}$, la matrice de contiguïté est binaire tant selon le partage d'un nœud (*Queen* en anglais) (@eq-ContiguiteQueen) que d'un segment commun (*Rook* en anglais) (@eq-ContiguiteRook).
 
 $$
  w_{ij} = 
@@ -615,7 +615,7 @@ Pour créer des matrices de pondération spatiale selon la contiguïté, nous ut
 
 -   `poly2nb(objet sf, queen = TRUE)` crée une matrice de contiguïté sous la forme d'une classe `nb` (liste de voisins). Avec le paramètre `queen = TRUE`, la contiguïté est évaluée selon le partage d'un nœud; avec `queen = FALSE`, la contiguïté est évaluée selon le partage d'un segment (frontière). La matrice spatiale comprend une ligne par polygone avec les index de ceux qui sont adjacents. Par exemple, `Queen[[1]]` renvoie la liste des polygones voisins à la première entité spatiale, soit `24 36 44 73`, c'est-à-dire quatre voisins.
 
--   `nb2listw(objet nb, zero.policy = TRUE, style = "W")` crée une matrice de pondération spatiale à partir de n'importe quelle matrice spatiale (de contiguïté ou de distance). Le paramètre `style = "W"`, qui est par défaut, permet de standardiser la matrice en ligne. Par exemple, `w_queen$weights[[1]]` renvoie les valeurs des pondérations pour la première entité spatiale, soit `0.25 0.25 0.25 25` (0,25 = 1 / 4 voisins). Pour obtenir une matrice non standardisée, vous devez écrire `style = "B"`, alors `w_queen$weights[[1]]` renverra les valeurs de `1 1 1 1`.
+-   `nb2listw(objet nb, zero.policy = TRUE, style = "W")` crée une matrice de pondération spatiale à partir de n'importe quelle matrice spatiale (de contiguïté ou de distance). Le paramètre `style = "W"`, qui est défini par défaut, permet de standardiser la matrice en ligne. Par exemple, `w_queen$weights[[1]]` renvoie les valeurs des pondérations pour la première entité spatiale, soit `0.25 0.25 0.25 25` (0,25 = 1 / 4 voisins). Pour obtenir une matrice non standardisée, vous devez écrire `style = "B"`, alors `w_queen$weights[[1]]` renverra les valeurs de `1 1 1 1`.
 
 ```{r}
 #| echo: true
@@ -636,7 +636,7 @@ nb_queen[[1]]
 # Création de la matrice de pondération avec une standardisation en ligne
 w_queen <- nb2listw(nb_queen, zero.policy = TRUE, style = "W")
 
-# Affichage de la première ligne des pondérations standardisée
+# Affichage de la première ligne des pondérations standardisées
 w_queen$weights[[1]]
 cat("La somme de la première ligne de la matrice de pondération est égale à",
     sum(w_queen$weights[[1]]))
@@ -647,7 +647,7 @@ nb2listw(nb_queen, zero.policy = TRUE, style = "B")$weights[[1]]
 nb_rook <- poly2nb(LyonIris, queen = FALSE)
 w_rook <- nb2listw(nb_rook, zero.policy = TRUE, style = "W")
 
-##  Comparaison des deux matrices de contiguïté
+## Comparaison des deux matrices de contiguïté
 # Résultat de la matrice de pondération (Queen)
 summary(w_queen)
 # Résultat de la matrice de pondération (Rook)
@@ -775,6 +775,7 @@ Spécifier un seuil de distance trop réduit peut toutefois être problématique
 #| echo: true
 #| message: false
 #| warning: false
+# Résultats de matrice de pondérations spatiales avec un seuil de 1000 mètres
 summary(w_inv_distances_1000, zero.policy = TRUE)
 ```
 
@@ -816,8 +817,8 @@ round(unlist(nbdists(k1, coords)), 0)
 plusprochevoisin_max <- max(unlist(nbdists(k1, coords)))
 cat("Distance maximale au plus proche voisin :", round(plusprochevoisin_max, 0), "mètres")
 
-## Matrice de distance avec la valeur maximale
-# les voisins les plus proches avec le seuil de distance maximale
+## Matrices des distances avec la valeur maximale
+# Voisins les plus proches avec le seuil de distance maximale
 voisins_distmax <- dnearneigh(coords, 0, plusprochevoisin_max)
 
 # Distances avec le seuil maximum
@@ -872,6 +873,7 @@ w_k5 <-  nb2listw(k5, zero.policy = FALSE, style = "W")
 #| message: false
 #| warning: false
 library(dplyr)
+
 # Nom de la couche sf départ à changer au besoin
 Couche.sf <- LyonIris
 
@@ -966,7 +968,7 @@ La fonction `lag.listw` du *package* `spdep` permet de créer une variable spati
 #| warning: false
 #| label: fig-Chap01FigureVariableSpatialementDecalee2
 #| fig-align: center
-#| fig-cap: Exemple de variable spatialement décalée
+#| fig-cap: Exemple de variable spatialement décalée (dioxyde d'azote)
 #| out-width: 85%
 # Chargement des données
 library(tmap)
@@ -988,14 +990,14 @@ carte1 <- tm_shape(LyonIris)+
             tm_borders(col = "gray25", lwd=.2)+
             tm_fill(col = "NO2", palette = "Reds", n = 5, style = "quantile",
                   legend.format = legende_parametres,
-        		      title = "(a) Variable initiale")+
+        		      title = "(a) Variable initiale (NO2)")+
           tm_layout(frame = FALSE)+tm_scale_bar(breaks=c(0,5))
 
 carte2 <- tm_shape(LyonIris)+
             tm_borders(col = "gray25", lwd=.2)+
             tm_fill(col = "W_NO2", palette = "Reds", n = 5, style = "quantile",
         		      legend.format = legende_parametres,
-        		      title = "(b) Spatialement décalée")+
+        		      title = "(b) Spatialement décalée (NO2)")+
           tm_layout(frame = FALSE)
 
 tmap_arrange(carte1, carte2, ncol = 2, nrow = 1)
@@ -1022,9 +1024,9 @@ Nous distinguons habituellement les statistiques d'autocorrélation spatiale glo
 
 -   Les statistiques d'autocorrélation spatiale globales renvoient une valeur pour l'ensemble de l'espace d'étude. Succinctement, elles permettent de vérifier si les entités proches ou voisines d'une couche géographique ont tendance à être (dis)semblables en fonction d'un phénomène donné (soit une variable).
 
--   Les mesures d'autocorrélation spatiale locales renvoient des valeurs pour chacune des entités spatiales. Succinctement, il s'agit de vérifier si chaque entité spatiale est significativement (dis)semblable de celles voisines ou proches.
+-   Les statistiques d'autocorrélation spatiale locales renvoient des valeurs pour chacune des entités spatiales. Succinctement, il s'agit de vérifier si chaque entité spatiale est significativement (dis)semblable de celles voisines ou proches.
 
-Nous aborderons ici uniquement une **statistique d'autocorrélation spatiale globale**, soit le ***I*** **de Moran**, pour évaluer l'autocorrélation spatiale d'une variable continue. Pour aborder une panoplie de mesures globales ou locales, nous vous invitons à consulter le chapitre intitulé [*Autocorrélation spatiale*](https://serieboldr.github.io/MethodesAnalyseSpatiale/01-ManipulationDonneesSpatiales.html) [@RBoldAirMethodesAnalysesSpatiales].
+Nous aborderons ici uniquement une **statistique d'autocorrélation spatiale globale**, soit le ***I*** **de Moran**, pour évaluer l'autocorrélation spatiale d'une variable continue. Pour aborder une panoplie de mesures globales ou locales, nous vous invitons à consulter le chapitre intitulé [*Autocorrélation spatiale*](https://serieboldr.github.io/MethodesAnalyseSpatiale/02-Autocorrelation.html) [@RBoldAirMethodesAnalysesSpatiales].
 :::
 :::
 
@@ -1072,7 +1074,7 @@ Avec une matrice standardisée, la statistique du *I* de Moran varie de -1 à 1 
 
 -   quand $I < 0$, l'autocorrélation est négative, c'est-à-dire que les entités géographiques ont tendance à être dissemblables d'autant plus qu'elles sont voisines ou proches.
 
-Les limites de -1 et 1 sont les maximums théoriques du *I* de Moran. Dans la pratique, elles sont limitées par la matrice spatiale utilisée dans le calcul. En effet, selon la matrice spatiale, le maximum du *I* de Moran peut être inférieur à 1, et son minimum supérieur à -1. Le calcul de ces bornes propres à chaque matrice spatiale peut se faire en utilisant les maximums et minimums des valeurs propres de $\frac{W+W^T}{2}$, quand la matrice spatiale est standardisée. À titre d'exemple, nous calculons ci-dessous les maximums et minimums possibles pour une matrice de contiguïté selon le partage d'un nœud (*Queen*) pour les 506 IRIS de l'agglomération de Lyon. Il apparaît ainsi que pour la matrice de contiguïté selon le partage d'un nœud (*Queen*), quelle soit la variable analysée, la valeur de *I* de Moran ne pourra pas dépasser les limites -0,64 et 1,04.
+Les limites de -1 et 1 sont les maximums théoriques du *I* de Moran. Dans la pratique, elles sont limitées par la matrice spatiale utilisée dans le calcul. En effet, selon la matrice spatiale, le maximum du *I* de Moran peut être inférieur à 1, et son minimum supérieur à -1. Le calcul de ces bornes propres à chaque matrice spatiale peut se faire en utilisant les maximums et minimums des valeurs propres de $\frac{W+W^T}{2}$, quand la matrice spatiale est standardisée. À titre d'exemple, nous calculons ci-dessous les maximums et minimums possibles pour une matrice de contiguïté selon le partage d'un nœud (*Queen*) pour les 506 IRIS de l'agglomération de Lyon. Il apparaît ainsi que pour la matrice de contiguïté selon le partage d'un nœud (*Queen*), quelle que soit la variable analysée, la valeur de *I* de Moran ne pourra pas dépasser les limites -0,64 et 1,04.
 
 
 ```{r}
@@ -1140,19 +1142,19 @@ library(dplyr)
 library(sf)
 library(spdep)
 load("data/Lyon.Rdata")
-# Matrice de contiguité 
+# Matrices de contiguité 
 nb_queen <- poly2nb(LyonIris, queen = TRUE)
 nb_rook <- poly2nb(LyonIris, queen = FALSE)
 w_queen <- nb2listw(nb_queen, zero.policy = TRUE, style = "W")
 w_rook <- nb2listw(nb_rook, zero.policy = TRUE, style = "W")
 
-# Matrice de contiguité (ordre 2 à 5)
+# Matrices de contiguité (ordre 2 à 5)
 w_rook2 <- nblag_cumul(nblag(nb_rook, 2)) %>% nb2listw(zero.policy = TRUE, style = "W")
 w_rook3 <- nblag_cumul(nblag(nb_rook, 3)) %>% nb2listw(zero.policy = TRUE, style = "W")
 w_rook4 <- nblag_cumul(nblag(nb_rook, 4)) %>% nb2listw(zero.policy = TRUE, style = "W")
 w_rook5 <- nblag_cumul(nblag(nb_rook, 5)) %>% nb2listw(zero.policy = TRUE, style = "W")
 
-# Matrice de connectivité binaire
+# Matrices de connectivité binaire
 centroides <- st_centroid(LyonIris)
 w_connect_2500m <- dnearneigh(centroides, d1 = 0, d2 = 2500) %>%
                   nb2listw(zero.policy = TRUE, style = "W")
@@ -1197,15 +1199,15 @@ Les fonctions `moran.test` et `moran.mc` du *package* `spdep` permettent de calc
 
 -   selon l'hypothèse de la normalité avec le paramètre `randomisation = FALSE`
 
-    -   `moran.test(ObjetSf$Variable, listw=MatriceW, zero.policy = TRUE, randomisation = FALSE)`
+    -   `moran.test(ObjetSf$Variable, listw = MatriceW, zero.policy = TRUE, randomisation = FALSE)`
 
 -   selon l'hypothèse de la randomisation avec le paramètre `randomisation = TRUE`
 
-    -   `moran.test(ObjetSf$Variable, listw=MatriceW, zero.policy = TRUE, randomisation = TRUE)`
+    -   `moran.test(ObjetSf$Variable, listw = MatriceW, zero.policy = TRUE, randomisation = TRUE)`
 
--   selon des permutations Monte-Carlo (ci-dessous avec 999 permutations)
+-   selon des permutations Monte-Carlo avec le paramètre `nsim` (ci-dessous avec 999 permutations)
 
-    -   `moran.mc(ObjetSf$Variable, listw=MatriceW, zero.policy = TRUE, nsim=999)`
+    -   `moran.mc(ObjetSf$Variable, listw=MatriceW, zero.policy = TRUE, nsim = 999)`
 
 Bien entendu, dans les sorties des trois méthodes, la valeur du *I* de Moran est la même, contrairement à la valeur de *p* qui peut varier.
 
@@ -1285,9 +1287,9 @@ print(moran_resultats)
 
 La lecture détaillée du @tbl-TableauIMoranMatrices permet d'avancer plusieurs constats intéressants :
 
--   D'emblée, signalons que toutes les valeurs sont positives et significatives, témoignant d'une autocorrélation spatiale positive.
+-   D'emblée, signalons que toutes les valeurs du *I* de Moran sont positives et significatives, témoignant d'une autocorrélation spatiale positive.
 
--   Concernant les **matrices de contiguïté**, l'autocorrélation spatiale est plus forte selon le partage d'un segment que d'un nœud (0,8244 contre 0,8189). Par conséquent, si nous devons choisir une matrice de contiguïté, il serait préférable d'utiliser celle définie selon le partage d'une chaîne (*Rook*).
+-   Concernant les **matrices de contiguïté**, l'autocorrélation spatiale est plus forte selon le partage d'un segment que d'un nœud (0,8244 contre 0,8189). Par conséquent, si nous devons choisir une matrice de contiguïté, il serait préférable d'utiliser celle définie selon le partage d'un segment (*Rook*).
 
 -   Sans surprise, plus nous ajoutons des **ordres d'adjacence**, plus la valeur de la statistique du *I* de Moran est faible, passant de 0,7174 à 0,4194 du deuxième au cinquième ordre.
 
@@ -1322,7 +1324,7 @@ kableExtra::pack_rows(my_table,
            index = c(
              "Matrices de contiguïté" = 2,
              "Matrices de contiguïté selon le partage d’un segment et ordre d'adjacence" = 4,
-             "Matrices de connectivité" = 1,
+             "Matrice de connectivité" = 1,
              "Matrices de distance (complètes)" = 2,
              "Matrices de distance (réduites)" = 2,
              "Matrices de distance avec un seuil maximal" = 4,
@@ -1391,13 +1393,19 @@ De nouveau, en quelques lignes de code, il est aisé de réaliser un graphique p
 #| warning: false 
 #| label: fig-loliplotMoran2 
 #| fig-align: center 
-#| fig-cap: Valeurs du *I* de Moran pour les quatre variables 
+#| fig-cap: Valeurs du *I* de Moran pour les dix variables 
 #| out-width: 75%
 
+
 library(ggplot2)
-	ggplot(data=moran_resultats2, aes(x=reorder(Variable,MoranIs), y=MoranIs)) + 
-	geom_segment( aes(x=reorder(Variable,MoranIs), xend=reorder(Variable,MoranIs), y=0, yend=MoranIs)) + 
-	geom_point( size=4,fill="red",shape=21)+ 
+
+# Construction d'un graphique avec les résultats I de Moran pour les différentes variables
+ggplot(data=moran_resultats2, aes(x=reorder(Variable,MoranIs), y=MoranIs)) + 
+	geom_segment(aes(x = reorder(Variable,MoranIs),
+	                 xend = reorder(Variable,MoranIs), 
+	                 y = 0 , 
+	                 yend=  MoranIs)) + 
+	geom_point( size = 4, fill = "red",shape = 21)+ 
 	xlab("Variable continue") + ylab("I de Moran")+ 
 	coord_flip()
 ```
@@ -1525,7 +1533,7 @@ Ces effets sont habituellement l'essence de l'intérêt des modèles de régress
 :::
 
 ::: bloc_aller_loin-body
-Afin de bien maîtriser les principes de base et les hypothèses de la régression linéaire multiple, de mesurer la qualité d'ajustement du modèle, d'introduire des variables explicatives particulières (variable qualitative dichotomique ou polytomique, variable d'interaction, etc.), d'interpréter les résultats d'un modèle de régression et de le mettre en œuvre dans R, nous vous invitons à lire le [chapitre suivant](https://serieboldr.github.io/MethodesQuantitatives/07-regressionlineaire.html) [@RBoldAirMethodesQuanti].
+Afin de bien maîtriser les principes de base et les hypothèses de la régression linéaire multiple, de mesurer la qualité d'ajustement du modèle, d'introduire des variables explicatives particulières (variable qualitative dichotomique ou polytomique, variable d'interaction, etc.), d'interpréter les résultats d'un modèle de régression et de le mettre en œuvre dans R, nous vous invitons à lire le chapitre intitulé [Régression linéaire multiple](https://serieboldr.github.io/MethodesQuantitatives/07-regressionlineaire.html) [@RBoldAirMethodesQuanti].
 :::
 :::
 
@@ -1534,9 +1542,9 @@ Afin de bien maîtriser les principes de base et les hypothèses de la régressi
 Deux motivations principales peuvent conduire à réaliser des régressions spatiales : la **dépendance spatiale** ou l'**hétérogénéité** du modèle de régression classique appliqué à des données spatiales [@chi2019spatial, p. 41-43].
 
 ### Dépendance spatiale {#sec-0171}
-Dans un modèle, les résidus ($\epsilon$) sont la différence entre les valeurs observées ($y_i$) et les valeurs prédites par le modèle ($\widehat{y_i}$). Une des hypothèses de la régression linéaire multiple est que les observations doivent être indépendantes les unes des autres (*indépendance du terme d'erreur*). Le non-respect de cette hypothèse produit des résultats biaisés, notamment pour les coefficients de régression. Un simple test de présence d’autocorrélation spatiale entre les résidus permet de vérifier si cette hypothèse est respectée ([section @sec-014]).
+Dans un modèle, les résidus ($\epsilon$) sont la différence entre les valeurs observées ($y_i$) et les valeurs prédites par le modèle ($\widehat{y_i}$). Une des hypothèses de la régression linéaire multiple est que les observations doivent être indépendantes les unes des autres (*indépendance du terme d'erreur*). Le non-respect de cette hypothèse produit des résultats biaisés, notamment pour les coefficients de régression. Un simple test d'autocorrélation spatiale entre les résidus permet de vérifier si cette hypothèse est respectée ([section @sec-014]).
 
-Le rejet de cette hypothèse d’indépendance rend les coefficients estimés, selon la forme fonctionnelle postulée (ou processus générateur des données – PGD), par le modèle biaisés et/ou biaise le calcul des écarts-types, invalidant ainsi les tests de significativité usuels. La présence d’autocorrélation spatiale entre les résidus est donc un premier test nécessaire pour s’assurer de la qualité des résultats issus du modèle de régression linéaire.
+Le rejet de cette hypothèse d’indépendance rend les coefficients estimés, selon la forme fonctionnelle postulée (ou processus générateur des données – PGD) par le modèle, biaisés et/ou biaise le calcul des écarts-types, invalidant ainsi les tests de significativité usuels. La présence d’autocorrélation spatiale entre les résidus est donc un premier test nécessaire pour s’assurer de la qualité des résultats issus du modèle de régression linéaire.
 
 À noter qu’une autocorrélation spatiale entre certaines variables observables, dépendantes ou indépendantes est possible sans pour autant que les résidus soient autocorrélés. Dans ce cas, les relations entre les variables indépendantes permettent de capter l’effet spatial contenu dans la variable dépendante et les résultats d’estimations sont valides si les résidus sont homoscédastiques, c’est-à-dire de variance homogène (autrement, le problème peut facilement être réglé par un simple ajout d’option dans la commande du modèle de régression). Ce n’est donc pas sur les variables observables que le test de détection d’autocorrélation spatiale est important, mais bien sur les résidus du modèle.
 
@@ -1555,7 +1563,7 @@ modele_MCO <- lm(PM25 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed, dat
 summary(modele_MCO)
 ``` 
 
-Pour vérifier la dépendance spatiale du modèle, nous calculons le *I* de Moran sur les résidus avec la fonction `lm.morantest` du *package* `spdep` et nous cartographions les résidus avec le *package* `tmap`. La statistique du *I* de Moran sur les résidus (*I* = 0,66, *p* \< 0,001) indique clairement que le modèle OLS a un problème de dépendance spatiale et que ses coefficients de régression reportés plus haut sont certainement biaisés. Aussi, la cartographie des coefficients de régression montre des résidus positifs dans les IRIS des quartiers centraux, tandis que les résidus négatifs sont concentrés dans les IRIS des quartiers ou des municipalités périphériques (@fig-ResidusMCOchap1). Par conséquent, le recours à des régressions spatiales est certainement nécessaire pour remédier à ce problème de dépendance spatiale du modèle MCO.
+Pour vérifier la dépendance spatiale du modèle, nous calculons le *I* de Moran sur les résidus avec la fonction `lm.morantest` du *package* `spdep` et nous cartographions les résidus avec le *package* `tmap`. La statistique du *I* de Moran sur les résidus (*I* = 0,66, *p* \< 0,001) indique clairement que le modèle MCO a un problème de dépendance spatiale et que ses coefficients de régression reportés plus haut sont certainement biaisés. Aussi, la cartographie des coefficients de régression montre des résidus positifs dans les IRIS des quartiers centraux, tandis que les résidus négatifs sont concentrés dans les IRIS des quartiers ou des municipalités périphériques (@fig-ResidusMCOchap1). Par conséquent, le recours à des régressions spatiales est certainement nécessaire pour remédier à ce problème de dépendance spatiale du modèle MCO.
 
 ```{r}
 #| echo: true 
@@ -1610,7 +1618,7 @@ tm_shape(LyonIris)+
 
 ### Hétérogénéité spatiale {#sec-0172}
 
-L’hétérogénéité ou la non-stationnarité (***spatial heterogeneity*** ou ***nonstationarity***) se manifeste quand les relations entre les variables dépendante et indépendantes varient dans l'espace (en d'autres termes à travers les entités spatiales du jeu de données). Cela contrevient ainsi à l'hypothèse de l’homogénéité spatiale ou de stationnarité spatiale selon laquelle les coefficients du modèle doivent être constant dans l'espace.
+L’hétérogénéité ou la non-stationnarité (***spatial heterogeneity*** ou ***nonstationarity***) se manifeste quand les relations entre la variable dépendante et les variables indépendantes varient dans l'espace (en d'autres termes à travers les entités spatiales du jeu de données). Cela contrevient ainsi à l'hypothèse de l’homogénéité spatiale ou de stationnarité spatiale selon laquelle les coefficients du modèle doivent être constant dans l'espace.
 
 ::: bloc_aller_loin
 ::: bloc_aller_loin-header
@@ -1619,7 +1627,7 @@ L’hétérogénéité ou la non-stationnarité (***spatial heterogeneity*** ou 
 **Hétérogénéité ou non-stationnarité spatiale et méthodes de régression spatiale : quelles solutions?**
 :::
 ::: bloc_aller_loin-body
-**Les régressions géographiquement pondérées** ([chapitre @sec-chap04] et [chapitre @sec-chap05]), sont des outils d'exploration particulièrement adaptés pour explorer et cartographier l'instabilité des relations entre les variables dépendante et indépendantes d'un modèle de régression.
+**Les régressions géographiquement pondérées** ([chapitre @sec-chap04] et [chapitre @sec-chap05]), sont des outils d'exploration particulièrement adaptés pour explorer et cartographier l'instabilité des relations entre la variable dépendante et les variables indépendantes d'un modèle de régression.
 
 **Les modèles généralisés additifs** ([chapitre @sec-chap06]) permettent d'introduire des lissages spatiaux pour capturer les tendances spatiales, soit de manière continues (avec une spline bivariée sur les coordonnées géographiques), soit de manière discrète (avec un lissage par champ aléatoire de Markov).
 :::

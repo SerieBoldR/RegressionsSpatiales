@@ -5,7 +5,7 @@
      - "Les résidus doivent suivre une distribution normale."
      - "Les relations entre les variables indépendantes et la variable dépendante doivent être linéaires."
      - "Les variables indépendantes ne doivent pas être corrélées entre-elles."
-  help: "Relisez au besoin la [section @sec-073]."
+  help: "Relisez au besoin la [section @sec-071]."
 
 - label: "Dans un GAM, que représente la fonction f ?"
   type: mc
@@ -44,4 +44,4 @@
      - "Interpréter les coefficients de chacune des bases de la spline."
      - "Cartographier les résidus du modèle."
      - "Cartographier l'effet de la spline grâce à la méthode des effets marginaux"
-  help: "Relisez au besoin la [section @sec-0751]."
+  help: "Relisez au besoin la [section @sec-0752]."

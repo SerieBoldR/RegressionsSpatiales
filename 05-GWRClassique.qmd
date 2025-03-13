@@ -16,7 +16,7 @@ La régression géographiquement pondérée (*geographically weighted regression
 -   comprendre pourquoi utiliser une GWR;
 -   assimiler les principes fondamentaux d'une GWR classique (distribution gaussienne);
 -   analyser les résultats produits par une GWR;
--   saisir que la GWR est un outil exploratoire intéressant, comprenant toutefois plusieurs limites et critiques importantes;
+-   comprendre les limites et critiques de la GWR;
 -   mettre en pratique une GWR dans R.
 :::
 :::
@@ -154,11 +154,11 @@ Dans le modèle GWR, la valeur de *b* est soit fixée par la personne utilisatri
 
 ### Exemple applicatif de la GWR {#sec-0513}
 
-Pour démontrer l'utilité de la GWR comme outil d'exploration de l'instabilité spatiale d'un modèle classique, nous utilisons le jeu de données sur Lyon ([section @sec-0111]). Les modèles de régression (global et GWR) sont construits avec comme variable dépendante le dioxyde d'azote (NO~2~) et cinq variables sociodémographiques comme variables indépendantes ([section @sec-0111]).
+Pour démontrer l'utilité de la GWR comme outil d'exploration de l'instabilité spatiale d'un modèle classique, nous utilisons le jeu de données sur Lyon ([section @sec-0111]). Les modèles de régression (global et GWR) sont construits avec le dioxyde d'azote (NO~2~) comme variable dépendante et cinq variables sociodémographiques comme variables indépendantes ([section @sec-0111]).
 
 #### Résultats du modèle global {#sec-05131}
 
-Les résultats de la régression linéaire multiple (modèle global) sont présentés au @tbl-regressionMCO. Les variables sociodémographiques (variables indépendantes) introduites dans le modèle expliquent 28,3 % de la variance du dioxyde d'azote (variable dépendante). La constante et tous les coefficients de régression du modèle sont significatifs (p \< 0,001). Toutes choses étant égales par ailleurs, le pourcentage d'immigrants est associé positivement avec le dioxyde d'azote ($\beta$ = 0,283), ce qui traduit une certaine iniquité environnementale pour ce groupe de population. À l'inverse, toutes les autres variables sont associées négativement.
+Les résultats de la régression linéaire multiple (modèle global) sont présentés au @tbl-regressionMCO. Les variables sociodémographiques (variables indépendantes) introduites dans le modèle expliquent 28,3 % de la variance du dioxyde d'azote (variable dépendante). La constante et tous les coefficients de régression du modèle sont significatifs (p \< 0,05). Toutes choses étant égales par ailleurs, le pourcentage d'immigrants est associé positivement avec le dioxyde d'azote ($\beta$ = 0,283), ce qui traduit une certaine iniquité environnementale pour ce groupe de population. À l'inverse, toutes les autres variables sont associées négativement.
 
 ```{r}
 #| label: tbl-regressionMCO
@@ -411,7 +411,7 @@ LyonIris$plus_sign <-  factor(plus_sign,
 
 carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
             tm_fill(col="nb_signif_1.96", palette="Reds",
-                 title = "Sign. au seuil de 5%")+
+                 title = "Nombre de variables \nsignificatives au seuil de 5%")+
           tm_layout(frame=FALSE)+ tm_scale_bar(breaks=c(0,5))
 
 carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
@@ -1037,7 +1037,7 @@ carte2 <- tm_shape(gwr_resultats)+
                     midpoint = NA,
                     breaks = classes_intervalles,
                     legend.format = legende_parametres,
-                    title = "Niveau de vie (€1000)")+
+                    title = "Valeur de t\nNiveau de vie (€1000)")+
             tm_layout(frame=FALSE)
 
 tmap_arrange(carte1, carte2)
@@ -1084,7 +1084,7 @@ La GWR fait face aussi à d'importantes critiques :
 
 -   **Validité des modèles locaux**. Pour une régression linéaire multiple, il est primordial de réaliser un diagnostic pour s'assurer du nombre suffisant d'observations, de l'absence de multicolinéarité excessive et de la normalité et l'homoscédasticité des résidus (lire par exemple cette [section](https://serieboldr.github.io/MethodesQuantitatives/07-regressionlineaire.html#sec-076) [@RBoldAirMethodesQuanti]). Or, ce diagnostic devrait être réalisé pour tous les modèles locaux obtenus pour les *n* observations du jeu de données. Par exemple, si le modèle global ne pose pas de problème de multicolinéarité excessive, rien ne garantit qu'elle ne soit pas présente dans plusieurs modèles locaux [@wheeler2005multicollinearity].
 
-- **Corrélation entre les coefficients locaux**. Dans un article intitulé *Multicollinearity and correlation among local regression coefficients in geographically weighted regression*, @wheeler2005multicollinearity signalent les coefficients de régression locaux peuvent être fortement corrélés entre eux, en raison d'un problème de multicolinéarité excessive des modèles locaux. En guise d'exemple, la @fig-CorrelationCoefs montre bien que certaines paires de coefficients locaux sont corrélées fortement.
+- **Corrélation entre les coefficients locaux**. Dans un article intitulé *Multicollinearity and correlation among local regression coefficients in geographically weighted regression*, @wheeler2005multicollinearity signalent les coefficients de régression locaux peuvent être fortement corrélés entre eux, en raison d'un problème de multicolinéarité excessive des modèles locaux. En guise d'exemple, la @fig-CorrelationCoefs montre bien que certaines paires de coefficients locaux sont fortement corrélées.
 
 ```{r}
 #| echo: true 
