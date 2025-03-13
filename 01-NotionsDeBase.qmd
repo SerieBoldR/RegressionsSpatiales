@@ -1610,9 +1610,15 @@ tm_shape(LyonIris)+
 **Dépendance spatiale et méthodes de régression spatiale : quelles solutions?**
 :::
 ::: bloc_aller_loin-body
-**Les modèles d'économétrie spatiale** ([chapitre @sec-chap02] et [chapitre @sec-chap03]) sont des solutions particulièrement intéressantes pour remédier au problème de dépendance spatiale d'un modèle et obtenir des coefficients de régression non biaisés.
 
-**Les modèles linéaires généralisés et ceux avec filtrage spatial** ([chapitre @sec-chap07]) permettent de capturer les tendances spatiales en résumant la matrice de pondération spatiale $W$.
+
+Les **modèles des moindres carrés généralisés** (GLS) et les **modèles linéaires généralisés à effets mixtes** (GLMM) permettent d'ajuster la corrélation spatiale sur les termes d'erreur.
+
+Le **modèle d'autorégression conditionnelle** (CAR) permet de tenir compte de la dépendance locale de la variable dépendante ([chapitre @sec-chap02]).
+
+**Les modèles d'économétrie spatiale** ([chapitre @sec-chap03], [chapitre @sec-chap04] et [chapitre @sec-chap05]) sont des solutions particulièrement intéressantes pour remédier au problème de dépendance spatiale d'un modèle et obtenir des coefficients de régression non biaisés, et ce, en introduisant l'autocorrélation spatiale de différentes façons : sur les variables indépendantes, sur la variable dépendante, sur le terme d'erreur, etc.).
+
+**Les modèles linéaires généralisés** (GAM) ([chapitre @sec-chap06]) permettent d’introduire des lissages spatiaux pour capturer les tendances spatiales soit de manière continue (avec une spline bivariée sur les coordonnées géographiques), soit de manière discrète (avec un lissage par champ aléatoire de Markov). Aussi, les **modèles linéaires généralisés avec des vecteurs spatiaux** ([chapitre @sec-chap07]) permettent de capturer les tendances spatiales en résumant la matrice de pondération spatiale $W$.
 :::
 :::
 
@@ -1627,9 +1633,9 @@ L’hétérogénéité ou la non-stationnarité (***spatial heterogeneity*** ou 
 **Hétérogénéité ou non-stationnarité spatiale et méthodes de régression spatiale : quelles solutions?**
 :::
 ::: bloc_aller_loin-body
-**Les régressions géographiquement pondérées** ([chapitre @sec-chap04] et [chapitre @sec-chap05]), sont des outils d'exploration particulièrement adaptés pour explorer et cartographier l'instabilité des relations entre la variable dépendante et les variables indépendantes d'un modèle de régression.
+**Les régressions géographiquement pondérées** ([chapitre @sec-chap08] et [chapitre @sec-chap09]), sont des outils d'exploration particulièrement adaptés pour explorer et cartographier l'instabilité des relations entre la variable dépendante et les variables indépendantes d'un modèle de régression.
 
-**Les modèles généralisés additifs** ([chapitre @sec-chap06]) permettent d'introduire des lissages spatiaux pour capturer les tendances spatiales, soit de manière continues (avec une spline bivariée sur les coordonnées géographiques), soit de manière discrète (avec un lissage par champ aléatoire de Markov).
+Les **modèles généralisés additifs** (GAM) et les **modèles généralisés à effet mixtes** (GLMM) permmettent aussi d'intégrer des coefficients variant spatialement ([chapitre @sec-chap09])
 :::
 :::
 
@@ -1673,7 +1679,7 @@ library(spdep)
 # I de Moran sur la variable Lden selon des permutations Monte-Carlo
 à compléter
 ```
-Correction à la [section @sec-10011].
+Correction à la [section @sec-11011].
 :::
 :::
 
@@ -1705,6 +1711,6 @@ formule <- "Lden ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed"
 # Cartographie des résidus
 à compléter
 ```
-Correction à la [section @sec-10012].
+Correction à la [section @sec-11012].
 :::
 :::

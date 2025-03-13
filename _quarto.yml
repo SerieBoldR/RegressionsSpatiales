@@ -58,26 +58,28 @@ book:
   chapters:
   - index.qmd
   - 00-auteurs.qmd
-  - part: Partie 1. Notions de base
+  - part: "Partie 1. Notions de base"
   - 01-NotionsDeBase.qmd
-  - part: Partie 2. Économétrie spatiale
-  - 02-ModelesEconometrieSpatiale.qmd
-  - 03-SpatialProbit.qmd
-  - 04-ModelesSpatiauxPanel.qmd
-  - part: Partie 3. Régressions géographiquement pondérées
-  - 05-GWRClassique.qmd
-  - 06-GWRExtensions.qmd
-  - part: Partie 4. Autres approches de modélisations spatiales
-  - 07-GAM.qmd
-  - 08-SEM.qmd
-  - 09-GLS.qmd
-  - part: Partie 5. Exercices et bibliographie
-  - 10-Exercices.qmd
+  - part: "Partie 2. Spécification de la structure de covariance spatiale"
+  - 02-GLS_CAR_GLMM.qmd
+  - part: Partie 3. Économétrie spatiale
+  - 03-EconometrieSpatiale.qmd
+  - 04-ProbitSpatial.qmd
+  - 05-EcoSpatialePanel.qmd
+  - part: "Partie 4. Autres approches de modélisations spatiales"
+  - 06-GAM.qmd
+  - 07-SEM.qmd
+  - part: "Partie 5. Régressions spatiales et hétérogénéité spatiale"
+  - 08-GWRClassique.qmd
+  - 09-GWRExtensions.qmd
+  - 10-Heterogenite_GAM_GLMM.qmd
+  - part: "Partie 6. Conclusions"
+  - 11-Exercices.qmd
+  - 12-Conclusion.qmd
   - references.qmd
       
 bibliography: references.bib
 csl: StyleRefs.csl
-
 
 format:
   html:
@@ -98,15 +100,16 @@ format:
     documentclass: scrbook
     papersize: letter
     keep-tex: false
+    fig-dpi: 100
     classoption:
       # Remove odd-even page breaks (for printing PDF)
       - open=any
       - twoside=false # don't use even/odd pages, no blank pages
       # pass french to book class (babel will see it automatically)
       - french
-    output: "MéthodesRegressionsSpatiales.pdf"
+    output-file: "Méthodes_regressions_spatiales.pdf"
     hyperrefoptions:
-      - pdfstartview={XYZ null null 0.75}
+      # - pdfstartview={XYZ null null 0.75}
       - pdfpagemode=UseOutlines
       - pdfdisplaydoctitle=true
       - pdfpagelayout=SinglePage
@@ -136,5 +139,6 @@ format:
       - tex-hacks/image-on-title-page.tex
       - tex-hacks/callout.tex
     header-includes:
+      - \usepackage{xparse}
       - \renewcommand{\thepart}{} % Enlever numérotation des parties
       - \setcounter{secnumdepth}{3} % Activer la numérotation des sections jusqu'au niveau des sous-sections

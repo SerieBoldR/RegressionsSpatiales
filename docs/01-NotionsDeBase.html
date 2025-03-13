@@ -80,7 +80,7 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./02-ModelesEconometrieSpatiale.html" rel="next">
+<link href="./02-GLS_CAR_GLMM.html" rel="next">
 <link href="./00-auteurs.html" rel="prev">
 <link href="./images/introduction/CouvertureP1.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js"></script>
@@ -201,40 +201,34 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Partie 2. Économétrie spatiale</span></span>
+ <span class="menu-text">Partie 2. Spécification de la structure de covariance spatiale</span></span>
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./02-ModelesEconometrieSpatiale.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./03-SpatialProbit.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles probit spatiaux pour une variable dépendante dichtonomique (en cours de rédaction)</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./04-ModelesSpatiauxPanel.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale en panel (en cours de rédaction)</span></span></a>
+  <a href="./02-GLS_CAR_GLMM.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles intégrant une structure de covariance spatiale (en cours de rédaction)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Partie 3. Régressions géographiquement pondérées</span></span>
+ <span class="menu-text">Partie 3. Économétrie spatiale</span></span>
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05-GWRClassique.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Régressions géographiquement pondérées classiques</span></span></a>
+  <a href="./03-EconometrieSpatiale.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-GWRExtensions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée (en cours de rédaction)</span></span></a>
+  <a href="./04-ProbitSpatial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles probit spatiaux pour une variable dépendante dichtonomique (en cours de rédaction)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-EcoSpatialePanel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale en panel (en cours de rédaction)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -243,30 +237,52 @@ window.Quarto = {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07-GAM.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modèles généralisés additifs</span></span></a>
+  <a href="./06-GAM.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Modèles généralisés additifs</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08-SEM.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Filtrage spatial</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./09-GLS.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modèles des moindres carrés ordinaires (GLS) (en cours de rédaction)</span></span></a>
+  <a href="./07-SEM.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés avec des vecteurs spatiaux</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Partie 5. Exercices et bibliographie</span></span>
+ <span class="menu-text">Partie 5. Régressions spatiales et hétérogénéité spatiale</span></span>
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10-Exercices.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Correction des exercices</span></span></a>
+  <a href="./08-GWRClassique.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Régressions géographiquement pondérées classiques</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-GWRExtensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée (en cours de rédaction)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-Heterogenite_GAM_GLMM.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Modèles GAM et GLMM avec des coefficients variant spatialement (en cours de rédaction)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Partie 6. Conclusions</span></span>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-Exercices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Correction des exercices</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-Conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Conclusion générale (en cours de rédaction)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -1792,7 +1808,7 @@ W 438 191844 438 203.0076 1789.585</code></pre>
 </div>
 </section></section></section><section id="sec-013" class="level2" data-number="1.3"><h2 data-number="1.3" class="anchored" data-anchor-id="sec-013">
 <span class="header-section-number">1.3</span> Variable spatialement décalée</h2>
-<p>À partir des matrices de pondérations standardisées en ligne, qu’elles soient de contiguïté ou de proximité, il est possible de calculer une version spatialement décalée d’une variable initiale. De la sorte, pour une entité spatiale <em>i</em>, il est possible de connaître la valeur moyenne d’une variable pour ses entités voisines ou proches (dépendamment si la matrice est définie selon la contiguïté ou la proximité). Au <a href="02-ModelesEconometrieSpatiale.html" class="quarto-xref">chapitre&nbsp;<span>2</span></a>, nous verrons que ces variables spatiales décalées sont utilisées dans plusieurs modèles d’économétrie spatiale.</p>
+<p>À partir des matrices de pondérations standardisées en ligne, qu’elles soient de contiguïté ou de proximité, il est possible de calculer une version spatialement décalée d’une variable initiale. De la sorte, pour une entité spatiale <em>i</em>, il est possible de connaître la valeur moyenne d’une variable pour ses entités voisines ou proches (dépendamment si la matrice est définie selon la contiguïté ou la proximité). Au <a href="02-GLS_CAR_GLMM.html" class="quarto-xref">chapitre&nbsp;<span>2</span></a>, nous verrons que ces variables spatiales décalées sont utilisées dans plusieurs modèles d’économétrie spatiale.</p>
 <div class="bloc_notes">
 <div class="bloc_notes-header">
 <div class="bloc_notes-icon">
@@ -2613,8 +2629,10 @@ Figure&nbsp;1.14: Cartographie des résidus d’un modèle MCO
 <p><strong>Dépendance spatiale et méthodes de régression spatiale&nbsp;: quelles solutions?</strong></p>
 </div>
 <div class="bloc_aller_loin-body">
-<p><strong>Les modèles d’économétrie spatiale</strong> (<a href="02-ModelesEconometrieSpatiale.html" class="quarto-xref">chapitre&nbsp;<span>2</span></a> et <a href="03-SpatialProbit.html" class="quarto-xref">chapitre&nbsp;<span>3</span></a>) sont des solutions particulièrement intéressantes pour remédier au problème de dépendance spatiale d’un modèle et obtenir des coefficients de régression non biaisés.</p>
-<p><strong>Les modèles linéaires généralisés et ceux avec filtrage spatial</strong> (<a href="07-GAM.html" class="quarto-xref">chapitre&nbsp;<span>7</span></a>) permettent de capturer les tendances spatiales en résumant la matrice de pondération spatiale <span class="math inline">\(W\)</span>.</p>
+<p>Les <strong>modèles des moindres carrés généralisés</strong> (GLS) et les <strong>modèles linéaires généralisés à effets mixtes</strong> (GLMM) permettent d’ajuster la corrélation spatiale sur les termes d’erreur.</p>
+<p>Le <strong>modèle d’autorégression conditionnelle</strong> (CAR) permet de tenir compte de la dépendance locale de la variable dépendante (<a href="02-GLS_CAR_GLMM.html" class="quarto-xref">chapitre&nbsp;<span>2</span></a>).</p>
+<p><strong>Les modèles d’économétrie spatiale</strong> (<a href="03-EconometrieSpatiale.html" class="quarto-xref">chapitre&nbsp;<span>3</span></a>, <a href="04-ProbitSpatial.html" class="quarto-xref">chapitre&nbsp;<span>4</span></a> et <a href="05-EcoSpatialePanel.html" class="quarto-xref">chapitre&nbsp;<span>5</span></a>) sont des solutions particulièrement intéressantes pour remédier au problème de dépendance spatiale d’un modèle et obtenir des coefficients de régression non biaisés, et ce, en introduisant l’autocorrélation spatiale de différentes façons&nbsp;: sur les variables indépendantes, sur la variable dépendante, sur le terme d’erreur, etc.).</p>
+<p><strong>Les modèles linéaires généralisés</strong> (GAM) (<a href="06-GAM.html" class="quarto-xref">chapitre&nbsp;<span>6</span></a>) permettent d’introduire des lissages spatiaux pour capturer les tendances spatiales soit de manière continue (avec une spline bivariée sur les coordonnées géographiques), soit de manière discrète (avec un lissage par champ aléatoire de Markov). Aussi, les <strong>modèles linéaires généralisés avec des vecteurs spatiaux</strong> (<a href="07-SEM.html" class="quarto-xref">chapitre&nbsp;<span>7</span></a>) permettent de capturer les tendances spatiales en résumant la matrice de pondération spatiale <span class="math inline">\(W\)</span>.</p>
 </div>
 </div>
 </section><section id="sec-0172" class="level3" data-number="1.6.2"><h3 data-number="1.6.2" class="anchored" data-anchor-id="sec-0172">
@@ -2628,8 +2646,8 @@ Figure&nbsp;1.14: Cartographie des résidus d’un modèle MCO
 <p><strong>Hétérogénéité ou non-stationnarité spatiale et méthodes de régression spatiale&nbsp;: quelles solutions?</strong></p>
 </div>
 <div class="bloc_aller_loin-body">
-<p><strong>Les régressions géographiquement pondérées</strong> (<a href="04-ModelesSpatiauxPanel.html" class="quarto-xref">chapitre&nbsp;<span>4</span></a> et <a href="05-GWRClassique.html" class="quarto-xref">chapitre&nbsp;<span>5</span></a>), sont des outils d’exploration particulièrement adaptés pour explorer et cartographier l’instabilité des relations entre la variable dépendante et les variables indépendantes d’un modèle de régression.</p>
-<p><strong>Les modèles généralisés additifs</strong> (<a href="06-GWRExtensions.html" class="quarto-xref">chapitre&nbsp;<span>6</span></a>) permettent d’introduire des lissages spatiaux pour capturer les tendances spatiales, soit de manière continues (avec une spline bivariée sur les coordonnées géographiques), soit de manière discrète (avec un lissage par champ aléatoire de Markov).</p>
+<p><strong>Les régressions géographiquement pondérées</strong> (<a href="08-GWRClassique.html" class="quarto-xref">chapitre&nbsp;<span>8</span></a> et <a href="09-GWRExtensions.html" class="quarto-xref">chapitre&nbsp;<span>9</span></a>), sont des outils d’exploration particulièrement adaptés pour explorer et cartographier l’instabilité des relations entre la variable dépendante et les variables indépendantes d’un modèle de régression.</p>
+<p>Les <strong>modèles généralisés additifs</strong> (GAM) et les <strong>modèles généralisés à effet mixtes</strong> (GLMM) permmettent aussi d’intégrer des coefficients variant spatialement (<a href="09-GWRExtensions.html" class="quarto-xref">chapitre&nbsp;<span>9</span></a>)</p>
 </div>
 </div>
 </section></section><section id="sec-017" class="level2" data-number="1.7"><h2 data-number="1.7" class="anchored" data-anchor-id="sec-017">
@@ -3019,7 +3037,7 @@ Vérifiez votre résultat
 <span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a><span class="co"># I de Moran sur la variable Lden selon des permutations Monte-Carlo</span></span>
 <span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>à compléter</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Correction à la <a href="10-Exercices.html#sec-10011" class="quarto-xref">section&nbsp;<span>10.1.1</span></a>.</p>
+<p>Correction à la <a href="11-Exercices.html#sec-11011" class="quarto-xref">section&nbsp;<span>11.1.1</span></a>.</p>
 </div>
 </div>
 <div class="bloc_exercice">
@@ -3047,7 +3065,7 @@ Vérifiez votre résultat
 <span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Cartographie des résidus</span></span>
 <span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a>à compléter</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Correction à la <a href="10-Exercices.html#sec-10012" class="quarto-xref">section&nbsp;<span>10.1.2</span></a>.</p>
+<p>Correction à la <a href="11-Exercices.html#sec-11012" class="quarto-xref">section&nbsp;<span>11.1.2</span></a>.</p>
 </div>
 </div>
 
@@ -3503,8 +3521,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./02-ModelesEconometrieSpatiale.html" class="pagination-link" aria-label="Modèles d'économétrie spatiale">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./02-GLS_CAR_GLMM.html" class="pagination-link" aria-label="Modèles intégrant une structure de covariance spatiale (en cours de rédaction)">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles intégrant une structure de covariance spatiale (en cours de rédaction)</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

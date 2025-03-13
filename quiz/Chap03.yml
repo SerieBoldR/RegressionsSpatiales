@@ -1,0 +1,57 @@
+- label: "Dans un modèle SLX, la matrice de pondération spatiale est appliquée au niveau de :"
+  type: uc
+  response: 2
+  answers:
+     - "Variable dépendante"
+     - "Variables indépendantes"
+     - "Terme d'erreur"
+     - "Variable dépendante et variables indépendantes"
+     - "Variable dépendante et terme d'erreur"
+  help: "Relisez au besoin la [section @sec-0311]."
+  
+- label: "Dans un modèle SAR, la matrice de pondération spatiale est appliquée au niveau de :"
+  type: uc
+  response: 1
+  answers:
+     - "Variable dépendante"
+     - "Variables indépendantes"
+     - "Terme d'erreur"
+  help: "Relisez au besoin la [section @sec-0312]."
+  
+- label: "Dans un modèle SEM, la matrice de pondération spatiale est appliquée au niveau de :"
+  type: uc
+  response: 3
+  answers:
+     - "Variable dépendante"
+     - "Variables indépendantes"
+     - "Terme d'erreur"
+  help: "Relisez au besoin la [section @sec-0313]."
+
+- label: "Dans un modèle mixte SDM, la matrice de pondération spatiale est appliquée au niveau de :"
+  type: mc
+  response: [1,2]
+  answers:
+     - "Variable dépendante"
+     - "Variables indépendantes"
+     - "Terme d'erreur"
+  help: "Relisez au besoin la [section @sec-0314]."
+
+- label: "Dans un modèle SDEM, la matrice de pondération spatiale est appliquée au niveau de :"
+  type: mc
+  response: [2,3]
+  answers:
+     - "Variable dépendante"
+     - "Variables indépendantes"
+     - "Terme d'erreur"
+  help: "Relisez au besoin la [section @sec-0315]."
+
+- label: "Quelle est la procédure popularisée par Luc Anselin pour discriminer entre les spécifications SAR, SEM et MCO?"
+  type: uc
+  response: 1
+  answers:
+     - "Tests du multiplicateur de Lagrange (LM) sur le modèle MCO"
+     - "Mesures AIC et BIC"
+     - "I de Moran"
+     - "Tests du ratio de vraisemblance sur les modèles spatiaux"
+  help: "Relisez au besoin la [section @sec-0321]."
+  
