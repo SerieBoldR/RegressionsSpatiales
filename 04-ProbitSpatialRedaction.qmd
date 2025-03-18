@@ -107,7 +107,7 @@ $$ {#eq-Probit07}
 
 où $p_i=P(Y^*_i)$, c'est-à-dire la probabilité que l'observation $i$ prenne la valeur 1 en fonction de ses caractéristiques $X_i$.
 
-Si nous procédons à l'estimation de ce modèle par moindres carrés ordinaires (MCO), cette méthode d'estimation présente quatre problèmes:
+Si nous procédons à l'estimation de ce modèle par moindres carrés ordinaire (MCO), cette méthode d'estimation présente quatre problèmes:
 
 -   Le terme d'erreur suit une distribution discrète et, par conséquent, l'hypothèse de normalité ne s'applique pas.
 -   Le terme d'erreur viole l'hypothèse d'homoscedasticité.

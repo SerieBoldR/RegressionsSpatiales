@@ -1418,8 +1418,8 @@ Tableau&nbsp;1.5: Standardisation de matrices de pondération spatiale
 <li><p><code>nb2listw(objet nb, zero.policy = TRUE, style = "W")</code> crée une matrice de pondération spatiale à partir de n’importe quelle matrice spatiale (de contiguïté ou de distance). Le paramètre <code>style = "W"</code>, qui est défini par défaut, permet de standardiser la matrice en ligne. Par exemple, <code>w_queen$weights[[1]]</code> renvoie les valeurs des pondérations pour la première entité spatiale, soit <code>0.25 0.25 0.25 25</code> (0,25 = 1&nbsp;/&nbsp;4 voisins). Pour obtenir une matrice non standardisée, vous devez écrire <code>style = "B"</code>, alors <code>w_queen$weights[[1]]</code> renverra les valeurs de <code>1 1 1 1</code>.</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span>    <span class="co"># pour importer des couches géographiques</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/spdep/">spdep</a></span><span class="op">)</span> <span class="co"># pour construire les matrices de pondération</span></span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-spatial/spdep/">spdep</a></span><span class="op">)</span></span>
+<span></span>
 <span><span class="co">## Utilisation du jeu de données sur l'agglomération de Lyon</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"data/Lyon.Rdata"</span><span class="op">)</span></span>
 <span></span>
@@ -1593,7 +1593,7 @@ W 506 256036 506 204.0416 2099.405</code></pre>
 </div>
 <p>Spécifier un seuil de distance trop réduit peut toutefois être problématique. Par exemple, sur les 506&nbsp;IRIS de l’agglomération de Lyon, 68&nbsp;n’ont pas de voisins à 1000&nbsp;mètres, indiqués par le résultat suivant&nbsp;: <code>68 regions with no links</code>.</p>
 <div class="cell">
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Résultats de matrice de pondérations spatiales avec un seuil de 1000 mètres</span></span>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Résultats de la matrice de pondération spatiale avec un seuil de 1000 mètres</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">w_inv_distances_1000</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Characteristics of weights list object:
@@ -2646,7 +2646,7 @@ Figure&nbsp;1.14: Cartographie des résidus d’un modèle MCO
 <p><strong>Hétérogénéité ou non-stationnarité spatiale et méthodes de régression spatiale&nbsp;: quelles solutions?</strong></p>
 </div>
 <div class="bloc_aller_loin-body">
-<p><strong>Les régressions géographiquement pondérées</strong> (<a href="08-GWRClassique.html" class="quarto-xref">chapitre&nbsp;<span>8</span></a> et <a href="09-GWRExtensions.html" class="quarto-xref">chapitre&nbsp;<span>9</span></a>), sont des outils d’exploration particulièrement adaptés pour explorer et cartographier l’instabilité des relations entre la variable dépendante et les variables indépendantes d’un modèle de régression.</p>
+<p><strong>Les régressions géographiquement pondérées</strong> (<a href="08-GWRClassique.html" class="quarto-xref">chapitre&nbsp;<span>8</span></a> et <a href="09-GWRExtensions.html" class="quarto-xref">chapitre&nbsp;<span>9</span></a>), sont des outils d’exploration particulièrement adaptés pour cartographier et analyser l’instabilité des relations entre la variable dépendante et les variables indépendantes d’un modèle de régression.</p>
 <p>Les <strong>modèles généralisés additifs</strong> (GAM) et les <strong>modèles généralisés à effet mixtes</strong> (GLMM) permmettent aussi d’intégrer des coefficients variant spatialement (<a href="09-GWRExtensions.html" class="quarto-xref">chapitre&nbsp;<span>9</span></a>)</p>
 </div>
 </div>

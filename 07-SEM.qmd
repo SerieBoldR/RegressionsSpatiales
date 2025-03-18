@@ -1,7 +1,7 @@
 # Modèles linéaires généralisés avec des vecteurs spatiaux {#sec-chap07}
 
 
-Daniel Griffith [-@griffith2019spatial] a proposé une autre technique pour ajouter l'espace dans un modèle, connue sous le nom du filtrage spatial (*spatial filtering*). Cette technique est très flexible, car elle s'applique à n'importe quel type de modèles GLM, GLMM et GAM. L'approche est relativement simple : elle consiste à ajouter dans le modèle un ensemble de variables supplémentaires dont le rôle est de capturer des tendances spatiales qui autrement seraient présentes dans les résidus. Ces variables supplémentaires sont appelées des vecteurs propres spatiaux (*spatial eigenvectors*, SEV) et sont obtenues à partir de la matrice de pondération spatiale décrivant l'espace de nos données. Plus exactement, les SEV sont obtenus en décomposant la matrice spatiale de la même manière que nous décomposons la variance d'un jeu de données lorsque nous réalisons une analyse en composantes principales (ACP). Pour un rappel sur l'ACP, vous pouvez vous référer au [chapitre sur les analyses factorielles](https://serieboldr.github.io/MethodesQuantitatives/12-AnalysesFactorielles.html#sec-122) [@RBoldAirMethodesQuanti]. Ces vecteurs propres sont aussi appelés *Moran eigenvectors* (MEM).
+Daniel Griffith [-@griffith2019spatial] a proposé une autre technique pour ajouter l'espace dans un modèle, connue sous le nom du filtrage spatial (*spatial filtering*). Cette technique est très flexible, car elle s'applique à n'importe quel type de modèles GLM, GLMM et GAM. L'approche est relativement simple : elle consiste à ajouter dans le modèle un ensemble de variables supplémentaires dont le rôle est de capturer des tendances spatiales qui autrement seraient présentes dans les résidus. Ces variables supplémentaires sont appelées des vecteurs propres spatiaux (*spatial eigenvectors*, SEV) et sont obtenues à partir de la matrice de pondération spatiale décrivant l'espace de nos données. Plus exactement, les SEV sont obtenus en décomposant la matrice spatiale de la même manière que nous décomposons la variance d'un jeu de données lorsque nous réalisons une analyse en composantes principales (ACP). Pour un rappel sur l'ACP, vous pouvez vous référer au [chapitre sur les analyses factorielles](https://serieboldr.github.io/MethodesQuantitatives/12-AnalysesFactorielles.html#sec-122) du manuel *Méthodes quantitatives en sciences sociales : un grand bol d’R* [@RBoldAirMethodesQuanti]. Ces vecteurs propres sont aussi appelés *Moran eigenvectors* (MEM).
 
 
 ::: bloc_objectif
@@ -46,7 +46,7 @@ Daniel Griffith [-@griffith2019spatial] a proposé une autre technique pour ajou
 
 ## Vecteurs propres de Moran {#sec-071}
 
-À partir d'une matrice spatiale *W* de taille *n x n*, il est possible de calculer *n-1* vecteurs propres de Moran qui représentent chacun un agencement spatial possible. Ces vecteurs propres sont obtenus en décomposant la variance de la matrice spatiale de façon analogue à une analyse en composantes principales (ACP). 
+À partir d'une matrice spatiale $W$ de taille $n \times n$, il est possible de calculer $n-1$ vecteurs propres de Moran qui représentent chacun un agencement spatial possible. Ces vecteurs propres sont obtenus en décomposant la variance de la matrice spatiale de façon analogue à une analyse en composantes principales (ACP). 
 
 
 ::: bloc_aller_loin
@@ -73,7 +73,7 @@ Prenons un exemple concret avec les données de secteurs de recensement de Montr
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-cap: Autocorrélation des vecteurs propres issus d'une matrice de contiguïté (Queen) sur les secteurs de recensement de la RMR de Montréal
+#| fig-cap: Autocorrélation des vecteurs propres issus d'une matrice de contiguïté (Queen) sur les secteurs de recensement de la région métropolitaine de recensement de Montréal
 #| fig-align: center
 #| out-width: 85%
 
@@ -174,8 +174,7 @@ carte4 <- tm_shape(data_mtl)+
   tm_layout(frame=FALSE, legend.outside = TRUE,
             main.title.size = 0.85,
             main.title = paste0('Vecteur propre 970 (I de Moran = ', 
-                                format(round(moran_vals[[970]],2), decimal.mark =","), ')')) + 
-  tm_scale_bar(breaks = c(0,10)) 
+                                format(round(moran_vals[[970]],2), decimal.mark =","), ')'))
 
 tmap_arrange(carte1, carte2, carte3, carte4, nrow = 2, ncol = 2)
 ```
@@ -238,7 +237,7 @@ La première approche proposée [@griffith2003spatial] consiste à appliquer une
 
 Puisque les vecteurs propres sont non corrélés, leur ordre d'ajout dans le modèle n'a pas d'importance. Il est donc conseillé d'ordonner les vecteurs propres en fonction de leur corrélation avec la variable dépendante pour effectuer leur sélection.
 
-Il est assez simple d'étendre cette approche à des GLM ou même à des GLMM. Pour ces modèles, l'objectif ne sera pas de maximiser le R^2^, mais plutôt d'obtenir une réduction significative de la déviance (*likelihood ratio test*). Notons que pour ce type de modèle, il est important de vérifier l'autocorrélation spatiale des résidus standardisés ou simulés, car de nombreux GLM supposent une hétéroscédasticité des résidus. Pour un rappel sur le *likelihood ratio test*, vous pouvez vous référer à [cette section](https://serieboldr.github.io/MethodesQuantitatives/08-GLM.html#sec-0716) du livre *Méthodes quantitatives en sciences sociales : un grand bol d’R* [@RBoldAirMethodesQuanti].
+Il est assez simple d'étendre cette approche à des GLM ou même à des GLMM. Pour ces modèles, l'objectif ne sera pas de maximiser le R^2^, mais plutôt d'obtenir une réduction significative de la déviance (*likelihood ratio test*). Notons que pour ce type de modèle, il est important de vérifier l'autocorrélation spatiale des résidus standardisés ou simulés, car de nombreux GLM supposent une hétéroscédasticité des résidus. Pour un rappel sur le *likelihood ratio test*, vous pouvez vous référer à [cette section](https://serieboldr.github.io/MethodesQuantitatives/08-GLM.html#sec-0816) du livre *Méthodes quantitatives en sciences sociales : un grand bol d’R* [@RBoldAirMethodesQuanti].
 
 L'approche par sélection itérative est très intuitive et relativement facile à mettre en œuvre. Cependant, elle comporte plusieurs défauts. Lorsque le jeu de données est grand, elle devient extrêmement coûteuse en temps de calcul, car le modèle doit être ajusté un grand nombre de fois. Aussi, bien que l'ordre d'ajout des vecteurs propres ne soit pas important, leur ajout séquentiel peut poser un problème. En effet, des combinaisons de vecteurs propres peuvent être particulièrement efficaces pour effectuer le filtrage spatial, ce qui n'est pas permis par la procédure pas à pas (*stepwise*). Notons ici que des approches alternatives utilisant par exemple des algorithmes génétiques ont été proposées [@helbich2016spatially], bien qu'elles ne soient pas communément utilisées.  
 
@@ -274,7 +273,7 @@ La méthode par lasso a été proposée comme alternative à la sélection pas �
 
 ## Mise en œuvre et analyse dans R {#sec-073}
 
-Pour illustrer l'utilisation des modèles SEVM, nous utilisons le même exemple que pour les modèles GAM ([section @sec-075]). Nous avons mentionné un peu plus haut que ces deux types de modèles se ressemblaient beaucoup dans leur façon d'intégrer l'espace dans leur formulation. 
+Pour illustrer l'utilisation des modèles SEVM, nous utilisons le même exemple que pour les modèles GAM ([section @sec-065]). Nous avons mentionné un peu plus haut que ces deux types de modèles se ressemblaient beaucoup dans leur façon d'intégrer l'espace dans leur formulation. 
 
 Nous modélisons donc une fois encore le log du ratio entre les parts modales du transport collectif et de la voiture pour les déplacements pendulaires pour les secteurs de recensement de la région métropolitaine de Montréal en 2021.
 
@@ -305,7 +304,7 @@ library(gamlss, quietly = TRUE)
 # Chargement des données
 data_mtl <- st_read('data/chap06/data_sr_access.gpkg', quiet = TRUE)
 
-# les variables d’accessibilité sont multipliées par 100 pour s’exprimer 
+# Les variables d’accessibilité sont multipliées par 100 pour s’exprimer 
 # sur l’échelle 0-100 plutôt que 0-1
 data_mtl$acs_idx_emp_pieton <- data_mtl$acs_idx_emp_pieton * 100
 data_mtl$acs_idx_emp_tc_peak <- data_mtl$acs_idx_emp_tc_peak * 100
@@ -354,6 +353,7 @@ moran_ev_sel <- ME(alr_val ~ prt_minorite_vis + prt_monoparental + revenu_median
                    alpha = 0.05,
                    zero.policy=TRUE)
 
+# Nombre de vecteurs propres
 ncol(moran_ev_sel$vectors)
 ```
 
@@ -369,6 +369,8 @@ La fonction ME a sélectionné `r ncol(moran_ev_sel $vectors)` vecteurs propres 
 #| fig-cap: Résidus simulés du modèle SEVM par sélection
 #| fig-align: center
 #| out-width: 85% 
+
+# Construction du modèle
 model_sel <- glm(alr_val ~ prt_minorite_vis + prt_monoparental + revenu_median +
                  acs_idx_emp_tc_peak + acs_idx_emp_pieton + 
                  fitted(moran_ev_sel),
@@ -377,11 +379,13 @@ model_sel <- glm(alr_val ~ prt_minorite_vis + prt_monoparental + revenu_median +
 
 # Validation des résidus
 res <- simulateResiduals(model_sel, plot = FALSE)
-moran.mc(residuals(res), listw = listw, nsim = 999)
 plot(res)
+
+# Autocorrélation spatiale des résidus
+moran.mc(residuals(res), listw = listw, nsim = 999)
 ```
 
-La @fig-ressev1 montre que les résidus simulés ne suivent pas une distribution uniforme. Nous avions rencontré un enjeu similaire lorsque nous avions ajusté les modèles GAM dans la [section @sec-075]. Nous avions notamment déterminé qu'une distribution de Student était plus adaptée qu'une simple distribution normale pour notre GLM. La fonction `ME` permet de sélectionner les vecteurs propres spatiaux pour un nombre limité de GLM. Pour pouvoir appliquer l'approche de sélection à d'autres types de modèles, il est nécessaire de l'implémenter manuellement. Nous répliquons ici l'approche décrite à la [section @sec-0721].
+La @fig-ressev1 montre que les résidus simulés ne suivent pas une distribution uniforme. Nous avions rencontré un enjeu similaire lorsque nous avions ajusté les modèles GAM dans la [section @sec-065]. Nous avions notamment déterminé qu'une distribution de Student était plus adaptée qu'une simple distribution normale pour notre GLM. La fonction `ME` permet de sélectionner les vecteurs propres spatiaux pour un nombre limité de GLM. Pour pouvoir appliquer l'approche de sélection à d'autres types de modèles, il est nécessaire de l'implémenter manuellement. Nous répliquons ici l'approche décrite à la [section @sec-0721].
 
 ```{r}
 #| echo: true 
@@ -827,7 +831,7 @@ carte1 <- tm_shape(data_mtl) +
           breaks = breaks$brks,
           midpoint = 1,
           legend.format = legende_parametres,
-          palette = "-RdBu", title = ) +
+          palette = "-RdBu") +
   tm_layout(frame=FALSE, legend.show = FALSE, title = 'SEL-SEVM')
 
 carte2 <- tm_shape(data_mtl) +
@@ -836,7 +840,7 @@ carte2 <- tm_shape(data_mtl) +
           midpoint = 1,
           legend.format = legende_parametres,
           palette = "-RdBu") +
-  tm_layout(frame=FALSE, legend.show = FALSE, title =  'RE-SEVM')
+  tm_layout(frame=FALSE, legend.show = FALSE, title = 'RE-SEVM')
 
 carte3 <- tm_shape(data_mtl) +
   tm_fill(col="effet_lasso", 

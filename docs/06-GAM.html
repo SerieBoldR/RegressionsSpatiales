@@ -380,7 +380,7 @@ window.Quarto = {
 <li>Pour construire des modèles GAM&nbsp;:
 <ul>
 <li>
-<code>mcgv</code>, le <em>package</em> de référence pour ajuster des modèles GAM. De nombreux autres <em>packages</em> proposent des extensions pour ce type de modèle et se basent principalement sur les outils mis à disposition par <code>mgcv</code> pour créer des bases et leurs matrices de pénalisation (<code>gamm4</code>, <code>brms</code>, <code>gamlss</code>, <code>qgam</code>, etc.).</li>
+<code>mgcv</code>, le <em>package</em> de référence pour ajuster des modèles GAM. De nombreux autres <em>packages</em> proposent des extensions pour ce type de modèle et se basent principalement sur les outils mis à disposition par <code>mgcv</code> pour créer des bases et leurs matrices de pénalisation (<code>gamm4</code>, <code>brms</code>, <code>gamlss</code>, <code>qgam</code>, etc.).</li>
 <li>
 <code>DHARMa</code>, un <em>package</em> permettant d’effectuer des diagnostics sur des résidus de modèles GLM.</li>
 </ul>
@@ -495,7 +495,7 @@ Figure&nbsp;6.4: Captation de l’effet spatial par une spline bivariée
 <p>avec <span class="math inline">\(sp\)</span> une matrice comprenant deux colonnes, soit les coordonnées cartésiennes des observations.</p>
 </section><section id="sec-063" class="level2" data-number="6.3"><h2 data-number="6.3" class="anchored" data-anchor-id="sec-063">
 <span class="header-section-number">6.3</span> Pourquoi recourir à un modèle GAM?</h2>
-<p>Les modèles GAM sont très flexibles puisqu’ils sont une extension directe des modèles linéaires généralisés (GLM). Ils peuvent donc être appliqués à des variables dépendantes suivant de nombreuses distributions (normale, gamma, binomiale, Poisson, Tweedie, log-normal, etc.). Cependant, ils imposent une conceptualisation particulière de l’espace. En effet, un modèle GAM n’inclut pas directement la notion de dépendance spatiale dans sa formulation. L’hypothèse d’indépendance des observations est conservée (contrairement à un modèle des moindres carrés généralisés, GLS). Le modèle intègre simplement un terme flexible correspondant à l’ajout d’un ensemble de nouvelles variables <span class="math inline">\(\mathbf{X}\)</span> structurées afin de capturer un effet spatialement positivement autocorrélé.</p>
+<p>Les modèles GAM sont très flexibles puisqu’ils sont une extension directe des modèles linéaires généralisés (GLM). Ils peuvent donc être appliqués à des variables dépendantes suivant de nombreuses distributions (normale, gamma, binomiale, Poisson, Tweedie, log-normal, etc.). Cependant, ils imposent une conceptualisation particulière de l’espace. En effet, un modèle GAM n’inclut pas directement la notion de dépendance spatiale dans sa formulation. L’hypothèse d’indépendance des observations est conservée (contrairement à un modèle des moindres carrés généralisés, GLS). Le modèle intègre simplement un terme flexible correspondant à l’ajout d’un ensemble de nouvelles variables <span class="math inline">\(\mathbf{X}\)</span> structurées afin de capturer un effet avec une autocorrélation spatiale positive.</p>
 <p>Si nous reprenons l’exemple de la pollution atmosphérique, le modèle est un simple GLM dans lequel nous supposons que les niveaux de pollution suivent une distribution normale et que les observations sont indépendantes. Cependant, la moyenne de cette distribution peut être prédite avec une spline calculée à partir des coordonnées spatiales des observations. Le modèle ne part donc pas du principe que deux observations proches sont plus similaires, mais plutôt qu’il existe un effet spatial permettant de prédire les niveaux moyens de pollution attendus. Un modèle GAM ne vise donc pas explicitement à corriger l’effet de la dépendance spatiale, mais plutôt à capturer un effet spatialement structuré et non capturé par les variables indépendantes <span class="math inline">\(\mathbf{X}\)</span>. Sans l’ajout de la spline, cet effet se serait retrouvé dans les résidus du modèle.</p>
 <p>La cartographie de l’effet spatial dans un modèle GAM permet de visualiser les secteurs de l’espace d’étude dans lesquels, toutes choses étant égales par ailleurs, la variable dépendante est plus forte ou plus faible que la moyenne régionale. Cet effet spatial peut être vu comme un ajustement local de la prédiction. Une forme de malus ou de bonus que le modèle ajoute à sa prédiction pour tenir compte de la variation spatiale de la variable dépendante qui n’a pas été expliquée par les variables indépendantes.</p>
 <p>Puisqu’un modèle GAM ne prend pas directement en compte l’autocorrélation spatiale, il est tout à fait possible qu’il échoue à réduire suffisamment la dépendance spatiale des résidus d’un modèle global (non spatial). Il faudra alors privilégier d’autres formes de modèles. De même, si notre cadre théorique nous amène à penser que nos observations s’influencent mutuellement dans l’espace, il sera beaucoup plus cohérent d’utiliser un modèle économétrique (<a href="02-GLS_CAR_GLMM.html" class="quarto-xref">chapitre&nbsp;<span>2</span></a>).</p>
@@ -537,7 +537,7 @@ Figure&nbsp;6.5: Cadre théorique de l’exposition des cyclistes
 \end{aligned}
 \tag{6.3}\]</span></span></p>
 <p>Il existe un lien direct entre les modèles à effets mixtes et les GAM. En effet, il est possible de reformuler un GLMM comme un GAM et vice-versa, ce qui signifie qu’une spline pénalisée peut être utilisée pour représenter un effet aléatoire <span class="citation" data-cites="wood2017generalized">(<a href="references.html#ref-wood2017generalized" role="doc-biblioref">Wood 2017</a>)</span>.</p>
-<p>Dans R, avec le <em>package</em> <code>mgcv</code>, il est possible d’utiliser une spline pénalisée par une matrice de pondération spatiale <em>W</em> pour approximer l’effet aléatoire que nous aurions modélisé avec un modèle de type CAR. L’intérêt d’utiliser un GAM plutôt qu’un CAR est que nous pouvons contrôler directement le degré de lissage (autocorrélation spatiale) du terme spatial dans le modèle grâce au nombre de degrés de liberté (<em>k</em>) de la spline. En utilisant un nombre de degrés de liberté maximal (<span class="math inline">\(k = n-1\)</span>), soit une base par observation, alors nous obtenons un <em>full rank MRF</em>, autorisant de facto la plus grande variance possible du terme spatial. En réduisant <em>k</em>, nous obtenons des modèles d’ordre inférieur (<em>lower rank MRF</em>) dont le terme spatial est plus lisse et moins complexe.</p>
+<p>Dans R, avec le <em>package</em> <code>mgcv</code>, il est possible d’utiliser une spline pénalisée par une matrice de pondération spatiale <em>W</em> pour approximer l’effet aléatoire que nous aurions modélisé avec un modèle de type CAR. L’intérêt d’utiliser un GAM plutôt qu’un CAR est que nous pouvons contrôler directement le degré de lissage (autocorrélation spatiale) du terme spatial dans le modèle grâce au nombre de degrés de liberté (<span class="math inline">\(k\)</span>) de la spline. En utilisant un nombre de degrés de liberté maximal (<span class="math inline">\(k = n-1\)</span>), soit une base par observation, alors nous obtenons un <em>full rank MRF</em>, autorisant de facto la plus grande variance possible du terme spatial. En réduisant <span class="math inline">\(k\)</span>, nous obtenons des modèles d’ordre inférieur (<em>lower rank MRF</em>) dont le terme spatial est plus lisse et moins complexe.</p>
 <p><span id="eq-gam4"><span class="math display">\[
 \begin{aligned}
 &amp;y_i \sim D(\mu_i,\theta)\\
@@ -614,6 +614,8 @@ Figure&nbsp;6.6: Distributions du ratio et du log ratio entre les parts modales 
 <span><span class="va">moran_i</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="va">data_mtl</span><span class="op">$</span><span class="va">alr_val</span>, </span>
 <span>                    listw <span class="op">=</span> <span class="va">queen_w</span>, </span>
 <span>                    zero.policy <span class="op">=</span> <span class="cn">TRUE</span>, nsim <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Texte pour la valeur du I de Moran</span></span>
 <span><span class="va">moran_text</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">moran_i</span><span class="op">$</span><span class="va">statistic</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span> , decimal.mark <span class="op">=</span><span class="st">","</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Cartographie de la variable</span></span>
@@ -790,7 +792,7 @@ alternative hypothesis: greater</code></pre>
 <span>                               decimal.mark <span class="op">=</span> <span class="st">","</span>, </span>
 <span>                               big.mark <span class="op">=</span> <span class="st">" "</span>,</span>
 <span>                               digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
-<span>          palette <span class="op">=</span> <span class="st">"-RdBu"</span>, title <span class="op">=</span> <span class="st">'résidus simulés'</span><span class="op">)</span> <span class="op">+</span></span>
+<span>          palette <span class="op">=</span> <span class="st">"-RdBu"</span>, title <span class="op">=</span> <span class="st">'Résidus simulés'</span><span class="op">)</span> <span class="op">+</span></span>
 <span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span>, legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span> </span>
 <span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_scale_bar.html">tm_scale_bar</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">10</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
 <span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/axis_labels.html">tm_xlab</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'I de Moran = '</span>, <span class="va">moran_text</span>,</span>
@@ -865,7 +867,7 @@ alternative hypothesis: greater</code></pre>
 <span>                               big.mark <span class="op">=</span> <span class="st">" "</span>,</span>
 <span>                               digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
 <span>          palette <span class="op">=</span> <span class="st">"-RdBu"</span>, </span>
-<span>          title <span class="op">=</span> <span class="st">'résidus simulés'</span><span class="op">)</span> <span class="op">+</span></span>
+<span>          title <span class="op">=</span> <span class="st">'Résidus simulés'</span><span class="op">)</span> <span class="op">+</span></span>
 <span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span>, legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span> </span>
 <span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_scale_bar.html">tm_scale_bar</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">10</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
 <span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/axis_labels.html">tm_xlab</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'I de Moran = '</span>, <span class="va">moran_text</span>,</span>
@@ -935,7 +937,7 @@ R-sq.(adj) =  0.902   Deviance explained = 81.4%
 -REML =  543.3  Scale est. = 1         n = 986</code></pre>
 </div>
 </div>
-<p>Le R<sup>2</sup> ajusté est très élevé (0,902), indiquant que le modèle est capable d’expliquer une part significative de la déviance de nos données. Chacune des variables explicatives a un impact significatif sur le ratio entre les parts modales de TC et de l’automobile. Pour interpréter leurs effets, nous devons tenir compte de l’impact de la transformation <em>alr</em>. Pour rappel, notre modèle prédit la moyenne de notre log du ratio entre la part TC et la part automobile. Il est possible de passer de l’échelle log à l’échelle naturelle en utilisant la fonction exponentielle (<code>exp</code>). Si nous transformons les coefficients obtenus avec la fonction <code>exp</code>, alors ils expriment l’impact <strong>multiplicatif</strong> des variables indépendantes sur le ratio entre la part TC et la part automobile. Si ce ratio augmente, c’est que l’automobile est moins utilisée et/ou que le TC est plus utilisé et inversement.</p>
+<p>Le R<sup>2</sup> ajusté est très élevé (0,902), indiquant que le modèle est capable d’expliquer une part significative de la déviance de nos données. Chacune des variables explicatives a un impact significatif sur le ratio entre les parts modales de TC et de l’automobile. Pour interpréter leurs effets, nous devons tenir compte de l’impact de la transformation <em>alr</em>. Pour rappel, notre modèle prédit la moyenne de notre logarithme du ratio entre la part TC et la part automobile. Il est possible de passer de l’échelle logarithme à l’échelle naturelle en utilisant la fonction exponentielle (<code>exp</code>). Si nous transformons les coefficients obtenus avec la fonction <code>exp</code>, alors ils expriment l’impact <strong>multiplicatif</strong> des variables indépendantes sur le ratio entre la part TC et la part automobile. Si ce ratio augmente, c’est que l’automobile est moins utilisée et/ou que le TC est plus utilisé et inversement.</p>
 <div class="cell">
 <div id="tbl-GamSpatialSpline" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-GamSpatialSpline-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1073,10 +1075,11 @@ Figure&nbsp;6.13: Représentation de l’impact de la spline spatiale bivariée
 </section><section id="sec-0653" class="level3" data-number="6.5.3"><h3 data-number="6.5.3" class="anchored" data-anchor-id="sec-0653">
 <span class="header-section-number">6.5.3</span> GAM avec spline spatiale de type MRF</h3>
 <p>Puisque nos observations sont des polygones, utiliser leurs centroïdes pour représenter l’espace est une approximation maladroite. Nous allons donc opter pour un <em>Markov random field</em> afin de modéliser les variations spatiales en fonction du voisinage.</p>
-<p>L’enjeu avec ce type de modèle est de sélectionner son rang (<em>k</em>). Pour cela, nous testons plusieurs valeurs allant de 10 à 250 autorisant une complexité grandissante du terme spatial. Notons d’emblée que notre spline bivariée précédente avait nécessité seulement 25&nbsp;degrés de liberté supplémentaires. La sélection de <em>k</em> (le nombre de degrés de liberté accordé au MRF) reposera sur deux critères&nbsp;: l’autocorrélation spatiale encore présente dans les résidus (<em>I</em> de Moran calculé sur les résidus de Pearson) et l’AIC (pénalisant la complexité des modèles).</p>
+<p>L’enjeu avec ce type de modèle est de sélectionner son rang (<span class="math inline">\(k\)</span>). Pour cela, nous testons plusieurs valeurs allant de 10 à 250 autorisant une complexité grandissante du terme spatial. Notons d’emblée que notre spline bivariée précédente avait nécessité seulement 25&nbsp;degrés de liberté supplémentaires. La sélection de <span class="math inline">\(k\)</span> (le nombre de degrés de liberté accordé au MRF) reposera sur deux critères&nbsp;: l’autocorrélation spatiale encore présente dans les résidus (<em>I</em> de Moran calculé sur les résidus de Pearson) et l’AIC (pénalisant la complexité des modèles).</p>
 <p>Pour accélérer le calcul, nous réalisons cette opération en traitement parallèle (<em>multiprocessing</em>). Quatre cœurs indépendants s’occuperont d’ajuster les différents modèles.</p>
 <div class="cell">
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org">future</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Package pour le traitement en parallèle</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org">future</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://future.apply.futureverse.org">future.apply</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># nous préparons les informations de voisinage pour le terme MRF</span></span>
@@ -1111,16 +1114,21 @@ Figure&nbsp;6.13: Représentation de l’impact de la spline spatiale bivariée
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">df_plot</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'moranI'</span>, <span class="st">'aic'</span>, <span class="st">'k'</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">plot1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">df_plot</span><span class="op">)</span> <span class="op">+</span> </span>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Graphique pour le I de Moran </span></span>
+<span><span class="va">plot1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">df_plot</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">k</span>, y <span class="op">=</span> <span class="va">moranI</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">'black'</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">k</span>, y <span class="op">=</span> <span class="va">moranI</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">'red'</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">'k'</span>, y <span class="op">=</span> <span class="st">'I de Moran'</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Graphique pour les valeurs d'AIC</span></span>
 <span><span class="va">plot2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">df_plot</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">k</span>, y <span class="op">=</span> <span class="va">aic</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">'black'</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">k</span>, y <span class="op">=</span> <span class="va">aic</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">'red'</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">'k'</span>, y <span class="op">=</span> <span class="st">'AIC'</span><span class="op">)</span><span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Combinaison des deux graphiques</span></span>
 <span><span class="fu"><a href="https://rpkgs.datanovia.com/ggpubr/reference/ggarrange.html">ggarrange</a></span><span class="op">(</span><span class="va">plot1</span>, <span class="va">plot2</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-gammrf1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -1133,7 +1141,7 @@ Figure&nbsp;6.14: Critères de sélection de k
 </div>
 </div>
 </div>
-<p>La <a href="#fig-gammrf1" class="quarto-xref">figure&nbsp;<span>6.14</span></a> permet de constater que l’AIC et le <em>I</em> de Moran diminuent à mesure que <em>k</em> augmente. Pour le <em>I</em> de Moran, nous constatons qu’au-delà de k&nbsp;=&nbsp;100, nous passons à des valeurs inférieures à 0,05. Aussi l’AIC semble se stabiliser lorsque k&nbsp;=&nbsp;150. Nous pourrions donc ajuster un modèle avec k&nbsp;=&nbsp;150 pour avoir un bon compromis entre AIC et réduction du <em>I</em> de Moran des résidus.</p>
+<p>La <a href="#fig-gammrf1" class="quarto-xref">figure&nbsp;<span>6.14</span></a> permet de constater que l’AIC et le <em>I</em> de Moran diminuent à mesure que <span class="math inline">\(k\)</span> augmente. Pour le <em>I</em> de Moran, nous constatons qu’au-delà de <span class="math inline">\(k&nbsp;=&nbsp;100\)</span>, nous passons à des valeurs inférieures à 0,05. Aussi l’AIC semble se stabiliser lorsque <span class="math inline">\(k&nbsp;=&nbsp;150\)</span>. Nous pourrions donc ajuster un modèle avec <span class="math inline">\(k&nbsp;=&nbsp;150\)</span> pour avoir un bon compromis entre AIC et réduction du <em>I</em> de Moran des résidus.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">gam2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/gam.html">gam</a></span><span class="op">(</span><span class="va">alr_val</span> <span class="op">~</span> <span class="va">prt_minorite_vis</span> <span class="op">+</span> <span class="va">prt_monoparental</span> <span class="op">+</span> <span class="va">revenu_median</span> <span class="op">+</span></span>
 <span>                  <span class="va">acs_idx_emp_tc_peak</span> <span class="op">+</span> <span class="va">acs_idx_emp_pieton</span> <span class="op">+</span> </span>
@@ -1290,7 +1298,7 @@ alternative hypothesis: greater</code></pre>
 <span>          legend.format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>text.separator <span class="op">=</span> <span class="st">"à"</span>, </span>
 <span>                               decimal.mark <span class="op">=</span> <span class="st">","</span>, </span>
 <span>                               big.mark <span class="op">=</span> <span class="st">" "</span>,digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
-<span>          palette <span class="op">=</span> <span class="st">"-RdBu"</span>, title <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'effet du MRF\n(edf = '</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">results_mrf</span><span class="op">$</span><span class="va">edf</span><span class="op">)</span>, <span class="st">')'</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>          palette <span class="op">=</span> <span class="st">"-RdBu"</span>, title <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'Effet du MRF\n(edf = '</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">results_mrf</span><span class="op">$</span><span class="va">edf</span><span class="op">)</span>, <span class="st">')'</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span>, legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_scale_bar.html">tm_scale_bar</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tmap_arrange.html">tmap_arrange</a></span><span class="op">(</span><span class="va">map_spline</span>, <span class="va">map_mrf</span>, nrow <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1401,7 +1409,7 @@ Relisez au besoin la <a href="#sec-061" class="quarto-xref">section&nbsp;<span>6
 Dans un GAM, que représente la fonction f ?
 </div>
 <div>
-Relisez au besoin le début de la <a href="#sec-063" class="quarto-xref">section&nbsp;<span>6.3</span></a>.
+Relisez au besoin le début de la <a href="#sec-061" class="quarto-xref">section&nbsp;<span>6.1</span></a>.
 </div>
 <div class="quizlib-question-answers">
 <table class="table table-sm table-striped small">
@@ -1587,39 +1595,41 @@ Vérifiez votre résultat
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
 <span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DHARMa)</span>
 <span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mgcViz)</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Chargement du jeu de données sur l’agglomération lyonnaise</span></span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/Lyon.Rdata"</span>)</span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Vérification de la multicolinéarité (VIF)</span></span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(<span class="fu">lm</span>(NO2 <span class="sc">~</span> Pct0_14<span class="sc">+</span>Pct_65<span class="sc">+</span>Pct_Img<span class="sc">+</span>Pct_brevet<span class="sc">+</span>NivVieMed, <span class="at">data =</span> LyonIris))</span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Construction du modèle GLM gaussien</span></span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>Modele.GAM1 <span class="ot">&lt;-</span> <span class="fu">gam</span>(à compléter)</span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Résidus simulés du modèle gaussien</span></span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>GAM1.res <span class="ot">&lt;-</span> à compléter</span>
-<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(GAM1.res)</span>
-<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Construction du modèle GLM avec une distribution de Student</span></span>
-<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>Modele.GAM2 <span class="ot">&lt;-</span> <span class="fu">gam</span>(à compléter)</span>
-<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Résidus simulés avec une distribution de Student</span></span>
-<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>GAM2.res <span class="ot">&lt;-</span> à compléter</span>
-<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(GAM2.res)</span>
-<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparaison des deux modèles</span></span>
-<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(Modele.GAM1, Modele.GAM2)</span>
-<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Résultats du modèle gaussien</span></span>
-<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(à compléter)</span>
-<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Matrice de contiguïté selon le partage d’un nœud </span></span>
-<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a>queen_nb <span class="ot">&lt;-</span> à compléter</span>
-<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a>queen_w <span class="ot">&lt;-</span> à compléter</span>
-<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a><span class="co"># I de Moran sur les résidus gaussiens</span></span>
-<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a><span class="fu">moran.mc</span>(<span class="fu">residuals</span>(à compléter))</span>
-<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a><span class="co"># I de Moran sur les résidus simulés</span></span>
-<span id="cb28-38"><a href="#cb28-38" aria-hidden="true" tabindex="-1"></a><span class="fu">moran.mc</span>(à compléter)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spdep)</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Chargement du jeu de données sur l’agglomération lyonnaise</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/Lyon.Rdata"</span>)</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Vérification de la multicolinéarité (VIF)</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(<span class="fu">lm</span>(NO2 <span class="sc">~</span> Pct0_14<span class="sc">+</span>Pct_65<span class="sc">+</span>Pct_Img<span class="sc">+</span>Pct_brevet<span class="sc">+</span>NivVieMed, <span class="at">data =</span> LyonIris))</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Construction du modèle GLM gaussien</span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>Modele.GAM1 <span class="ot">&lt;-</span> <span class="fu">gam</span>(à compléter)</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Résidus simulés du modèle gaussien</span></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>GAM1.res <span class="ot">&lt;-</span> à compléter</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(GAM1.res)</span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Construction du modèle GLM avec une distribution de Student</span></span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>Modele.GAM2 <span class="ot">&lt;-</span> <span class="fu">gam</span>(à compléter)</span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Résidus simulés avec une distribution de Student</span></span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>GAM2.res <span class="ot">&lt;-</span> à compléter</span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(GAM2.res)</span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparaison des deux modèles</span></span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(Modele.GAM1, Modele.GAM2)</span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Résultats du modèle gaussien</span></span>
+<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(à compléter)</span>
+<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Matrice de contiguïté selon le partage d’un nœud </span></span>
+<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a>queen_nb <span class="ot">&lt;-</span> à compléter</span>
+<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a>queen_w <span class="ot">&lt;-</span> à compléter</span>
+<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a><span class="co"># I de Moran sur les résidus gaussiens</span></span>
+<span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a><span class="fu">moran.mc</span>(<span class="fu">residuals</span>(à compléter))</span>
+<span id="cb28-38"><a href="#cb28-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-39"><a href="#cb28-39" aria-hidden="true" tabindex="-1"></a><span class="co"># I de Moran sur les résidus simulés</span></span>
+<span id="cb28-40"><a href="#cb28-40" aria-hidden="true" tabindex="-1"></a><span class="fu">moran.mc</span>(à compléter)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Correction à la <a href="11-Exercices.html#sec-11061" class="quarto-xref">section&nbsp;<span>11.6.1</span></a>.</p>
 </div>

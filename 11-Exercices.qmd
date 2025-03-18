@@ -12,14 +12,17 @@
 load("data/Lyon.Rdata")
 library(spdep)
 ## Matrice de contiguïté selon le partage d'un nœud (Queen)
-nb_queen <- poly2nb(LyonIris, queen=TRUE)
-w_queen <- nb2listw(nb_queen, zero.policy=TRUE, style = "W")
+nb_queen <- poly2nb(LyonIris, queen = TRUE)
+w_queen <- nb2listw(nb_queen, zero.policy = TRUE, style = "W")
+
 # I de Moran sur la variable lden elon l’hypothèse de la normalité
-moran.test(LyonIris$Lden, listw=w_queen, zero.policy=TRUE, randomisation = FALSE)
+moran.test(LyonIris$Lden, listw=w_queen, zero.policy = TRUE, randomisation = FALSE)
+
 # I de Moran sur la variable lden selon la normalité selon l’hypothèse de la randomisation
-moran.test(LyonIris$Lden, listw=w_queen, zero.policy=TRUE, randomisation = FALSE)
+moran.test(LyonIris$Lden, listw=w_queen, zero.policy = TRUE, randomisation = TRUE)
+
 # I de Moran sur la variable lden selon des permutations Monte-Carlo
-moran.mc(LyonIris$Lden, listw=w_queen, zero.policy=TRUE, nsim=999)
+moran.mc(LyonIris$Lden, listw=w_queen, zero.policy = TRUE, nsim = 999)
 ```
 
 ### Exercice 2 {#sec-11012}
@@ -29,18 +32,24 @@ moran.mc(LyonIris$Lden, listw=w_queen, zero.policy=TRUE, nsim=999)
 #| message: false 
 #| warning: false 
 #| eval: false
-load("data/Lyon.Rdata")
 library(spdep)
+load("data/Lyon.Rdata")
+
 # Modèle MCO
 formule <- "Lden ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed"
 modele_mco <- lm(formule, data = LyonIris)
+
 # Résultats du modèle
 summary(modele_mco)
+
 ## Matrice de contiguïté (Rook)
-nb_rook <- poly2nb(LyonIris, queen=TRUE)
-w_rook <- nb2listw(nb_rook, zero.policy=TRUE, style = "W")
+
+nb_rook <- poly2nb(LyonIris, queen = FALSE)
+w_rook <- nb2listw(nb_rook, zero.policy = TRUE, style = "W")
+
 # I de Moran sur les résidus du modèle global (MCO)
 lm.morantest(modele_mco, w_rook)
+
 # Cartographie des résidus
 LyonIris$MCO.Residus <- modele_mco$residuals
 tmap_mode("plot")
@@ -52,7 +61,7 @@ tm_shape(LyonIris)+
                  midpoint = 0,
                  palette = "-RdBu", 
                  title = "MCO") +
-         tm_layout(frame=FALSE)+ 
+         tm_layout(frame = FALSE)+ 
          tm_scale_bar(breaks = c(0,5))
 ```
 
@@ -77,11 +86,14 @@ tm_shape(LyonIris)+
 library(sf)
 library(spatialreg)
 load("data/Lyon.Rdata")
+
 # Matrice de contiguïté selon le partage d'un segment
 nb_rook <- poly2nb(LyonIris, queen=FALSE)
-w_rook <- nb2listw(nb_rook, zero.policy=TRUE, style = "W")
+w_rook <- nb2listw(nb_rook, zero.policy = TRUE, style = "W")
+
 # Modèles
 formule <- "PM25 ~  Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed"
+
 # Modèles MOC, SLX, SDM, SDEM, SAR, SEM, Manski
 MCO     <- lm(formule, data = LyonIris)
 SLX     <- lmSLX(formule, listw = w_rook, data = LyonIris)
@@ -114,13 +126,14 @@ summary(lm.LMtests(model = MCO,
 ## Valeurs d'AIC et de BIC
 AICs <- AIC(MCO, SLX, SDM, SDEM, SAR, SEM)
 BICs <- BIC(MCO, SLX, SDM, SDEM, SAR, SEM)
+
 ## Autocorrélation spatiale des résidus
-IMoran_MCO  <- moran.mc(resid(MCO), w_rook, nsim=999)
-IMoran_SLX  <- moran.mc(resid(SLX), w_rook, nsim=999)
-IMoran_SAR  <- moran.mc(resid(SAR), w_rook, nsim=999)
-IMoran_SEM  <- moran.mc(resid(SEM), w_rook, nsim=999)
-IMoran_SDM  <- moran.mc(resid(SDM), w_rook, nsim=999)
-IMoran_SDEM <- moran.mc(resid(SDEM), w_rook, nsim=999)
+IMoran_MCO  <- moran.mc(resid(MCO), w_rook, nsim = 999)
+IMoran_SLX  <- moran.mc(resid(SLX), w_rook, nsim = 999)
+IMoran_SAR  <- moran.mc(resid(SAR), w_rook, nsim = 999)
+IMoran_SEM  <- moran.mc(resid(SEM), w_rook, nsim = 999)
+IMoran_SDM  <- moran.mc(resid(SDM), w_rook, nsim = 999)
+IMoran_SDEM <- moran.mc(resid(SDEM), w_rook, nsim = 999)
 
 MoranI_s <- c(IMoran_MCO$statistic, IMoran_SLX$statistic,
              IMoran_SAR$statistic, IMoran_SEM$statistic,
@@ -129,6 +142,7 @@ MoranI_s <- c(IMoran_MCO$statistic, IMoran_SLX$statistic,
 MoranI_p <- c(IMoran_MCO$p.value, IMoran_SLX$p.value,
              IMoran_SAR$p.value, IMoran_SEM$p.value,
              IMoran_SDM$p.value, IMoran_SDEM$p.value)
+
 ## Tableau
 Comparaison <- data.frame(Modele = c("MCO", "SLX", "SAR", "SEM", "SDM", "SDEM"),
                           AIC = round(AICs$AIC,2),
@@ -189,6 +203,7 @@ plot(gam1_res)
 # Construction du modèle GLM avec une distribution de Student
 modele_gam2 <- gam(PM25 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
                    family = scat, data = LyonIris)
+
 # Résidus simulés avec une distribution de Student
 gam2_res <- simulateResiduals(modele_gam2, plot = FALSE)
 plot(gam2_res)
@@ -225,15 +240,18 @@ moran.mc(residuals(gam2_res,
 #| eval: false
 # Chargement du jeu de données sur l'agglomération Lyonnaise
 load("data/Lyon.Rdata")
+
 # Ajout des coordonnées x et y dans la couche sf LyonIris
 XY <- st_coordinates(st_centroid(LyonIris))
 LyonIris$X <- XY[,1]
 LyonIris$Y <- XY[,2]
+
 # Modèle GAM avec la distribution de student et une spline
 # sur les coordonnées x et y avec la distribution de Student
 modele_gam_spline <- gam(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed+
                          s(X,Y, bs = 'gp', m = 3),
                          data = LyonIris, family = scat)
+
 summary(modele_gam_spline)
 ```
 
@@ -262,6 +280,7 @@ load("data/Lyon.Rdata")
 xy <- st_coordinates(st_centroid(LyonIris))
 LyonIris$X <- xy[,1]
 LyonIris$Y <- xy[,2]
+
 # Optimisation du nombre de voisins avec le CV
 formule <- "PM25 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed"
 bwaCV_voisins  <- gwr.sel(formule,
@@ -273,6 +292,7 @@ bwaCV_voisins  <- gwr.sel(formule,
                           RMSE = TRUE,
                           longlat = FALSE,
                           coords=cbind(LyonIris$X,LyonIris$Y))
+
 # Optimisation du nombre de voisins avec l'AIC
 formule <- "PM25 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed"
 bwaCV_voisins  <- gwr.sel(formule,
@@ -284,6 +304,7 @@ bwaCV_voisins  <- gwr.sel(formule,
                           RMSE = TRUE,
                           longlat = FALSE,
                           coords=cbind(LyonIris$X,LyonIris$Y))
+
 # Réalisation de la GWR
 modele_gwr <- gwr(formule,
                   data = LyonIris,
@@ -293,6 +314,7 @@ modele_gwr <- gwr(formule,
                   se.fit=TRUE,
                   coords=cbind(LyonIris$X,LyonIris$Y),
                   longlat=FALSE)
+
 # Affichage des résultats
 modele_gwr
 ```
@@ -305,6 +327,7 @@ modele_gwr
 #| eval: false
 # Modèle MCO
 modele_global <- lm(formule, data = LyonIris)
+
 # Comparaison des R2
 r2_global <- summary(modele_global)$r.squared
 rss <- sum((modele_gwr$lm$y - modele_gwr$SDF$pred)^2) 
@@ -312,10 +335,12 @@ tss <- sum((modele_gwr$lm$y - mean(modele_gwr$SDF$pred))^2)
 R2_GWRquasiglobal <- 1 - (rss / tss)
 cat("R2 global (LM) = ", round(r2_global, 3),
     "\nR2 quasi-global (GWR) : ", round(R2_GWRquasiglobal, 3))
+
 # Comparaison des R2
 anova(modele_gwr)
 LMZ.F1GWR.test(modele_gwr)
 LMZ.F2GWR.test(modele_gwr)
+
 # Les coefficients du modèle GWR varient-ils significativement dans l'espace?
 LMZ.F3GWR.test(modele_gwr)
 ```
@@ -327,6 +352,7 @@ LMZ.F3GWR.test(modele_gwr)
 #| message: false
 #| eval: false
 library(tmap)
+
 # Récupération du R carré locaux et valeurs de t locales
 LyonIris$GWR.R2 <- modele_gwr$SDF$localR2
 vars_indep <- c("Pct0_14", "Pct_65", "Pct_Img", "Pct_brevet", "NivVieMed")
@@ -351,7 +377,7 @@ tm_shape(LyonIris)+
           n=5, style="quantile",
           legend.format = legendes_parametres,
           title = "R2 locaux")+
-  tm_layout(frame=FALSE)+
+  tm_layout(frame = FALSE)+
   tm_scale_bar(breaks=c(0,5))
 
 # Cartographie des valeurs de t locales
@@ -370,7 +396,7 @@ carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
                   breaks = classes_intervalles,
                   legend.format = legende.parametres,
                   title = "Moins de 15 ans (%)")+
-          tm_layout(frame=FALSE, legend.outside = TRUE)
+          tm_layout(frame = FALSE, legend.outside = TRUE)
 
 carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
           tm_fill(col="GWR.T_Pct_65", palette="-RdBu",
@@ -378,7 +404,7 @@ carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
                   breaks = classes_intervalles,
                   legend.format = legende.parametres,
                   title = "65 ans et plus (%)")+
-          tm_layout(frame=FALSE, legend.outside = TRUE)
+          tm_layout(frame = FALSE, legend.outside = TRUE)
 
 carte3 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
           tm_fill(col="GWR.T_Pct_Img", palette="-RdBu", 
@@ -386,7 +412,7 @@ carte3 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
                   breaks = classes_intervalles,
                   legend.format = legende.parametres,
                   title = "Immigrants (%)")+
-          tm_layout(frame=FALSE, legend.outside = TRUE)
+          tm_layout(frame = FALSE, legend.outside = TRUE)
 
 carte4 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
           tm_fill(col="GWR.B_Pct_brevet", palette="-RdBu", 
@@ -394,7 +420,7 @@ carte4 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
                   breaks = classes_intervalles,
                   legend.format = legende.parametres,
                   title = "Faible scolarité (%)")+
-          tm_layout(frame=FALSE, legend.outside = TRUE)
+          tm_layout(frame = FALSE, legend.outside = TRUE)
 
 carte5 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
           tm_fill(col="GWR.T_NivVieMed", palette="-RdBu", 
@@ -402,7 +428,7 @@ carte5 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
                  breaks = classes_intervalles,
                  legend.format = legende.parametres,
                  title = "Niveau de vie (€1000)")+
-          tm_layout(frame=FALSE, legend.outside = TRUE)+
+          tm_layout(frame = FALSE, legend.outside = TRUE)+
           tm_scale_bar(breaks=c(0,5))
 
 tmap_arrange(carte1, carte2, carte3, carte4, carte5, ncol = 2, nrow=3)

@@ -36,7 +36,7 @@ Dans ce chapitre, nous abordons deux formes de modèles généralisés additifs 
     -   `ggplot2` pour construire des graphiques.
     -   `tmap` est certainement le meilleur *package* pour la cartographie.
 -   Pour construire des modèles GAM :
-    -   `mcgv`, le *package* de référence pour ajuster des modèles GAM. De nombreux autres *packages* proposent des extensions pour ce type de modèle et se basent principalement sur les outils mis à disposition par `mgcv` pour créer des bases et leurs matrices de pénalisation (`gamm4`, `brms`, `gamlss`, `qgam`, etc.).
+    -   `mgcv`, le *package* de référence pour ajuster des modèles GAM. De nombreux autres *packages* proposent des extensions pour ce type de modèle et se basent principalement sur les outils mis à disposition par `mgcv` pour créer des bases et leurs matrices de pénalisation (`gamm4`, `brms`, `gamlss`, `qgam`, etc.).
     -   `DHARMa`, un *package* permettant d'effectuer des diagnostics sur des résidus de modèles GLM.
 :::
 :::
@@ -303,7 +303,7 @@ avec $sp$ une matrice comprenant deux colonnes, soit les coordonnées cartésien
 
 ## Pourquoi recourir à un modèle GAM? {#sec-063}
 
-Les modèles GAM sont très flexibles puisqu'ils sont une extension directe des modèles linéaires généralisés (GLM). Ils peuvent donc être appliqués à des variables dépendantes suivant de nombreuses distributions (normale, gamma, binomiale, Poisson, Tweedie, log-normal, etc.). Cependant, ils imposent une conceptualisation particulière de l'espace. En effet, un modèle GAM n'inclut pas directement la notion de dépendance spatiale dans sa formulation. L'hypothèse d'indépendance des observations est conservée (contrairement à un modèle des moindres carrés généralisés, GLS). Le modèle intègre simplement un terme flexible correspondant à l'ajout d'un ensemble de nouvelles variables $\mathbf{X}$ structurées afin de capturer un effet spatialement positivement autocorrélé.
+Les modèles GAM sont très flexibles puisqu'ils sont une extension directe des modèles linéaires généralisés (GLM). Ils peuvent donc être appliqués à des variables dépendantes suivant de nombreuses distributions (normale, gamma, binomiale, Poisson, Tweedie, log-normal, etc.). Cependant, ils imposent une conceptualisation particulière de l'espace. En effet, un modèle GAM n'inclut pas directement la notion de dépendance spatiale dans sa formulation. L'hypothèse d'indépendance des observations est conservée (contrairement à un modèle des moindres carrés généralisés, GLS). Le modèle intègre simplement un terme flexible correspondant à l'ajout d'un ensemble de nouvelles variables $\mathbf{X}$ structurées afin de capturer un effet avec une autocorrélation spatiale positive.
 
 Si nous reprenons l'exemple de la pollution atmosphérique, le modèle est un simple GLM dans lequel nous supposons que les niveaux de pollution suivent une distribution normale et que les observations sont indépendantes. Cependant, la moyenne de cette distribution peut être prédite avec une spline calculée à partir des coordonnées spatiales des observations. Le modèle ne part donc pas du principe que deux observations proches sont plus similaires, mais plutôt qu'il existe un effet spatial permettant de prédire les niveaux moyens de pollution attendus. Un modèle GAM ne vise donc pas explicitement à corriger l'effet de la dépendance spatiale, mais plutôt à capturer un effet spatialement structuré et non capturé par les variables indépendantes $\mathbf{X}$. Sans l'ajout de la spline, cet effet se serait retrouvé dans les résidus du modèle.
 
@@ -352,7 +352,7 @@ $$ {#eq-gam3}
 
 Il existe un lien direct entre les modèles à effets mixtes et les GAM. En effet, il est possible de reformuler un GLMM comme un GAM et vice-versa, ce qui signifie qu'une spline pénalisée peut être utilisée pour représenter un effet aléatoire [@wood2017generalized].
 
-Dans R, avec le *package* `mgcv`, il est possible d'utiliser une spline pénalisée par une matrice de pondération spatiale *W* pour approximer l'effet aléatoire que nous aurions modélisé avec un modèle de type CAR. L'intérêt d'utiliser un GAM plutôt qu'un CAR est que nous pouvons contrôler directement le degré de lissage (autocorrélation spatiale) du terme spatial dans le modèle grâce au nombre de degrés de liberté (*k*) de la spline. En utilisant un nombre de degrés de liberté maximal ($k = n-1$), soit une base par observation, alors nous obtenons un *full rank MRF*, autorisant de facto la plus grande variance possible du terme spatial. En réduisant *k*, nous obtenons des modèles d'ordre inférieur (*lower rank MRF*) dont le terme spatial est plus lisse et moins complexe.
+Dans R, avec le *package* `mgcv`, il est possible d'utiliser une spline pénalisée par une matrice de pondération spatiale *W* pour approximer l'effet aléatoire que nous aurions modélisé avec un modèle de type CAR. L'intérêt d'utiliser un GAM plutôt qu'un CAR est que nous pouvons contrôler directement le degré de lissage (autocorrélation spatiale) du terme spatial dans le modèle grâce au nombre de degrés de liberté ($k$) de la spline. En utilisant un nombre de degrés de liberté maximal ($k = n-1$), soit une base par observation, alors nous obtenons un *full rank MRF*, autorisant de facto la plus grande variance possible du terme spatial. En réduisant $k$, nous obtenons des modèles d'ordre inférieur (*lower rank MRF*) dont le terme spatial est plus lisse et moins complexe.
 
 $$
 \begin{aligned}
@@ -444,6 +444,8 @@ queen_w <- nb2listw(queen_nb, style = 'W', zero.policy = TRUE)
 moran_i <- moran.mc(data_mtl$alr_val, 
                     listw = queen_w, 
                     zero.policy = TRUE, nsim = 999)
+
+# Texte pour la valeur du I de Moran
 moran_text <- format(as.numeric(round(moran_i$statistic,3)) , decimal.mark =",")
 
 # Cartographie de la variable
@@ -598,7 +600,7 @@ tm_shape(data_mtl) +
                                decimal.mark = ",", 
                                big.mark = " ",
                                digits = 2),
-          palette = "-RdBu", title = 'résidus simulés') +
+          palette = "-RdBu", title = 'Résidus simulés') +
 tm_layout(frame=FALSE, legend.outside = TRUE) + 
 tm_scale_bar(breaks = c(0,10))+
 tm_xlab(paste0('I de Moran = ', moran_text,
@@ -662,7 +664,7 @@ tm_shape(data_mtl) +
                                big.mark = " ",
                                digits = 2),
           palette = "-RdBu", 
-          title = 'résidus simulés') +
+          title = 'Résidus simulés') +
 tm_layout(frame=FALSE, legend.outside = TRUE) + 
 tm_scale_bar(breaks = c(0,10))+
 tm_xlab(paste0('I de Moran = ', moran_text,
@@ -695,7 +697,7 @@ results <- summary(gam1)
 print(results)
 ```
 
-Le R^2^ ajusté est très élevé (`r format(round(results$r.sq,3), decimal.mark =",")`), indiquant que le modèle est capable d'expliquer une part significative de la déviance de nos données. Chacune des variables explicatives a un impact significatif sur le ratio entre les parts modales de TC et de l'automobile. Pour interpréter leurs effets, nous devons tenir compte de l'impact de la transformation *alr*. Pour rappel, notre modèle prédit la moyenne de notre log du ratio entre la part TC et la part automobile. Il est possible de passer de l'échelle log à l'échelle naturelle en utilisant la fonction exponentielle (`exp`). Si nous transformons les coefficients obtenus avec la fonction `exp`, alors ils expriment l'impact **multiplicatif** des variables indépendantes sur le ratio entre la part TC et la part automobile. Si ce ratio augmente, c'est que l'automobile est moins utilisée et/ou que le TC est plus utilisé et inversement.
+Le R^2^ ajusté est très élevé (`r format(round(results$r.sq,3), decimal.mark =",")`), indiquant que le modèle est capable d'expliquer une part significative de la déviance de nos données. Chacune des variables explicatives a un impact significatif sur le ratio entre les parts modales de TC et de l'automobile. Pour interpréter leurs effets, nous devons tenir compte de l'impact de la transformation *alr*. Pour rappel, notre modèle prédit la moyenne de notre logarithme du ratio entre la part TC et la part automobile. Il est possible de passer de l'échelle logarithme à l'échelle naturelle en utilisant la fonction exponentielle (`exp`). Si nous transformons les coefficients obtenus avec la fonction `exp`, alors ils expriment l'impact **multiplicatif** des variables indépendantes sur le ratio entre la part TC et la part automobile. Si ce ratio augmente, c'est que l'automobile est moins utilisée et/ou que le TC est plus utilisé et inversement.
 
 ```{r}
 #| echo: false 
@@ -806,7 +808,7 @@ La @fig-gamspline1 permet de visualiser l'effet multiplicatif de la spline spati
 
 Puisque nos observations sont des polygones, utiliser leurs centroïdes pour représenter l'espace est une approximation maladroite. Nous allons donc opter pour un *Markov random field* afin de modéliser les variations spatiales en fonction du voisinage.
 
-L'enjeu avec ce type de modèle est de sélectionner son rang (*k*). Pour cela, nous testons plusieurs valeurs allant de 10 à 250 autorisant une complexité grandissante du terme spatial. Notons d'emblée que notre spline bivariée précédente avait nécessité seulement 25 degrés de liberté supplémentaires. La sélection de *k* (le nombre de degrés de liberté accordé au MRF) reposera sur deux critères : l'autocorrélation spatiale encore présente dans les résidus (*I* de Moran calculé sur les résidus de Pearson) et l'AIC (pénalisant la complexité des modèles).
+L'enjeu avec ce type de modèle est de sélectionner son rang ($k$). Pour cela, nous testons plusieurs valeurs allant de 10 à 250 autorisant une complexité grandissante du terme spatial. Notons d'emblée que notre spline bivariée précédente avait nécessité seulement 25 degrés de liberté supplémentaires. La sélection de $k$ (le nombre de degrés de liberté accordé au MRF) reposera sur deux critères : l'autocorrélation spatiale encore présente dans les résidus (*I* de Moran calculé sur les résidus de Pearson) et l'AIC (pénalisant la complexité des modèles).
 
 Pour accélérer le calcul, nous réalisons cette opération en traitement parallèle (*multiprocessing*). Quatre cœurs indépendants s'occuperont d'ajuster les différents modèles.
 
@@ -880,6 +882,7 @@ df_plot <- readRDS('data/chap06/results_mrf.rds')
 #| warning: false
 #| include: true
 
+# Package pour le traitement en parallèle
 library(future)
 library(future.apply)
 
@@ -924,20 +927,26 @@ names(df_plot) <- c('moranI', 'aic', 'k')
 #| include: true
 #| fig-cap: Critères de sélection de k
 #| fig-align: center
+
+# Graphique pour le I de Moran 
 plot1 <- ggplot(df_plot) + 
   geom_line(aes(x = k, y = moranI), color = 'black') +
   geom_point(aes(x = k, y = moranI), color = 'red') + 
   labs(x = 'k', y = 'I de Moran') + 
   theme_bw()
+
+# Graphique pour les valeurs d'AIC
 plot2 <- ggplot(df_plot) + 
   geom_line(aes(x = k, y = aic), color = 'black') + 
   geom_point(aes(x = k, y = aic), color = 'red') + 
   labs(x = 'k', y = 'AIC')+ 
   theme_bw()
+
+# Combinaison des deux graphiques
 ggarrange(plot1, plot2)
 ```
 
-La @fig-gammrf1 permet de constater que l'AIC et le *I* de Moran diminuent à mesure que *k* augmente. Pour le *I* de Moran, nous constatons qu'au-delà de k = 100, nous passons à des valeurs inférieures à 0,05. Aussi l'AIC semble se stabiliser lorsque k = 150. Nous pourrions donc ajuster un modèle avec k = 150 pour avoir un bon compromis entre AIC et réduction du *I* de Moran des résidus.
+La @fig-gammrf1 permet de constater que l'AIC et le *I* de Moran diminuent à mesure que $k$ augmente. Pour le *I* de Moran, nous constatons qu'au-delà de $k = 100$, nous passons à des valeurs inférieures à 0,05. Aussi l'AIC semble se stabiliser lorsque $k = 150$. Nous pourrions donc ajuster un modèle avec $k = 150$ pour avoir un bon compromis entre AIC et réduction du *I* de Moran des résidus.
 
 ```{r}
 #| echo: true 
@@ -1036,7 +1045,7 @@ map_mrf <- tm_shape(pred_df) +
           legend.format = list(text.separator = "à", 
                                decimal.mark = ",", 
                                big.mark = " ",digits = 2),
-          palette = "-RdBu", title = paste0('effet du MRF\n(edf = ', round(results_mrf$edf), ')')) +
+          palette = "-RdBu", title = paste0('Effet du MRF\n(edf = ', round(results_mrf$edf), ')')) +
   tm_layout(frame=FALSE, legend.outside = TRUE) + 
   tm_scale_bar(breaks = c(0,10))
 tmap_arrange(map_spline, map_mrf, nrow = 2)
@@ -1079,6 +1088,8 @@ library(mgcv)
 library(car)
 library(DHARMa)
 library(mgcViz)
+library(spdep)
+library(dplyr)
 # Chargement du jeu de données sur l’agglomération lyonnaise
 load("data/Lyon.Rdata")
 

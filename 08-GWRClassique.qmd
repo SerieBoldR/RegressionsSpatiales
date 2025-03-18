@@ -47,7 +47,7 @@ La régression géographiquement pondérée (*geographically weighted regression
 
 ### Pourquoi recourir à une régression géographiquement pondérée? {#sec-0811}
 
-Dans le [chapitre @sec-chap03], nous avons vu que les modèles d'économétrie spatiale visent à contrôler la **dépendance spatiale** d'un modèle de régression classique (MCO), afin d'améliorer l'estimation des coefficients de régression. L'objectif des modèles de régression géographiquement pondérée est différent : ils visent à analyser les variations spatiales de la relation entre la variable dépendante et les variables indépendantes. Autrement dit, les modèles GWR visent à explorer **l'instabilité spatiale du modèle MCO** afin d'analyser localement la relation entre la variable dépendante et les variables indépendantes. Pour une description détaillée en français de la GWR, consultez Apparicio *et al.* [-@apparicio2007modelisation].
+Dans le [chapitre @sec-chap03], nous avons vu que les modèles d'économétrie spatiale visent à contrôler la **dépendance spatiale** d'un modèle de régression classique (MCO) afin d'améliorer l'estimation des coefficients de régression. L'objectif des modèles de régression géographiquement pondérée est différent : ils visent à analyser les variations spatiales de la relation entre la variable dépendante et les variables indépendantes. Autrement dit, les modèles GWR visent à explorer **l'instabilité spatiale du modèle MCO** afin d'analyser localement la relation entre la variable dépendante et les variables indépendantes. Pour une description détaillée en français de la GWR, consultez Apparicio *et al.* [-@apparicio2007modelisation].
 
 ### Formulation de la GWR {#sec-0812}
 
@@ -154,7 +154,7 @@ Dans le modèle GWR, la valeur de *b* est soit fixée par la personne utilisatri
 
 ### Exemple applicatif de la GWR {#sec-0813}
 
-Pour démontrer l'utilité de la GWR comme outil d'exploration de l'instabilité spatiale d'un modèle classique, nous utilisons le jeu de données sur Lyon ([section @sec-0111]). Les modèles de régression (global et GWR) sont construits avec le dioxyde d'azote (NO~2~) comme variable dépendante et cinq variables sociodémographiques comme variables indépendantes ([section @sec-0111]).
+Pour démontrer l'utilité de la GWR comme outil d'exploration de l'instabilité spatiale d'un modèle classique, nous utilisons le jeu de données sur Lyon ([section @sec-0111]). Les modèles de régression (global et GWR) sont construits avec le dioxyde d'azote (NO~2~) comme variable dépendante et cinq variables sociodémographiques comme variables indépendantes.
 
 #### Résultats du modèle global {#sec-08131}
 
@@ -226,7 +226,7 @@ LyonIris$Y <- xy[,2]
 bwCVa_voisins <- gwr.sel(NO2 ~ Pct0_14+Pct_65+Pct_Img+Pct_brevet+NivVieMed,
                         data = LyonIris,
                         method = "cv",          # Méthode cv ou AIC
-                        gweight = gwr.bisquare,   # gwr.gauss ou gwr.bisquare
+                        gweight = gwr.bisquare, # gwr.gauss ou gwr.bisquare
                         adapt = TRUE,
                         verbose = FALSE,
                         RMSE = TRUE,
@@ -465,8 +465,8 @@ LyonIris$Y <- xy[,2]
 bwCVa_voisins <- gwr.sel(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
                          data = LyonIris,
                          method = "cv",          # Méthode cv ou AIC
-                         gweight = gwr.bisquare,   # gwr.gauss ou gwr.bisquare
-                         adapt = TRUE,
+                         gweight = gwr.bisquare, # gwr.gauss ou gwr.bisquare
+                         adapt = TRUE,           # adaptatif
                          verbose = FALSE,
                          RMSE = TRUE,
                          longlat = FALSE,
@@ -476,8 +476,8 @@ bwCVa_voisins <- gwr.sel(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieM
 bwAICa_voisins <- gwr.sel(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
                           data = LyonIris,
                           method = "AIC",          # Méthode cv ou AIC
-                          gweight = gwr.bisquare,    # gwr.gauss ou gwr.bisquare
-                          adapt = TRUE,              # adaptatif
+                          gweight = gwr.bisquare,  # gwr.gauss ou gwr.bisquare
+                          adapt = TRUE,            # adaptatif
                           verbose = FALSE,
                           RMSE = TRUE,
                           longlat = FALSE,
@@ -560,6 +560,7 @@ Le R^2^ du modèle GWR est bien supérieur à celui du modèle classique MCO (0,
 #| message: false
 #| warning: false
 #| eval: true
+# Calcul des R2 pour les modèles MCO et GWR
 r2_global <- summary(modele_global)$r.squared
 rss <- sum((modele_gwr$lm$y - modele_gwr$SDF$pred)^2) 
 tss <- sum((modele_gwr$lm$y - mean(modele_gwr$SDF$pred))^2) 
@@ -591,7 +592,7 @@ LMZ.F3GWR.test(modele_gwr)
 ```
 
 
-Pour comparer **la dépendance spatiale** des deux modèles (MCO versus GWR), nous calculons le *I* de Moran sur leurs résidus avec une matrice de contiguïté standardisée selon le partage d'un segment (*Rook*). Avec une valeur du *I* de Moran de 0,587 (*p* < 0,001), les résidus du modèle global (MCO) sont fortement autocorrélés spatialement, traduisant ainsi un problème de dépendance spatiale du modèle. Bien qu'elle soit toujours significative, l'autocorrélation spatiale des résidus du modèle GWR est bien plus faible (0,275, *p* < 0,001). La cartographie des résidus des deux modèles à la @fig-ResidusMCOGWR corrobore ces résultats.
+Pour comparer **la dépendance spatiale** des deux modèles (MCO versus GWR), nous calculons le *I* de Moran sur leurs résidus avec une matrice de contiguïté standardisée selon le partage d'un segment (*Rook*). Avec une valeur du *I* de Moran de 0,587 (*p* < 0,001), les résidus du modèle global (MCO) sont fortement autocorrélés spatialement, traduisant ainsi un problème de dépendance spatiale du modèle. Bien qu'elle soit toujours significative, l'autocorrélation spatiale des résidus du modèle GWR est bien plus faible (0,288, *p* < 0,001). La cartographie des résidus des deux modèles à la @fig-ResidusMCOGWR corrobore ces résultats.
 
 
 ```{r}
@@ -603,11 +604,14 @@ library(spdep)
 ## Résidus des modèles global (MCO) et GWR
 LyonIris$MCO.Residus <- modele_global$residuals
 LyonIris$GWR.Residus <- modele_gwr$SDF$pred - modele_gwr$lm$y
+
 ## Matrice de contiguïté
-rook_nb <- poly2nb(LyonIris, queen=TRUE)
-rook_w <- nb2listw(rook_nb, zero.policy=TRUE, style = "W")
+rook_nb <- poly2nb(LyonIris, queen = FALSE)
+rook_w <- nb2listw(rook_nb, zero.policy = TRUE, style = "W")
+
 # I de Moran sur les résidus du modèle global (MCO)
 moran.test(LyonIris$MCO.Residus, rook_w, randomisation = FALSE)
+
 # I de Moran sur les résidus du modèle GWR (MCO)
 moran.test(LyonIris$GWR.Residus, rook_w, randomisation = FALSE)
 ```
@@ -784,6 +788,10 @@ Pour cartographier les valeurs de *t*, nous utilisons les seuils de ± 1,96, 2,5
 #| fig-cap: "Cartographie des valeurs de *t* locales de la GWR"
 #| out-width: 100%
 
+
+# Bornes pour les valeurs de t
+classes_intervalles = c(-Inf, -3.29, -2.58, -1.96, 1.96, 2.58, 3.29, Inf)
+
 # Paramètres pour la légende 
 legende_parametres <- list(text.separator = "à",
                            text.less.than = "Moins de",
@@ -791,7 +799,7 @@ legende_parametres <- list(text.separator = "à",
                            decimal.mark = ",",
                            big.mark = " ")
 
-classes_intervalles = c(-Inf, -3.29, -2.58, -1.96, 1.96, 2.58, 3.29, Inf)
+# Construction des cartes
 carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
             tm_fill(col="GWR.T_Pct0_14", palette="-RdBu", 
                   midpoint = NA,
@@ -833,6 +841,7 @@ carte5 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
           tm_layout(frame=FALSE, legend.outside = TRUE)+
           tm_scale_bar(breaks=c(0,5))
 
+# Combinaison des cartes dans la même figure
 tmap_arrange(carte1, carte2, carte3, carte4, carte5, ncol = 2, nrow=3)
 ```
 
@@ -858,10 +867,12 @@ plus_sign <- Vars_t[apply(lyon_df[Vars_t],1,which.max)]
 plus_sign <- substr(plus_sign, 7, nchar(plus_sign))
 max_abs_tvalue <- apply(lyon_df[Vars_t], 1, max)
 plus_sign <- ifelse(max_abs_tvalue<1.96, "Aucune", plus_sign)
+
 ## Nombre de variables significatives au seuil de 5%, soit abs(t)= 1,96)
 LyonIris$nb_signif_1.96 <- as.factor(rowSums(lyon_df > 1.96))
 LyonIris$nb_signif_2.58 <- as.factor(rowSums(lyon_df > 2.58))
 LyonIris$plus_sign      <- as.factor(plus_sign)
+
 ## Cartographie
 carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
           tm_fill(col="nb_signif_1.96", palette="Reds",

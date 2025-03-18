@@ -15,7 +15,7 @@
      - "Une fonction non paramétrique ajustée aux données."
      - "Une fonction quadratique définie par l'utilisateur."
      - "La somme d'un ensemble de bases non linéaires multipliées par leurs coefficients."
-  help: "Relisez au besoin le début de la [section @sec-063]."
+  help: "Relisez au besoin le début de la [section @sec-061]."
 
 - label: "Comment un modèle GAM peut-il être utilisé pour intégrer l'espace?"
   type: uc

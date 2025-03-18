@@ -621,8 +621,8 @@ Pour créer des matrices de pondération spatiale selon la contiguïté, nous ut
 #| echo: true
 #| message: false
 #| warning: false
-library(sf)    # pour importer des couches géographiques
-library(spdep) # pour construire les matrices de pondération
+library(spdep)
+
 ## Utilisation du jeu de données sur l'agglomération de Lyon
 load("data/Lyon.Rdata")
 
@@ -775,7 +775,7 @@ Spécifier un seuil de distance trop réduit peut toutefois être problématique
 #| echo: true
 #| message: false
 #| warning: false
-# Résultats de matrice de pondérations spatiales avec un seuil de 1000 mètres
+# Résultats de la matrice de pondération spatiale avec un seuil de 1000 mètres
 summary(w_inv_distances_1000, zero.policy = TRUE)
 ```
 
@@ -1572,8 +1572,8 @@ Pour vérifier la dépendance spatiale du modèle, nous calculons le *I* de Mora
 #| warning: false
 #| label: fig-ResidusMCOchap1
 #| fig-align: center
+#| out-width: 85%
 #| fig-cap: "Cartographie des résidus d'un modèle MCO"
-#| out-width: 85% 
 library(spdep)
 library(tmap)
 ## Modèle MCO
@@ -1633,7 +1633,7 @@ L’hétérogénéité ou la non-stationnarité (***spatial heterogeneity*** ou 
 **Hétérogénéité ou non-stationnarité spatiale et méthodes de régression spatiale : quelles solutions?**
 :::
 ::: bloc_aller_loin-body
-**Les régressions géographiquement pondérées** ([chapitre @sec-chap08] et [chapitre @sec-chap09]), sont des outils d'exploration particulièrement adaptés pour explorer et cartographier l'instabilité des relations entre la variable dépendante et les variables indépendantes d'un modèle de régression.
+**Les régressions géographiquement pondérées** ([chapitre @sec-chap08] et [chapitre @sec-chap09]), sont des outils d'exploration particulièrement adaptés pour cartographier et analyser l'instabilité des relations entre la variable dépendante et les variables indépendantes d'un modèle de régression.
 
 Les **modèles généralisés additifs** (GAM) et les **modèles généralisés à effet mixtes** (GLMM) permmettent aussi d'intégrer des coefficients variant spatialement ([chapitre @sec-chap09])
 :::
