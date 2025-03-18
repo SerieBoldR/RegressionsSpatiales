@@ -66,7 +66,7 @@ book:
   - 03-EconometrieSpatiale.qmd
   - 04-ProbitSpatial.qmd
   - 05-EcoSpatialePanel.qmd
-  - part: "Partie 4. Autres approches de modélisations spatiales"
+  - part: "Partie 4. Variable latente spatiale : lissage et filtrage spatial"
   - 06-GAM.qmd
   - 07-SEM.qmd
   - part: "Partie 5. Régressions spatiales et hétérogénéité spatiale"
