@@ -1,0 +1,142 @@
+# Modèles GAM et GLMM avec des coefficients variant spatialement (en cours de rédaction) {#sec-chap10}
+
+Dans le chapitre précédent, nous avons présenté la GWR. Cette méthode permet notamment d'explorer comment les relations d'un modèle de régression varient spatialement. Contrairement aux autres modèles abordés jusqu'ici, la GWR permet de répondre à la question de l'hétérogénéité spatiale plutôt que de la dépendance spatiale.
+
+Cependant, la GWR fait l'objet de critiques variées. En effet, bien qu'elle soit une technique puissante d'exploration de données, souffre de plusieurs défauts d'un point de vue statistique qui limitent grandement son usage pour faire des analyses plus inférentielles.
+
+Avec le développement des logiciels et packages pour travailler avec des modèles complexes et notamment les modèles à effets mixtes, de nouvelles pistes ont été développés pour intégrer la question de l'hétérogénéité spatiale dans les modèles. Nous allons aborder ici comment les modèles GAM et GLMM peuvent être utilisés pour autoriser des coefficients à varier spatialement tout en évitant les biais spécifiques de la GWR. Ces modèles peuvent être regroupés sous le terme de modèles à coefficients variant spatilament, soit *spatially varying coefficients models*.
+
+## Hétérogénéité spatiale et modèles généralisés additifs (GAM) {#sec-101}
+
+Nous avions vu dans le chapitre @sec-chap06 que les modèles GAM permettaient de prendre en compte l'espace dans un modèle en intégrant une fonction non linéaire appelée *spline*. Cette fonction non linéaire venait capturer l'effet des coordonnées spatiales (*spline* bivariée) ou de la matrice de voisinage (*Narkov Random Field*). La complexité de cette fonction dépendait du nombre de noeuds (*k*) qui lui était était accordé et d'un paramètre de lissage déterminé le plus souvent comme un pénalisation similaire à un effet aléatoire. Ces splines spatiales permettent notamment de capturer des structures spatiales lisses et marquées par une importante autocorrélation spatiale.
+
+Un modèle GAM intégrant uniquement une *spline* spatiale est donc formulé de la façon suivante :
+
+$$
+\begin{aligned}
+&y \sim D(\mu,\theta)\\
+&g(\mu) = \beta_0 + \beta X + f(sp)\\
+\end{aligned}
+$$ {#eq-hetero1}
+
+avec :
+
+-   $y$, la variable dépendante.
+-   $D$, une distribution avec une espérance $\mu$ et ses autres paramètres $\theta$.
+-   $X$, les variables indépendantes dont l'effet est supposé linéaire par le modèle.
+-   $\beta$, les coefficients des variables indépendantes.
+-   $\beta_0$, la constante.
+-   $\zeta$, les variables dont l'effet est supposé non linéaire par le modèle.
+-   $f(sp)$, une fonction modélisant l'impact de l'espace.
+-   $sp$, une matrice de coordonnées cartésiennes ou une matrice de contiguité spatiale.
+
+Les splines donnent une très grande flexibilité en terme de modélisation. Il est possible de les utiliser dans notre cas pour faire varier un coefficient spatialement. L'idée générale est la suivante, nous formulons l'hypothèse qu'un coefficient n'a pas toujours le même effet sur le territoire et que son effet peut être parfois supérieur et parfois inférieur. Il serait donc pertinent d'ajouter dans le modèle une série de bonus ou de malus au coefficient principal dont les valeurs varient dans l'espace.
+
+Le modèle peut donc être modifié de la façon suivante : 
+
+$$
+\begin{aligned}
+&y \sim D(\mu,\theta)\\
+&g(\mu) = \beta_0 + \beta X + \sum^{n}_{j=1}(f_j(sp)\zeta_j) + f(sp)\\
+\end{aligned}
+$$ {#eq-gam}
+
+avec :
+
+-   $\zeta_j$, une variable indépendante variant spatialement.
+
+Notez ici que nous avons plusieurs *splines* spatiales, soit une par coefficient variant spatialement et la *spline* spatiale de base que nous avions introduite jusqu'ici. En quelque sorte, cette première *spline* spatiale peut être vue comme un bonus ou un malus local accordé à l'intercept du modèle. Notez qu'il n'est pas obligatoire de conserver cette première spline dans le modèle et qu'il est tout à fait possible qu'elle devienne inutile après avoir autorisé certains coefficient à varier spatialement.
+
+Il est généralement recommandé d'effectuer deux ajustements méthodologiques pour faciliter l'interprétation de ce modèles: 
+
+1. Chaque variable indépendante dont l'effet varie dans l'espace doit aussi avoir un coefficient non spatial dans le modèle. Ce dernier représente donc l'effet moyen de la variable en question.
+2. Les splines à utiliser doivent être de type *processus gaussian* (`gp`), ainsi, leur moyenne sera de zéro.
+
+Ces deux spécifications permettent de s'assurer que nous pourrons interpréter l'effet moyen général de la variable indépendante ainsi que la variation spatiale de son coefficient. 
+
+Il est ainsi possible de déterminer quelles variables vont avoir des coefficient variant spatialement dans ce type de modèle. Il est préférable de choisir ces variables pour répondre à une question de recherche précise, ou encore si le cadre théorique le justifie. Il est bien sûr possible de comparer l'ajustement de plusieurs modèles imbriqués pour vérifier si l'ajout d'un coefficient variant spatialement complexifie le modèle de façon justifiée, notamment en comparant leurs *AIC* ou en effectuant un test de rapport de vraissemblance. Notez que le test de rapport de vraisemblance basé sur la distribution du $\chi^2$ n'est pas très adapté à ce type de modèle. Une alternative est la version non paramétrique par *boostrap*, mais elle est très intensive en temps de calcul.
+
+## Modèles linéaires généralisés à effets mixtes (GLMM) {#sec-103}
+
+## Quiz de révision {#sec-104}
+
+```{r}
+#| label: quizChapitre10
+#| echo: false 
+#| eval: false 
+#| message: false 
+#| warning: false 
+#| results: asis
+
+source("code_complementaire/QuizzFunctions.R")
+Chap10Quiz <- quizz("quiz/Chap10.yml", "Chap10")
+render_quizz(Chap10Quiz)
+```
+
+## Exercices de révision {#sec-105}
+
+::: bloc_exercice
+::: bloc_exercice-header
+::: bloc_exercice-icon
+:::
+
+**Exercice 1.** À compléter
+:::
+
+::: bloc_exercice-body
+Complétez le code ci-dessous.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+```
+
+Correction à la [section @sec-11101].
+:::
+:::
+
+::: bloc_exercice
+::: bloc_exercice-header
+::: bloc_exercice-icon
+:::
+
+**Exercice 2.** À compléter
+:::
+
+::: bloc_exercice-body
+Complétez le code ci-dessous.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+```
+
+Correction à la [section @sec-11102].
+:::
+:::
+
+::: bloc_exercice
+::: bloc_exercice-header
+::: bloc_exercice-icon
+:::
+
+**Exercice 3.** À compléter
+:::
+
+::: bloc_exercice-body
+Complétez le code ci-dessous.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+```
+
+Correction à la [section @sec-11103].
+:::
+:::

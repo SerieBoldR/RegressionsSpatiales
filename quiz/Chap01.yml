@@ -35,7 +35,7 @@
      - "La standardisation augmente la vitesse des calculs."
   help: "Relisez au besoin la [section @sec-0123]."
 
-- label: "Avec une matrice standardisée, la statistique du I de Moran varien théoriquement de :"
+- label: "Avec une matrice standardisée, la statistique du I de Moran varie théoriquement de :"
   type: uc
   response: 1
   answers:

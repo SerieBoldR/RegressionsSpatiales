@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
-
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.33">
-
+<meta name="generator" content="quarto-1.5.57">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-
 <meta name="author" content="Philippe Apparicio">
 <meta name="author" content="Jérémy Gelb">
 <meta name="author" content="Jean Dubé">
 <meta name="author" content="Joan Carles Martori">
-<meta name="dcterms.date" content="2025-03-05">
-
+<meta name="dcterms.date" content="2025-04-30">
 <title>Méthodes de régression spatiale : un grand bol d’R</title>
 <style>
 code{white-space: pre-wrap;}
@@ -81,7 +78,6 @@ div.csl-indent {
   margin-left: 2em;
 }</style>
 
-
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
@@ -96,11 +92,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-07ba0ad10f5680c660e360ac31d2f3b6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-e7f91c2723297c1dc845c6a220e21f7a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -126,18 +121,12 @@ div.csl-indent {
     "search-submit-button-title": "Envoyer",
     "search-label": "Recherche"
   }
-}</script>
-
-
-<link rel="stylesheet" href="css/quizlib.min.css">
+}</script><link rel="stylesheet" href="css/quizlib.min.css">
 </head>
-
 <body class="nav-sidebar floating">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
@@ -148,13 +137,9 @@ div.csl-indent {
         <i class="bi bi-search"></i>
       </button>
     </div>
-  </nav>
-</header>
-<!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Méthodes de régression spatiale : un grand bol d’R</a> 
         <div class="sidebar-tools-main">
@@ -170,7 +155,7 @@ div.csl-indent {
         </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Préface</span></a>
@@ -194,72 +179,88 @@ div.csl-indent {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Partie 2. Économétrie spatiale</span></span>
+ <span class="menu-text">Partie 2. Spécification de la structure de covariance spatiale</span></span>
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./02-ModelesEconometrieSpatiale.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./03-CAR_SpatialProbit.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Autres modèles d’économétrie spatiale</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./04-ModelesSpatiauxPanel.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale par panel (en cours de rédaction)</span></span></a>
+  <a href="./02-GLS_CAR_GLMM.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles intégrant une structure de covariance spatiale (en cours de rédaction)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Partie 3. Régressions géographiquement pondérées</span></span>
+ <span class="menu-text">Partie 3. Économétrie spatiale</span></span>
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05-GWRClassique.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Régressions géographiquement pondérées classiques</span></span></a>
+  <a href="./03-EconometrieSpatiale.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-GWRExtensions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée (en cours de rédaction)</span></span></a>
+  <a href="./04-ProbitSpatial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles probit spatiaux pour une variable dépendante dichtonomique (en cours de rédaction)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-EcoSpatialePanel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale en panel (en cours de rédaction)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Partie 4. Autres approches de modélisations spatiales</span></span>
+ <span class="menu-text">Partie 4. Variable latente spatiale : lissage et filtrage spatial</span></span>
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07-GAM.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modèles généralisés additifs</span></span></a>
+  <a href="./06-GAM.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Modèles généralisés additifs</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08-SEM.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Filtrage spatial</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./09-GLS.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modèles des moindres carrés ordinaires (GLS) (en cours de rédaction)</span></span></a>
+  <a href="./07-SEM.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés avec des vecteurs spatiaux</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Partie 7. Exercices et bibliographie</span></span>
+ <span class="menu-text">Partie 5. Régressions spatiales et hétérogénéité spatiale</span></span>
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./10-Exercices.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Correction des exercices</span></span></a>
+  <a href="./08-GWRClassique.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Régressions géographiquement pondérées classiques</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-GWRExtensions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Extensions de la régression géographiquement pondérée (en cours de rédaction)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-Heterogenite_GAM_GLMM.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Modèles GAM et GLMM avec des coefficients variant spatialement (en cours de rédaction)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Partie 6. Conclusions</span></span>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-Exercices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Correction des exercices</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-Conclusion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Conclusion générale (en cours de rédaction)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -269,33 +270,29 @@ div.csl-indent {
   </div>
 </li>
     </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table des matières</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table des matières</h2>
    
   <ul>
-  <li><a href="#préface" id="toc-préface" class="nav-link active" data-scroll-target="#préface">Préface</a>
+<li>
+<a href="#pr%C3%A9face" id="toc-préface" class="nav-link active" data-scroll-target="#pr%C3%A9face">Préface</a>
   <ul class="collapse">
-  <li><a href="#sect001" id="toc-sect001" class="nav-link" data-scroll-target="#sect001">Un manuel sous la forme d’une ressource éducative libre</a></li>
+<li><a href="#sect001" id="toc-sect001" class="nav-link" data-scroll-target="#sect001">Un manuel sous la forme d’une ressource éducative libre</a></li>
   <li><a href="#sect002" id="toc-sect002" class="nav-link" data-scroll-target="#sect002">Comment lire ce manuel?</a></li>
   <li><a href="#sect003" id="toc-sect003" class="nav-link" data-scroll-target="#sect003">Comment utiliser les données du livre pour reproduire les exemples?</a></li>
   <li><a href="#sect004" id="toc-sect004" class="nav-link" data-scroll-target="#sect004">Liste des <em>packages</em> utilisés</a></li>
   <li><a href="#sect005" id="toc-sect005" class="nav-link" data-scroll-target="#sect005">Bref historique sur les modèles de régressions spatiales en économie et en géographie</a></li>
   <li><a href="#sect006" id="toc-sect006" class="nav-link" data-scroll-target="#sect006">Structure du livre</a></li>
   <li><a href="#sect007" id="toc-sect007" class="nav-link" data-scroll-target="#sect007">Remerciements</a></li>
-  </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></nav>
+</li>
+  </ul><div class="toc-actions"><ul><li><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
 <h1 class="title">Méthodes de régression spatiale : un grand bol d’R</h1>
 </div>
 
@@ -352,7 +349,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Date de publication</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">2025-03-05</p>
+      <p class="date">2025-04-30</p>
     </div>
   </div>
   
@@ -361,26 +358,20 @@ div.csl-indent {
   
 
 
-</header>
-
-
-<p><img src="images/introduction/CouvertureP1.png" title="Méthodes de régression spatiale : un grand bol d’R" class="quarto-cover-image img-fluid"></p>
+</header><p><img src="images/introduction/CouvertureP1.png" title="Méthodes de régression spatiale : un grand bol d’R" class="quarto-cover-image img-fluid"></p>
 <p><strong>Résumé&nbsp;:</strong>&nbsp;Ce livre vise à décrire une panoplie de méthodes de régression spatiale avec le logiciel ouvert R. La philosophie de ce livre est de donner toutes les clés de compréhension et de mise en œuvre des méthodes abordées dans R. La présentation des méthodes est basée sur une approche compréhensive et intuitive plutôt que mathématique, sans pour autant négliger la rigueur statistique.</p>
 <p><strong>Remerciements&nbsp;:</strong>&nbsp;Ce manuel a été réalisé avec le soutien de la <a href="https://fabriquerel.org/rel/">fabriqueREL</a>. Fondée en 2019, la fabriqueREL est portée par divers établissements d’enseignement supérieur du Québec et agit en collaboration avec les services de soutien pédagogique et les bibliothèques. Son but est de faire des ressources éducatives libres (REL) le matériel privilégié en enseignement supérieur au Québec.</p>
 <p><strong>Maquette de la page couverture et identité graphique du livre&nbsp;:</strong> Andrés Henao Florez.</p>
 <p><strong>Mise en page&nbsp;:</strong>&nbsp;Philippe Apparicio et Marie-Hélène Gadbois Del Carpio.</p>
 <p><strong>Révision linguistique&nbsp;:</strong>&nbsp;Denise Latreille.</p>
 <p>© Philippe Apparicio, Jérémy Gelb, Jean Dubé et Joan Carles Martori.</p>
-<p><strong>Pour citer cet ouvrage&nbsp;:</strong> Apparicio Philippe, Jérémy Gelb, Jean Dubé et Joan Carles Martori (2025). <em>Méthodes de régression spatiale&nbsp;: un grand bol d’R</em>. Université Laval et Université de Sherbrooke. fabriqueREL. Licence CC&nbsp;BY-SA. <br> <br></p>
+<p><strong>Pour citer cet ouvrage&nbsp;:</strong> Apparicio Philippe, Jérémy Gelb, Jean Dubé et Joan Carles Martori (2025). <em>Méthodes de régression spatiale&nbsp;: un grand bol d’R</em>. Université Laval et Université de Sherbrooke. fabriqueREL. Licence CC&nbsp;BY-SA. <br><br></p>
 <div class="quarto-figure quarto-figure-left">
-<figure class="figure">
-<p><img src="images/introduction/CouvertureP2.png" class="img-fluid quarto-figure quarto-figure-left figure-img" style="width:80.0%"></p>
+<figure class="figure"><p><img src="images/introduction/CouvertureP2.png" class="img-fluid quarto-figure quarto-figure-left figure-img" style="width:80.0%"></p>
 </figure>
 </div>
-<section id="préface" class="level1 unnumbered">
-<h1 class="unnumbered">Préface</h1>
-<section id="sect001" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="sect001">Un manuel sous la forme d’une ressource éducative libre</h2>
+<section id="préface" class="level1 unnumbered"><h1 class="unnumbered">Préface</h1>
+<section id="sect001" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="sect001">Un manuel sous la forme d’une ressource éducative libre</h2>
 <p><strong>Pourquoi un manuel sous licence libre?</strong></p>
 <p>Les logiciels libres sont aujourd’hui très répandus. Comparativement aux logiciels propriétaires, l’accès au code source permet à quiconque de l’utiliser, de le modifier, de le dupliquer et de le partager. Le logiciel R, dans lequel sont mises en œuvre les méthodes de régression spatiale décrites dans ce livre, est d’ailleurs à la fois un langage de programmation et un logiciel libre (sous la licence publique générale <a href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.html">GNU GPL2</a>). Par analogie aux logiciels libres, il existe aussi des <strong>ressources éducatives libres (REL)</strong> «&nbsp;dont la licence accorde les permissions désignées par les 5R (<strong>Retenir — Réutiliser — Réviser — Remixer — Redistribuer</strong>) et donc permet nécessairement la modification&nbsp;» (<a href="https://fabriquerel.org/rel/"><strong><em>fabriqueREL</em></strong></a>). La licence de ce livre, CC BY-SA (<a href="#fig-Licence" class="quarto-xref">figure&nbsp;<span>1</span></a>), permet donc de&nbsp;:</p>
 <ul>
@@ -396,14 +387,12 @@ div.csl-indent {
 <li><p>Utiliser la même licence ou une licence similaire à toutes versions dérivées.</p></li>
 </ul>
 <div id="fig-Licence" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-Licence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-Licence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/introduction/LicenceCCBY-SA.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-Licence-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;1: Licence Creative Commons du livre
-</figcaption>
-</figure>
+</figcaption></figure>
 </div>
 <div class="bloc_astuce">
 <div class="bloc_astuce-header">
@@ -428,9 +417,7 @@ Figure&nbsp;1: Licence Creative Commons du livre
 </ul>
 </div>
 </div>
-</section>
-<section id="sect002" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="sect002">Comment lire ce manuel?</h2>
+</section><section id="sect002" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="sect002">Comment lire ce manuel?</h2>
 <p>Le livre comprend plusieurs types de blocs de texte qui en facilitent la lecture.</p>
 <div class="bloc_package">
 <div class="bloc_package-header">
@@ -448,7 +435,7 @@ Figure&nbsp;1: Licence Creative Commons du livre
 <div class="bloc_objectif-icon">
 
 </div>
-<p><strong>Bloc objectif</strong></p>
+<p><strong>Bloc objectifs</strong></p>
 </div>
 <div class="bloc_objectif-body">
 <p>Il comprend une description des objectifs d’un chapitre ou d’une section.</p>
@@ -509,55 +496,52 @@ Figure&nbsp;1: Licence Creative Commons du livre
 <p>Il comprend un court exercice de révision à la fin de chaque chapitre.</p>
 </div>
 </div>
-</section>
-<section id="sect003" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="sect003">Comment utiliser les données du livre pour reproduire les exemples?</h2>
+</section><section id="sect003" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="sect003">Comment utiliser les données du livre pour reproduire les exemples?</h2>
 <p>Ce livre comprend des exemples détaillés et appliqués dans R pour chacune des méthodes abordées. Ces exemples se basent sur des jeux de données structurés et mis à disposition avec le livre. Ils sont disponibles sur le <em>repo github</em> dans le sous-dossier <code>data</code>, à l’adresse <a href="https://github.com/SerieBoldR/RegressionsSpatiales/tree/main/data" class="uri">https://github.com/SerieBoldR/RegressionsSpatiales/tree/main/data</a>.</p>
 <p>Une autre option est de télécharger le <em>repo</em> complet du livre directement sur <em>github</em> (<a href="https://github.com/SerieBoldR/RegressionsSpatiales" class="uri">https://github.com/SerieBoldR/RegressionsSpatiales</a>) en cliquant sur le bouton <code>Code</code>, puis le bouton <code>Download ZIP</code> (<a href="#fig-downloaffromgit" class="quarto-xref">figure&nbsp;<span>2</span></a>). Les données se trouvent alors dans le sous-dossier nommé <code>data</code>.</p>
 <div id="fig-downloaffromgit" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-downloaffromgit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-downloaffromgit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="images/introduction/download_github.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:40.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-downloaffromgit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;2: Téléchargement de l’intégralité du livre
-</figcaption>
-</figure>
+</figcaption></figure>
 </div>
-</section>
-<section id="sect004" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="sect004">Liste des <em>packages</em> utilisés</h2>
+</section><section id="sect004" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="sect004">Liste des <em>packages</em> utilisés</h2>
 <p>Dans ce livre, nous utilisons la version 4.4.0 de R avec de nombreux <em>packages</em> que vous pouvez installer avec le code ci-dessous.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Liste des packages</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>ListePackages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"adespatial"</span>, <span class="st">"car"</span>, <span class="st">"corrplot"</span>, <span class="st">"DHARMa"</span>, <span class="st">"dplyr"</span>, <span class="st">"future"</span>, </span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"future.apply"</span>,  <span class="st">"gamlss"</span>, <span class="st">"GGally"</span>, <span class="st">"ggplot2"</span>, <span class="st">"ggpubr"</span>, <span class="st">"geoR"</span>,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"GWmodel"</span>, <span class="st">"kableExtra"</span>, <span class="st">"mcgv"</span>, <span class="st">"mgcViz"</span>, <span class="st">"mgwrsar"</span>, <span class="st">"plm"</span>, </span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"ProbitSpatial"</span>, <span class="st">"randomcoloR"</span>, <span class="st">"RColorBrewer"</span>, <span class="st">"sf"</span>, <span class="st">"spatialreg"</span>,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"spdep"</span>, <span class="st">"spgwr"</span>, <span class="st">"splm"</span>, <span class="st">"spmoran"</span>, <span class="st">"tmap"</span>) </span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Packages non installés dans la liste</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>PackagesNonInstalles <span class="ot">&lt;-</span> ListePackages[<span class="sc">!</span>(ListePackages <span class="sc">%in%</span> <span class="fu">installed.packages</span>()[,<span class="st">"Package"</span>])]</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Installation des packages manquants</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">length</span>(new.packages)) <span class="fu">install.packages</span>(PackagesNonInstalles)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Liste des packages</span></span>
+<span><span class="va">ListePackages</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"adespatial"</span>, <span class="st">"car"</span>, <span class="st">"corrplot"</span>, <span class="st">"DHARMa"</span>, <span class="st">"dplyr"</span>, <span class="st">"future"</span>, </span>
+<span>                   <span class="st">"future.apply"</span>,  <span class="st">"gamlss"</span>, <span class="st">"GGally"</span>, <span class="st">"ggplot2"</span>, <span class="st">"ggpubr"</span>, <span class="st">"geoR"</span>,</span>
+<span>                   <span class="st">"GWmodel"</span>, <span class="st">"kableExtra"</span>, <span class="st">"mgcv"</span>, <span class="st">"mgcViz"</span>, <span class="st">"mgwrsar"</span>, <span class="st">"plm"</span>, </span>
+<span>                   <span class="st">"ProbitSpatial"</span>, <span class="st">"randomcoloR"</span>, <span class="st">"RColorBrewer"</span>, <span class="st">"sf"</span>, <span class="st">"spatialreg"</span>,</span>
+<span>                   <span class="st">"spdep"</span>, <span class="st">"spgwr"</span>, <span class="st">"splm"</span>, <span class="st">"spmoran"</span>, <span class="st">"tmap"</span><span class="op">)</span> </span>
+<span><span class="co"># Packages non installés dans la liste</span></span>
+<span><span class="va">PackagesNonInstalles</span> <span class="op">&lt;-</span> <span class="va">ListePackages</span><span class="op">[</span><span class="op">!</span><span class="op">(</span><span class="va">ListePackages</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">[</span>,<span class="st">"Package"</span><span class="op">]</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co"># Installation des packages manquants</span></span>
+<span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">new.packages</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="va">PackagesNonInstalles</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="sect005" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="sect005">Bref historique sur les modèles de régressions spatiales en économie et en géographie</h2>
+</section><section id="sect005" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="sect005">Bref historique sur les modèles de régressions spatiales en économie et en géographie</h2>
 <p>Depuis une cinquantaine d’années, les économistes et les géographes conçoivent et utilisent largement des méthodes de régression prenant en compte la dimension spatiale&nbsp;: modèles d’économétrie spatiale, régressions géographiquement pondérées, modèles généralisés additifs intégrant une dimension spatiale, modèles avec des vecteurs propres spatiaux, etc.</p>
 <p>La notion d’autocorrélation spatiale, étroitement liée aux régressions spatiales, remonte à une période encore plus ancienne. Elle a été introduite notamment par les travaux de Patrick Moran, d’abord en 1948 puis en 1950, suivis par ceux de Robert Geary en 1954 et de Nathan Mantel en 1967 <span class="citation" data-cites="moran1948interpretation moran1950test geary1954contiguity mantel1967detection">(<a href="references.html#ref-moran1948interpretation" role="doc-biblioref">Moran 1948</a>; <a href="references.html#ref-moran1950test" role="doc-biblioref">Moran 1950</a>; <a href="references.html#ref-geary1954contiguity" role="doc-biblioref">Geary 1954</a>; <a href="references.html#ref-mantel1967detection" role="doc-biblioref">Mantel 1967</a>)</span>. La formalisation des relations spatiales trouve son origine, plus précisément, dans la première loi de la géographie énoncée par Waldo Tobler qui stipule que «&nbsp;tout interagit avec tout, mais les objets proches ont plus de chance de le faire que les objets éloignés [<em>Everything is related to everything else, but near things are more related than distant things</em>]&nbsp;» <span class="citation" data-cites="tobler1970computer">(<a href="references.html#ref-tobler1970computer" role="doc-biblioref">Tobler 1970</a>)</span>.</p>
-<p>En économie, le terme «&nbsp;économétrie spatiale&nbsp;» a été utilisé pour la première fois par Jean Paelinck&nbsp;<span class="citation" data-cites="paelinck1978spatial">(<a href="references.html#ref-paelinck1978spatial" role="doc-biblioref">1978</a>)</span> à la fin des années 1970. Cependant, il est resté relativement peu exploité jusqu’aux travaux de Luc Anselin, qui a publié en 1988 un ouvrage de référence sur le sujet intitulé <em>Spatial econometrics: methods and models</em>&nbsp;<span class="citation" data-cites="anselin1988">(<a href="references.html#ref-anselin1988" role="doc-biblioref">Anselin 1988</a>)</span>. Il faut néanmoins attendre le développement des outils informatiques avant de voir les applications affluer. Ainsi, au début des années 1990, l’économétrie spatiale a véritablement pris son essor (voir Anselin <span class="citation" data-cites="anselin2010thirty">(<a href="references.html#ref-anselin2010thirty" role="doc-biblioref">2010</a>)</span> pour un historique détaillé). Depuis, ce domaine a gagné en importance, s’établissant presque comme un incontournable pour la prise en compte des effets spatiaux, mais aussi, et surtout, des fameux efforts de débordements (nous y reviendrons). Ces dernières décennies, plusieurs ouvrages traitant des modèles économétriques spatiaux ont été publiés, principalement en anglais <span class="citation" data-cites="anselin1995new anselin2013advances lesage2008introduction bivand2008applied anselin2014modern">(<a href="references.html#ref-anselin1995new" role="doc-biblioref">Anselin et Florax 1995</a>; <a href="references.html#ref-anselin2013advances" role="doc-biblioref">Anselin, Florax et Rey 2013</a>; <a href="references.html#ref-lesage2008introduction" role="doc-biblioref">LeSage et Pace 2009</a>; <a href="references.html#ref-bivand2008applied" role="doc-biblioref">Bivand et al. 2008</a>; <a href="references.html#ref-anselin2014modern" role="doc-biblioref">Anselin et Rey 2014</a>)</span>. Ils méritent grandement d’être consultés, surtout celui de LeSage et Pace <span class="citation" data-cites="lesage2008introduction">(<a href="references.html#ref-lesage2008introduction" role="doc-biblioref">2009</a>)</span>. Peu de références sont disponibles en français. Le livre de référence de Dubé et Legros <span class="citation" data-cites="dube2014econometrie">(<a href="references.html#ref-dube2014econometrie" role="doc-biblioref">2014</a>)</span> constitue vraisemblablement une référence intéressante, notamment par la présentation vulgarisée des modèles et des concepts.</p>
-<p>En géographie, Daniel Griffith est certainement l’un des géographes les plus actifs dans le domaine des régressions spatiales, y allant de plusieurs propositions dans le but de contrôler pour la présence d’autocorrélation spatiale résiduelle. Ses premiers travaux remontent aux années 1980, et il a publié depuis un grand nombre d’ouvrages <span class="citation" data-cites="Griffith1988 griffith2003spatial griffith2019spatial">(notamment, <a href="references.html#ref-Griffith1988" role="doc-biblioref">Griffith 1988</a>; <a href="references.html#ref-griffith2003spatial" role="doc-biblioref">Griffith 2003</a>; <a href="references.html#ref-griffith2019spatial" role="doc-biblioref">Griffith, Chun et Li 2019</a>)</span>. Puis, dans les années 1990, trois géographes –&nbsp;Stewart Fotheringham, Chris Brunsdon et Martin Charlton&nbsp;– ont introduit la régression géographiquement pondérée (GWR), une méthode permettant d’analyser localement les relations entre la variable dépendante et les variables indépendantes d’un modèle de régression <span class="citation" data-cites="stewart1996geography brunsdon1996geographically brunsdon1998spatial">(<a href="references.html#ref-stewart1996geography" role="doc-biblioref">Fotheringham, Charlton et Brunsdon 1996</a>; <a href="references.html#ref-brunsdon1996geographically" role="doc-biblioref">Brunsdon, Fotheringham et Charlton 1996</a>; <a href="references.html#ref-brunsdon1998spatial" role="doc-biblioref">Brunsdon, Fotheringham et Charlton 1998</a>)</span>. En 2003, la parution de leur ouvrage intitulé <em>Geographically weighted regression: the analysis of spatially varying relationships</em> <span class="citation" data-cites="fotheringham2003geographically">(<a href="references.html#ref-fotheringham2003geographically" role="doc-biblioref">Fotheringham, Brunsdon et Charlton 2003</a>)</span> a largement contribué à la popularisation de cette méthode. Depuis, de nombreuses extensions de la GWR ont été proposées (nous y reviendrons).</p>
-</section>
-<section id="sect006" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="sect006">Structure du livre</h2>
-<p>Depuis une cinquantaine d’années, les économètres, les épidémiologistes et les géographes conçoivent et utilisent largement des méthodes de régression prenant en compte la dimension spatiale, dont les principales sont présentées dans ce manuel. Ce dernier est structuré en quatre parties.</p>
-<p><strong>Partie&nbsp;1. Notions de base.</strong> Dans cette première partie, nous présentons les jeux de données utilisées pour mettre en œuvre les différentes méthodes de régression spatiale présentées dans le livre (<a href="01-NotionsDeBase.html" class="quarto-xref">chapitre&nbsp;<span>1&nbsp; Autocorrélation spatiale, dépendance spatiale et hétérogénéité spatiale d’un modèle de régression</span></a>). Nous discutons aussi de plusieurs notions fondamentales et méthodes qu’il importe de bien maîtriser avant d’aborder les chapitres suivants consacrés aux méthodes de régression spatiale, notamment&nbsp;: l’autocorrélation spatiale (globale et locale), la notion de variable spatialement décalée et la régression linéaire multiple. Nous conclurons ce chapitre en exposant les raisons qui justifient l’utilisation de différentes formes de régressions spatiales pour modéliser des données spatiales ou spatiotemporelles.</p>
-<p><strong>Partie&nbsp;2. Modèles d’économétrie spatiale</strong>. Cette seconde partie comprend trois chapitres. Elle est consacrée aux modèles d’économétrie spatiale qui vise à modéliser la <strong>dépendance spatiale</strong>. Dans le <a href="02-ModelesEconometrieSpatiale.html" class="quarto-xref">chapitre&nbsp;<span>2&nbsp; Modèles d’économétrie spatiale</span></a>, nous décrivons ainsi les principaux modèles spatiaux autorégressifs qui permettent d’introduire l’autocorrélation spatiale sur les variables indépendantes (modèle SLX), la variable dépendante (SAR), le terme d’erreur (SEM), à la fois la variable dépendante et les variables indépendantes (SDM) ou à la fois les variables indépendantes et le terme d’erreur (SDEM). Dans le <a href="03-CAR_SpatialProbit.html" class="quarto-xref">chapitre&nbsp;<span>3&nbsp; Autres modèles d’économétrie spatiale</span></a>, nous abordons deux autres types modèles d’économétrie spatiale&nbsp;: le modèle d’autorégression conditionnelle (<em><strong>c</strong>onditional <strong>a</strong>utoregressive <strong>m</strong>odel</em>, CAR) qui se distingue du modèle SAR; les modèles probit spatiaux pour modéliser une variable qualitative dichotomique (binaire). Finalement, dans le <a href="04-ModelesSpatiauxPanel.html" class="quarto-xref">chapitre&nbsp;<span>4&nbsp; Modèles d’économétrie spatiale par panel (en cours de rédaction)</span></a>, nous abordons une autre extension des modèles autorégressifs, soit les modèles spatiaux par panel qui permettent de modéliser des données spatiales longitudinales.</p>
-<p><strong>Partie&nbsp;3. Régressions géographiquement pondérées</strong>. Dans cette partie, nous abordons les régressions géographiquement pondérées (GWR) qui permettent de modéliser l’<strong>hétérogénéité spatiale</strong>, soit l’instabilité des relations entre la variable dépendante et les variables indépendantes. Premièrement, nous décrirons les formes dites classiques de la GWR qui s’appliquent à des variables dépendantes continues, dichotomiques (logistique) et de comptage (Poisson) (<a href="05-GWRClassique.html" class="quarto-xref">chapitre&nbsp;<span>5&nbsp; Régressions géographiquement pondérées classiques</span></a>). Deuxièmement, nous abordons des extensions des la GWR, particulièrement la GWR mixte, la GWR multiéchelle et les GWR mixtes avec des variables spatialement décalées (MGWR-SAR) (<a href="06-GWRExtensions.html" class="quarto-xref">chapitre&nbsp;<span>6&nbsp; Extensions de la régression géographiquement pondérée (en cours de rédaction)</span></a>).</p>
-<p><strong>Partie&nbsp;4. Autres modèles de régressions spatiales</strong>. Cette quatrième et dernière partie comprend trois chapitres. Le <a href="07-GAM.html" class="quarto-xref">chapitre&nbsp;<span>7&nbsp; Modèles généralisés additifs</span></a> est consacré aux modèles généralisés additifs qui permettent d’introduire l’espace de deux manières différentes&nbsp;: les modèles GAM avec une <em>spline</em> bivariée avec les coordonnées géographiques (x, y) pour capturer les variations continues dans l’espace; les modèles GAM avec un lissage par champ aléatoire de Markov (<em>Markov Random Field</em> – MRF) pour modéliser la dépendance spatiale entre les unités spatiales voisines. Dans le <a href="08-SEM.html" class="quarto-xref">chapitre&nbsp;<span>8&nbsp; Filtrage spatial</span></a>, nous abordons les modèles linéaires généralisés avec des vecteurs spatiaux proposés par Daniel Griffith <span class="citation" data-cites="griffith2003spatial griffith2019spatial">(<a href="references.html#ref-griffith2003spatial" role="doc-biblioref">2003</a>; <a href="references.html#ref-griffith2019spatial" role="doc-biblioref">2019</a>)</span>.</p>
-</section>
-<section id="sect007" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="sect007">Remerciements</h2>
+<p>En économie, le terme «&nbsp;économétrie spatiale&nbsp;» a été utilisé pour la première fois par Jean Paelinck&nbsp;<span class="citation" data-cites="paelinck1978spatial">(<a href="references.html#ref-paelinck1978spatial" role="doc-biblioref">1978</a>)</span> à la fin des années 1970. Cependant, il est resté relativement peu exploité jusqu’aux travaux de Luc Anselin, qui a publié en 1988 un ouvrage de référence sur le sujet intitulé <em>Spatial econometrics: methods and models</em>&nbsp;<span class="citation" data-cites="anselin1988">(<a href="references.html#ref-anselin1988" role="doc-biblioref">Anselin 1988</a>)</span>. Il faut néanmoins attendre le développement des outils informatiques avant de voir les applications affluer. Ainsi, au début des années 1990, l’économétrie spatiale a véritablement pris son essor (voir Anselin <span class="citation" data-cites="anselin2010thirty">(<a href="references.html#ref-anselin2010thirty" role="doc-biblioref">2010</a>)</span> pour un historique détaillé). Depuis, ce domaine a gagné en importance, s’établissant presque comme un incontournable pour la prise en compte des effets spatiaux, mais aussi, et surtout, des fameux effets de débordement. Ces dernières décennies, plusieurs ouvrages traitant des modèles économétriques spatiaux ont été publiés, principalement en anglais <span class="citation" data-cites="anselin1995new anselin2013advances lesage2008introduction bivand2008applied anselin2014modern">(<a href="references.html#ref-anselin1995new" role="doc-biblioref">Anselin et Florax 1995</a>; <a href="references.html#ref-anselin2013advances" role="doc-biblioref">Anselin, Florax et Rey 2013</a>; <a href="references.html#ref-lesage2008introduction" role="doc-biblioref">LeSage et Pace 2009</a>; <a href="references.html#ref-bivand2008applied" role="doc-biblioref">Bivand et al. 2008</a>; <a href="references.html#ref-anselin2014modern" role="doc-biblioref">Anselin et Rey 2014</a>)</span>. Ils méritent grandement d’être consultés, particulièrement celui de LeSage et Pace <span class="citation" data-cites="lesage2008introduction">(<a href="references.html#ref-lesage2008introduction" role="doc-biblioref">2009</a>)</span>. Peu de références sont disponibles en français. Le livre de référence de Dubé et Legros <span class="citation" data-cites="dube2014econometrie">(<a href="references.html#ref-dube2014econometrie" role="doc-biblioref">2014</a>)</span> constitue vraisemblablement une référence intéressante, notamment par la présentation vulgarisée des modèles et des concepts.</p>
+<p>En géographie, Daniel Griffith est certainement l’un des géographes les plus actifs dans le domaine des régressions spatiales, ayant fait plusieurs propositions pour contrôler la présence d’autocorrélation spatiale résiduelle. Ses premiers travaux remontent aux années 1980, et il a publié depuis un grand nombre d’ouvrages <span class="citation" data-cites="Griffith1988 griffith2003spatial griffith2019spatial">(notamment, <a href="references.html#ref-Griffith1988" role="doc-biblioref">Griffith 1988</a>; <a href="references.html#ref-griffith2003spatial" role="doc-biblioref">Griffith 2003</a>; <a href="references.html#ref-griffith2019spatial" role="doc-biblioref">Griffith, Chun et Li 2019</a>)</span>. Puis, dans les années 1990, trois géographes –&nbsp;Stewart Fotheringham, Chris Brunsdon et Martin Charlton&nbsp;– ont introduit la régression géographiquement pondérée (<em>Geographically weighted regression</em> - GWR), une méthode permettant d’analyser localement les relations entre la variable dépendante et les variables indépendantes d’un modèle de régression <span class="citation" data-cites="stewart1996geography brunsdon1996geographically brunsdon1998spatial">(<a href="references.html#ref-stewart1996geography" role="doc-biblioref">Fotheringham, Charlton et Brunsdon 1996</a>; <a href="references.html#ref-brunsdon1996geographically" role="doc-biblioref">Brunsdon, Fotheringham et Charlton 1996</a>; <a href="references.html#ref-brunsdon1998spatial" role="doc-biblioref">Brunsdon, Fotheringham et Charlton 1998</a>)</span>. En 2003, la parution de leur ouvrage intitulé <em>Geographically weighted regression: the analysis of spatially varying relationships</em> <span class="citation" data-cites="fotheringham2003geographically">(<a href="references.html#ref-fotheringham2003geographically" role="doc-biblioref">Fotheringham, Brunsdon et Charlton 2003</a>)</span> a largement contribué à la popularisation de cette méthode. Depuis, de nombreuses extensions de la GWR ont été proposées.</p>
+</section><section id="sect006" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="sect006">Structure du livre</h2>
+<p>Le manuel est structuré en six parties.</p>
+<p><strong>Partie&nbsp;1. Notions de base</strong></p>
+<p>Dans cette première partie, nous présentons les jeux de données utilisés pour mettre en œuvre les différentes méthodes de régression spatiale présentées dans le livre (<a href="01-NotionsDeBase.html" class="quarto-xref">chapitre&nbsp;<span>1&nbsp; Notions de base</span></a>). Nous discutons aussi de plusieurs notions fondamentales et méthodes qu’il importe de bien maîtriser avant d’aborder les chapitres suivants consacrés aux méthodes de régression spatiale, notamment l’autocorrélation spatiale, la notion de variable spatialement décalée et la régression linéaire multiple. Nous conclurons ce chapitre en exposant les raisons qui justifient l’utilisation de différentes formes de régressions spatiales pour modéliser des données spatiales ou spatiotemporelles.</p>
+<p><strong>Partie&nbsp;2. Spécification de la structure de covariance spatiale</strong></p>
+<p>Dans cette seconde partie, les types de régression spatiale retenus introduisent l’espace en spécifiant directement la structure de covariance induite par l’autocorrélation spatiale dans les matrices de covariance de distribution normale (<a href="02-GLS_CAR_GLMM.html" class="quarto-xref">chapitre&nbsp;<span>2&nbsp; Modèles intégrant une structure de covariance spatiale (en cours de rédaction)</span></a>). La méthode des moindres carrés généralisés (GLS) permet d’étendre le modèle des moindres carrés ordinaires (MCO) pour tenir compte de cette structure de covariance entre les observations. Cette approche est similaire à l’introduction d’effets aléatoires, ce qui a notamment conduit à la construction de GLMM (modèles linéaires généralisés à effets mixtes) introduisant des effets aléatoires distribués normalement avec une matrice de covariance structurée spatialement. Finalement, nous décrirons le modèle d’autorégression conditionnelle (<em>conditional autoregressive model</em>, CAR) qui s’applique à une variable dépendante continue dont la valeur pour une entité spatiale dépend de celles des entités spatiales proches ou voisines.</p>
+<p><strong>Partie&nbsp;3. Modèles d’économétrie spatiale</strong></p>
+<p>Cette troisième partie comprend trois chapitres qui sont consacrés aux modèles d’économétrie spatiale qui vise à modéliser la <strong>dépendance spatiale</strong>. D’emblée, nous décrivons les principaux modèles spatiaux autorégressifs pour une variable dépendante continue qui permettent d’introduire l’autocorrélation spatiale sur les variables indépendantes (modèle SLX), la variable dépendante (SAR), le terme d’erreur (SEM), à la fois la variable dépendante et les variables indépendantes (SDM) et à la fois les variables indépendantes et le terme d’erreur (SDEM) (<span class="quarto-unresolved-ref">?sec-chap03</span>). Puis, nous abordons les modèles probit spatiaux pour modéliser une variable qualitative dichotomique (binaire) (<span class="quarto-unresolved-ref">?sec-chap04</span>). Finalement, nous décrivons d’autres extensions des modèles autorégressifs, soit les modèles spatiaux en panel qui permettent de modéliser des données spatiales longitudinales (<span class="quarto-unresolved-ref">?sec-chap05</span>).</p>
+<p><strong>Partie&nbsp;4. Variable latente spatiale&nbsp;: lissage et filtrage spatial</strong></p>
+<p>Dans cette troisième partie, les modèles retenus ont la particularité d’ajouter un terme spatialement structuré dans leur équation de régression. Ce terme spatial est construit à partir d’un ensemble de fonctions de base multipliées par des coefficients. Ces fonctions de base suivent des patrons géographiques, ce qui leur permet de capturer une variable latente spatialement autocorrélée qui autrement aurait fini dans les résidus. Le premier chapitre de cette partie est consacré aux modèles généralisés additifs (GAM) qui permettent d’introduire l’espace de deux manières différentes&nbsp;: avec une <em>spline</em> bivariée construite à partir des coordonnées géographiques (x, y) pour capturer les variations continues dans l’espace; avec un lissage par champ aléatoire de Markov (<em>Markov Random Field</em> – MRF) pour modéliser la dépendance spatiale entre les unités spatiales voisines (<a href="06-GAM.html" class="quarto-xref">chapitre&nbsp;<span>6&nbsp; Modèles généralisées additifs</span></a>). Dans le second, nous abordons les modèles linéaires généralisés avec des vecteurs spatiaux (<em>Spatial Eigenvector Generalized Linear Models</em>, SEVM) (<a href="07-SEM.html" class="quarto-xref">chapitre&nbsp;<span>7&nbsp; Filtrage spatial</span></a>). Ces modèles SEVM ajoutent des variables construites à partir de la décomposition de la matrice de pondération spatiale en vecteurs propres (<em>Moran Eigenvectors</em>). Ces deux types de modèles (GAM et SEVM) se ressemblent énormément dans leur conceptualisation de l’espace.</p>
+<div style="page-break-after: always;"></div>
+<p><strong>Partie 5. Régressions spatiales et hétérogénéité spatiale</strong></p>
+<p>Dans cette cinquième partie, nous abordons plusieurs types de régression spatiale qui permettent de faire varier les coefficients de régression dans l’espace. Premièrement, les régressions géographiquement pondérées (<em>Geographically weighted regression</em> - GWR) permettent d’explorer et de visualiser l’<strong>hétérogénéité spatiale</strong>, soit l’instabilité des relations entre la variable dépendante et les variables indépendantes. Premièrement, nous décrirons les formes dites classiques de la GWR qui s’appliquent à des variables dépendantes continues, dichotomiques (logistique) et de comptage (Poisson) (<span class="quarto-unresolved-ref">?sec-chap08</span>). Puis, nous abordons des extensions de la GWR, particulièrement la GWR mixte, la GWR multiéchelle et les GWR mixtes avec des variables spatialement décalées (MGWR-SAR) (<span class="quarto-unresolved-ref">?sec-chap09</span>). Finalement, nous verrons comment il est possible d’introduire des coefficients variant spatialement avec des modèles GAM (modèles généralisés additifs) et GLMM (modèles linéaires généralisés à effets mixtes) (<a href="10-Heterogenite_GAM_GLMM.html" class="quarto-xref">chapitre&nbsp;<span>10&nbsp; Modèles GAM et GLMM avec des coefficients variant spatialement (en cours de rédaction)</span></a>).</p>
+<p><strong>Partie&nbsp;6. Conclusions</strong></p>
+<p>Cette dernière partie regroupe les exercices corrigés (<span class="quarto-unresolved-ref">?sec-chap11</span>), une conclusion générale (<span class="quarto-unresolved-ref">?sec-chap12</span>) et la bibliographie.</p>
+</section><section id="sect007" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="sect007">Remerciements</h2>
 <p>De nombreuses personnes ont contribué à l’élaboration de ce manuel.</p>
 <p>Ce projet a bénéficié du soutien pédagogique et financier de la <a href="https://fabriquerel.org/"><strong><em>fabriqueREL</em></strong></a> (ressources éducatives libres). Les différentes rencontres avec le comité de suivi nous ont permis de comprendre l’univers des ressources éducatives libres (REL) et notamment leurs <a href="https://fabriquerel.org/rel/">fameux 5R</a> (Retenir — Réutiliser — Réviser — Remixer — Redistribuer), de mieux définir le besoin pédagogique visé par ce manuel, d’identifier des ressources pédagogiques et des outils pertinents pour son élaboration. Ainsi, nous remercions chaleureusement les membres de la <em>fabriqueREL</em> pour leur soutien inconditionnel&nbsp;:</p>
 <ul>
@@ -640,11 +624,7 @@ Paelinck, Jean. 1978. <span>«&nbsp;Spatial econometrics.&nbsp;»</span> <em>Eco
 Tobler, Waldo R. 1970. <span>«&nbsp;A computer movie simulating urban growth in the Detroit region.&nbsp;»</span> <em>Economic geography</em> 46 (sup1): 234‑240. <a href="https://doi.org/10.2307/143141">https://doi.org/10.2307/143141</a>.
 </div>
 </div>
-</section>
-</section>
-
-</main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
+</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -1063,9 +1043,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
   </div>
   <div class="nav-page nav-page-next">
       <a href="./00-auteurs.html" class="pagination-link" aria-label="À propos des auteurs">
@@ -1074,8 +1052,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer">
-  <div class="nav-footer">
+<footer class="footer"><div class="nav-footer">
     <div class="nav-footer-left">
 <p>Méthodes de régression spatiale : un grand bol d’R.</p>
 </div>   
@@ -1087,8 +1064,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>
   </div>
 </footer>
-
-
 
 
 </body></html>

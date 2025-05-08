@@ -1,3 +1,607 @@
-# Modèles des moindres carrés ordinaires (GLS) (en cours de rédaction) {#sec-chap09}
+# Modèles des moindres carrés généralisés {#sec-chap09}
 
-Les modèles des moindres carrés ordinaires (*Generalized least squares*, GLS) peuvent aussi être utilisés quand les termes d'erreur (résidus) du modèle non spatial sont spatialement autocorrélés.
+La méthodes des moindres carrés généralisés (GLS) est une méthode d'estimation qui a été développée pour ajuster les paramètres d'un modèle de régression lorsqu'il existe une corrélation différente de zéro entre les résidus du modèle [@aitken1936iv].
+
+Ce type de modèle est donc parfaitement adapté à l'analyse de données spatialisées puisqu'il permet de corriger très spécifiquement l'enjeu de dépendance spatiale, soit la présence d'autocorrélation spatiale dans les résidus.
+
+::: bloc_objectif
+::: bloc_objectif-header
+::: bloc_objectif-icon
+:::
+
+**Objectifs d'apprentissage visés dans ce chapitre**
+:::
+
+::: bloc_objectif-body
+
+À la fin de ce chapitre, vous devriez être en mesure de : 
+
+-  Ajuster un modèle GLS.
+-  Sélectionner la matrice de covariance spatiale la plus adaptée pour un modèle GLS.
+-  Analyser les résultats produits par un modèle GLS.
+:::
+:::
+
+::: bloc_package
+::: bloc_package-header
+::: bloc_package-icon
+:::
+**Liste des *packages* utilisés dans ce chapitre**
+:::
+::: bloc_package-body
+-   Pour ajuster des modèles GLS:
+    -   `nlme` package dédié à l'ajustement de modèles gaussiens à effets mixtes.
+    -   `glmmTMB` package dédié à l'ajustement de modèles GLMM
+-   Pour analyser les résidus des modèles :
+    -   `DHARMa` pour valider la distribution de modèle GLM complexes.
+    -   `spdep` pour construire des matrices de pondération spatiales et calculer le *I* de Moran.
+-   Pour construire des cartes et des graphiques :
+    -   `tmap` est certainement le meilleur *package* pour la cartographie.
+    -   `ggplot2` pour construire des graphiques.
+:::
+:::
+
+
+## Spécification d'un modèle spatial estimé par GLS {#sec-091}
+
+Un modèle de régression linéaire classique suivant une distribution normale est formulé de la façon suivante : 
+
+$$
+\begin{aligned}
+&y \sim N(\mu,\sigma^2)\\
+&\mu = \beta_0 + \beta X\\
+\end{aligned}
+$$ {#eq-gls1}
+
+Dans cette formulation, nous formulons le postulat que notre variable dépendante *y* suit une distribution normale dont la moyenne est conditionnée par nos variables indépendantes *X*. Selon cette formulation, les variables *X* ne peuvent pas prédire exactement *y*, mais seulement une valeur moyenne attendue de *y*. Les valeurs réelles de *y* varient autours de cette moyenne attendue en suivant une distribution normale de variance $\sigma^2$. Plus cette variance est grande, plus grande est notre incertitude et donc nos résidus.
+
+$\sigma^2$ peut être présenté sous forme d'une valeur unique, mais aussi sous forme d'une matrice de covariance :
+
+$$
+\begin{equation}
+\operatorname{cov}=\sigma^2\times\left(\begin{array}{cccc}
+1 & 0 & \cdots & 0 \\
+0 & 1 & \cdots & \vdots \\
+\vdots & \cdots & 1 & \vdots \\
+0 & \cdots & \cdots & 1
+\end{array}\right)
+\end{equation}
+$$ {#eq-gls2}
+
+Cette matrice est carrée et a une taille égale au nombre d'observations dans le modèle. Dans un modèle gaussien classique, elle est remplie de 0, sauf sa diagonale qui a toujours la même valeur, soit $1 \times \sigma^2$. Un modèle spécifié de cette manière formule donc l'hypothèse que les observations qu'il modélise sont non-corrélées entre elles (matrice de covariance remplie de 0) et qu'il existe uniquement une variance commune partagée par toutes les observations. C'est de là que viennent les conditions d'application d'indépendance des observations et d'homoscédasticité des résidus.
+
+Admettons maintenant que nous décidions maintenant de de modifier notre modèle pour le rendre plus général et qu'il puisse tenir compte d'éventuelles corrélations entre nos observations. Nous pouvons remplacer la matrice de covariance classique par une matrice plus complexe qui autorisera les corrélations entre les observations : 
+
+$$
+\begin{equation}
+\operatorname{cov}=\sigma^2\times\left(\begin{array}{cccc}
+1 & \lambda_{1-2} & \cdots & \lambda_{1-n} \\
+\lambda_{1-2} & 1 & \cdots & \vdots \\
+\vdots & \cdots & 1 & \vdots \\
+\lambda_{1-n} & \cdots & \cdots & 1
+\end{array}\right)
+\end{equation}
+$$ {#eq-gls3}
+
+Notez que cette matrice est symétrique car si une observation *i* est corrélée avec une observation *j*, alors *j* est identiquement corrélée avec *i*.
+
+Malheureusement, il est impossible d'ajuser un modèle avec une telle matrice si nous ne connaissons aucune des valeurs de corrélation entre les observations ($\sigma^2_{i-j}$). En effet, cela voudrait dire que le modèle devrait ajuster un nombre de paramètres égal au nombre de coefficients (plus l'intercept) plus chacune des valeurs $\sigma^2_{i-j}$. Or, pour un jeu de donnée de taille *n*, cela représente $\frac{n^2}{2}-n$ (la moitiée de la matrice moins la diagonale) paramètres! Ce chiffre grandit à mesure que *n* augmente, il est donc impossible de déterminer cette matrice à partir des données.
+
+Nous pouvons réduire la complexité de ce problème en simplifiant la matrice de corrélation entre les observations. Plutôt que d'ajuster tous les paramètres, nous pouvons partir du principe que la corrélation entre deux observations dépend d'une fonction spécifique. Par exemple, dans un contexte spatial, il serait assez logique de partir du principe que deux observations proches ont une corrélation plus élevée que deux observations lointaines.
+
+$$
+\begin{equation}
+\operatorname{cov}=\sigma^2\times\left(\begin{array}{cccc}
+1 & f(d_{1-2}) & \cdots & f(d_{1-n}) \\
+f(d_{1-2}) & 1 & \cdots & \vdots \\
+\vdots & \cdots & 1 & \vdots \\
+f(d_{1-n}) & \cdots & \cdots & 1
+\end{array}\right)
+\end{equation}
+$$ {#eq-gls4}
+
+Avec $f(d_{i-j})$ la fonction permettant de calculer la corrélation entre les obserations *i* et *j* séparées par une distance $d_{i-j}$.
+
+Il est cependant nécessaire que cette fonction *f* puisse s'ajuster aux données. En effet, parfois l'impact de la distance sera plus ou moins grand. *f* aura donc des paramètres qui contrôlent son comportement et qui pourront être ajustés dans le modèle. Nous nous retrouvons donc avec une structure de covariance capable de tenir compte de la notion d'autocorrélation spatiale entre les observations.
+
+Il existe plusieurs fonctions utilisées classiquement pour construire des structures de covariance dans un modèle GLS spatial : 
+
+* La fonction Gaussienne
+* La fonction Exponentielle
+* La fonction Matern
+* La fonction Sphérique
+* La fonction Raionnelle quadatique
+
+Ces différentes fonctions permettent toutes de modéliser que l'éloignement entre deux observations est associée avec une diminution de leur corrélation. Chacune dispose de différents paramètres influençant leur forme.
+
+```{r}
+#| label: fig-gls1
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-cap: Fonctions de corrélation spatiale classiques
+#| fig-align: center
+#| out-width: 85%
+
+library(ggplot2)
+
+prep_data <- function(d, f){
+  dfs <- do.call(rbind,lapply(d, function(d){
+    df <- data.frame(
+      d = d,
+      dist = seq(0,2500,50)
+    )
+    df$cor <- f(df$dist, df$d)
+    return(df)
+  }))
+  dfs$d <- as.character(dfs$d)
+  return(dfs)
+}
+
+## Structure rationnelle quadratique
+corRatio <- function(r, d){
+  return(1/(1+(r/d)^2))
+}
+
+## Structure Gaussienne 
+corGau <- function(r, d){
+  return(exp(-(r/d)^2))
+}
+
+## Structure  Sphérique 
+corSph <- function(r, d){
+  return(ifelse(r <= d, 1-1.5*(r/d)+0.5*(r/d)**3, 0))
+}
+
+## Structure Matern 
+corMat <- function(r, d){
+  spaMM::MaternCorr(r, rho = 1/d, nu = 0.3)
+}
+
+## Structure exponentielle
+corExp <- function(r, d){
+  return(exp((-1*r)/d))
+}
+
+df_ratio <- prep_data(c(250,1000,1500), corRatio)
+df_ratio$type <- "Rationnelle quadratique"
+df_gauss <- prep_data(c(250,1000,1500), corGau)
+df_gauss$type <- "Gaussienne"
+df_sph <- prep_data(c(250,1000,1500), corSph)
+df_sph$type <- "Sphérique"
+df_mat <- prep_data(c(250,1000,1500), corMat)
+df_mat$type <- "Matern"
+df_exp <- prep_data(c(250,1000,1500), corExp)
+df_exp$type <- "Exponentielle"
+
+df_total <- rbind(
+  df_ratio,
+  df_gauss,
+  df_sph,
+  df_mat,
+  df_exp
+)
+df_total$type <- factor(df_total$type)
+
+ggplot(df_total) + 
+  geom_line(aes(x = dist, y = cor, color = d, group = d))+
+  facet_wrap(vars(type), ncol = 2) + 
+  labs(x = 'distance', y = 'corrélation', color = 'paramètre range') + 
+  theme_bw()
+
+```
+
+La figure @fig-gls1 illustre ces 5 fonctions. Notons ici que toutes ces fonctions n'ont besoin que d'un seul paramètre appelé le *range* qui controle la vitesse à laquelle la corrélation diminue. Seule la fonction *Matern* a un second paramètre nommé $\nu$ qui contrôle son niveau de lissage (ici fixé à 0.3).
+
+Il est difficile de déterminer à l'avance qu'elle sera la fonction la plus adéquate pour un modèle, l'idéal est donc d'ajuster chaque modèle possible et ensuite de comparer les modèles obtenus pour voir lequel produit les meilleurs résultats.
+
+
+## Modèle GLS et GLMM {#sec-092}
+
+Nous venons de voir qu'un modèle GLS est construit en modifiant la stucture de covariance d'un modèle linéaire classique assumant une distribution normale. Il est difficile  de transposer cette méthode au cas des GLM puisque ces derniers ne se limitent pas à l'utilisation d'une distribution normale pour modéliser la variable dépendante. Le principe de la structure de covariance est difficile à généraliser pour des distributions autres que la distribution normale.
+
+Nous allons montrer ci-dessous comment un modèle GLS peut être reformulé comme un modèle GLMM. Notez que cette explication est relativement simplifiée car elle ne tient pas compte qu'un modèle GLS (moindres carrés généralisés) et un modèle GLMM (maximum de vraissemblance) n'utilisent pas les mêmes approches d'estimation.
+
+Si nous reprenons notre formulation du modèle GLS gaussien, nous pouvons tenter de modifier légèrement sa formulation pour faciliter sa généralisation.
+
+La formulation de base est la suivante.
+
+$$
+\begin{aligned}
+&y \sim N(\mu,\Omega)\\
+&\mu = \beta_0 + \beta X\\
+\end{aligned}
+$$ {#eq-gls5}
+
+Avec $\Omega$ notre matrice de covariance.
+
+Le modèle stipule que *y* suit une distribution normale dont la moyenne $\mu$ peut être prédire par une équation de régression. Cependant, ceci ne suffit pas à avoir exactement la valeur de *y* et une certaine variation existe autour de la moyenne prédite. Cette variation suit une distribution normale avec une matrice de covariance $\Omega$.
+
+Nous pouvons donc reformuler ce modèle de la façon suivante.
+
+$$
+\begin{aligned}
+&y = \beta_0 + \beta X + N(0,\Omega)\\
+\end{aligned}
+$$ {#eq-gls6}
+
+Cette écriture est rigoureusement identique à la précédente puisque nous prédisons *y* en combinant notre équation de régression et un terme normalement distribué aléatoire (les résidus). À partir d'ici, nous pourrions tenter de séparer ce terme aléatoire en une composante réellement aléatoire, et une composante caractérisée par de l'autocorrélation spatiale.
+
+$$
+\begin{aligned}
+&y = \beta_0 + \beta X + N(0,\sigma^2) + N(0,\Omega)\\
+\end{aligned}
+$$ {#eq-gls7}
+
+Les deux termes aléatoires ont leur propre matrice de covariance, l'une est une simple matrice identitaire ($N(0,\sigma^2)$) alors que l'autre peut être construite pour tenir compte des corrélations entre les observations.
+
+Nous aurions donc une variance inexpliquée et réellement aléatoire, et une variance structurée spatialement. Les effets de ces deux termes sont en moyenne 0 car si on regarde toutes les observations, les effets aléatoires et spatiaux s'annulent en moyenne.
+
+Le modèle ci-dessus est en fait un simple GLMM gaussien avec un effet aléatoire spatialement structuré.
+
+$$
+\begin{aligned}
+&y \sim N(\mu,\sigma^2)\\
+&\mu = \beta_0 + \beta X + \zeta\\
+&\zeta \sim N(0,\Omega) \\
+\end{aligned}
+$$ {#eq-gls8}
+
+À partir de ce point, il devient possible de changer le modèle pour travailler avec d'autres distributions que la distribution normale. Nous obtenons donc des GLMM avec un effet aléatoire spatialement structuré. Cette structure spatiale s'exprime au travers d'un terme suivant une distribution normale centrée sur 0 et dont la structure de covariance est calculée à partir d'une fonction telle que la fonction Gaussienne, Sphérique, Exponentielle, Matern ou Rationnelle quadratique.
+
+Par exemple, pour une variable dépendante binaire, nous pourrions formuler le modèle suivant: 
+
+$$
+\begin{aligned}
+&y \sim Binomial(p)\\
+&g(p) = \beta_0 + \beta X + \zeta\\
+&\zeta \sim N(0,\Omega) \\
+&g(x) = log(\frac{x}{1-x})
+\end{aligned}
+$$ {#eq-gls9}
+
+Nous modélisons donc la variable *y* en formulant le postulat qu'elle suit une distribution binomiale, et nous prédisons la probabilité *p* d'observer l'évènement $y=1$. Cette probabilité est conditionnée par notre équation de régression, transformée par la fonction de lien logistique. Cette dernière garantit que la prédiction du modèle sera comprise entre 0 et 1 (une probabilité). Finalement, l'autocorrélation spatiale est captée comme une variable latente normalement distribuée, centrée sur 0 et présentant une structure d'autocorrélation spatiale représentée par la matrice de covariance $\Omega$.
+
+## Mise en oeuvre et analyse dans R {#sec-094}
+
+Pour illustrer la réalisation de différents modèles GLS, nous utilisons le jeu de données sur le prix des logements Airbnb ([section @sec-0112]) sur l'Île de Montréal. Ce jeu de donnée comporte 2500 logements airbnb pour lesquels nous connaissons un ensemble d'informations sur la nature du logement, son propriétaire ainsi que l'environnement à proximité du logement. Nous tentons ici de modéliser le prix de ces logements à la nuit.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+#| warning: false
+#| label: fig-glsdescrib
+#| fig-cap: Distribution du prix des logements Airbnb à Montréal
+#| fig-align: center
+
+library(sf, quietly = TRUE)
+library(ggplot2, quietly = TRUE)
+library(tmap, quietly = TRUE)
+library(dplyr, quietly = TRUE)
+library(ggpubr, quietly = TRUE)
+library(cowplot, quietly = TRUE)
+library(spdep, quietly = TRUE)
+library(DHARMa, quietly = TRUE)
+library(nlme, quietly = TRUE)
+library(car, quietly = TRUE)
+
+# Chargement des données
+data_airbnb <- readRDS('data/airbnb.rds')
+
+
+plot1 <- ggplot(data_airbnb) + 
+  geom_histogram(aes(x = price), fill = 'grey', color = 'black', bins = 30) + 
+  theme_bw() + 
+  labs(x = 'prix par nuit ($)',
+       y = 'effectif'
+       )
+
+plot2 <- (tm_shape(data_airbnb[order(data_airbnb$price),]) + 
+  tm_dots('price', title = 'prix par nuit ($)', size = 0.1)) %>% 
+  tmap_grob()
+
+plot_grid(plot1,plot2)
+
+```
+
+Nous allons commencer par créer un modèle ne tenant pas compte de l'autocorrélation spatiale.
+
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+#| warning: false
+
+# structuration des données
+
+data_airbnb$super_hote <- ifelse(data_airbnb$host_is_superhost == 't', 'YES', 'NO')
+data_airbnb$prive <- factor(data_airbnb$private, levels = c('Chambre', 'Entier'))
+data_airbnb$stationnement_gratuit <- factor(data_airbnb$Free_street_parking, levels = c('NO', 'YES'))
+data_airbnb$jardin_ou_cours <- factor(data_airbnb$Garden_or_backyard, levels = c('NO', 'YES'))
+data_airbnb$super_hote <- factor(data_airbnb$super_hote, levels = c('NO', 'YES'))
+data_airbnb$metro_500m <- factor(data_airbnb$has_metro_500m, levels = c('NO', 'YES'))
+
+# nous regarderons l'impact de 10 review supplementaires
+data_airbnb$number_of_reviews <- data_airbnb$number_of_reviews / 10
+
+model_data <- data_airbnb %>%
+  select(any_of(c('price','private','stationnement_gratuit', 'jardin_ou_cours', 
+                    'bedrooms', 'super_hote', 
+                    'number_of_reviews','review_scores_rating','metro_500m',
+                    'prt_veg_500m'))) %>% 
+  filter(complete.cases(st_drop_geometry(.)))
+
+model_data$log_price <- log(model_data$price)
+XY <- st_coordinates(model_data)
+model_data$X <- XY[,1]
+model_data$Y <- XY[,2]
+
+
+model1 <- lm(log_price ~ private + bedrooms +
+               stationnement_gratuit + jardin_ou_cours + 
+               number_of_reviews + review_scores_rating + super_hote + 
+               prt_veg_500m + metro_500m, 
+             data = model_data
+               )
+
+summary(model1)
+
+```
+
+Il apparait que notre premier modèle explique un peu plus que 45% de la variance du prix des logements.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+#| warning: false
+
+model_data$residual_lm <- residuals(model1)
+
+knn_list <- knearneigh(model_data, k = 10)
+nb_list <- knn2nb(knn_list, sym = TRUE)
+listw <- nb2listwdist(nb_list, model_data , style = 'W', type = 'idw', alpha = 2)
+test <- moran.mc(model_data$residual_lm, listw, nsim = 999)
+print(test)
+```
+
+Nous avons cependant une autocorrélation spatiale résiduelle faible, mais significative avec un I de moran de `r round(as.numeric(test$statistic),2)`.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+#| warning: false
+#| label: fig-glslmresid
+#| fig-cap: Diagnostic des résidus du modèle linéaire
+#| fig-align: center
+
+plot(simulateResiduals(model1))
+
+```
+Les résidus semblent bien suivre une distribution normale et avoir une variance homogène.
+
+Pour rêgler le problème de l'autocorrélation spatiale, nous allons utiliser la méthode des moindres carrés généralisés (GLS). Nous allons pour cela utiliser le package `nlme` qui offre quatre fonctions différentes pour créer une structure de covariance spatiale.
+
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: false
+#| warning: false
+
+# exponentielle
+modelExp <- gls(log_price ~ private + bedrooms +
+                   stationnement_gratuit + jardin_ou_cours + 
+                   number_of_reviews + review_scores_rating + super_hote + 
+                   prt_veg_500m + metro_500m,
+                 data = model_data,
+                 correlation=corExp(form=~X+Y, nugget=T))
+
+# gaussian
+modelGau <- gls(log_price ~ private + bedrooms +
+                   stationnement_gratuit + jardin_ou_cours + 
+                   number_of_reviews + review_scores_rating + super_hote + 
+                   prt_veg_500m + metro_500m,
+                 data = model_data,
+                 correlation=corGaus(form=~X+Y, nugget=T))
+
+# spherique
+modelSph <- gls(log_price ~ private + bedrooms +
+                   stationnement_gratuit + jardin_ou_cours + 
+                   number_of_reviews + review_scores_rating + super_hote + 
+                   prt_veg_500m + metro_500m,
+                 data = model_data,
+                 correlation=corSpher(form=~X+Y, nugget=T))
+
+# rationelle quadratique
+modelRatio <- gls(log_price ~ private + bedrooms +
+                   stationnement_gratuit + jardin_ou_cours + 
+                   number_of_reviews + review_scores_rating + super_hote + 
+                   prt_veg_500m + metro_500m,
+                 data = model_data,
+                 correlation=corRatio(form=~X+Y, nugget=T))
+
+```
+
+
+Une fois que nous disposons de nos quatres modèles, nous devons les comparer pour retenir uniquement celui qui est le mieux ajusté aux données. Nous pouvons pour cela utiliser le AIC puisque ces modèles ont exactement la même structure.
+
+```{r}
+#| echo: false 
+#| message: false 
+#| eval: true
+#| warning: false
+
+load('data/chap09/gls_models.rda')
+```
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+#| warning: false
+
+AIC(modelExp, modelGau, modelSph, modelRatio)
+struc <- modelRatio$modelStruct$corStruct
+print(struc)
+```
+
+Le modèle avec la structure de covariance basée que la fonction quadratique rationnelle est de loin le modèle qui obtient le AIC le plus bas. Son paramètre de range est de 768 ce qui signifie qu'au delà de 768m, la semi-variance sesse d'augmenter. Cette distance marque donc la limite au delà de laquelle les observations sont indépendantes spatialement.
+
+La figure @fig-glscorstruc permet de représenter la fonction de corrélation sous jacente à cette structure de covariance.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+#| warning: false
+#| label: fig-glscorstruc
+#| fig-cap: Fonction de corrélation etimée par le modèle GLS
+#| fig-align: center
+
+## Structure rationnelle quadratique
+corRatio <- function(n, r, d){
+  return(
+    (1-n) / (1+(r/d)**2)
+  )
+}
+
+distances <- seq(0,1000,10)
+
+df_corr <- data.frame(
+  distance = distances, 
+  correlation = corRatio(n = 0.8579, 
+                        d = 768.05, 
+                        r = distances
+                        )
+)
+
+ggplot(df_corr) + 
+  geom_line(aes(x = distance, y = correlation)) + 
+  theme_bw() + 
+  labs(title = 'Structure de corrélation du modèle GLS')
+
+```
+
+Nous pouvons constater que le modèle prévoit une autocorrélation spatiale positive mais relativement faible pour les observations dans un rayon relativement limité. Il y a donc de forte chance que les conclusions de ce modèle soient très proches de celle du modèle linéaire simple.
+
+Pour tester la distribution des résidus d'un modèle GLS, il est important d'utiliser les résidus *normalisés* qui tiennent compte de la structure de corrélation introduite dans le modèle @galecki2013linear.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+#| warning: false
+
+model_data$residual_gls <- residuals(modelRatio, type = "normalized")
+
+knn_list <- knearneigh(model_data, k = 10)
+nb_list <- knn2nb(knn_list, sym = TRUE)
+listw <- nb2listwdist(nb_list, model_data , style = 'W', type = 'idw', alpha = 2)
+test <- moran.mc(model_data$residual_gls, listw, nsim = 999)
+print(test)
+```
+Notre GLS a donc pu retirer l'autocorrélation qui restait dans les résidus du notre modèle linéaire original. Nous pouvons donc à présent vérifier la distribution de ses résidus.
+
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+#| warning: false
+#| label: fig-glsresids
+#| fig-cap: Distribution des résidus du modèle GLS
+#| fig-align: center
+#| out-width: '100%'
+
+par(mfrow = c(1, 2))
+qqPlot(model_data$residual_gls)
+hist(model_data$residual_gls, breaks = 30)
+
+```
+
+La figure @fig-glsresids indique que les résidus semblent suivre une distribution très proche d'une distribution normale. Il semble qu'une observation pourrait être considérée comme une valeur abhérrente. 
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+#| warning: false
+
+subset(model_data, model_data$residual_gls < -6)
+
+```
+
+Il s'agit d'un logement un peu étrange disposant de 20 chambres pour seulement 108$ par nuit. 
+
+
+Nous pouvons à présenter comparer les coefficients obtenus par les deux modèles.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+#| warning: false
+#| label: fig-glsresids
+#| fig-cap: Distribution des résidus du modèle GLS
+#| fig-align: center
+#| out-width: '100%'
+
+library(knitr, quietly = TRUE)
+library(kableExtra, quietly = TRUE)
+
+s1 <- summary(model1)
+s2 <- summary(modelRatio)
+
+df1 <- data.frame(s1$coefficients[,c(1,2,4)])
+df2 <- data.frame(s2$tTable[,c(1,2,4)])
+
+kable(cbind(df1, df2), digits = 3,
+             col.names = c('coeff.', 'err. std.', 'val. p',
+                           'coeff.', 'err. std.', 'val. p')) %>% 
+  kable_classic() %>% 
+  add_header_above(c(' ' = 1, "modèle linéaire" = 3, "modèle GLS" = 3))
+  
+
+```
+
+Il est intéressant de constater que même en corrigeant une autocorrélation résiduelle relativement minime, nous obtenons des résultats assez différents pour ces deux modèles. Commençons par regarder les éléments faisant concensus pour les deux modèles.
+
+* Un logement entier privé plutôt qu'un logement partagé a un impact positif et significatif sur le prix à la nuit. Les deux modèles donne un coefficient d'environ `r round(df1$Estimate[[2]],3)` sur l'échelle log. Ceci signifie qu'un logement privé coûte en moyenne `r round(exp(df1$Estimate[[2]]),2)` qu'un logement partagé.
+* Chaque chambre supplémentaire fait augmenter le prix du logement d'environ `r round(df1$Estimate[[3]],3)` sur l'échelle log. Sur l'échelle linéaire, cela signifie qu'une chambre supplémentaire augmenter le prix moyen d'un logement de `r round(exp(df1$Estimate[[3]]) * 100 - 100,2)`%.
+* Un score de review plus élevé est aussi associé à un prix plus élevé. Une augmentation de 10 points de pourcentage du score est associé avec une augmentation du prix moyen du logement de `r round(exp(df1$Estimate[[7]]*10) * 100 - 100,2)`%.
+* Le fait pour l'hôte d'avoir le qualificatif de *super hôte* ou encore la présence d'un jardin ou d'une cours ne semblent pas avoir d'impact significatif.
+
+Les deux modèles ont aussi des points de désaccord importants.
+
+* Pour le modèle linéaire simple, le fait de dispoer d'un stationnement gratuit avec le logement a un impact non significatif. Pour le modèle GLS, le fait de disposer d'un stationnement contribue à augmenter le prix par nuit de `r round(exp(df2$Value[[4]]) * 100 - 100,2)`% (p = `r round(df2$p.value[[4]],3)`).
+* Le modèle linéaire simple indiquait que la densité de végétation dans un rayon de 500 réduisait le prix des logements. La présence d'une station de métro dans un rayon de 500m était quant à elle associée à une augmentation du prix des logements. Le modèle GLS indique que ces deux effets sont non significatifs. Ceci s'explique vraisemblablement par la prise en compte de l'espace par le modèle GLS.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+#| warning: false
+#| label: fig-glsresids
+#| fig-cap: Distribution des résidus du modèle GLS
+#| fig-align: center
+#| out-width: '100%'
+
+
+library(spaMM)
+
+# Gaussien
+
+glmm <- fitme(log_price ~ private + bedrooms +
+                   stationnement_gratuit + jardin_ou_cours + 
+                   number_of_reviews + review_scores_rating + super_hote + 
+                   prt_veg_500m + metro_500m + 
+                   Matern(1|X+Y),
+      data = model_data)
+      
+summary(glmm)
+
+```
