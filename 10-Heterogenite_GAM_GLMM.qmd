@@ -56,6 +56,7 @@ Ces deux spécifications permettent de s'assurer que nous pourrons interpréter 
 
 Il est ainsi possible de déterminer quelles variables vont avoir des coefficient variant spatialement dans ce type de modèle. Il est préférable de choisir ces variables pour répondre à une question de recherche précise, ou encore si le cadre théorique le justifie. Il est bien sûr possible de comparer l'ajustement de plusieurs modèles imbriqués pour vérifier si l'ajout d'un coefficient variant spatialement complexifie le modèle de façon justifiée, notamment en comparant leurs *AIC* ou en effectuant un test de rapport de vraissemblance. Notez que le test de rapport de vraisemblance basé sur la distribution du $\chi^2$ n'est pas très adapté à ce type de modèle. Une alternative est la version non paramétrique par *boostrap*, mais elle est très intensive en temps de calcul.
 
+
 ## Modèles linéaires généralisés à effets mixtes (GLMM) {#sec-103}
 
 ## Quiz de révision {#sec-104}
