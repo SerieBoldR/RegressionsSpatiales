@@ -267,8 +267,11 @@ Pour illustrer la réalisation de différents modèles GLS, nous utilisons le je
 #| eval: true
 #| warning: false
 #| label: fig-glsdescrib
-#| fig-cap: Distribution du prix des logements Airbnb à Montréal
 #| fig-align: center
+#| layout-ncol: 2
+#| fig-cap: 
+#|   - "Distribution du prix des logements Airbnb à Montréal"
+#|   - "Géographie du prix des logements Airbnb à Montréal"
 
 library(sf, quietly = TRUE)
 library(ggplot2, quietly = TRUE)
@@ -285,18 +288,15 @@ library(car, quietly = TRUE)
 data_airbnb <- readRDS('data/airbnb.rds')
 
 
-plot1 <- ggplot(data_airbnb) + 
+ggplot(data_airbnb) + 
   geom_histogram(aes(x = price), fill = 'grey', color = 'black', bins = 30) + 
   theme_bw() + 
   labs(x = 'prix par nuit ($)',
        y = 'effectif'
        )
 
-plot2 <- (tm_shape(data_airbnb[order(data_airbnb$price),]) + 
-  tm_dots('price', title = 'prix par nuit ($)', size = 0.1)) %>% 
-  tmap_grob()
-
-plot_grid(plot1,plot2)
+tm_shape(data_airbnb[order(data_airbnb$price),]) + 
+  tm_dots('price', title = 'prix par nuit ($)', size = 0.1)
 
 ```
 
@@ -322,7 +322,7 @@ data_airbnb$metro_500m <- factor(data_airbnb$has_metro_500m, levels = c('NO', 'Y
 data_airbnb$number_of_reviews <- data_airbnb$number_of_reviews / 10
 
 model_data <- data_airbnb %>%
-  select(any_of(c('price','private','stationnement_gratuit', 'jardin_ou_cours', 
+  dplyr::select(any_of(c('price','private','stationnement_gratuit', 'jardin_ou_cours', 
                     'bedrooms', 'super_hote', 
                     'number_of_reviews','review_scores_rating','metro_500m',
                     'prt_veg_500m'))) %>% 
@@ -509,13 +509,11 @@ Notre GLS a donc pu retirer l'autocorrélation qui restait dans les résidus du 
 #| eval: true
 #| warning: false
 #| label: fig-glsresids
-#| fig-cap: Distribution des résidus du modèle GLS
 #| fig-align: center
 #| out-width: '100%'
+#| fig-cap: Distribution des résidus du modèle GLS
 
-par(mfrow = c(1, 2))
 qqPlot(model_data$residual_gls)
-hist(model_data$residual_gls, breaks = 30)
 
 ```
 
@@ -1391,9 +1389,14 @@ La figure @fig-glmmcorstruct illustre la fonction de corrélation ajustée pour 
 #| eval: true
 #| warning: false
 #| out-width: '100%'
-#| fig-cap: 'Représentation des structures de corrélation Matern et Cauchy'
 #| label: fig-glmmcorstruct
 #| fig-align: center
+#| layout-ncol: 2
+#| fig-cap: "Structures de corrélations ajustées par le modèle"
+#| fig-subcap: 
+#|   - "Structure Cauchy"
+#|   - "Structures Cauchy et Matern, effet de la distance"
+#|   - "Structure Matern"
 
 # récupération des distances 
 dists_4326 <- make_scaled_dist(lonlat, rho = 1, return_matrix = TRUE)
@@ -1428,11 +1431,11 @@ plot_corr <- ggplot(df_corr) +
   geom_line(aes(x = dists, y = corr_matern, color = 'Matern'))+
   geom_line(aes(x = dists, y = corr_cauchy, color = 'Cauchy'))+
   theme_bw() + 
-  labs(x = 'distance (km)', y = 'corrélation') + 
   scale_color_manual(values = c(
     'Matern' = '#669bbc',
     'Cauchy' = '#c1121f'
-  ))
+  )) + 
+  labs(x = 'distance (km)', y = 'corrélation', colour = 'structure de \ncorrélation')
 
 
 # représentation cartographique des fonctions
@@ -1473,10 +1476,9 @@ map_corr_cau <- tm_shape(data_mode1) +
             legend.outside.position = 'bottom') + 
   tm_scale_bar(breaks = c(0,10))
 
-map_corr_mat <- tmap_grob(map_corr_mat)
-map_corr_cau <- tmap_grob(map_corr_cau)
-
-cowplot::plot_grid(map_corr_mat,plot_corr, map_corr_cau)
+map_corr_cau
+plot_corr
+map_corr_mat
 
 ```
 
@@ -1623,7 +1625,7 @@ Pour terminer, nous pouvons comparer les résultats de nos trois modèles GLMM.
 #| warning: false
 
 models <- list(model_car, model_matern, model_cauchy)
-aics <- lapply(models, AIC, verbose = FALSE)
+aics <- lapply(models, spaMM::AIC.HLfit, verbose = FALSE)
 aics <- t(do.call(rbind, aics))
 colnames(aics) <- c('CAR', 'MATERN', 'CAUCHY')
 

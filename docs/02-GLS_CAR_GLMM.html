@@ -345,19 +345,19 @@ window.Quarto = {
 <ol type="1">
 <li>normalement distribués,</li>
 <li>centrés sur 0,</li>
-<li>homoscédastique,</li>
-<li>indépendant des les uns des autres</li>
+<li>homoscédastiques,</li>
+<li>indépendants des les uns des autres</li>
 </ol>
-<p>Dans ce chapitre, nous allons notamment modifier la dernière hypothèse pour tenir compte du fait que nous nous attendons à ce que des observations proches spatialement aient des résidus autocorrélés. En intégrant cette connaissance dans le modèle, nous pouvons corriger son estimation pour réduire les biais dans l’estimation des paramètres du modèle et l’incertitude associée à ces paramètres.</p>
+<p>Dans ce chapitre, nous allons notamment modifier la dernière hypothèse pour tenir compte du fait que nous nous attendons à ce que des observations proches spatialement aient des résidus autocorrélés. En intégrant cette connaissance dans le modèle, nous pouvons réduire les biais dans l’estimation des paramètres du modèle et de l’incertitude associée à ces paramètres.</p>
 <p>Un modèle OLS est formulé de la façon suivante&nbsp;:</p>
 <p><span id="eq-gls1"><span class="math display">\[
 \begin{aligned}
-&amp;y = \beta_0 + \beta X + \epsilon\\
+&amp;Y = \beta_0 + \beta X + \epsilon\\
 &amp;\epsilon \sim N(0,\sigma^2)
 \end{aligned}
 \tag{2.1}\]</span></span></p>
-<p>Selon cette formulation, les variables <em>X</em> ne peuvent pas prédire exactement <em>y</em>, mais seulement une valeur moyenne attendue de <em>y</em>. Les valeurs réelles de <em>y</em> varient autours de cette moyenne attendue en suivant une distribution normale de variance <span class="math inline">\(\sigma^2\)</span>. Plus cette variance est grande, plus grande est notre incertitude et donc nos résidus. Cette valeur est unique à cause de l’hypothèse d’homoscédasticité, soit que la variance soit la même pour tous les résidus. En d’autres termes, on ne s’attend pas à observer des résidus plus grands ou plus petits si la valeur de <em>y</em> est plus grande ou plus petite.</p>
-<p><span class="math inline">\(\sigma^2\)</span> peut être présenté sous forme d’une valeur unique, mais aussi sous forme d’une matrice de variance-covariance&nbsp;:</p>
+<p>Selon cette formulation, les variables <span class="math inline">\(\mathbf{X}\)</span> ne peuvent pas prédire exactement <span class="math inline">\(\mathbf{Y}\)</span>, mais seulement une valeur moyenne attendue de <span class="math inline">\(\mathbf{Y}\)</span>. Les valeurs réelles de <span class="math inline">\(\mathbf{Y}\)</span> varient autours de cette moyenne attendue en suivant une distribution normale de variance <span class="math inline">\(\sigma^2\)</span>. Plus cette variance est grande, plus grande est notre incertitude et donc nos résidus. Cette valeur est unique et ainsi implique l’hypothèse d’homoscédasticité, soit que la variance soit la même pour tous les résidus. En d’autres termes, on ne s’attend pas à observer des résidus plus grands ou plus petits si la valeur de <span class="math inline">\(\mathbf{Y}\)</span> est plus grande ou plus petite.</p>
+<p><span class="math inline">\(\sigma^2\)</span> peut être présenté comme une valeur unique, mais aussi sous forme d’une matrice de variance-covariance&nbsp;:</p>
 <p><span id="eq-gls2"><span class="math display">\[
 \begin{equation}
 \operatorname{cov}=\sigma^2\times\left(\begin{array}{cccc}
@@ -461,7 +461,6 @@ Figure&nbsp;2.2: Exemple de variables continues suivant une structure de corrél
 </section><section id="mise-en-oeuvre-et-analyse-dans-r" class="level3" data-number="2.1.2"><h3 data-number="2.1.2" class="anchored" data-anchor-id="mise-en-oeuvre-et-analyse-dans-r">
 <span class="header-section-number">2.1.2</span> Mise en oeuvre et analyse dans R</h3>
 <p>Pour illustrer la réalisation de différents modèles GLS, nous utilisons le jeu de données sur le prix des logements Airbnb (<a href="01-NotionsDeBase.html#sec-0112" class="quarto-xref">section&nbsp;<span>1.1.2</span></a>) sur l’Île de Montréal. Ce jeu de donnée comporte 2500 logements airbnb pour lesquels nous connaissons un ensemble d’informations sur la nature du logement, son propriétaire ainsi que l’environnement à proximité du logement. Nous tentons ici de modéliser le prix de ces logements à la nuit.</p>
-<div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/">tmap</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -477,19 +476,18 @@ Figure&nbsp;2.2: Exemple de variables continues suivant une structure de corrél
 <span><span class="va">data_airbnb</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">'data/airbnb.rds'</span><span class="op">)</span></span>
 <span></span>
 <span></span>
-<span><span class="va">plot1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">data_airbnb</span><span class="op">)</span> <span class="op">+</span> </span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">data_airbnb</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">price</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">'grey'</span>, color <span class="op">=</span> <span class="st">'black'</span>, bins <span class="op">=</span> <span class="fl">30</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">'prix par nuit ($)'</span>,</span>
 <span>       y <span class="op">=</span> <span class="st">'effectif'</span></span>
 <span>       <span class="op">)</span></span>
 <span></span>
-<span><span class="va">plot2</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">data_airbnb</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">data_airbnb</span><span class="op">$</span><span class="va">price</span><span class="op">)</span>,<span class="op">]</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_dots</a></span><span class="op">(</span><span class="st">'price'</span>, title <span class="op">=</span> <span class="st">'prix par nuit ($)'</span>, size <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tmap_grob.html">tmap_grob</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html">plot_grid</a></span><span class="op">(</span><span class="va">plot1</span>,<span class="va">plot2</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">data_airbnb</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">data_airbnb</span><span class="op">$</span><span class="va">price</span><span class="op">)</span>,<span class="op">]</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_dots</a></span><span class="op">(</span><span class="st">'price'</span>, title <span class="op">=</span> <span class="st">'prix par nuit ($)'</span>, size <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell quarto-layout-panel" data-layout-ncol="2" data-layout-align="center">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-glsdescrib-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-glsdescrib-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="02-GLS_CAR_GLMM_files/figure-html/fig-glsdescrib-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
@@ -499,14 +497,15 @@ Figure&nbsp;2.3: Distribution du prix des logements Airbnb à Montréal
 </figcaption></figure>
 </div>
 </div>
-<div class="cell-output-display">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-glsdescrib-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-glsdescrib-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="02-GLS_CAR_GLMM_files/figure-html/fig-glsdescrib-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-glsdescrib-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.4: Distribution du prix des logements Airbnb à Montréal
+Figure&nbsp;2.4: Géographie du prix des logements Airbnb à Montréal
 </figcaption></figure>
+</div>
 </div>
 </div>
 </div>
@@ -525,7 +524,7 @@ Figure&nbsp;2.4: Distribution du prix des logements Airbnb à Montréal
 <span><span class="va">data_airbnb</span><span class="op">$</span><span class="va">number_of_reviews</span> <span class="op">&lt;-</span> <span class="va">data_airbnb</span><span class="op">$</span><span class="va">number_of_reviews</span> <span class="op">/</span> <span class="fl">10</span></span>
 <span></span>
 <span><span class="va">model_data</span> <span class="op">&lt;-</span> <span class="va">data_airbnb</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html">any_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'price'</span>,<span class="st">'private'</span>,<span class="st">'stationnement_gratuit'</span>, <span class="st">'jardin_ou_cours'</span>, </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html">any_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'price'</span>,<span class="st">'private'</span>,<span class="st">'stationnement_gratuit'</span>, <span class="st">'jardin_ou_cours'</span>, </span>
 <span>                    <span class="st">'bedrooms'</span>, <span class="st">'super_hote'</span>, </span>
 <span>                    <span class="st">'number_of_reviews'</span>,<span class="st">'review_scores_rating'</span>,<span class="st">'metro_500m'</span>,</span>
 <span>                    <span class="st">'prt_veg_500m'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
@@ -722,27 +721,40 @@ alternative hypothesis: greater</code></pre>
 </div>
 </div>
 <p>Notre GLS a donc pu retirer l’autocorrélation qui restait dans les résidus du notre modèle linéaire original. Nous pouvons donc à présent vérifier la distribution de ses résidus.</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/car/man/qqPlot.html">qqPlot</a></span><span class="op">(</span><span class="va">model_data</span><span class="op">$</span><span class="va">residual_gls</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/car/man/qqPlot.html">qqPlot</a></span><span class="op">(</span><span class="va">model_data</span><span class="op">$</span><span class="va">residual_gls</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">model_data</span><span class="op">$</span><span class="va">residual_gls</span>, breaks <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell quarto-layout-panel" data-layout-ncol="2" data-layout-align="center">
+<div class="quarto-layout-row">
+<div class="cell-output cell-output-stdout quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <pre><code>[1] 1843 1218</code></pre>
 </div>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">model_data</span><span class="op">$</span><span class="va">residual_gls</span>, breaks <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div id="fig-glsresids" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-glsresids-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-glsresids-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-glsresids-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="02-GLS_CAR_GLMM_files/figure-html/fig-glsresids-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-glsresids-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-glsresids-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;2.7: Distribution des résidus du modèle GLS
 </figcaption></figure>
 </div>
 </div>
 </div>
-<p>La figure <a href="#fig-glsresids" class="quarto-xref">figure&nbsp;<span>2.7</span></a> indique que les résidus semblent suivre une distribution très proche d’une distribution normale. Il semble qu’une observation pourrait être considérée comme une valeur abhérrente.</p>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-glsresids-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-glsresids-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-GLS_CAR_GLMM_files/figure-html/fig-glsresids-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-glsresids-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.8: Distribution des résidus du modèle GLS
+</figcaption></figure>
+</div>
+</div>
+</div>
+</div>
+<p>La figure <span class="quarto-unresolved-ref">?fig-glsresids</span> indique que les résidus semblent suivre une distribution très proche d’une distribution normale. Il semble qu’une observation pourrait être considérée comme une valeur abhérrente.</p>
 <div class="cell">
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">model_data</span>, <span class="va">model_data</span><span class="op">$</span><span class="va">residual_gls</span> <span class="op">&lt;</span> <span class="op">-</span><span class="fl">6</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">model_data</span>, <span class="va">model_data</span><span class="op">$</span><span class="va">residual_gls</span> <span class="op">&lt;</span> <span class="op">-</span><span class="fl">6</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Simple feature collection with 1 feature and 15 fields
 Geometry type: POINT
@@ -761,7 +773,7 @@ Projected CRS: NAD83 / MTM zone 8
 <p>Il s’agit d’un logement un peu étrange disposant de 20 chambres pour seulement 108$ par nuit.</p>
 <p>Nous pouvons à présenter comparer les coefficients obtenus par les deux modèles.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/">knitr</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/">knitr</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://haozhu233.github.io/kableExtra/">kableExtra</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">s1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model1</span><span class="op">)</span></span>
@@ -1051,7 +1063,7 @@ metro_500mYES
 </table>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-glsresids2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.8: Distribution des résidus du modèle GLS
+Figure&nbsp;2.9: Distribution des résidus du modèle GLS
 </figcaption></figure>
 </div>
 </div>
@@ -1096,7 +1108,7 @@ Figure&nbsp;2.8: Distribution des résidus du modèle GLS
 <img src="02-GLS_CAR_GLMM_files/figure-html/fig-carexamples-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-carexamples-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.9: Exemple de différentes réalisation d’une variable suivant un modèle CAR
+Figure&nbsp;2.10: Exemple de différentes réalisation d’une variable suivant un modèle CAR
 </figcaption></figure>
 </div>
 </div>
@@ -1107,7 +1119,7 @@ Figure&nbsp;2.9: Exemple de différentes réalisation d’une variable suivant u
 <p>Pour illustrer l’utilisation du modèle CAR, nous utilisons le jeu de données sur les parts modales dans la région métropolitaine de Montréal (<a href="01-NotionsDeBase.html#sec-0112" class="quarto-xref">section&nbsp;<span>1.1.2</span></a>). Ce jeu de données comprend trois variables mesurant respectivement la proportion des individus utilisant la voiture, le transport collectif ou un mode actif (marche ou vélo) comme mode de transport principal pour leurs déplacements domicile-travail en 2021 pour les secteurs de recensement (<a href="01-NotionsDeBase.html#fig-datamtlCarto" class="quarto-xref">figure&nbsp;<span>1.2</span></a>).</p>
 <p>Tel qu’indiqué dans la section <a href="06-GAM.html#sec-065" class="quarto-xref"><span>Section 6.5</span></a>, nous utilisons ici la méthode du log des ratios (<em>alr</em>) pour analyser ces données compositionnelles. Plus exactement, nous modélisons le log entre le ratio des personnes utilisant principalement le transport en commun et des automobilistes.</p>
 <div class="cell">
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/">tmap</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -1132,7 +1144,7 @@ Figure&nbsp;2.9: Exemple de différentes réalisation d’une variable suivant u
 </div>
 <p>Nous pouvons à présent ajuster notre modèle CAR. Nous utilisons pour cela le package <code>spatialreg</code>. Nous devons utiliser une matrice spatiale binaire pour ajuster le modèle.</p>
 <div class="cell">
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nbs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/poly2nb.html">poly2nb</a></span><span class="op">(</span><span class="va">data_mtl</span>, queen <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nbs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/poly2nb.html">poly2nb</a></span><span class="op">(</span><span class="va">data_mtl</span>, queen <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">listw</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">nbs</span>, style <span class="op">=</span> <span class="st">'B'</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">model_car</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spatialreg/reference/spautolm.html">spautolm</a></span><span class="op">(</span></span>
@@ -1161,7 +1173,7 @@ alternative hypothesis: greater</code></pre>
 </div>
 <p>Le modèle CAR est bien parvenu à retirer l’aucorrélation spatiale des résidus.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
 <span>  residus_car <span class="op">=</span> <span class="va">model_car</span><span class="op">$</span><span class="va">fit</span><span class="op">$</span><span class="va">residuals</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -1178,7 +1190,7 @@ alternative hypothesis: greater</code></pre>
 <img src="02-GLS_CAR_GLMM_files/figure-html/fig-carresid-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-carresid-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.10: Résidus du modèle CAR
+Figure&nbsp;2.11: Résidus du modèle CAR
 </figcaption></figure>
 </div>
 </div>
@@ -1269,7 +1281,7 @@ R2 de Nagelkerke = 0,891.</td>
 </div>
 <p>Le coefficient d’autocorrélation spatial <code>rho</code> (appelé lambda par la fonction <code>summary</code>) est positif dans le modèle. Pour visualiser le terme spatial ajouté au modèle, on peut utiliser l’élément appelé <code>signal_stochastic</code> dans l’objet obtenu via la fonction <code>spautolm</code>. Ce terme correspond à la partie spatialement distribuée des résidus, à séparer du bruit blanc, soit les résidus distribués aléatoirement dans l’espace. Nous allons transformer ce terme avec la fonction log afin de pouvoir interprêter le résultat sur l’échelle originale des données, soit le ratio entre la part modale du transport collectif et de la voiture.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">data_mtl</span><span class="op">$</span><span class="va">car_term</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">model_car</span><span class="op">$</span><span class="va">fit</span><span class="op">$</span><span class="va">signal_stochastic</span><span class="op">)</span> </span>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">data_mtl</span><span class="op">$</span><span class="va">car_term</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">model_car</span><span class="op">$</span><span class="va">fit</span><span class="op">$</span><span class="va">signal_stochastic</span><span class="op">)</span> </span>
 <span></span>
 <span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">data_mtl</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_polygons</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"car_term"</span>, n <span class="op">=</span> <span class="fl">7</span>,</span>
@@ -1291,7 +1303,7 @@ R2 de Nagelkerke = 0,891.</td>
 <img src="02-GLS_CAR_GLMM_files/figure-html/fig-carresid2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-carresid2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.11: Résidus du modèle CAR
+Figure&nbsp;2.12: Résidus du modèle CAR
 </figcaption></figure>
 </div>
 </div>
@@ -1397,7 +1409,7 @@ Figure&nbsp;2.11: Résidus du modèle CAR
 </ul>
 <p>Les cartes ci-dessous illustrent la variable dépendante (taux de décès) et trois variables indépendantes.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/">tmap</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -1522,7 +1534,7 @@ Figure&nbsp;2.11: Résidus du modèle CAR
 <img src="02-GLS_CAR_GLMM_files/figure-html/fig-expcar1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-expcar1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.12: Distribution spatiale de différentes données utilisées pour le modèle
+Figure&nbsp;2.13: Distribution spatiale de différentes données utilisées pour le modèle
 </figcaption></figure>
 </div>
 </div>
@@ -1530,7 +1542,7 @@ Figure&nbsp;2.12: Distribution spatiale de différentes données utilisées pour
 <p>Pour nous rapprocher le plus possible de l’analyse effectuée par les auteurs, nous allons utiliser la même stratégie de modélisation de la variable dépendante. Plutôt que de modéliser directement le taux de décès, nous allons modéliser le nombre de décès selon une distribution Poisson en intégrant dans l’équation de régression le nombre d’habitants. Cette stratégie est appelée un <em>offset</em> et permet de modéliser directement le taux de décès via un modèle Poisson en contrôlant pour le fait que dans certain conté, une plus grande population va nécessaire produire un plus grand nombde de décés.</p>
 <p>Nous commençons donc par ajuster un modèle non spatial.</p>
 <div class="cell">
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">data_mode1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span><span class="op">(</span><span class="va">covid_data</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">data_mode1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span><span class="op">(</span><span class="va">covid_data</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">model_poisson</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span></span>
 <span>  <span class="va">deaths_3</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/offset.html">offset</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">population</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
@@ -1544,7 +1556,7 @@ Figure&nbsp;2.12: Distribution spatiale de différentes données utilisées pour
 </div>
 <p>Nous pouvons effectuer quelques diagnostics rapides sur ce premier modèle.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">resid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DHARMa/man/simulateResiduals.html">simulateResiduals</a></span><span class="op">(</span><span class="va">model_poisson</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">resid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DHARMa/man/simulateResiduals.html">simulateResiduals</a></span><span class="op">(</span><span class="va">model_poisson</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">resid</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-poiss1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -1552,14 +1564,14 @@ Figure&nbsp;2.12: Distribution spatiale de différentes données utilisées pour
 <img src="02-GLS_CAR_GLMM_files/figure-html/fig-poiss1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-poiss1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.13: Distribution des résidus simulés du modèle poisson
+Figure&nbsp;2.14: Distribution des résidus simulés du modèle poisson
 </figcaption></figure>
 </div>
 </div>
 </div>
-<p>La figure <a href="#fig-poiss1" class="quarto-xref">figure&nbsp;<span>2.13</span></a> indique clairement un problème dans la distribution des résidus simulés du modèle. Ces derniers sont bien plus dispersés que ce que suppose un modèle Poisson. Ce phénomène peut s’expliquer par la présence d’autocorrélation spatiale dans les résidus (variance supplémentaire non prise en compte) mais aussi par une mauvaise spécification du modèle. Dans ce contexte, il convient de tester un autre distribution, soit la distribution négative binomiale.</p>
+<p>La figure <a href="#fig-poiss1" class="quarto-xref">figure&nbsp;<span>2.14</span></a> indique clairement un problème dans la distribution des résidus simulés du modèle. Ces derniers sont bien plus dispersés que ce que suppose un modèle Poisson. Ce phénomène peut s’expliquer par la présence d’autocorrélation spatiale dans les résidus (variance supplémentaire non prise en compte) mais aussi par une mauvaise spécification du modèle. Dans ce contexte, il convient de tester un autre distribution, soit la distribution négative binomiale.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_nb</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/spaMM/man/fitme.html">fitme</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_nb</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/spaMM/man/fitme.html">fitme</a></span><span class="op">(</span></span>
 <span>  <span class="va">deaths_3</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/offset.html">offset</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">population</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>    <span class="va">income</span> <span class="op">+</span> <span class="va">per_black</span> <span class="op">+</span> <span class="va">per_hispanic</span> <span class="op">+</span> <span class="va">per_atleast_hs</span> <span class="op">+</span> </span>
 <span>    <span class="va">per_nursing</span> <span class="op">+</span> <span class="va">X65plus</span> <span class="op">+</span> </span>
@@ -1577,14 +1589,14 @@ Figure&nbsp;2.13: Distribution des résidus simulés du modèle poisson
 <img src="02-GLS_CAR_GLMM_files/figure-html/fig-nb1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-nb1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.14: Distribution des résidus simulés du modèle négatif binomial
+Figure&nbsp;2.15: Distribution des résidus simulés du modèle négatif binomial
 </figcaption></figure>
 </div>
 </div>
 </div>
-<p>La figure <a href="#fig-nb1" class="quarto-xref">figure&nbsp;<span>2.14</span></a> indique une bien meilleure distribution des résidus. Nous pouvons donc maintenant nous intéresser à l’éventuelle autocorrélation spatiale des résidus. Notez que puisque notre modèle assume une distribution négative binomiale, nous utilisons les résidus de Pearson pour tester l’autocorrélation spatiale puisque ceux-ci sont standardisés et tiennent compte de l’hétéroscédasticité des résidus.</p>
+<p>La figure <a href="#fig-nb1" class="quarto-xref">figure&nbsp;<span>2.15</span></a> indique une bien meilleure distribution des résidus. Nous pouvons donc maintenant nous intéresser à l’éventuelle autocorrélation spatiale des résidus. Notez que puisque notre modèle assume une distribution négative binomiale, nous utilisons les résidus de Pearson pour tester l’autocorrélation spatiale puisque ceux-ci sont standardisés et tiennent compte de l’hétéroscédasticité des résidus.</p>
 <div class="cell">
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">queen_nb</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/poly2nb.html">poly2nb</a></span><span class="op">(</span><span class="va">data_mode1</span>, queen <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">queen_nb</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/poly2nb.html">poly2nb</a></span><span class="op">(</span><span class="va">data_mode1</span>, queen <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">queen_w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">queen_nb</span>, style <span class="op">=</span> <span class="st">'W'</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">model_nb</span>, type <span class="op">=</span> <span class="st">'pearson'</span><span class="op">)</span>, listw <span class="op">=</span> <span class="va">queen_w</span>, nsim <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">test</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1602,7 +1614,7 @@ alternative hypothesis: greater</code></pre>
 </div>
 <p>Nous pouvons constater que le I de Moran obtenu sur les résidus simulés est élevé 0,36. Nous devons donc opter pour un modèle contrôlant la dépendance spatiale. Nous allons ici tester deux modèles GLMM incluant un effet aléatoire suivant une structure de corrélation CAR et une structure de corrélation Matern.</p>
 <div class="cell">
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://www.r-project.org">spaMM</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://www.r-project.org">spaMM</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># ajustement du modèle CAR</span></span>
 <span><span class="va">data_mode1</span><span class="op">$</span><span class="va">oid</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">data_mode1</span><span class="op">)</span></span>
@@ -1642,7 +1654,7 @@ alternative hypothesis: greater</code></pre>
 </div>
 <p>Le modèle GLMM avec un effet aléatoire de type CAR est donc parvenu à réduire significativement l’autocorrélation spatiale dans les résidus. Nous pouvons maintenant extraire cet effet aléatoire.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pred_df</span> <span class="op">&lt;-</span> <span class="va">data_mode1</span></span>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pred_df</span> <span class="op">&lt;-</span> <span class="va">data_mode1</span></span>
 <span></span>
 <span><span class="va">vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'income'</span>, <span class="st">'per_black'</span>, <span class="st">'per_hispanic'</span>, <span class="st">'per_atleast_hs'</span>,</span>
 <span>          <span class="st">'per_nursing'</span>, <span class="st">'X65plus'</span>,</span>
@@ -1685,14 +1697,14 @@ alternative hypothesis: greater</code></pre>
 <img src="02-GLS_CAR_GLMM_files/figure-html/fig-nb2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-nb2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.15: Valeurs ajustées de l’effet aléatoire spatial CAR
+Figure&nbsp;2.16: Valeurs ajustées de l’effet aléatoire spatial CAR
 </figcaption></figure>
 </div>
 </div>
 </div>
 <p>Nous retrouvons sensiblement le même terme spatial que celui présenté par les auteurs sur le github sur lequel ils hébergents leurs données. Nous pouvons à présent interprêter les coefficients de notre modèle. Pour un modèle GLMM, le calcul des valeurs de <em>p</em> pose quelques problèmes car le nombre de degré de liberté est difficile à estimer. En effet, un effet aléatoire, tout particulièrement un effet aléatoire spatial, apporte un nombre de degré flou au modèle. Dans notre cas, considérant le grand nombre d’observations (plus de 2600), il serait acceptable de calculer des valeurs de <em>p</em> en utilisant l’approche classique et distribution T. Les deux autres alternatives sont les tests basés sur le rapport de vraissemblance ou uns approche par <em>bootstrap</em> pour obtenir des intervalles de confiances. Si cette dernière approche est la plus robuste, elle est beaucoup plus longue en temps de calcul.</p>
 <div class="cell">
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model_car</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">beta_table</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model_car</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">beta_table</span><span class="op">)</span></span>
 <span><span class="va">pvals</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span><span class="op">(</span><span class="va">model_car</span><span class="op">)</span></span>
 <span><span class="va">df</span><span class="op">$</span><span class="va">exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">Estimate</span><span class="op">)</span></span>
 <span><span class="va">df</span><span class="op">$</span><span class="va">p_val</span> <span class="op">&lt;-</span> <span class="va">pvals</span><span class="op">[</span>,<span class="fl">3</span><span class="op">]</span></span>
@@ -1813,7 +1825,7 @@ Figure&nbsp;2.15: Valeurs ajustées de l’effet aléatoire spatial CAR
 <p>À ce stade, nous pourrions envisager une autre structure spatiale pour notre effet aléatoire. En l’occurence, le package <code>spaMM</code> permet notamment d’utiliser une structure de covariance de type Matern ou Cauchy basées sur les distances entre les observations. Considérant que les contés américains sont relativement uniformément distribués, nous pourrions tester cette approche et la comparer au modèle CAR.</p>
 <p>Pour spécifier la structure de corrélation spatiale, le package <code>spaMM</code> à besoin des coordonnées des observations en longitude et latitude. Nous reprojectons donc nos observations dans le système de référence <em>4326</em>.</p>
 <div class="cell">
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># extraction des coordonnées XY des centroids des contés</span></span>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># extraction des coordonnées XY des centroids des contés</span></span>
 <span><span class="va">lonlat</span> <span class="op">&lt;-</span> <span class="va">data_mode1</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_point_on_surface</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="fl">4326</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
@@ -1824,7 +1836,7 @@ Figure&nbsp;2.15: Valeurs ajustées de l’effet aléatoire spatial CAR
 </div>
 <p>Attention, le code ci-dessous prend pas mal de temps pour s’exécuter.</p>
 <div class="cell">
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># ajustement du modèle avec structure de covariance Matern</span></span>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># ajustement du modèle avec structure de covariance Matern</span></span>
 <span></span>
 <span><span class="va">model_matern</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/spaMM/man/fitme.html">fitme</a></span><span class="op">(</span></span>
 <span>  <span class="va">deaths_3</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/offset.html">offset</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">population</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
@@ -1853,7 +1865,7 @@ Figure&nbsp;2.15: Valeurs ajustées de l’effet aléatoire spatial CAR
 <span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">model_matern</span>, type <span class="op">=</span> <span class="st">'pearson'</span><span class="op">)</span>,</span>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">model_matern</span>, type <span class="op">=</span> <span class="st">'pearson'</span><span class="op">)</span>,</span>
 <span>                 listw <span class="op">=</span> <span class="va">queen_w</span>, nsim <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">test</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1867,7 +1879,7 @@ number of simulations + 1: 1000
 statistic = -0.078253, observed rank = 1, p-value = 0.999
 alternative hypothesis: greater</code></pre>
 </div>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">simresid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DHARMa/man/simulateResiduals.html">simulateResiduals</a></span><span class="op">(</span><span class="va">model_matern</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">simresid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DHARMa/man/simulateResiduals.html">simulateResiduals</a></span><span class="op">(</span><span class="va">model_matern</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">simresid</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
@@ -1878,7 +1890,7 @@ alternative hypothesis: greater</code></pre>
 </div>
 <p>Pour le modèle avec la structure de corrélation Matern, La fonction <code>moran.mc</code> semble bien indiquer que nous n’avons plus d’autocorrélation spatiale dans les résidus. Cependant, les résidus semblent moins bien distribués que lorsque nous utilisons la structure CAR pour notre effet aléatoire.</p>
 <div class="cell">
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">model_cauchy</span>, type <span class="op">=</span> <span class="st">'pearson'</span><span class="op">)</span>,</span>
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">model_cauchy</span>, type <span class="op">=</span> <span class="st">'pearson'</span><span class="op">)</span>,</span>
 <span>                 listw <span class="op">=</span> <span class="va">queen_w</span>, nsim <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">test</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1892,7 +1904,7 @@ number of simulations + 1: 1000
 statistic = -0.09147, observed rank = 1, p-value = 0.999
 alternative hypothesis: greater</code></pre>
 </div>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">simresid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DHARMa/man/simulateResiduals.html">simulateResiduals</a></span><span class="op">(</span><span class="va">model_cauchy</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">simresid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DHARMa/man/simulateResiduals.html">simulateResiduals</a></span><span class="op">(</span><span class="va">model_cauchy</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">simresid</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
@@ -1902,9 +1914,8 @@ alternative hypothesis: greater</code></pre>
 </div>
 </div>
 <p>Pour le modèle avec la structure de corrélation Cauchy,les résidus semblent encore moins bien distribués. Il faudrait donc probablement éviter de se fier à ce troisième modèle.</p>
-<p>La figure <span class="quarto-unresolved-ref">?fig-glmmcorstruct</span> illustre la fonction de corrélation ajustée pour les deux modèles pour leurs effets aléatoires. Nous représentons notamment la corrélation selon la distance, mais aussi une illustration en montrant la corrélation attendue en prenant un conté de référence. Notez ici que le package <code>spaMM</code> applique une transformation aux distances lors du calcul de la matrice de covariance spatiale de l’effet aléatoire. Pour retrouver ces distances, il est nécessaire de passer par la fonction <code>make_scaled_dist</code>.</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># récupération des distances </span></span>
+<p>La figure <a href="#fig-glmmcorstruct" class="quarto-xref">figure&nbsp;<span>2.17</span></a> illustre la fonction de corrélation ajustée pour les deux modèles pour leurs effets aléatoires. Nous représentons notamment la corrélation selon la distance, mais aussi une illustration en montrant la corrélation attendue en prenant un conté de référence. Notez ici que le package <code>spaMM</code> applique une transformation aux distances lors du calcul de la matrice de covariance spatiale de l’effet aléatoire. Pour retrouver ces distances, il est nécessaire de passer par la fonction <code>make_scaled_dist</code>.</p>
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># récupération des distances </span></span>
 <span><span class="va">dists_4326</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/spaMM/man/make.scaled.dist.html">make_scaled_dist</a></span><span class="op">(</span><span class="va">lonlat</span>, rho <span class="op">=</span> <span class="fl">1</span>, return_matrix <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">dists_proj</span> <span class="op">&lt;-</span> <span class="va">data_mode1</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
@@ -1937,11 +1948,11 @@ alternative hypothesis: greater</code></pre>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">dists</span>, y <span class="op">=</span> <span class="va">corr_matern</span>, color <span class="op">=</span> <span class="st">'Matern'</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">dists</span>, y <span class="op">=</span> <span class="va">corr_cauchy</span>, color <span class="op">=</span> <span class="st">'Cauchy'</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">'distance (km)'</span>, y <span class="op">=</span> <span class="st">'corrélation'</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
 <span>    <span class="st">'Matern'</span> <span class="op">=</span> <span class="st">'#669bbc'</span>,</span>
 <span>    <span class="st">'Cauchy'</span> <span class="op">=</span> <span class="st">'#c1121f'</span></span>
-<span>  <span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">'distance (km)'</span>, y <span class="op">=</span> <span class="st">'corrélation'</span>, colour <span class="op">=</span> <span class="st">'structure de \ncorrélation'</span><span class="op">)</span></span>
 <span></span>
 <span></span>
 <span><span class="co"># représentation cartographique des fonctions</span></span>
@@ -1982,46 +1993,55 @@ alternative hypothesis: greater</code></pre>
 <span>            legend.outside.position <span class="op">=</span> <span class="st">'bottom'</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_scale_bar.html">tm_scale_bar</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">map_corr_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tmap_grob.html">tmap_grob</a></span><span class="op">(</span><span class="va">map_corr_mat</span><span class="op">)</span></span>
-<span><span class="va">map_corr_cau</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tmap_grob.html">tmap_grob</a></span><span class="op">(</span><span class="va">map_corr_cau</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">cowplot</span><span class="fu">::</span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html">plot_grid</a></span><span class="op">(</span><span class="va">map_corr_mat</span>,<span class="va">plot_corr</span>, <span class="va">map_corr_cau</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
+<span><span class="va">map_corr_cau</span></span>
+<span><span class="va">plot_corr</span></span>
+<span><span class="va">map_corr_mat</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="fig-glmmcorstruct" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-glmmcorstruct-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-glmmcorstruct" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-glmmcorstruct-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-glmmcorstruct-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="02-GLS_CAR_GLMM_files/figure-html/fig-glmmcorstruct-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+<figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-glmmcorstruct-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-GLS_CAR_GLMM_files/figure-html/fig-glmmcorstruct-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-glmmcorstruct">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-glmmcorstruct-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.16: Représentation des structures de corrélation Matern et Cauchy
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-glmmcorstruct-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Structure Cauchy
 </figcaption></figure>
 </div>
 </div>
-<div class="cell-output-display">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-glmmcorstruct" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-glmmcorstruct-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-glmmcorstruct-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="02-GLS_CAR_GLMM_files/figure-html/fig-glmmcorstruct-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+<figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-glmmcorstruct-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-GLS_CAR_GLMM_files/figure-html/fig-glmmcorstruct-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-glmmcorstruct">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-glmmcorstruct-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.17: Représentation des structures de corrélation Matern et Cauchy
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-glmmcorstruct-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Structures Cauchy et Matern, effet de la distance
 </figcaption></figure>
 </div>
 </div>
-<div class="cell-output-display">
+</div>
+<div class="quarto-layout-row">
+<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-glmmcorstruct" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-glmmcorstruct-3" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-glmmcorstruct-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="02-GLS_CAR_GLMM_files/figure-html/fig-glmmcorstruct-3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+<figure class="quarto-float quarto-subfloat-fig figure"><div aria-describedby="fig-glmmcorstruct-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-GLS_CAR_GLMM_files/figure-html/fig-glmmcorstruct-3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-glmmcorstruct">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-glmmcorstruct-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.18: Représentation des structures de corrélation Matern et Cauchy
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-glmmcorstruct-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(c) Structure Matern
 </figcaption></figure>
 </div>
 </div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-glmmcorstruct-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.17: Structures de corrélations ajustées par le modèle
+</figcaption></figure>
 </div>
 <p>Nous pouvons observer que la fonction de corrélation Cauchy est probalement peu adaptée à nos données. Elle semble bien trop lisser les résultats en autorisant des corrélations importantes entre des contés éloignés.</p>
 <p>Pour la fonction Matern, la corrélation est réduite de moitiée au delà de 260 km, et tombe à zéro aux alentours de 2000 km.</p>
 <p>Pour visualiser la contribution de ces effets aléatoires dans les modèles, nous pouvons les cartographier. Puisque les structures de corrélation Matern et Cauchy se basent sur des coordonnées géographiques, elle est de nature continue. Nous allons donc les représenter comme des variables continues spatialement. Notez également que puisque notre modèle a une fonction de lien <code>log</code>, nous pouvons prendre ce terme spatial centré sur 0 et le transformer avec la fonction <code>exp</code>. Ainsi, nous verrons l’impact de l’espace sur le taux d’infection en effet multiplicatif. Les valeurs proches de 1 indiquerons donc les contés des États-Unis dans lesquels la tendance spatiale est moyenne. Des valeurs supérieure à un indiqueront des contés dans lesquels toutes choses étant égales par ailleurs, le taux d’infection a été plus élevé.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/">terra</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/">terra</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># création d'un dataframe de prédiction</span></span>
 <span><span class="co"># puisque la prédiction sera continue, nous créons des points à </span></span>
@@ -2140,15 +2160,16 @@ Figure&nbsp;2.18: Représentation des structures de corrélation Matern et Cauch
 <img src="02-GLS_CAR_GLMM_files/figure-html/fig-glmmRESp-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-glmmRESp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.19: Cartographie des effets aléatoires Matern et Cauchy
+Figure&nbsp;2.18: Cartographie des effets aléatoires Matern et Cauchy
 </figcaption></figure>
 </div>
 </div>
 </div>
+<p>Les deux cartes sont extrèmement similaires et uniquement des changements marginaux peuvent être observés</p>
 <p>Pour terminer, nous pouvons comparer les résultats de nos trois modèles GLMM.</p>
 <div class="cell">
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">models</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">model_car</span>, <span class="va">model_matern</span>, <span class="va">model_cauchy</span><span class="op">)</span></span>
-<span><span class="va">aics</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">models</span>, <span class="va">AIC</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">models</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">model_car</span>, <span class="va">model_matern</span>, <span class="va">model_cauchy</span><span class="op">)</span></span>
+<span><span class="va">aics</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">models</span>, <span class="fu">spaMM</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/spaMM/man/AIC.html">AIC.HLfit</a></span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">aics</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/transpose.html">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="va">aics</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">aics</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'CAR'</span>, <span class="st">'MATERN'</span>, <span class="st">'CAUCHY'</span><span class="op">)</span></span>
 <span></span>
@@ -2193,12 +2214,12 @@ Figure&nbsp;2.19: Cartographie des effets aléatoires Matern et Cauchy
 </div>
 <p>Le package <code>spAMM</code> donne plusieurs version du <em>AIC</em> pour la sélection de modèle. Le <em>AIC</em> conditionnel et le <em>AIC</em> marginal ont des visées différentes et peuvent être privilégiés selon les objectifs de l’étude.</p>
 <ol type="1">
-<li>Le <em>AIC</em> marginal considère que les effet aléatoires ne sont pas observés et sont donc <em>marginalisés</em> dans son calcul. Il est préférable de l’utiliser lorsque l’on s’intéresse avant tout aux effets fixes du modèle ou lorsque les prédictions porteront sur de nouvelles observations qui ne faisaient pas partie des données originales.</li>
-<li>Le <em>AIC</em> conditionnel considère que les effets aléatoires ont été observé, son calcul est donc conditionné par les valeurs des effets aléatoires. Il est préférable de l’utiliser si les prédictions futures se feront sur des entités déjà observées et dont l’effet propre est connu. Typiquement, lorsque des splines pénalisées sont intégrées dans un modèle pour faire du lissage et sont estimées comme des effets aléatoires, le <em>AIC</em> conditionnel est préféré <span class="citation" data-cites="safken2021conditional">(<a href="references.html#ref-safken2021conditional" role="doc-biblioref">Säfken et al. 2021</a>)</span>.</li>
+<li>Le <em>AIC</em> <strong>marginal</strong> considère que les effet aléatoires ne sont pas observés et sont donc <em>marginalisés</em> dans son calcul. Il est préférable de l’utiliser lorsque l’on s’intéresse avant tout aux effets fixes du modèle ou lorsque les prédictions porteront sur de nouvelles observations qui ne faisaient pas partie des données originales.</li>
+<li>Le <em>AIC</em> <strong>conditionnel</strong> considère que les effets aléatoires ont été observés, son calcul est donc conditionné par les valeurs des effets aléatoires. Il est préférable de l’utiliser si les prédictions futures se feront sur des entités déjà observées et dont l’effet propre est connu. Typiquement, lorsque des splines pénalisées sont intégrées dans un modèle pour faire du lissage et sont estimées comme des effets aléatoires, le <em>AIC</em> conditionnel est préféré <span class="citation" data-cites="safken2021conditional">(<a href="references.html#ref-safken2021conditional" role="doc-biblioref">Säfken et al. 2021</a>)</span>.</li>
 </ol>
 <p>Dans notre contexte, les effets aléatoires spatiaux reposent tous sur l’hypothèse d’autocorrélation spatiale et impose une forme de lissage dans l’espace. De plus, le nombre de contés est limité. Il serait donc plus pertinent de se baser sur le <em>AIC</em> conditionnel pour déterminer le meilleur modèle. Le modèle <em>CAR</em> semble donc le mieux ajusté. Rappelons qu’il s’agit aussi du modèle pour lequel les résidus simulés étaient le mieux distribués.</p>
 <div class="cell">
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://haozhu233.github.io/kableExtra/">kableExtra</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://haozhu233.github.io/kableExtra/">kableExtra</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># extraction des effets fixes du modèle CAR</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/summary.html">summary</a></span><span class="op">(</span><span class="va">model_car</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">beta_table</span><span class="op">)</span></span>
@@ -2360,7 +2381,7 @@ Matern
 </div>
 <div class="bloc_exercice-body">
 <p>Complétez le code ci-dessous.</p>
-<p>Correction à la <span class="quarto-unresolved-ref">?sec-11021</span>.</p>
+<p>Correction à la <a href="11-Exercices.html#sec-11021" class="quarto-xref">section&nbsp;<span>11.2.1</span></a>.</p>
 </div>
 </div>
 <div class="bloc_exercice">
@@ -2372,7 +2393,7 @@ Matern
 </div>
 <div class="bloc_exercice-body">
 <p>Complétez le code ci-dessous.</p>
-<p>Correction à la <span class="quarto-unresolved-ref">?sec-11022</span>.</p>
+<p>Correction à la <a href="11-Exercices.html#sec-11022" class="quarto-xref">section&nbsp;<span>11.2.2</span></a>.</p>
 </div>
 </div>
 <div class="bloc_exercice">
@@ -2384,7 +2405,7 @@ Matern
 </div>
 <div class="bloc_exercice-body">
 <p>Complétez le code ci-dessous.</p>
-<p>Correction à la <span class="quarto-unresolved-ref">?sec-11023</span>.</p>
+<p>Correction à la <a href="11-Exercices.html#sec-11023" class="quarto-xref">section&nbsp;<span>11.2.3</span></a>.</p>
 </div>
 </div>
 

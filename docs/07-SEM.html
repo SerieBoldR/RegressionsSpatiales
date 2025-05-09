@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.42">
+<meta name="generator" content="quarto-1.5.57">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>7&nbsp; Modèles linéaires généralisés avec des vecteurs spatiaux – Méthodes de régression spatiale : un grand bol d’R</title>
 <style>
@@ -88,10 +88,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-0e8412ddb3e8581162f62dfa963713cc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -1032,7 +1032,7 @@ data:  residuals(res)
 weights: listw  
 number of simulations + 1: 1000 
 
-statistic = 0.054179, observed rank = 997, p-value = 0.003
+statistic = 0.054179, observed rank = 998, p-value = 0.002
 alternative hypothesis: greater</code></pre>
 </div>
 <div class="cell-output-display">
@@ -1108,7 +1108,7 @@ data:  residuals(res)
 weights: listw  
 number of simulations + 1: 1000 
 
-statistic = 0.038299, observed rank = 969, p-value = 0.031
+statistic = 0.03918, observed rank = 971, p-value = 0.029
 alternative hypothesis: greater</code></pre>
 </div>
 <div class="cell-output-display">
@@ -1155,7 +1155,7 @@ Effet aléatoire
 Lasso
 </div></th>
 </tr>
-<tr class="even">
+<tr class="odd">
 <th style="text-align: left;" data-quarto-table-cell-role="th"></th>
 <th style="text-align: center;" data-quarto-table-cell-role="th">coef.</th>
 <th style="text-align: center;" data-quarto-table-cell-role="th">p</th>
@@ -1221,7 +1221,7 @@ Lasso
 <td style="text-align: center;">*</td>
 </tr>
 </tbody>
-<tfoot><tr class="odd">
+<tfoot><tr class="even">
 <td style="text-align: left; padding: 0;">
 <sup></sup> I de Moran sur les résidus : sélection pas à pas (0,082), effet aléatoire (0,054), Lasso (0,039).</td>
 <td style="text-align: center;"></td>
@@ -1713,6 +1713,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -1823,6 +1825,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
+      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.42">
+<meta name="generator" content="quarto-1.5.57">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>8&nbsp; Régressions géographiquement pondérées classiques – Méthodes de régression spatiale : un grand bol d’R</title>
 <style>
@@ -88,10 +88,10 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-0e8412ddb3e8581162f62dfa963713cc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -582,7 +582,7 @@ Tableau&nbsp;8.2: Analyse de variance entre les modèles global et GWR
 <td style="text-align: right;">9,09</td>
 </tr>
 </tbody>
-<tfoot><tr class="odd">
+<tfoot><tr class="even">
 <td style="text-align: left; padding: 0;">
 <sup></sup> R carré du modèle global = 0,2832. R carré du modèle GWR = 0,7838.</td>
 <td style="text-align: right;"></td>
@@ -1370,7 +1370,7 @@ Sélection de la taille de la zone optimale (bandwidth) avec la distance :
 <pre><code>   ***********************************************************************
    *                       Package   GWmodel                             *
    ***********************************************************************
-   Program starts at: 2025-03-18 19:49:50.435837 
+   Program starts at: 2025-05-09 15:09:17.045589 
    Call:
    gwr.basic(formula = NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + 
     NivVieMed, data = LyonIris, bw = bwCV_voisins, kernel = "bisquare", 
@@ -1462,7 +1462,7 @@ Sélection de la taille de la zone optimale (bandwidth) avec la distance :
    ---Significance stars
    Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
    ***********************************************************************
-   Program stops at: 2025-03-18 19:50:05.088237 </code></pre>
+   Program stops at: 2025-05-09 15:09:27.041943 </code></pre>
 </div>
 </div>
 </section><section id="sec-08223" class="level4" data-number="8.2.2.3"><h4 data-number="8.2.2.3" class="anchored" data-anchor-id="sec-08223">
@@ -2082,6 +2082,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -2192,6 +2194,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
+      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
