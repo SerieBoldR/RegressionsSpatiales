@@ -2,11 +2,15 @@
 
 Dans le chapitre précédent, nous avons présenté la GWR. Cette méthode permet notamment d'explorer comment les relations d'un modèle de régression varient spatialement. Contrairement aux autres modèles abordés jusqu'ici, la GWR permet de répondre à la question de l'hétérogénéité spatiale plutôt que de la dépendance spatiale.
 
-Cependant, la GWR fait l'objet de critiques variées. En effet, bien qu'elle soit une technique puissante d'exploration de données, souffre de plusieurs défauts d'un point de vue statistique qui limitent grandement son usage pour faire des analyses plus inférentielles.
+Cependant, la GWR fait l'objet de critiques variées. En effet, bien qu'elle soit une technique puissante d'exploration de données, elle souffre de plusieurs défauts d'un point de vue statistique qui limitent grandement son usage pour faire des analyses inférentielles.
 
-Avec le développement des logiciels et packages pour travailler avec des modèles complexes et notamment les modèles à effets mixtes, de nouvelles pistes ont été développés pour intégrer la question de l'hétérogénéité spatiale dans les modèles. Nous allons aborder ici comment les modèles GAM et GLMM peuvent être utilisés pour autoriser des coefficients à varier spatialement tout en évitant les biais spécifiques de la GWR. Ces modèles peuvent être regroupés sous le terme de modèles à coefficients variant spatilament, soit *spatially varying coefficients models*.
+Avec le développement des logiciels et packages pour travailler avec des modèles complexes et notamment les modèles à effets mixtes, de nouvelles pistes ont été développées pour intégrer la question de l'hétérogénéité spatiale dans les modèles. Nous allons aborder ici comment les modèles GAM et GLMM peuvent être utilisés pour autoriser des coefficients à varier spatialement tout en évitant les biais spécifiques de la GWR. Ces modèles peuvent être regroupés sous le terme de modèles à coefficients variant spatilament, soit *spatially varying coefficients models* ou *SVCM*.
 
 ## Hétérogénéité spatiale et modèles généralisés additifs (GAM) {#sec-101}
+
+Dans cette section, nous expliquons comment les *splines* que nous avions utilisées pour intégrer l'espace dans un modèle GAM peuvent être utilisées pour faire varier spatialement l'effet de certains coefficients.
+
+### Splines et coefficients variant spatialement
 
 Nous avions vu dans le chapitre @sec-chap06 que les modèles GAM permettaient de prendre en compte l'espace dans un modèle en intégrant une fonction non linéaire appelée *spline*. Cette fonction non linéaire venait capturer l'effet des coordonnées spatiales (*spline* bivariée) ou de la matrice de voisinage (*Narkov Random Field*). La complexité de cette fonction dépendait du nombre de noeuds (*k*) qui lui était était accordé et d'un paramètre de lissage déterminé le plus souvent comme un pénalisation similaire à un effet aléatoire. Ces splines spatiales permettent notamment de capturer des structures spatiales lisses et marquées par une importante autocorrélation spatiale.
 
@@ -30,7 +34,7 @@ avec :
 -   $f(sp)$, une fonction modélisant l'impact de l'espace.
 -   $sp$, une matrice de coordonnées cartésiennes ou une matrice de contiguité spatiale.
 
-Les splines donnent une très grande flexibilité en terme de modélisation. Il est possible de les utiliser dans notre cas pour faire varier un coefficient spatialement. L'idée générale est la suivante, nous formulons l'hypothèse qu'un coefficient n'a pas toujours le même effet sur le territoire et que son effet peut être parfois supérieur et parfois inférieur. Il serait donc pertinent d'ajouter dans le modèle une série de bonus ou de malus au coefficient principal dont les valeurs varient dans l'espace.
+Les splines donnent une très grande flexibilité en terme de modélisation. Il est possible de les utiliser dans notre cas pour faire varier un coefficient spatialement. L'idée générale est la suivante : nous formulons l'hypothèse qu'un coefficient n'a pas toujours le même effet sur le territoire et que son effet peut être parfois supérieur et parfois inférieur. Il serait donc pertinent d'ajouter dans le modèle une série de bonus ou de malus au coefficient principal dont les valeurs varient dans l'espace. Ces bonus ou malus locaux devraient être spatialement autocorrélés et suivre une variation spatiale lisse. Une *spline* en deux dimensions est particulièrement adaptée pour cette tâche.
 
 Le modèle peut donc être modifié de la façon suivante : 
 
@@ -45,17 +49,150 @@ avec :
 
 -   $\zeta_j$, une variable indépendante variant spatialement.
 
-Notez ici que nous avons plusieurs *splines* spatiales, soit une par coefficient variant spatialement et la *spline* spatiale de base que nous avions introduite jusqu'ici. En quelque sorte, cette première *spline* spatiale peut être vue comme un bonus ou un malus local accordé à l'intercept du modèle. Notez qu'il n'est pas obligatoire de conserver cette première spline dans le modèle et qu'il est tout à fait possible qu'elle devienne inutile après avoir autorisé certains coefficient à varier spatialement.
+Notez ici que nous avons plusieurs *splines* spatiales, soit une par coefficient variant spatialement et la *spline* spatiale de base que nous avions introduite jusqu'ici. En quelque sorte, cette *spline* spatiale utilisée jusqu'ici peut être vue comme un ensemble de bonus ou de malus locaux accordés à l'intercept du modèle. En quelque sorte, elle permet de faire varier spatialement l'intercept du modèle. 
+
+::: bloc_attention
+::: bloc_attention-header
+::: bloc_attention-icon
+:::
+
+**Enjeux de concurvité**
+:::
+
+::: bloc_attention-body
+Notez qu'il n'est pas obligatoire de conserver la première *spline* faisant varier l'intercept dans le modèle. Il est tout à fait possible qu'elle devienne inutile après avoir autorisé certains coefficient à varier spatialement. En effet, il est possible que les différentes *splines* spatiales d'un modèle se superposent et posent alors un problème de **concurvité**. La concurvité est l'équivalent de la multicolinéarité mais pas les fonctions lisses estimées par les *splines*. Si deux termes non linéaires ont une forte concurvité, cela signifie que l'un des deux termes peut englober l'autre. Ce type de problème est trés fréquent lorsque l'on essaye de modéliser des coefficients variant spatialement avec des *splines*.
+:::
+:::
+
+
 
 Il est généralement recommandé d'effectuer deux ajustements méthodologiques pour faciliter l'interprétation de ce modèles: 
 
 1. Chaque variable indépendante dont l'effet varie dans l'espace doit aussi avoir un coefficient non spatial dans le modèle. Ce dernier représente donc l'effet moyen de la variable en question.
-2. Les splines à utiliser doivent être de type *processus gaussian* (`gp`), ainsi, leur moyenne sera de zéro.
+2. Les *splines* à utiliser doivent être de type *processus gaussian* (`gp`), ainsi, leur moyenne sera de zéro.
 
 Ces deux spécifications permettent de s'assurer que nous pourrons interpréter l'effet moyen général de la variable indépendante ainsi que la variation spatiale de son coefficient. 
 
-Il est ainsi possible de déterminer quelles variables vont avoir des coefficient variant spatialement dans ce type de modèle. Il est préférable de choisir ces variables pour répondre à une question de recherche précise, ou encore si le cadre théorique le justifie. Il est bien sûr possible de comparer l'ajustement de plusieurs modèles imbriqués pour vérifier si l'ajout d'un coefficient variant spatialement complexifie le modèle de façon justifiée, notamment en comparant leurs *AIC* ou en effectuant un test de rapport de vraissemblance. Notez que le test de rapport de vraisemblance basé sur la distribution du $\chi^2$ n'est pas très adapté à ce type de modèle. Une alternative est la version non paramétrique par *boostrap*, mais elle est très intensive en temps de calcul.
+Il est ainsi possible de déterminer quelles variables vont avoir des coefficient variant spatialement dans ce type de modèle. Il est préférable de choisir ces variables pour répondre à une question de recherche précise, ou encore si le cadre théorique le justifie. Il est bien sûr possible de comparer l'ajustement de plusieurs modèles imbriqués pour vérifier si l'ajout d'un coefficient variant spatialement complexifie le modèle de façon justifiée. Pour cela la comparaison des *AIC* ou ou un test de rapport de vraissemblance peuvent être utilisés. Notez que le test de rapport de vraisemblance basé sur la distribution du $\chi^2$ n'est pas très adapté à ce type de modèle. Une alternative est la version non paramétrique par *boostrap*, mais elle est très intensive en temps de calcul.
 
+### Mise en oeuvre dans R
+
+Pour illustrer l'utilisation des splines pour faire varier spatialement les coefficients d'un modèle, nous réutilisons l'exemple donné dans le chapitre sur les GAM. Pour rappel, nous modélisions le log du ratio entre la part modale du transport collectif et de l'automobile au niveau des secteurs de recensement de la RMR de Montréal. Nous commençons par réajuster le modèle non spatial, le modèle GAM simple, plus nous essayerons d'améliorer le modèle en faisant varier spatialement certains coefficients.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+#| warning: false
+
+library(sf, quietly = TRUE)
+library(ggplot2, quietly = TRUE)
+library(tmap, quietly = TRUE)
+library(dplyr, quietly = TRUE)
+library(ggpubr, quietly = TRUE)
+library(mgcv, quietly = TRUE)
+library(spdep, quietly = TRUE)
+
+# Chargement des données
+load("data/Mtl.Rdata")
+
+# Nous préparons ici les données en calculant les ratios
+# remplaçant les 0 et calculant la transformation alr
+data_mtl <- data_mtl %>% 
+  mutate(
+    prt_tc = ifelse(prt_tc == 0, min(prt_tc[prt_tc>0]) ,prt_tc)
+  ) %>% 
+  mutate(
+    ratio = (prt_tc / prt_auto),
+    alr_val = log(prt_tc / prt_auto)
+  )
+
+XY <- st_coordinates(st_centroid(data_mtl))
+data_mtl$X <- XY[,1]
+data_mtl$Y <- XY[,2]
+
+nb <- poly2nb(data_mtl)
+names(nb) <- as.integer(attr(nb, "region.id"))
+data_mtl$ID_LOC <- as.integer(attr(nb, "region.id"))
+
+# modèle non spatial
+model1 <- gam(alr_val ~ prt_minorite_vis + prt_monoparental + revenu_median +
+                          acs_idx_emp_tc_peak + acs_idx_emp_pieton,
+                data = data_mtl, 
+                family = scat)
+
+# modèle intégrant uniquement un intercept variant spatialement
+model2 <- gam(alr_val ~ prt_minorite_vis + prt_monoparental + revenu_median +
+                      acs_idx_emp_tc_peak + acs_idx_emp_pieton +
+                      s(ID_LOC, bs = 'mrf', xt = list(nb = nb), k = 50),
+            data = data_mtl, 
+            family = scat)
+
+```
+
+Nous allons commencer par tester si la variation spatiale des deux variables associées à l'accessibilité améliorerait notre modèle. Nous allons aussi déterminer si nous obtenons des enjeux de concurvité associé à ce nouveau modèle.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+#| warning: false
+
+model3 <- gam(alr_val ~ prt_minorite_vis + prt_monoparental + revenu_median + acs_idx_emp_tc_peak +
+                s(ID_LOC, bs = 'mrf', xt = list(nb = nb), k = 50) +
+                s(ID_LOC, bs = 'mrf', xt = list(nb = nb), k = 15, by = acs_idx_emp_tc_peak) + 
+                s(ID_LOC, bs = 'mrf', xt = list(nb = nb), k = 15, by = revenu_median),
+            method = 'reml',
+            data = data_mtl, 
+            family = scat)
+
+round(concurvity(model3, full = FALSE)$estimate,3)
+
+```
+
+Il apparait clairement dans ce modèle que nous avons des enjeux de concurvité, notamment avec l'intercept variant spatialement, mais aussi avec la variable d'accessibilité à pied. Nous allons tenté de retirer cette variable dans un premier temps.
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+#| warning: false
+
+model3 <- gam(alr_val ~
+                prt_minorite_vis + prt_monoparental + revenu_median +
+                s(X,Y, bs = 'gp', k = 50) + 
+                acs_idx_emp_tc_peak + s(X,Y, by = acs_idx_emp_tc_peak, k = 30) + 
+                acs_idx_emp_pieton + s(X,Y, by = acs_idx_emp_pieton, k = 30),
+            data = data_mtl, 
+            family = scat)
+
+
+model3 <- gam(alr_val ~
+                prt_minorite_vis + prt_monoparental + revenu_median + 
+                s(X,Y, bs = 'gp', by = acs_idx_emp_tc_peak, m = 2),
+              data = data_mtl, 
+            family = scat)
+
+round(concurvity(model3, full = TRUE),3)
+
+```
+
+Le troisième modèle obtient les meilleurs valeurs pour le AIC et le GCV (*Generalized Cross Validation*).
+
+À ce stade, nous devons vérifier que nous n'avons pas introduit un problème de multicolinéarité dans notre modèle. En effet, 
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+#| warning: false
+
+# comp_df <- AIC(model1, model2, model3)
+# comp_df$GCV <- c(model1$gcv.ubre, model2$gcv.ubre, model3$gcv.ubre)
+# 
+# knitr::kable(comp_df, row.names = TRUE, digits = 2)
+
+```
 
 ## Modèles linéaires généralisés à effets mixtes (GLMM) {#sec-103}
 
