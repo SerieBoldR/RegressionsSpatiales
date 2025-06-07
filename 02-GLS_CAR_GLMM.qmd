@@ -259,14 +259,14 @@ Dans les faits, les packages ajustant des modèles GLS renvoient des erreurs lor
 
 ### Mise en oeuvre et analyse dans R
 
-Pour illustrer la réalisation de différents modèles GLS, nous utilisons le jeu de données sur le prix des logements Airbnb ([section @sec-0112]) sur l'Île de Montréal. Ce jeu de donnée comporte 2500 logements airbnb pour lesquels nous connaissons un ensemble d'informations sur la nature du logement, son propriétaire ainsi que l'environnement à proximité du logement. Nous tentons ici de modéliser le prix de ces logements à la nuit.
+Pour illustrer la réalisation de différents modèles GLS, nous utilisons le jeu de données sur le prix des logements Airbnb ([section @sec-0115]) sur l'Île de Montréal. Ce jeu de donnée comporte 2500 logements airbnb pour lesquels nous connaissons un ensemble d'informations sur la nature du logement, son propriétaire ainsi que l'environnement à proximité du logement. Nous tentons ici de modéliser le prix de ces logements à la nuit.
 
 ```{r}
 #| echo: true 
 #| message: false 
 #| eval: true
 #| warning: false
-#| label: fig-glsdescrib
+#| label: fig-glsdescrib_rep
 #| fig-align: center
 #| layout-ncol: 2
 #| fig-cap: 
@@ -301,7 +301,6 @@ tm_shape(data_airbnb[order(data_airbnb$price),]) +
 ```
 
 Nous allons commencer par créer un modèle ne tenant pas compte de l'autocorrélation spatiale.
-
 
 ```{r}
 #| echo: true 
@@ -856,7 +855,7 @@ Sur la carte ci-dessus, nous pouvons voir émerger des zones dans lesquels le mo
 
 Nous venons de voir qu'un modèle GLS ou un modèle CAR est construit en modifiant la structure de covariance d'un modèle linéaire classique assumant une distribution normale. Le principe de la structure de covariance est difficile à généraliser pour des distributions autres que la distribution normale. Dans ce contexte, il est difficile d'utiliser ces modèles pour des variables binaires, de comptages ou multinomiale et plus généralement d'introduire la prise en compte de l'espace dans un modèle GLM via la modification de la structure de covariance.
 
-### Du GLS et du CAR aux GLMM
+### Du GLS et du CAR aux GLMM {#sec-0231}
 
 Nous allons montrer ci-dessous comment les modèles GLS et CAR peuvent être reformulés comme des modèles GLMM. Notez que cette explication est relativement simplifiée car elle ne tient pas compte du fait que ces modèles utilisent différentes approches d'estimation.
 
@@ -921,46 +920,18 @@ Pour plus de détail sur les modèles à effets mixtes et comment ils sont notam
 :::
 :::
 
-### Mise en oeuvre dans R
+### Mise en oeuvre dans R {#sec-0232}
 
-Nous illustrons ici comment un modèle GLMM peut être construit avec un effet spatial. Pour cela, nous allons tenté de reproduire les résultats de l'étude de @kaashoek2022evolving. Dans cet article, les auteurs cherchent à déterminer quels sont les facteurs socio-économiques, politiques, et sanitaires qui ont été associés avec une prévalence de décès de COVID19 dans les différents contés des États-Unis. Les données de l'article ont été publiées en [accès ouvert](https://github.com/ctesta01/spatial_poisson_covid/tree/main). Nous nous concentrons spécifiquement sur le modèle spatial appliqué à la troisième période d'étude.
+Nous illustrons ici comment un modèle GLMM peut être construit avec un effet spatial. Pour cela, nous allons tenté de reproduire les résultats de l'étude de @kaashoek2022evolving avec le jeu de donnée décrit à la section @sec-0114.
 
-L'objectif du modèle est donc de prédire le nombre de décès de COVID19 par conté pour la période octobre 2020 à février 2021. Il s'agit de la période pendant laquelle le nombre de cas était le plus élevé pour l'ensemble du pays. La première période correspond aux premiers pics épidémiques (férvier - mai 2020) et à l'apparition des premiers clusters de contagions. La seconde période a été marquée par l'adoption des premières mesures sanitaires et une poursuite de la contamination vers les états plus éloignés et moins peuplés. 
 
-Les variables intégrées peuvent être regroupées dans trois groupes: 
-
-1. Les variables socio-démographiques. L'hypothèse originale étant que dans les milieux plus défavorisés et moins éduqués, l'épidémie a fait plus de victimes. De même, les personnes âgées étaient particulièrement à risque pendant la pendémie, ainsi que les personnes fragilisées vivant dans des établissements de soin.
-
-* `income`: le niveau de revenu médian ($)
-* `per_black`: le pourcentage de la population étant afro-américaine
-* `per_hispanic`: le pourcentage de la population étant hispanique
-* `per_atleast_hs`: la part de la population disposant d'un dilôme de fin d'étude secondaire
-* `X65plus`: part de la population ayant 65 ans et plus
-* `per_nursing`: part de la population vivant dans des établissements de soin
-
-2. Les variables politiques. L'hypothèse originale est que certains partis politiques ont moins mis en place de mesures sanitaires ce qui a eu un impact sur le nombre de décès dans les contés. Les comportements de la population ont aussi été affectés par les orientations politiques menant à une adoption moins systématique par exemple des gestes barrières.
-
-* `political_leaning`: le niveau d'orientation politique, calculé comme la différence entre les votes républicains (votes pour Donald Trump) et les votes démocrates (votes pour Joe Biden), divisé par le total de votant. Une valeur positive indique un état avec une tendance plus républicaine et une valeur négative indique à état à tendance plus démocrate. Ces données proviennent des données électorale du New York Times de 2020.
-* `strict_p3`: le niveau d'intensité de mise en place de mesures sanitaires. Il s'agit d'un score développé par le *Oxford COVID-19 Government Response Tracker* avec des valeurs allant de 0 (absence de mesures) à 100 (mesures les plus importantes). Ces données sont obtenues à l'échelle des États.
-
-3. Les variables de contagions. Plusieurs facteurs expliquent la propagation de la maladie tels que la proximité aux aéroports, les niveaux de mobilité dans les contés ou encore le port du masque.
-
-* `density`: la densité de population du conté
-* `google_p3`: les niveaux de mobilité pour le motif travail selon les données de Google Mobility. Cet indicateur est comparatif par rapport à une tendance habituelle et est exprimé en pourcentage. Une mobilité plus importante serait associée à une moins bonne distanciation sociale entre individus de ménages différents.
-* `dist_to_airport`: la distance à l'aéroport internationnal le plus proche.
-* `mask_usage_p3`: estimation de la proportion des personnes portant le masque la plupart du temps ou tout le temps en public. Ces données proviennent d'une enquête effectuée par Facebook (*Facebook’s COVID-19 symptom survey*).
-
-Les cartes ci-dessous illustrent la variable dépendante (taux de décès) et trois variables indépendantes. 
+Pour nous rapprocher le plus possible de l'analyse effectuée par les auteurs, nous allons utiliser la même stratégie de modélisation de la variable dépendante. Plutôt que de modéliser directement le taux de décès, nous allons modéliser le nombre de décès selon une distribution Poisson en intégrant dans l'équation de régression le nombre d'habitants. Cette stratégie est appelée un *offset* et permet de modéliser directement le taux de décès via un modèle Poisson en contrôlant pour le fait que dans certain conté, une plus grande population va nécessaire produire un plus grand nombde de décés.
 
 ```{r}
 #| echo: true 
 #| message: false 
 #| eval: true
 #| warning: false
-#| label: fig-expcar1
-#| fig-cap: Distribution spatiale de différentes données utilisées pour le modèle
-#| fig-align: center
-
 
 library(sf, quietly = TRUE)
 library(ggplot2, quietly = TRUE)
@@ -988,103 +959,7 @@ covid_data <- covid_data %>%
 # Matrice de de contiguïté selon le partage d'un nœud 
 queen_nb <- poly2nb(covid_data, queen = TRUE)
 queen_w <- nb2listw(queen_nb, style = 'W', zero.policy = TRUE)
-
-# Calcul du I de moran de la variable ratio
-moran_i <- moran.mc(covid_data$rate_3, 
-                    listw = queen_w,
-                    na.action = na.omit,
-                    zero.policy = TRUE, nsim = 999)
-
-# Texte pour la valeur du I de Moran
-moran_text <- format(as.numeric(round(moran_i$statistic,3)) , decimal.mark =",")
-
-
-# Cartographie de la variable
-map1 <- tm_shape(covid_data) +
-  tm_fill(col="rate_3", n = 7,
-          style = "jenks",
-          legend.format = list(text.separator = "à", 
-                               decimal.mark = ",", 
-                               big.mark = " ",
-                               digits = 2),
-          palette = "YlOrBr", title = 'taux de décès') +
-  tm_layout(frame=FALSE, legend.outside = TRUE) + 
-  tm_scale_bar(breaks = c(0,10)) + 
-  tm_xlab(paste0('I de Moran = ', moran_text))
-
-
-# Calcul du I de moran de la variable
-moran_i <- moran.mc(covid_data$political_leaning, 
-                    listw = queen_w,
-                    na.action = na.omit,
-                    zero.policy = TRUE, nsim = 999)
-
-# Texte pour la valeur du I de Moran
-moran_text <- format(as.numeric(round(moran_i$statistic,3)) , decimal.mark =",")
-
-map2 <- tm_shape(covid_data) +
-  tm_fill(col="political_leaning", n = 7,
-          style = "equal",
-          midpoint = 0,
-          legend.format = list(text.separator = "à", 
-                               decimal.mark = ",", 
-                               big.mark = " ",
-                               digits = 2),
-          palette = "-RdBu", title = 'orientation politique') +
-  tm_layout(frame=FALSE, legend.outside = TRUE) + 
-  tm_scale_bar(breaks = c(0,10)) + 
-  tm_xlab(paste0('I de Moran = ', moran_text))
-
-
-# Calcul du I de moran de la variable
-moran_i <- moran.mc(covid_data$strict_p3, 
-                    listw = queen_w,
-                    na.action = na.omit,
-                    zero.policy = TRUE, nsim = 999)
-
-# Texte pour la valeur du I de Moran
-moran_text <- format(as.numeric(round(moran_i$statistic,3)) , decimal.mark =",")
-
-map3 <- tm_shape(covid_data) +
-  tm_fill(col="strict_p3", n = 7,
-          style = "jenks",
-          legend.format = list(text.separator = "à", 
-                               decimal.mark = ",", 
-                               big.mark = " ",
-                               digits = 2),
-          palette = "Greens", title = 'mesures sanitaires') +
-  tm_layout(frame=FALSE, legend.outside = TRUE) + 
-  tm_scale_bar(breaks = c(0,10)) + 
-  tm_xlab(paste0('I de Moran = ', moran_text))
-
-
-# Calcul du I de moran de la variable
-moran_i <- moran.mc(covid_data$google_p3, 
-                    listw = queen_w,
-                    na.action = na.omit,
-                    zero.policy = TRUE, nsim = 999)
-
-# Texte pour la valeur du I de Moran
-moran_text <- format(as.numeric(round(moran_i$statistic,3)) , decimal.mark =",")
-
-map4 <- tm_shape(covid_data) +
-  tm_fill("google_p3", n = 6,
-          legend.format = list(text.separator = "à", 
-                               decimal.mark = ",", 
-                               big.mark = " ",
-                               digits = 0),
-          title = 'mobilité'
-          )+
-  tm_layout(frame=FALSE, legend.outside = TRUE) + 
-  tm_scale_bar(breaks = c(0,10)) + 
-  tm_xlab(paste0('I de Moran = ', moran_text))
-
-
-tmap_arrange(map1, map2, map3, map4, ncol = 2, nrow = 2)
-
 ```
-
-Pour nous rapprocher le plus possible de l'analyse effectuée par les auteurs, nous allons utiliser la même stratégie de modélisation de la variable dépendante. Plutôt que de modéliser directement le taux de décès, nous allons modéliser le nombre de décès selon une distribution Poisson en intégrant dans l'équation de régression le nombre d'habitants. Cette stratégie est appelée un *offset* et permet de modéliser directement le taux de décès via un modèle Poisson en contrôlant pour le fait que dans certain conté, une plus grande population va nécessaire produire un plus grand nombde de décés.
 
 Nous commençons donc par ajuster un modèle non spatial.
 
@@ -1634,12 +1509,24 @@ knitr::kable(aics, digits = 0,
 
 ```
 
+::: bloc_notes 
+::: bloc_notes-header
+::: bloc_notes-icon
+:::
+
+**Bloc notes**
+:::
+
+::: bloc_notes-body
 Le package `spAMM` donne plusieurs version du *AIC* pour la sélection de modèle. Le *AIC* conditionnel et le *AIC* marginal ont des visées différentes et peuvent être privilégiés selon les objectifs de l'étude.
 
 1. Le *AIC* **marginal** considère que les effet aléatoires ne sont pas observés et sont donc *marginalisés* dans son calcul. Il est préférable de l'utiliser lorsque l'on s'intéresse avant tout aux effets fixes du modèle ou lorsque les prédictions porteront sur de nouvelles observations qui ne faisaient pas partie des données originales.
 2. Le *AIC* **conditionnel** considère que les effets aléatoires ont été observés, son calcul est donc conditionné par les valeurs des effets aléatoires. Il est préférable de l'utiliser si les prédictions futures se feront sur des entités déjà observées et dont l'effet propre est connu. Typiquement, lorsque des splines pénalisées sont intégrées dans un modèle pour faire du lissage et sont estimées comme des effets aléatoires, le *AIC* conditionnel est préféré [@safken2021conditional].
 
 Dans notre contexte, les effets aléatoires spatiaux reposent tous sur l'hypothèse d'autocorrélation spatiale et impose une forme de lissage dans l'espace. De plus, le nombre de contés est limité. Il serait donc plus pertinent de se baser sur le *AIC* conditionnel pour déterminer le meilleur modèle. Le modèle *CAR* semble donc le mieux ajusté. Rappelons qu'il s'agit aussi du modèle pour lequel les résidus simulés étaient le mieux distribués.
+:::
+:::
+
 
 ```{r}
 #| echo: true 

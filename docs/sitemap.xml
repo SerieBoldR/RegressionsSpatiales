@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://serieboldr.github.io/RegressionsSpatiales/index.html/02-GLS_CAR_GLMM.html</loc>
-    <lastmod>2025-05-09T21:28:05.922Z</lastmod>
+    <lastmod>2025-05-30T12:58:19.358Z</lastmod>
   </url>
   <url>
     <loc>https://serieboldr.github.io/RegressionsSpatiales/index.html/03-EconometrieSpatiale.html</loc>
@@ -34,7 +34,7 @@
   </url>
   <url>
     <loc>https://serieboldr.github.io/RegressionsSpatiales/index.html/10-Heterogenite_GAM_GLMM.html</loc>
-    <lastmod>2025-05-08T21:27:06.882Z</lastmod>
+    <lastmod>2025-06-07T15:40:58.954Z</lastmod>
   </url>
   <url>
     <loc>https://serieboldr.github.io/RegressionsSpatiales/index.html/11-Exercices.html</loc>
@@ -47,5 +47,9 @@
   <url>
     <loc>https://serieboldr.github.io/RegressionsSpatiales/index.html/references.html</loc>
     <lastmod>2025-04-13T14:47:12.471Z</lastmod>
+  </url>
+  <url>
+    <loc>https://serieboldr.github.io/RegressionsSpatiales/index.html/01-NotionsDeBase.html</loc>
+    <lastmod>2025-05-16T21:35:43.977Z</lastmod>
   </url>
 </urlset>

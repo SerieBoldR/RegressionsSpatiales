@@ -316,8 +316,8 @@ window.Quarto = {
   <li>
 <a href="#sec-023" id="toc-sec-023" class="nav-link" data-scroll-target="#sec-023"><span class="header-section-number">2.3</span> Modèles Généralisés à Effets Mixtes</a>
   <ul class="collapse">
-<li><a href="#du-gls-et-du-car-aux-glmm" id="toc-du-gls-et-du-car-aux-glmm" class="nav-link" data-scroll-target="#du-gls-et-du-car-aux-glmm"><span class="header-section-number">2.3.1</span> Du GLS et du CAR aux GLMM</a></li>
-  <li><a href="#mise-en-oeuvre-dans-r" id="toc-mise-en-oeuvre-dans-r" class="nav-link" data-scroll-target="#mise-en-oeuvre-dans-r"><span class="header-section-number">2.3.2</span> Mise en oeuvre dans R</a></li>
+<li><a href="#sec-0231" id="toc-sec-0231" class="nav-link" data-scroll-target="#sec-0231"><span class="header-section-number">2.3.1</span> Du GLS et du CAR aux GLMM</a></li>
+  <li><a href="#sec-0232" id="toc-sec-0232" class="nav-link" data-scroll-target="#sec-0232"><span class="header-section-number">2.3.2</span> Mise en oeuvre dans R</a></li>
   </ul>
 </li>
   <li><a href="#sec-024" id="toc-sec-024" class="nav-link" data-scroll-target="#sec-024"><span class="header-section-number">2.4</span> Quiz de révision</a></li>
@@ -460,7 +460,7 @@ Figure&nbsp;2.2: Exemple de variables continues suivant une structure de corrél
 </div>
 </section><section id="mise-en-oeuvre-et-analyse-dans-r" class="level3" data-number="2.1.2"><h3 data-number="2.1.2" class="anchored" data-anchor-id="mise-en-oeuvre-et-analyse-dans-r">
 <span class="header-section-number">2.1.2</span> Mise en oeuvre et analyse dans R</h3>
-<p>Pour illustrer la réalisation de différents modèles GLS, nous utilisons le jeu de données sur le prix des logements Airbnb (<a href="01-NotionsDeBase.html#sec-0112" class="quarto-xref">section&nbsp;<span>1.1.2</span></a>) sur l’Île de Montréal. Ce jeu de donnée comporte 2500 logements airbnb pour lesquels nous connaissons un ensemble d’informations sur la nature du logement, son propriétaire ainsi que l’environnement à proximité du logement. Nous tentons ici de modéliser le prix de ces logements à la nuit.</p>
+<p>Pour illustrer la réalisation de différents modèles GLS, nous utilisons le jeu de données sur le prix des logements Airbnb (<a href="01-NotionsDeBase.html#sec-0115" class="quarto-xref">section&nbsp;<span>1.1.5</span></a>) sur l’Île de Montréal. Ce jeu de donnée comporte 2500 logements airbnb pour lesquels nous connaissons un ensemble d’informations sur la nature du logement, son propriétaire ainsi que l’environnement à proximité du logement. Nous tentons ici de modéliser le prix de ces logements à la nuit.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/">tmap</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -485,24 +485,24 @@ Figure&nbsp;2.2: Exemple de variables continues suivant une structure de corrél
 <span></span>
 <span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">data_airbnb</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="va">data_airbnb</span><span class="op">$</span><span class="va">price</span><span class="op">)</span>,<span class="op">]</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html">tm_dots</a></span><span class="op">(</span><span class="st">'price'</span>, title <span class="op">=</span> <span class="st">'prix par nuit ($)'</span>, size <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell quarto-layout-panel" data-layout-ncol="2" data-layout-align="center">
+<div class="cell quarto-layout-panel" data-layout-align="center" data-layout-ncol="2">
 <div class="quarto-layout-row">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-glsdescrib-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-glsdescrib-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="02-GLS_CAR_GLMM_files/figure-html/fig-glsdescrib-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
+<div id="fig-glsdescrib_rep-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-glsdescrib_rep-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-GLS_CAR_GLMM_files/figure-html/fig-glsdescrib_rep-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-glsdescrib-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-glsdescrib_rep-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;2.3: Distribution du prix des logements Airbnb à Montréal
 </figcaption></figure>
 </div>
 </div>
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-glsdescrib-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-glsdescrib-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="02-GLS_CAR_GLMM_files/figure-html/fig-glsdescrib-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
+<div id="fig-glsdescrib_rep-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-glsdescrib_rep-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-GLS_CAR_GLMM_files/figure-html/fig-glsdescrib_rep-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-glsdescrib-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-glsdescrib_rep-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;2.4: Géographie du prix des logements Airbnb à Montréal
 </figcaption></figure>
 </div>
@@ -721,38 +721,23 @@ alternative hypothesis: greater</code></pre>
 </div>
 </div>
 <p>Notre GLS a donc pu retirer l’autocorrélation qui restait dans les résidus du notre modèle linéaire original. Nous pouvons donc à présent vérifier la distribution de ses résidus.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/car/man/qqPlot.html">qqPlot</a></span><span class="op">(</span><span class="va">model_data</span><span class="op">$</span><span class="va">residual_gls</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">model_data</span><span class="op">$</span><span class="va">residual_gls</span>, breaks <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell quarto-layout-panel" data-layout-ncol="2" data-layout-align="center">
-<div class="quarto-layout-row">
-<div class="cell-output cell-output-stdout quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/car/man/qqPlot.html">qqPlot</a></span><span class="op">(</span><span class="va">model_data</span><span class="op">$</span><span class="va">residual_gls</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
 <pre><code>[1] 1843 1218</code></pre>
 </div>
-<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-glsresids-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-glsresids-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="fig-glsresids" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-glsresids-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="02-GLS_CAR_GLMM_files/figure-html/fig-glsresids-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-glsresids-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-glsresids-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;2.7: Distribution des résidus du modèle GLS
 </figcaption></figure>
 </div>
 </div>
 </div>
-<div class="quarto-layout-row">
-<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-glsresids-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-glsresids-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="02-GLS_CAR_GLMM_files/figure-html/fig-glsresids-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-glsresids-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.8: Distribution des résidus du modèle GLS
-</figcaption></figure>
-</div>
-</div>
-</div>
-</div>
-<p>La figure <span class="quarto-unresolved-ref">?fig-glsresids</span> indique que les résidus semblent suivre une distribution très proche d’une distribution normale. Il semble qu’une observation pourrait être considérée comme une valeur abhérrente.</p>
+<p>La figure <a href="#fig-glsresids" class="quarto-xref">figure&nbsp;<span>2.7</span></a> indique que les résidus semblent suivre une distribution très proche d’une distribution normale. Il semble qu’une observation pourrait être considérée comme une valeur abhérrente.</p>
 <div class="cell">
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">model_data</span>, <span class="va">model_data</span><span class="op">$</span><span class="va">residual_gls</span> <span class="op">&lt;</span> <span class="op">-</span><span class="fl">6</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1063,7 +1048,7 @@ metro_500mYES
 </table>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-glsresids2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.9: Distribution des résidus du modèle GLS
+Figure&nbsp;2.8: Distribution des résidus du modèle GLS
 </figcaption></figure>
 </div>
 </div>
@@ -1108,7 +1093,7 @@ Figure&nbsp;2.9: Distribution des résidus du modèle GLS
 <img src="02-GLS_CAR_GLMM_files/figure-html/fig-carexamples-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-carexamples-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.10: Exemple de différentes réalisation d’une variable suivant un modèle CAR
+Figure&nbsp;2.9: Exemple de différentes réalisation d’une variable suivant un modèle CAR
 </figcaption></figure>
 </div>
 </div>
@@ -1190,7 +1175,7 @@ alternative hypothesis: greater</code></pre>
 <img src="02-GLS_CAR_GLMM_files/figure-html/fig-carresid-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-carresid-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.11: Résidus du modèle CAR
+Figure&nbsp;2.10: Résidus du modèle CAR
 </figcaption></figure>
 </div>
 </div>
@@ -1303,7 +1288,7 @@ R2 de Nagelkerke = 0,891.</td>
 <img src="02-GLS_CAR_GLMM_files/figure-html/fig-carresid2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-carresid2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.12: Résidus du modèle CAR
+Figure&nbsp;2.11: Résidus du modèle CAR
 </figcaption></figure>
 </div>
 </div>
@@ -1312,7 +1297,7 @@ Figure&nbsp;2.12: Résidus du modèle CAR
 </section></section><section id="sec-023" class="level2" data-number="2.3"><h2 data-number="2.3" class="anchored" data-anchor-id="sec-023">
 <span class="header-section-number">2.3</span> Modèles Généralisés à Effets Mixtes</h2>
 <p>Nous venons de voir qu’un modèle GLS ou un modèle CAR est construit en modifiant la structure de covariance d’un modèle linéaire classique assumant une distribution normale. Le principe de la structure de covariance est difficile à généraliser pour des distributions autres que la distribution normale. Dans ce contexte, il est difficile d’utiliser ces modèles pour des variables binaires, de comptages ou multinomiale et plus généralement d’introduire la prise en compte de l’espace dans un modèle GLM via la modification de la structure de covariance.</p>
-<section id="du-gls-et-du-car-aux-glmm" class="level3" data-number="2.3.1"><h3 data-number="2.3.1" class="anchored" data-anchor-id="du-gls-et-du-car-aux-glmm">
+<section id="sec-0231" class="level3" data-number="2.3.1"><h3 data-number="2.3.1" class="anchored" data-anchor-id="sec-0231">
 <span class="header-section-number">2.3.1</span> Du GLS et du CAR aux GLMM</h3>
 <p>Nous allons montrer ci-dessous comment les modèles GLS et CAR peuvent être reformulés comme des modèles GLMM. Notez que cette explication est relativement simplifiée car elle ne tient pas compte du fait que ces modèles utilisent différentes approches d’estimation.</p>
 <p>Si nous reprenons notre formulation des modèles GLS et CAR, nous pouvons rassembler les deux formulations en une.</p>
@@ -1363,52 +1348,11 @@ Figure&nbsp;2.12: Résidus du modèle CAR
 <p>Pour plus de détail sur les modèles à effets mixtes et comment ils sont notamment utilisés pour tenir compte de structures hiérarchiques vous pouvez vous référex au <a href="https://serieboldr.com/MethodesQuantitatives/09-GLMM.html">chapitre sur les GLMM</a> du livre <em>Méthodes quantitatives en sciences sociales&nbsp;: un grand bol d’R</em> <span class="citation" data-cites="RBoldAirMethodesQuanti">(<a href="references.html#ref-RBoldAirMethodesQuanti" role="doc-biblioref">Apparicio et Gelb 2022</a>)</span>.</p>
 </div>
 </div>
-</section><section id="mise-en-oeuvre-dans-r" class="level3" data-number="2.3.2"><h3 data-number="2.3.2" class="anchored" data-anchor-id="mise-en-oeuvre-dans-r">
+</section><section id="sec-0232" class="level3" data-number="2.3.2"><h3 data-number="2.3.2" class="anchored" data-anchor-id="sec-0232">
 <span class="header-section-number">2.3.2</span> Mise en oeuvre dans R</h3>
-<p>Nous illustrons ici comment un modèle GLMM peut être construit avec un effet spatial. Pour cela, nous allons tenté de reproduire les résultats de l’étude de <span class="citation" data-cites="kaashoek2022evolving">Kaashoek et al. (<a href="references.html#ref-kaashoek2022evolving" role="doc-biblioref">2022</a>)</span>. Dans cet article, les auteurs cherchent à déterminer quels sont les facteurs socio-économiques, politiques, et sanitaires qui ont été associés avec une prévalence de décès de COVID19 dans les différents contés des États-Unis. Les données de l’article ont été publiées en <a href="https://github.com/ctesta01/spatial_poisson_covid/tree/main">accès ouvert</a>. Nous nous concentrons spécifiquement sur le modèle spatial appliqué à la troisième période d’étude.</p>
-<p>L’objectif du modèle est donc de prédire le nombre de décès de COVID19 par conté pour la période octobre 2020 à février 2021. Il s’agit de la période pendant laquelle le nombre de cas était le plus élevé pour l’ensemble du pays. La première période correspond aux premiers pics épidémiques (férvier - mai 2020) et à l’apparition des premiers clusters de contagions. La seconde période a été marquée par l’adoption des premières mesures sanitaires et une poursuite de la contamination vers les états plus éloignés et moins peuplés.</p>
-<p>Les variables intégrées peuvent être regroupées dans trois groupes:</p>
-<ol type="1">
-<li>Les variables socio-démographiques. L’hypothèse originale étant que dans les milieux plus défavorisés et moins éduqués, l’épidémie a fait plus de victimes. De même, les personnes âgées étaient particulièrement à risque pendant la pendémie, ainsi que les personnes fragilisées vivant dans des établissements de soin.</li>
-</ol>
-<ul>
-<li>
-<code>income</code>: le niveau de revenu médian ($)</li>
-<li>
-<code>per_black</code>: le pourcentage de la population étant afro-américaine</li>
-<li>
-<code>per_hispanic</code>: le pourcentage de la population étant hispanique</li>
-<li>
-<code>per_atleast_hs</code>: la part de la population disposant d’un dilôme de fin d’étude secondaire</li>
-<li>
-<code>X65plus</code>: part de la population ayant 65 ans et plus</li>
-<li>
-<code>per_nursing</code>: part de la population vivant dans des établissements de soin</li>
-</ul>
-<ol start="2" type="1">
-<li>Les variables politiques. L’hypothèse originale est que certains partis politiques ont moins mis en place de mesures sanitaires ce qui a eu un impact sur le nombre de décès dans les contés. Les comportements de la population ont aussi été affectés par les orientations politiques menant à une adoption moins systématique par exemple des gestes barrières.</li>
-</ol>
-<ul>
-<li>
-<code>political_leaning</code>: le niveau d’orientation politique, calculé comme la différence entre les votes républicains (votes pour Donald Trump) et les votes démocrates (votes pour Joe Biden), divisé par le total de votant. Une valeur positive indique un état avec une tendance plus républicaine et une valeur négative indique à état à tendance plus démocrate. Ces données proviennent des données électorale du New York Times de 2020.</li>
-<li>
-<code>strict_p3</code>: le niveau d’intensité de mise en place de mesures sanitaires. Il s’agit d’un score développé par le <em>Oxford COVID-19 Government Response Tracker</em> avec des valeurs allant de 0 (absence de mesures) à 100 (mesures les plus importantes). Ces données sont obtenues à l’échelle des États.</li>
-</ul>
-<ol start="3" type="1">
-<li>Les variables de contagions. Plusieurs facteurs expliquent la propagation de la maladie tels que la proximité aux aéroports, les niveaux de mobilité dans les contés ou encore le port du masque.</li>
-</ol>
-<ul>
-<li>
-<code>density</code>: la densité de population du conté</li>
-<li>
-<code>google_p3</code>: les niveaux de mobilité pour le motif travail selon les données de Google Mobility. Cet indicateur est comparatif par rapport à une tendance habituelle et est exprimé en pourcentage. Une mobilité plus importante serait associée à une moins bonne distanciation sociale entre individus de ménages différents.</li>
-<li>
-<code>dist_to_airport</code>: la distance à l’aéroport internationnal le plus proche.</li>
-<li>
-<code>mask_usage_p3</code>: estimation de la proportion des personnes portant le masque la plupart du temps ou tout le temps en public. Ces données proviennent d’une enquête effectuée par Facebook (<em>Facebook’s COVID-19 symptom survey</em>).</li>
-</ul>
-<p>Les cartes ci-dessous illustrent la variable dépendante (taux de décès) et trois variables indépendantes.</p>
-<div class="cell" data-layout-align="center">
+<p>Nous illustrons ici comment un modèle GLMM peut être construit avec un effet spatial. Pour cela, nous allons tenté de reproduire les résultats de l’étude de <span class="citation" data-cites="kaashoek2022evolving">Kaashoek et al. (<a href="references.html#ref-kaashoek2022evolving" role="doc-biblioref">2022</a>)</span> avec le jeu de donnée décrit à la section <a href="01-NotionsDeBase.html#sec-0114" class="quarto-xref"><span>Section 1.1.4</span></a>.</p>
+<p>Pour nous rapprocher le plus possible de l’analyse effectuée par les auteurs, nous allons utiliser la même stratégie de modélisation de la variable dépendante. Plutôt que de modéliser directement le taux de décès, nous allons modéliser le nombre de décès selon une distribution Poisson en intégrant dans l’équation de régression le nombre d’habitants. Cette stratégie est appelée un <em>offset</em> et permet de modéliser directement le taux de décès via un modèle Poisson en contrôlant pour le fait que dans certain conté, une plus grande population va nécessaire produire un plus grand nombde de décés.</p>
+<div class="cell">
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/">tmap</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -1434,112 +1378,8 @@ Figure&nbsp;2.12: Résidus du modèle CAR
 <span></span>
 <span><span class="co"># Matrice de de contiguïté selon le partage d'un nœud </span></span>
 <span><span class="va">queen_nb</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/poly2nb.html">poly2nb</a></span><span class="op">(</span><span class="va">covid_data</span>, queen <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">queen_w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">queen_nb</span>, style <span class="op">=</span> <span class="st">'W'</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Calcul du I de moran de la variable ratio</span></span>
-<span><span class="va">moran_i</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="va">covid_data</span><span class="op">$</span><span class="va">rate_3</span>, </span>
-<span>                    listw <span class="op">=</span> <span class="va">queen_w</span>,</span>
-<span>                    na.action <span class="op">=</span> <span class="va">na.omit</span>,</span>
-<span>                    zero.policy <span class="op">=</span> <span class="cn">TRUE</span>, nsim <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Texte pour la valeur du I de Moran</span></span>
-<span><span class="va">moran_text</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">moran_i</span><span class="op">$</span><span class="va">statistic</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span> , decimal.mark <span class="op">=</span><span class="st">","</span><span class="op">)</span></span>
-<span></span>
-<span></span>
-<span><span class="co"># Cartographie de la variable</span></span>
-<span><span class="va">map1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">covid_data</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"rate_3"</span>, n <span class="op">=</span> <span class="fl">7</span>,</span>
-<span>          style <span class="op">=</span> <span class="st">"jenks"</span>,</span>
-<span>          legend.format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>text.separator <span class="op">=</span> <span class="st">"à"</span>, </span>
-<span>                               decimal.mark <span class="op">=</span> <span class="st">","</span>, </span>
-<span>                               big.mark <span class="op">=</span> <span class="st">" "</span>,</span>
-<span>                               digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
-<span>          palette <span class="op">=</span> <span class="st">"YlOrBr"</span>, title <span class="op">=</span> <span class="st">'taux de décès'</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span>, legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_scale_bar.html">tm_scale_bar</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/axis_labels.html">tm_xlab</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'I de Moran = '</span>, <span class="va">moran_text</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span></span>
-<span><span class="co"># Calcul du I de moran de la variable</span></span>
-<span><span class="va">moran_i</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="va">covid_data</span><span class="op">$</span><span class="va">political_leaning</span>, </span>
-<span>                    listw <span class="op">=</span> <span class="va">queen_w</span>,</span>
-<span>                    na.action <span class="op">=</span> <span class="va">na.omit</span>,</span>
-<span>                    zero.policy <span class="op">=</span> <span class="cn">TRUE</span>, nsim <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Texte pour la valeur du I de Moran</span></span>
-<span><span class="va">moran_text</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">moran_i</span><span class="op">$</span><span class="va">statistic</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span> , decimal.mark <span class="op">=</span><span class="st">","</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">map2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">covid_data</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"political_leaning"</span>, n <span class="op">=</span> <span class="fl">7</span>,</span>
-<span>          style <span class="op">=</span> <span class="st">"equal"</span>,</span>
-<span>          midpoint <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>          legend.format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>text.separator <span class="op">=</span> <span class="st">"à"</span>, </span>
-<span>                               decimal.mark <span class="op">=</span> <span class="st">","</span>, </span>
-<span>                               big.mark <span class="op">=</span> <span class="st">" "</span>,</span>
-<span>                               digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
-<span>          palette <span class="op">=</span> <span class="st">"-RdBu"</span>, title <span class="op">=</span> <span class="st">'orientation politique'</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span>, legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_scale_bar.html">tm_scale_bar</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/axis_labels.html">tm_xlab</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'I de Moran = '</span>, <span class="va">moran_text</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span></span>
-<span><span class="co"># Calcul du I de moran de la variable</span></span>
-<span><span class="va">moran_i</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="va">covid_data</span><span class="op">$</span><span class="va">strict_p3</span>, </span>
-<span>                    listw <span class="op">=</span> <span class="va">queen_w</span>,</span>
-<span>                    na.action <span class="op">=</span> <span class="va">na.omit</span>,</span>
-<span>                    zero.policy <span class="op">=</span> <span class="cn">TRUE</span>, nsim <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Texte pour la valeur du I de Moran</span></span>
-<span><span class="va">moran_text</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">moran_i</span><span class="op">$</span><span class="va">statistic</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span> , decimal.mark <span class="op">=</span><span class="st">","</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">map3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">covid_data</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span>col<span class="op">=</span><span class="st">"strict_p3"</span>, n <span class="op">=</span> <span class="fl">7</span>,</span>
-<span>          style <span class="op">=</span> <span class="st">"jenks"</span>,</span>
-<span>          legend.format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>text.separator <span class="op">=</span> <span class="st">"à"</span>, </span>
-<span>                               decimal.mark <span class="op">=</span> <span class="st">","</span>, </span>
-<span>                               big.mark <span class="op">=</span> <span class="st">" "</span>,</span>
-<span>                               digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
-<span>          palette <span class="op">=</span> <span class="st">"Greens"</span>, title <span class="op">=</span> <span class="st">'mesures sanitaires'</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span>, legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_scale_bar.html">tm_scale_bar</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/axis_labels.html">tm_xlab</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'I de Moran = '</span>, <span class="va">moran_text</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span></span>
-<span><span class="co"># Calcul du I de moran de la variable</span></span>
-<span><span class="va">moran_i</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/moran.mc.html">moran.mc</a></span><span class="op">(</span><span class="va">covid_data</span><span class="op">$</span><span class="va">google_p3</span>, </span>
-<span>                    listw <span class="op">=</span> <span class="va">queen_w</span>,</span>
-<span>                    na.action <span class="op">=</span> <span class="va">na.omit</span>,</span>
-<span>                    zero.policy <span class="op">=</span> <span class="cn">TRUE</span>, nsim <span class="op">=</span> <span class="fl">999</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Texte pour la valeur du I de Moran</span></span>
-<span><span class="va">moran_text</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">moran_i</span><span class="op">$</span><span class="va">statistic</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span> , decimal.mark <span class="op">=</span><span class="st">","</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">map4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">covid_data</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span><span class="st">"google_p3"</span>, n <span class="op">=</span> <span class="fl">6</span>,</span>
-<span>          legend.format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>text.separator <span class="op">=</span> <span class="st">"à"</span>, </span>
-<span>                               decimal.mark <span class="op">=</span> <span class="st">","</span>, </span>
-<span>                               big.mark <span class="op">=</span> <span class="st">" "</span>,</span>
-<span>                               digits <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,</span>
-<span>          title <span class="op">=</span> <span class="st">'mobilité'</span></span>
-<span>          <span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame<span class="op">=</span><span class="cn">FALSE</span>, legend.outside <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_scale_bar.html">tm_scale_bar</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/axis_labels.html">tm_xlab</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'I de Moran = '</span>, <span class="va">moran_text</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span></span>
-<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tmap_arrange.html">tmap_arrange</a></span><span class="op">(</span><span class="va">map1</span>, <span class="va">map2</span>, <span class="va">map3</span>, <span class="va">map4</span>, ncol <span class="op">=</span> <span class="fl">2</span>, nrow <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div id="fig-expcar1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-expcar1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="02-GLS_CAR_GLMM_files/figure-html/fig-expcar1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
+<span><span class="va">queen_w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">queen_nb</span>, style <span class="op">=</span> <span class="st">'W'</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-expcar1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.13: Distribution spatiale de différentes données utilisées pour le modèle
-</figcaption></figure>
-</div>
-</div>
-</div>
-<p>Pour nous rapprocher le plus possible de l’analyse effectuée par les auteurs, nous allons utiliser la même stratégie de modélisation de la variable dépendante. Plutôt que de modéliser directement le taux de décès, nous allons modéliser le nombre de décès selon une distribution Poisson en intégrant dans l’équation de régression le nombre d’habitants. Cette stratégie est appelée un <em>offset</em> et permet de modéliser directement le taux de décès via un modèle Poisson en contrôlant pour le fait que dans certain conté, une plus grande population va nécessaire produire un plus grand nombde de décés.</p>
 <p>Nous commençons donc par ajuster un modèle non spatial.</p>
 <div class="cell">
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">data_mode1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span><span class="op">(</span><span class="va">covid_data</span><span class="op">)</span></span>
@@ -1564,12 +1404,12 @@ Figure&nbsp;2.13: Distribution spatiale de différentes données utilisées pour
 <img src="02-GLS_CAR_GLMM_files/figure-html/fig-poiss1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-poiss1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.14: Distribution des résidus simulés du modèle poisson
+Figure&nbsp;2.12: Distribution des résidus simulés du modèle poisson
 </figcaption></figure>
 </div>
 </div>
 </div>
-<p>La figure <a href="#fig-poiss1" class="quarto-xref">figure&nbsp;<span>2.14</span></a> indique clairement un problème dans la distribution des résidus simulés du modèle. Ces derniers sont bien plus dispersés que ce que suppose un modèle Poisson. Ce phénomène peut s’expliquer par la présence d’autocorrélation spatiale dans les résidus (variance supplémentaire non prise en compte) mais aussi par une mauvaise spécification du modèle. Dans ce contexte, il convient de tester un autre distribution, soit la distribution négative binomiale.</p>
+<p>La figure <a href="#fig-poiss1" class="quarto-xref">figure&nbsp;<span>2.12</span></a> indique clairement un problème dans la distribution des résidus simulés du modèle. Ces derniers sont bien plus dispersés que ce que suppose un modèle Poisson. Ce phénomène peut s’expliquer par la présence d’autocorrélation spatiale dans les résidus (variance supplémentaire non prise en compte) mais aussi par une mauvaise spécification du modèle. Dans ce contexte, il convient de tester un autre distribution, soit la distribution négative binomiale.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_nb</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/spaMM/man/fitme.html">fitme</a></span><span class="op">(</span></span>
 <span>  <span class="va">deaths_3</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/stats/offset.html">offset</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">population</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
@@ -1589,12 +1429,12 @@ Figure&nbsp;2.14: Distribution des résidus simulés du modèle poisson
 <img src="02-GLS_CAR_GLMM_files/figure-html/fig-nb1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-nb1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.15: Distribution des résidus simulés du modèle négatif binomial
+Figure&nbsp;2.13: Distribution des résidus simulés du modèle négatif binomial
 </figcaption></figure>
 </div>
 </div>
 </div>
-<p>La figure <a href="#fig-nb1" class="quarto-xref">figure&nbsp;<span>2.15</span></a> indique une bien meilleure distribution des résidus. Nous pouvons donc maintenant nous intéresser à l’éventuelle autocorrélation spatiale des résidus. Notez que puisque notre modèle assume une distribution négative binomiale, nous utilisons les résidus de Pearson pour tester l’autocorrélation spatiale puisque ceux-ci sont standardisés et tiennent compte de l’hétéroscédasticité des résidus.</p>
+<p>La figure <a href="#fig-nb1" class="quarto-xref">figure&nbsp;<span>2.13</span></a> indique une bien meilleure distribution des résidus. Nous pouvons donc maintenant nous intéresser à l’éventuelle autocorrélation spatiale des résidus. Notez que puisque notre modèle assume une distribution négative binomiale, nous utilisons les résidus de Pearson pour tester l’autocorrélation spatiale puisque ceux-ci sont standardisés et tiennent compte de l’hétéroscédasticité des résidus.</p>
 <div class="cell">
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">queen_nb</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/poly2nb.html">poly2nb</a></span><span class="op">(</span><span class="va">data_mode1</span>, queen <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">queen_w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html">nb2listw</a></span><span class="op">(</span><span class="va">queen_nb</span>, style <span class="op">=</span> <span class="st">'W'</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -1648,7 +1488,7 @@ data:  residuals(model_car, type = "pearson")
 weights: queen_w  
 number of simulations + 1: 1000 
 
-statistic = -0.018803, observed rank = 56, p-value = 0.944
+statistic = -0.018803, observed rank = 68, p-value = 0.932
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
@@ -1697,7 +1537,7 @@ alternative hypothesis: greater</code></pre>
 <img src="02-GLS_CAR_GLMM_files/figure-html/fig-nb2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-nb2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.16: Valeurs ajustées de l’effet aléatoire spatial CAR
+Figure&nbsp;2.14: Valeurs ajustées de l’effet aléatoire spatial CAR
 </figcaption></figure>
 </div>
 </div>
@@ -1914,7 +1754,7 @@ alternative hypothesis: greater</code></pre>
 </div>
 </div>
 <p>Pour le modèle avec la structure de corrélation Cauchy,les résidus semblent encore moins bien distribués. Il faudrait donc probablement éviter de se fier à ce troisième modèle.</p>
-<p>La figure <a href="#fig-glmmcorstruct" class="quarto-xref">figure&nbsp;<span>2.17</span></a> illustre la fonction de corrélation ajustée pour les deux modèles pour leurs effets aléatoires. Nous représentons notamment la corrélation selon la distance, mais aussi une illustration en montrant la corrélation attendue en prenant un conté de référence. Notez ici que le package <code>spaMM</code> applique une transformation aux distances lors du calcul de la matrice de covariance spatiale de l’effet aléatoire. Pour retrouver ces distances, il est nécessaire de passer par la fonction <code>make_scaled_dist</code>.</p>
+<p>La figure <a href="#fig-glmmcorstruct" class="quarto-xref">figure&nbsp;<span>2.15</span></a> illustre la fonction de corrélation ajustée pour les deux modèles pour leurs effets aléatoires. Nous représentons notamment la corrélation selon la distance, mais aussi une illustration en montrant la corrélation attendue en prenant un conté de référence. Notez ici que le package <code>spaMM</code> applique une transformation aux distances lors du calcul de la matrice de covariance spatiale de l’effet aléatoire. Pour retrouver ces distances, il est nécessaire de passer par la fonction <code>make_scaled_dist</code>.</p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># récupération des distances </span></span>
 <span><span class="va">dists_4326</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/spaMM/man/make.scaled.dist.html">make_scaled_dist</a></span><span class="op">(</span><span class="va">lonlat</span>, rho <span class="op">=</span> <span class="fl">1</span>, return_matrix <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
@@ -2034,7 +1874,7 @@ alternative hypothesis: greater</code></pre>
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-glmmcorstruct-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.17: Structures de corrélations ajustées par le modèle
+Figure&nbsp;2.15: Structures de corrélations ajustées par le modèle
 </figcaption></figure>
 </div>
 <p>Nous pouvons observer que la fonction de corrélation Cauchy est probalement peu adaptée à nos données. Elle semble bien trop lisser les résultats en autorisant des corrélations importantes entre des contés éloignés.</p>
@@ -2160,7 +2000,7 @@ Figure&nbsp;2.17: Structures de corrélations ajustées par le modèle
 <img src="02-GLS_CAR_GLMM_files/figure-html/fig-glmmRESp-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-glmmRESp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.18: Cartographie des effets aléatoires Matern et Cauchy
+Figure&nbsp;2.16: Cartographie des effets aléatoires Matern et Cauchy
 </figcaption></figure>
 </div>
 </div>
@@ -2212,12 +2052,22 @@ Figure&nbsp;2.18: Cartographie des effets aléatoires Matern et Cauchy
 </table>
 </div>
 </div>
+<div class="bloc_notes">
+<div class="bloc_notes-header">
+<div class="bloc_notes-icon">
+
+</div>
+<p><strong>Bloc notes</strong></p>
+</div>
+<div class="bloc_notes-body">
 <p>Le package <code>spAMM</code> donne plusieurs version du <em>AIC</em> pour la sélection de modèle. Le <em>AIC</em> conditionnel et le <em>AIC</em> marginal ont des visées différentes et peuvent être privilégiés selon les objectifs de l’étude.</p>
 <ol type="1">
 <li>Le <em>AIC</em> <strong>marginal</strong> considère que les effet aléatoires ne sont pas observés et sont donc <em>marginalisés</em> dans son calcul. Il est préférable de l’utiliser lorsque l’on s’intéresse avant tout aux effets fixes du modèle ou lorsque les prédictions porteront sur de nouvelles observations qui ne faisaient pas partie des données originales.</li>
 <li>Le <em>AIC</em> <strong>conditionnel</strong> considère que les effets aléatoires ont été observés, son calcul est donc conditionné par les valeurs des effets aléatoires. Il est préférable de l’utiliser si les prédictions futures se feront sur des entités déjà observées et dont l’effet propre est connu. Typiquement, lorsque des splines pénalisées sont intégrées dans un modèle pour faire du lissage et sont estimées comme des effets aléatoires, le <em>AIC</em> conditionnel est préféré <span class="citation" data-cites="safken2021conditional">(<a href="references.html#ref-safken2021conditional" role="doc-biblioref">Säfken et al. 2021</a>)</span>.</li>
 </ol>
 <p>Dans notre contexte, les effets aléatoires spatiaux reposent tous sur l’hypothèse d’autocorrélation spatiale et impose une forme de lissage dans l’espace. De plus, le nombre de contés est limité. Il serait donc plus pertinent de se baser sur le <em>AIC</em> conditionnel pour déterminer le meilleur modèle. Le modèle <em>CAR</em> semble donc le mieux ajusté. Rappelons qu’il s’agit aussi du modèle pour lequel les résidus simulés étaient le mieux distribués.</p>
+</div>
+</div>
 <div class="cell">
 <div class="sourceCode" id="cb46"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://haozhu233.github.io/kableExtra/">kableExtra</a></span><span class="op">)</span></span>
 <span></span>

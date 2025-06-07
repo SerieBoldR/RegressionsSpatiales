@@ -1,0 +1,47 @@
+- label: "Un modèle dont les coefficients varient spatialement permet de: "
+  type: mc
+  response: [1,3]
+  answers:
+     - "Réduire l'autocorrélation spatiale résiduelle"
+     - "Améliorer l'homoscédasticité des résidus"
+     - "Contrôler l'hétérogénéité spatiale"
+     - "Filtrer les effets spatiaux du modèle"
+  help: "Relisez au besoin la [section @sec-chap10]."
+  
+- label: "Comment un GAM permet de faire varier spatialement un coefficient ?"
+  type: uc
+  response: [3]
+  answers:
+     - "En définissant une bandwidth qui permettra de faire varier spatialement la contribution des différentes observations"
+     - "En ajoutant une spline bivariée sur les coordonnées géographiques"
+     - "En ajoutant une spline bivariée sur les coordonnées géographiques en interaction avec une variable indépendante"
+  help: "Relisez au besoin la [section @sec-1011]."
+  
+- label: "Quels sont les risques associés avec l'ajout de splines pour faire varier spatialement les coefficients d'un modèle GAM?"
+  type: mc
+  response: [2,3]
+  answers:
+     - "La réduction de la qualité d'ajustement"
+     - "L'augmentation de la complexité du modèle"
+     - "La concurvité entre plusieurs termes spatiaux"
+  help: "Relisez au besoin la [section @sec-1011]."
+
+- label: "Pourquoi est-il important de vérifier la significativité locale des paramètres d'une spline spatiale?"
+  type: mc
+  response: [2,3]
+  answers:
+     - "Le test général de significativité d'une spline tend à être optimiste"
+     - "Même si une spline a un effet général significatif, il est possible que ses effets locaux ne soient pas significativement différents de zéro"
+     - "Ne pas tenir compte de la significativité locale risque d'entrainer une sur-interprétation des résultats"
+  help: "Relisez au besoin la [section @sec-1011]."
+
+- label: "Dans un modèle GLMM, comment les effets aléatoires permettent-ils de capturer la variation spatiale d'un coefficient?"
+  type: mc
+  response: [1,2]
+  answers:
+     - "En ajustant un effet aléatoire avec une structure de covariance spatiale sur le coefficient en question"
+     - "En ajoutant au modèle un processus gaussien sur le coefficient en question"
+     - "En ajoutant une interaction entre le coefficients en question et les coordonnées géographiques"
+     - "En ajoutant des fonctions de base spatiales combinées au coefficient en question"
+  help: "Relisez au besoin la [section @sec-1031]."
+  

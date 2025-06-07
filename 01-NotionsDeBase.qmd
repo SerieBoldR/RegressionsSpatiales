@@ -110,7 +110,7 @@ knitr::kable(stats,
 			format = "markdown")
 ```
 
-### Jeu de données sur la région métropolitaine de Montréal {#sec-0112}
+### Jeu de données sur les parts modales de la région métropolitaine de Montréal {#sec-0112}
 
 Deuxièmement, nous utiliserons un jeu de données spatiales sur les parts modales dans la région de Montréal extraites du recensement de 2021 de Statistique Canada pour la région métropolitaine de Montréal (@tbl-Mtl). En guise d'exemple, les proportions des navetteurs utilisant respectivement le transport en commun et l'automobile par secteur de recensement sont présentées à la @fig-datamtlCarto.
 
@@ -217,8 +217,6 @@ tmap_arrange(carte1, carte2, carte3, ncol=2, nrow=2)
 ```
 
 
-
-
 ### Jeu de données sur Barcelone {#sec-0113}
 
 Troisièmement, nous utiliserons un jeu de données spatiales (`Barcelone`) pour la ville de Barcelone (Catalogne, Espagne). Ce jeu de données spatiales comprend 14 variables, dont cinq environnementales (EN), six socioéconomiques (SE), une géographique (GE) et un variable binaire (BI), pour les 1068 entités polygonales de recensement formant la ville de Barcelone (@tbl-Barcelone et @fig-datacarto).
@@ -271,6 +269,225 @@ knitr::kable(stats,
 ```
 
 ![Cartographie des variables du jeu de données de Barcelone](images/Chap01/FigureDataBarcelone.png){#fig-barceloneCarto width="100%" fig-align="center"}
+
+### Jeu de données sur les taux de décès dde la COVID19 dans les comtés des États-Unis {#sec-0114}
+
+Quatrièmement, nous utiliserons un jeu mis l'étude de @kaashoek2022evolving. Dans cet article, les auteurs cherchent à déterminer quels sont les facteurs socio-économiques, politiques, et sanitaires qui ont été associés avec une prévalence de décès de COVID19 dans les différents comtés des États-Unis. Les données de l'article ont été publiées en [accès ouvert](https://github.com/ctesta01/spatial_poisson_covid/tree/main). Nous nous concentrons spécifiquement sur les données utilisées pour réaliser modèle spatial appliqué à la troisième période d'étude.
+
+L'objectif de ce modèle est donc de prédire le nombre de décès de COVID19 par comté pour la période octobre 2020 à février 2021. Il s'agit de la période pendant laquelle le nombre de cas était le plus élevé pour l'ensemble du pays. La première période correspond aux premiers pics épidémiques (férvier - mai 2020) et à l'apparition des premiers clusters de contagions. La seconde période a été marquée par l'adoption des premières mesures sanitaires et une poursuite de la contamination vers les états plus éloignés et moins peuplés. 
+
+Les variables intégrées peuvent être regroupées dans trois groupes : 
+
+1. Les variables socio-démographiques. L'hypothèse originale étant que dans les milieux plus défavorisés et moins éduqués, l'épidémie a fait plus de victimes. De même, les personnes âgées étaient particulièrement à risque pendant la pendémie, ainsi que les personnes fragilisées vivant dans des établissements de soin.
+
+* `income` : le niveau de revenu médian ($)
+* `per_black` : le pourcentage de la population étant afro-américaine
+* `per_hispanic` : le pourcentage de la population étant hispanique
+* `per_atleast_hs` : la part de la population disposant d'un dilôme de fin d'étude secondaire
+* `X65plus` : part de la population ayant 65 ans et plus
+* `per_nursing` : part de la population vivant dans des établissements de soin
+
+2. Les variables politiques. L'hypothèse originale est que certains partis politiques ont moins mis en place de mesures sanitaires ce qui a eu un impact sur le nombre de décès dans les contés. Les comportements de la population ont aussi été affectés par les orientations politiques menant à une adoption moins systématique par exemple des gestes barrières.
+
+* `political_leaning` : le niveau d'orientation politique, calculé comme la différence entre les votes républicains (votes pour Donald Trump) et les votes démocrates (votes pour Joe Biden), divisé par le total de votant. Une valeur positive indique un état avec une tendance plus républicaine et une valeur négative indique à état à tendance plus démocrate. Ces données proviennent des données électorale du New York Times de 2020.
+* `strict_p3` : le niveau d'intensité de mise en place de mesures sanitaires. Il s'agit d'un score développé par le *Oxford COVID-19 Government Response Tracker* avec des valeurs allant de 0 (absence de mesures) à 100 (mesures les plus importantes). Ces données sont obtenues à l'échelle des États.
+
+3. Les variables de contagions. Plusieurs facteurs expliquent la propagation de la maladie tels que la proximité aux aéroports, les niveaux de mobilité dans les contés ou encore le port du masque.
+
+* `density` : la densité de population du conté
+* `google_p3` : les niveaux de mobilité pour le motif travail selon les données de Google Mobility. Cet indicateur est comparatif par rapport à une tendance habituelle et est exprimé en pourcentage. Une mobilité plus importante serait associée à une moins bonne distanciation sociale entre individus de ménages différents.
+* `dist_to_airport` : la distance à l'aéroport internationnal le plus proche.
+* `mask_usage_p3` : estimation de la proportion des personnes portant le masque la plupart du temps ou tout le temps en public. Ces données proviennent d'une enquête effectuée par Facebook (*Facebook’s COVID-19 symptom survey*).
+
+Les cartes ci-dessous illustrent la variable dépendante (taux de décès) et trois variables indépendantes. 
+
+```{r}
+#| echo: false 
+#| message: false 
+#| eval: true
+#| warning: false
+#| label: fig-expcar1
+#| fig-cap: Distribution spatiale de différentes données utilisées pour le modèle
+#| fig-align: center
+
+
+library(sf, quietly = TRUE)
+library(ggplot2, quietly = TRUE)
+library(tmap, quietly = TRUE)
+library(dplyr, quietly = TRUE)
+library(spaMM, quietly = TRUE)
+library(spdep, quietly = TRUE)
+library(DHARMa, quietly = TRUE)
+
+# Chargement des données
+covid_data <- readRDS('data/chap02/covid_usa.rds')
+
+# recodage des valeurs négatives pour le nombre de décès
+covid_data$deaths_3 <- ifelse(covid_data$deaths_3 < 0, 
+                              0, 
+                              covid_data$deaths_3
+                              )
+
+# conservation uniquement des contés unique
+covid_data <- covid_data %>% 
+  group_by(FIPS) %>% 
+  slice_head(n = 1)
+  
+
+# Matrice de de contiguïté selon le partage d'un nœud 
+queen_nb <- poly2nb(covid_data, queen = TRUE)
+queen_w <- nb2listw(queen_nb, style = 'W', zero.policy = TRUE)
+
+# Calcul du I de moran de la variable ratio
+moran_i <- moran.mc(covid_data$rate_3, 
+                    listw = queen_w,
+                    na.action = na.omit,
+                    zero.policy = TRUE, nsim = 999)
+
+# Texte pour la valeur du I de Moran
+moran_text <- format(as.numeric(round(moran_i$statistic,3)) , decimal.mark =",")
+
+
+# Cartographie de la variable
+map1 <- tm_shape(covid_data) +
+  tm_fill(col="rate_3", n = 7,
+          style = "jenks",
+          legend.format = list(text.separator = "à", 
+                               decimal.mark = ",", 
+                               big.mark = " ",
+                               digits = 2),
+          palette = "YlOrBr", title = 'taux de décès') +
+  tm_layout(frame=FALSE, legend.outside = TRUE) + 
+  tm_scale_bar(breaks = c(0,10)) + 
+  tm_xlab(paste0('I de Moran = ', moran_text))
+
+
+# Calcul du I de moran de la variable
+moran_i <- moran.mc(covid_data$political_leaning, 
+                    listw = queen_w,
+                    na.action = na.omit,
+                    zero.policy = TRUE, nsim = 999)
+
+# Texte pour la valeur du I de Moran
+moran_text <- format(as.numeric(round(moran_i$statistic,3)) , decimal.mark =",")
+
+map2 <- tm_shape(covid_data) +
+  tm_fill(col="political_leaning", n = 7,
+          style = "equal",
+          midpoint = 0,
+          legend.format = list(text.separator = "à", 
+                               decimal.mark = ",", 
+                               big.mark = " ",
+                               digits = 2),
+          palette = "-RdBu", title = 'orientation politique') +
+  tm_layout(frame=FALSE, legend.outside = TRUE) + 
+  tm_scale_bar(breaks = c(0,10)) + 
+  tm_xlab(paste0('I de Moran = ', moran_text))
+
+
+# Calcul du I de moran de la variable
+moran_i <- moran.mc(covid_data$strict_p3, 
+                    listw = queen_w,
+                    na.action = na.omit,
+                    zero.policy = TRUE, nsim = 999)
+
+# Texte pour la valeur du I de Moran
+moran_text <- format(as.numeric(round(moran_i$statistic,3)) , decimal.mark =",")
+
+map3 <- tm_shape(covid_data) +
+  tm_fill(col="strict_p3", n = 7,
+          style = "jenks",
+          legend.format = list(text.separator = "à", 
+                               decimal.mark = ",", 
+                               big.mark = " ",
+                               digits = 2),
+          palette = "Greens", title = 'mesures sanitaires') +
+  tm_layout(frame=FALSE, legend.outside = TRUE) + 
+  tm_scale_bar(breaks = c(0,10)) + 
+  tm_xlab(paste0('I de Moran = ', moran_text))
+
+
+# Calcul du I de moran de la variable
+moran_i <- moran.mc(covid_data$google_p3, 
+                    listw = queen_w,
+                    na.action = na.omit,
+                    zero.policy = TRUE, nsim = 999)
+
+# Texte pour la valeur du I de Moran
+moran_text <- format(as.numeric(round(moran_i$statistic,3)) , decimal.mark =",")
+
+map4 <- tm_shape(covid_data) +
+  tm_fill("google_p3", n = 6,
+          legend.format = list(text.separator = "à", 
+                               decimal.mark = ",", 
+                               big.mark = " ",
+                               digits = 0),
+          title = 'mobilité'
+          )+
+  tm_layout(frame=FALSE, legend.outside = TRUE) + 
+  tm_scale_bar(breaks = c(0,10)) + 
+  tm_xlab(paste0('I de Moran = ', moran_text))
+
+
+tmap_arrange(map1, map2, map3, map4, ncol = 2, nrow = 2)
+
+```
+
+### Jeu de données sur les prix des Airbnb de l'Île de Montréal {#sec-0115}
+
+Ce jeu de donnée comporte 2500 logements airbnb pour lesquels nous connaissons un ensemble d'informations sur la nature du logement, son propriétaire ainsi que l'environnement à proximité du logement. Les données sont mises à disposition par l'organisation [Inside Airbnb](https://insideairbnb.com/fr/get-the-data/). La version utilisée ici a été téléchargée en 2023 et est échantillon aléatoire de tous les logements disponibles.
+
+Nous avons notamment accès aux variables suivantes : 
+
+* `price` : le prix en dollars du logement pour une nuit
+* `private` : une variable binaire indiquant si le logement est privé ou partagé
+* `stationnement_gratuit` : une variable binaire indiquant si le logement dispose d'un stationnement gratuit
+* `jardin_ou_cours` : une variable binaire indiquant si le logement dispose d'un jardin ou d'une cours
+* `bedrooms` : une variable de comptage indiquant le nombre de chambres dans le logement
+* `super_hote` : une variable binaire indiquant si l'hôte à le statut *super-hôte*
+* `number_of_reviews` : une variable de comptage indiquant le nombre d'évaluations reçues par le logement
+* `review_scores_rating` : une variable continue indiquant la note sur 100 du logement
+* `metro_500m` : une variable binaire indiquant si le logement est à moins de 500m d'une station de métro
+* `prt_veg_500m` : une variable continue indiquant la part de la superficie du logement dans un rayon de 500 couverte par de la végétation haute (arbres).
+
+```{r}
+#| echo: true 
+#| message: false 
+#| eval: true
+#| warning: false
+#| label: fig-glsdescrib
+#| fig-align: center
+#| layout-ncol: 2
+#| fig-cap: 
+#|   - "Distribution du prix des logements Airbnb à Montréal"
+#|   - "Géographie du prix des logements Airbnb à Montréal"
+
+library(sf, quietly = TRUE)
+library(ggplot2, quietly = TRUE)
+library(tmap, quietly = TRUE)
+library(dplyr, quietly = TRUE)
+library(ggpubr, quietly = TRUE)
+library(cowplot, quietly = TRUE)
+library(spdep, quietly = TRUE)
+library(DHARMa, quietly = TRUE)
+library(nlme, quietly = TRUE)
+library(car, quietly = TRUE)
+
+# Chargement des données
+data_airbnb <- readRDS('data/airbnb.rds')
+
+
+ggplot(data_airbnb) + 
+  geom_histogram(aes(x = price), fill = 'grey', color = 'black', bins = 30) + 
+  theme_bw() + 
+  labs(x = 'prix par nuit ($)',
+       y = 'effectif'
+       )
+
+tm_shape(data_airbnb[order(data_airbnb$price),]) + 
+  tm_dots('price', title = 'prix par nuit ($)', size = 0.1)
+
+```
 
 ## Matrices de pondération spatiale {#sec-012}
 
