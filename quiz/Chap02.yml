@@ -1,0 +1,36 @@
+- label: "Les modèles des moindres carrés généralisés (GLS) permettent d'introduire le degré d'autocorrélation spatiale :"
+  type: uc
+  response: 2
+  answers:
+     - "Avec une variable spatiale décalée"
+     - "Dans la matrice identité"
+     - "En transformant la variable dépendante"
+  help: "Relisez au besoin la [section @sec-0211]."
+
+- label: "Il existe des structures de covariance dans un modèle GLS spatial :"
+  type: mc
+  response: [1,2,3,4,5]
+  answers:
+     - "Fonction gaussienne"
+     - "Fonction exponentielle"
+     - "Fonction Matérn"
+     - "Fonction sphérique"
+     - "Fonction rationnelle quadratique"
+  help: "Relisez au besoin la [section @sec-0211]."
+
+- label: "Pour quel type d'entités spatiales est adapté le modèle CAR?"
+  type: uc
+  response: 1
+  answers:
+     - "Polygones"
+     - "Points"
+  help: "Relisez au besoin la [section @sec-022]."
+
+- label: "Contrairement aux modèles GLS et CAR, les modèles GLMM permettent de modéliser d'autres distributions que la distribution normale."
+  type: uc
+  response: 1
+  answers:
+     - "Vrai"
+     - "Faux"
+  help: "Relisez au besoin la [section @sec-023]."
+  

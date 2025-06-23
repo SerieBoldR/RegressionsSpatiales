@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.6.42">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
 <title>4&nbsp; Modèles probit spatiaux pour une variable dépendante dichtonomique (en cours de rédaction) – Méthodes de régression spatiale : un grand bol d’R</title>
 <style>
 code{white-space: pre-wrap;}
@@ -18,6 +21,7 @@ ul.task-list li input[type="checkbox"] {
   vertical-align: middle;
 }
 </style>
+
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
@@ -34,10 +38,11 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap-0e8412ddb3e8581162f62dfa963713cc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -63,12 +68,18 @@ ul.task-list li input[type="checkbox"] {
     "search-submit-button-title": "Envoyer",
     "search-label": "Recherche"
   }
-}</script><link rel="stylesheet" href="css/quizlib.min.css">
+}</script>
+
+
+<link rel="stylesheet" href="css/quizlib.min.css">
 </head>
+
 <body class="nav-sidebar floating">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
@@ -79,9 +90,13 @@ ul.task-list li input[type="checkbox"] {
         <i class="bi bi-search"></i>
       </button>
     </div>
-  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Méthodes de régression spatiale : un grand bol d’R</a> 
         <div class="sidebar-tools-main">
@@ -97,7 +112,7 @@ ul.task-list li input[type="checkbox"] {
         </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-<li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Préface</span></a>
@@ -126,7 +141,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./02-GLS_CAR_GLMM.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles intégrant une structure de covariance spatiale (en cours de rédaction)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles intégrant une structure de covariance spatiale (en cours de révision)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -186,7 +201,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./10-Heterogenite_GAM_GLMM.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Modèles GAM et GLMM avec des coefficients variant spatialement (en cours de rédaction)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Modèles GAM et GLMM avec des coefficients variant spatialement (en cours de révision)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -212,21 +227,27 @@ ul.task-list li input[type="checkbox"] {
   </div>
 </li>
     </ul>
-</div>
-</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table des matières</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table des matières</h2>
    
   <ul>
-<li><a href="#sec-041" id="toc-sec-041" class="nav-link active" data-scroll-target="#sec-041"><span class="header-section-number">4.1</span> Bref retour sur le modèle probit</a></li>
+  <li><a href="#sec-041" id="toc-sec-041" class="nav-link active" data-scroll-target="#sec-041"><span class="header-section-number">4.1</span> Bref retour sur le modèle probit</a></li>
   <li><a href="#sec-042" id="toc-sec-042" class="nav-link" data-scroll-target="#sec-042"><span class="header-section-number">4.2</span> Les différents modèles probit spatiaux</a></li>
   <li><a href="#sec-043" id="toc-sec-043" class="nav-link" data-scroll-target="#sec-043"><span class="header-section-number">4.3</span> Quiz de révision</a></li>
   <li><a href="#sec-044" id="toc-sec-044" class="nav-link" data-scroll-target="#sec-044"><span class="header-section-number">4.4</span> Exercices de révision</a></li>
-  </ul><div class="toc-actions"><ul><li><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></nav>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/SerieBoldR/RegressionsSpatiales/issues/new" class="toc-action"><i class="bi bi-github"></i>Signaler un problème ou<br>formuler une suggestion</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
 <h1 class="title"><span id="sec-chap04" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles probit spatiaux pour une variable dépendante dichtonomique (en cours de rédaction)</span></span></h1>
 </div>
 
@@ -241,7 +262,10 @@ ul.task-list li input[type="checkbox"] {
   
 
 
-</header><p>Dans ce chapitre, nous décrirons les modèles probit spatiaux, très utiles lorsque la variable dépendante est une variable qualitative binaire.</p>
+</header>
+
+
+<p>Dans ce chapitre, nous décrirons les modèles probit spatiaux, très utiles lorsque la variable dépendante est une variable qualitative binaire.</p>
 <div class="bloc_objectif">
 <div class="bloc_objectif-header">
 <div class="bloc_objectif-icon">
@@ -268,39 +292,33 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li>Pour importer et manipuler des fichiers géographiques&nbsp;:
 <ul>
-<li>
-<code>sf</code> pour importer et manipuler des données vectorielles.</li>
-</ul>
-</li>
+<li><code>sf</code> pour importer et manipuler des données vectorielles.</li>
+</ul></li>
 <li>Pour construire des cartes et des graphiques&nbsp;:
 <ul>
-<li>
-<code>tmap</code> est certainement le meilleur <em>package</em> pour la cartographie.</li>
-<li>
-<code>ggplot2</code> et <code>ggpubr</code> pour construire des graphiques.</li>
-</ul>
-</li>
+<li><code>tmap</code> est certainement le meilleur <em>package</em> pour la cartographie.</li>
+<li><code>ggplot2</code> et <code>ggpubr</code> pour construire des graphiques.</li>
+</ul></li>
 <li>Pour construire des modèles spatiaux&nbsp;:
 <ul>
-<li>
-<code>spdep</code> pour construire des matrices de pondération spatiales et calculer le <em>I</em> de Moran.</li>
-<li>
-<code>Matrix</code> pour construire des matrices de pondération spatiales peu denses.</li>
-<li>
-<code>ProbitSpatial</code> pour construire des modèles économétriques spatiaux avec variable dépendante binaire.</li>
-</ul>
-</li>
+<li><code>spdep</code> pour construire des matrices de pondération spatiales et calculer le <em>I</em> de Moran.</li>
+<li><code>Matrix</code> pour construire des matrices de pondération spatiales peu denses.</li>
+<li><code>ProbitSpatial</code> pour construire des modèles économétriques spatiaux avec variable dépendante binaire.</li>
+</ul></li>
 </ul>
 </div>
 </div>
-<section id="sec-041" class="level2" data-number="4.1"><h2 data-number="4.1" class="anchored" data-anchor-id="sec-041">
-<span class="header-section-number">4.1</span> Bref retour sur le modèle probit</h2>
-</section><section id="sec-042" class="level2" data-number="4.2"><h2 data-number="4.2" class="anchored" data-anchor-id="sec-042">
-<span class="header-section-number">4.2</span> Les différents modèles probit spatiaux</h2>
-</section><section id="sec-043" class="level2" data-number="4.3"><h2 data-number="4.3" class="anchored" data-anchor-id="sec-043">
-<span class="header-section-number">4.3</span> Quiz de révision</h2>
-</section><section id="sec-044" class="level2" data-number="4.4"><h2 data-number="4.4" class="anchored" data-anchor-id="sec-044">
-<span class="header-section-number">4.4</span> Exercices de révision</h2>
+<section id="sec-041" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="sec-041"><span class="header-section-number">4.1</span> Bref retour sur le modèle probit</h2>
+</section>
+<section id="sec-042" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="sec-042"><span class="header-section-number">4.2</span> Les différents modèles probit spatiaux</h2>
+</section>
+<section id="sec-043" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="sec-043"><span class="header-section-number">4.3</span> Quiz de révision</h2>
+</section>
+<section id="sec-044" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="sec-044"><span class="header-section-number">4.4</span> Exercices de révision</h2>
 <div class="bloc_exercice">
 <div class="bloc_exercice-header">
 <div class="bloc_exercice-icon">
@@ -339,7 +357,10 @@ ul.task-list li input[type="checkbox"] {
 </div>
 
 
-</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -421,8 +442,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -533,7 +552,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
@@ -758,7 +776,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
       <a href="./03-EconometrieSpatiale.html" class="pagination-link" aria-label="Modèles d'économétrie spatiale">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles d’économétrie spatiale</span></span>
       </a>          
@@ -770,7 +790,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer">
+<footer class="footer">
+  <div class="nav-footer">
     <div class="nav-footer-left">
 <p>Méthodes de régression spatiale : un grand bol d’R.</p>
 </div>   
@@ -782,6 +803,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>
   </div>
 </footer>
+
+
 
 
 </body></html>

@@ -2,6 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
-/data/chap02/model_glmm_cauchy.rds
-/data/chap02/model_glmm_matern.rds
+
 /.quarto/

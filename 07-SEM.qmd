@@ -138,43 +138,84 @@ data_mtl$vector970 <- moran_vectors[,970]
 
 legende_parametres <- list(text.separator = "à",
                            decimal.mark = ",",
+                           big.mark = " ",
                            digits = 1)
 
-carte1 <- tm_shape(data_mtl)+
-  tm_fill(col="vector10", n = 7, style = "fisher", 
-          legend.format = legende_parametres,
-          palette = "-RdBu", title = "") +
-  tm_layout(frame=FALSE, legend.outside = TRUE,
-            main.title.size = 0.85,
-            main.title = paste0('Vecteur propre 10 (I de Moran = ', 
-                                format(round(moran_vals[[5]],2), decimal.mark =","), ')'))
+carte1 <- tm_shape(data_mtl) +
+            tm_polygons(col=NULL,
+              fill = "vector10",
+              fill.scale = tm_scale_intervals(
+                n = 7,
+                midpoint = 0,
+                style = "fisher",
+                values = "-brewer.rd_bu",
+                label.format = legende_parametres),
+              fill.legend  = tm_legend(
+                title = "",
+                position = tm_pos_out("right", pos.v = "center"),
+                frame = FALSE)
+              ) +
+              tm_layout(frame=FALSE) +
+              tm_title(size = 0.85,
+                       text = paste0('Vecteur propre 10 (I de Moran = ',
+                                     format(round(moran_vals[[5]],2), decimal.mark =","), ')'))
 
-carte2 <- tm_shape(data_mtl)+
-  tm_fill(col="vector100", n = 7, style = "quantile", 
-          legend.format = legende_parametres,
-          palette = "-RdBu", title = "") +
-  tm_layout(frame=FALSE, legend.outside = TRUE,
-            main.title.size = 0.85,
-            main.title = paste0('Vecteur propre 100 (I de Moran = ', 
-                                format(round(moran_vals[[100]],2), decimal.mark =","), ')'))
+carte2 <- tm_shape(data_mtl) +
+            tm_polygons(col=NULL,
+              fill = "vector100",
+              fill.scale = tm_scale_intervals(
+                n = 7,
+                midpoint = 0,
+                style = "quantile",
+                values = "-brewer.rd_bu",
+                label.format = legende_parametres),
+              fill.legend  = tm_legend(
+                title = "",
+                position = tm_pos_out("right", pos.v = "center"),
+                frame = FALSE)
+              ) +
+              tm_layout(frame=FALSE) +
+              tm_title(size = 0.85,
+                       text = paste0('Vecteur propre 100 (I de Moran = ',
+                                     format(round(moran_vals[[100]],2), decimal.mark =","), ')'))
 
-carte3 <- tm_shape(data_mtl)+
-  tm_fill(col="vector375", n = 7, style = "quantile", 
-          legend.format = legende_parametres,
-          palette = "-RdBu", title = "") +
-  tm_layout(frame=FALSE, legend.outside = TRUE,
-            main.title.size = 0.85,
-            main.title = paste0('Vecteur propre 375 (I de Moran = ', 
-                                format(round(moran_vals[[375]],2), decimal.mark =","), ')'))
+carte3 <- tm_shape(data_mtl) +
+            tm_polygons(col=NULL,
+              fill = "vector375",
+              fill.scale = tm_scale_intervals(
+                n = 7,
+                midpoint = 0,
+                style = "quantile",
+                values = "-brewer.rd_bu",
+                label.format = legende_parametres),
+              fill.legend  = tm_legend(
+                title = "",
+                position = tm_pos_out("right", pos.v = "center"),
+                frame = FALSE)
+              ) +
+              tm_layout(frame=FALSE) +
+              tm_title(size = 0.85,
+                       text = paste0('Vecteur propre 375 (I de Moran = ',
+                                     format(round(moran_vals[[375]],2), decimal.mark =","), ')'))
 
-carte4 <- tm_shape(data_mtl)+
-  tm_fill(col="vector970", n = 7, style = "quantile", 
-          legend.format = legende_parametres,
-          palette = "-RdBu", title = "") +
-  tm_layout(frame=FALSE, legend.outside = TRUE,
-            main.title.size = 0.85,
-            main.title = paste0('Vecteur propre 970 (I de Moran = ', 
-                                format(round(moran_vals[[970]],2), decimal.mark =","), ')'))
+carte4 <- tm_shape(data_mtl) +
+            tm_polygons(col=NULL,
+              fill = "vector970",
+              fill.scale = tm_scale_intervals(
+                n = 7,
+                midpoint = 0,
+                style = "quantile",
+                values = "-brewer.rd_bu",
+                label.format = legende_parametres),
+              fill.legend  = tm_legend(
+                title = "",
+                position = tm_pos_out("right", pos.v = "center"),
+                frame = FALSE)
+              ) +
+              tm_layout(frame=FALSE) +
+              tm_title(size = 0.85,
+                       text = paste0('Vecteur propre 970 (I de Moran = ',
+                                     format(round(moran_vals[[970]],2), decimal.mark =","), ')'))
 
 tmap_arrange(carte1, carte2, carte3, carte4, nrow = 2, ncol = 2)
 ```
@@ -824,41 +865,84 @@ breaks <- classIntervals(c(pred_sel,
 
 legende_parametres <- list(text.separator = "à",
                            decimal.mark = ",",
+                           big.mark = " ",
                            digits = 2)
 
 carte1 <- tm_shape(data_mtl) +
-  tm_fill(col="effet_sel", 
-          breaks = breaks$brks,
-          midpoint = 1,
-          legend.format = legende_parametres,
-          palette = "-RdBu") +
-  tm_layout(frame=FALSE, legend.show = FALSE, title = 'SEL-SEVM')
+            tm_polygons(
+              col=NULL,
+              fill = "effet_sel",
+              fill.scale = tm_scale_intervals(
+                n = 7,
+                midpoint = 1,
+                style = "fisher",
+                values = "-brewer.rd_bu",
+                label.format = legende_parametres),
+              fill.legend  = tm_legend(
+                title = "",
+                position = tm_pos_out("right", pos.v = "center"),
+                frame = FALSE)
+              ) +
+              tm_layout(frame=FALSE, legend.show = FALSE) +
+              tm_title("SEL-SEVM")
+
 
 carte2 <- tm_shape(data_mtl) +
-  tm_fill(col="effet_ridge",
-          breaks = breaks$brks,
-          midpoint = 1,
-          legend.format = legende_parametres,
-          palette = "-RdBu") +
-  tm_layout(frame=FALSE, legend.show = FALSE, title = 'RE-SEVM')
+            tm_polygons(
+              col=NULL,
+              fill = "effet_ridge",
+              fill.scale = tm_scale_intervals(
+                n = 7,
+                midpoint = 1,
+                style = "fisher",
+                values = "-brewer.rd_bu",
+                label.format = legende_parametres),
+              fill.legend  = tm_legend(
+                title = "",
+                position = tm_pos_out("right", pos.v = "center"),
+                frame = FALSE)
+              ) +
+              tm_layout(frame=FALSE, legend.show = FALSE) +
+              tm_title("RE-SEVM")
+
 
 carte3 <- tm_shape(data_mtl) +
-  tm_fill(col="effet_lasso", 
-          breaks = breaks$brks,
-          midpoint = 1,
-          legend.format = legende_parametres,
-          palette = "-RdBu") +
-  tm_layout(frame=FALSE, legend.show = FALSE, title = 'LASSO-SEVM')
+            tm_polygons(
+              col=NULL,
+              fill = "effet_lasso",
+              fill.scale = tm_scale_intervals(
+                n = 7,
+                midpoint = 1,
+                style = "fisher",
+                values = "-brewer.rd_bu",
+                label.format = legende_parametres),
+              fill.legend  = tm_legend(
+                title = "",
+                position = tm_pos_out("right", pos.v = "center"),
+                frame = FALSE)
+              ) +
+              tm_layout(frame=FALSE, legend.show = FALSE) +
+              tm_title("LASSO-SEVM")
 
 # Cette carte est ajoutée pour ne pas apparaître mais afficher la légende 
 # commune dans le 4ème panneau
 carte4 <- tm_shape(data_mtl) +
-  tm_fill(col="effet_lasso", 
-          breaks = breaks$brks,
-          midpoint = 1,
-          legend.format = legende_parametres,
-          palette = "-RdBu", title = 'effet spatial') +
-  tm_layout(legend.only = TRUE,scale=1.5, asp=0)
+            tm_polygons(
+              col=NULL,
+              fill = "effet_lasso",
+              fill.scale = tm_scale_intervals(
+                n = 7,
+                midpoint = 1,
+                style = "fisher",
+                values = "-brewer.rd_bu",
+                label.format = legende_parametres),
+              fill.legend  = tm_legend(
+                title = "Effet spatial",
+                position = tm_pos_out("right", pos.v = "center"),
+                frame = FALSE)
+              ) +
+              tm_layout(frame=FALSE, legend.only = TRUE,
+                        scale=1.5, asp=0)
 
 tmap_arrange(carte1, carte2, carte3, carte4, nrow = 2, ncol = 2)
 

@@ -449,19 +449,37 @@ moran_i <- moran.mc(data_mtl$alr_val,
 moran_text <- format(as.numeric(round(moran_i$statistic,3)) , decimal.mark =",")
 
 # Cartographie de la variable
-tm_shape(data_mtl) +
-  tm_fill(col="alr_val", n = 7,
-          style = "jenks",
-          midpoint = log(1),
-          legend.format = list(text.separator = "à", 
-                               decimal.mark = ",", 
-                               big.mark = " ",
-                               digits = 2),
-          palette = "-RdBu", title = 'part modale TC / part modale auto') +
-tm_layout(frame=FALSE, legend.outside = TRUE) + 
-tm_scale_bar(breaks = c(0,10)) + 
-tm_xlab(paste0('I de Moran = ', moran_text,
-               " (matrice de contiguïté selon le partage d’un nœud)."))
+legende_parametres <- list(text.separator = "à",
+                           decimal.mark = ",",
+                           big.mark = " ",
+                           digits = 2)
+
+tmap_mode("plot")
+tm_shape(data_mtl)+
+  tm_polygons(
+    col = NULL,
+    fill = "alr_val",
+    fill.scale = tm_scale_intervals(
+      n = 7,
+      midpoint = log(1),
+      style = "jenks",
+      values = "-brewer.rd_bu",
+      label.format = legende_parametres
+      ),
+      fill.legend  = tm_legend(
+        title = "part modale TC / part modale auto",
+        frame = FALSE,
+        position = tm_pos_out("right", pos.v = "center")
+        )
+      ) +
+  tm_layout(frame = FALSE) +
+  tm_scale_bar(breaks = c(0,10),
+               position = tm_pos_out("right", pos.v = "bottom")
+               ) +
+  tm_credits(paste0('I de Moran = ', moran_text,
+                 " (matrice de contiguïté selon le partage d’un nœud)."),
+             position = tm_pos_out("center", "bottom")
+          )
 ```
 
 Sans surprise, notre variable dépendante est fortement spatialement autocorrélée. Plus un secteur est éloigné du centre-ville, plus le transport collectif est délaissé au profit de la voiture. Les secteurs dans lesquels la part modale du TC est supérieure à celle de l'automobile sont situés au centre de l'île de Montréal, à proximité des lignes de métro.
@@ -592,19 +610,32 @@ moran_text <- format(as.numeric(round(moran_i$statistic,3)),
 data_mtl$base_residual <- residuals(glm_base, type = 'response')
 
 # Cartographie
-tm_shape(data_mtl) +
-  tm_fill(col="base_residual", n = 7,
-          style = "jenks",
-          midpoint = 0,
-          legend.format = list(text.separator = "à", 
-                               decimal.mark = ",", 
-                               big.mark = " ",
-                               digits = 2),
-          palette = "-RdBu", title = 'Résidus simulés') +
-tm_layout(frame=FALSE, legend.outside = TRUE) + 
-tm_scale_bar(breaks = c(0,10))+
-tm_xlab(paste0('I de Moran = ', moran_text,
-               " (matrice de contiguïté selon le partage d’un nœud)."))
+tmap_mode("plot")
+tm_shape(data_mtl)+
+  tm_polygons(
+    col = NULL,
+    fill = "base_residual",
+    fill.scale = tm_scale_intervals(
+      n = 7,
+      midpoint = 0,
+      style = "jenks",
+      values = "-brewer.rd_bu",
+      label.format = legende_parametres
+      ),
+      fill.legend  = tm_legend(
+        title = "Résidus simulés",
+        frame = FALSE,
+        position = tm_pos_out("right", pos.v = "center")
+        )
+      ) +
+  tm_layout(frame = FALSE) +
+  tm_scale_bar(breaks = c(0,10),
+               position = tm_pos_out("right", pos.v = "bottom")
+               ) +
+  tm_credits(paste0('I de Moran = ', moran_text,
+                 " (matrice de contiguïté selon le partage d’un nœud)."),
+             position = tm_pos_out("center", "bottom")
+          )
 ```
 
 En effet, la @fig-gamresid1 démontre clairement que la distribution des résidus du modèle GLM (avec une distribution de Student) n'est pas aléatoire spatialement. Les valeurs négatives indiquent des secteurs dans lesquels le modèle tend à prédire un log ratio trop favorable au transport collectif et inversement dans les secteurs avec des valeurs positives.
@@ -655,20 +686,31 @@ print(test)
 moran_text <- format(as.numeric(round(test$statistic, 3)), 
                      decimal.mark =",")
 
-tm_shape(data_mtl) +
-  tm_fill(col="sim_residual", n = 7,
-          style = "jenks",
-          midpoint = 0.5,
-          legend.format = list(text.separator = "à", 
-                               decimal.mark = ",", 
-                               big.mark = " ",
-                               digits = 2),
-          palette = "-RdBu", 
-          title = 'Résidus simulés') +
-tm_layout(frame=FALSE, legend.outside = TRUE) + 
-tm_scale_bar(breaks = c(0,10))+
-tm_xlab(paste0('I de Moran = ', moran_text,
-               " (matrice de contiguïté selon le partage d’un nœud)."))
+tm_shape(data_mtl)+
+  tm_polygons(
+    col = NULL,
+    fill = "sim_residual",
+    fill.scale = tm_scale_intervals(
+      n = 7,
+      midpoint = 0.5,
+      style = "jenks",
+      values = "-brewer.rd_bu",
+      label.format = legende_parametres
+      ),
+      fill.legend  = tm_legend(
+        title = "Résidus simulés",
+        frame = FALSE,
+        position = tm_pos_out("right", pos.v = "center")
+        )
+      ) +
+  tm_layout(frame = FALSE) +
+  tm_scale_bar(breaks = c(0,10),
+               position = tm_pos_out("right", pos.v = "bottom")
+               ) +
+  tm_credits(paste0('I de Moran = ', moran_text,
+                 " (matrice de contiguïté selon le partage d’un nœud)."),
+             position = tm_pos_out("center", "bottom")
+          )
 ```
 
 La valeur du I de Moran (I = `r format(round(as.numeric(test$statistic),3), decimal.mark =",")`), calculée à partir de la matrice de contiguïté selon le partage d'un nœud (*Queen*), indique toujours une autocorrélation spatiale non négligeable des résidus (@fig-gamxycarto).
@@ -783,22 +825,31 @@ sf_pred <- df_pred %>%
   st_as_sf(coords = c('X', 'Y'), crs = st_crs(data_mtl)) %>% 
   subset(lengths(st_intersects(.,data_mtl)) > 0)
 
-map_spline <- tm_shape(sf_pred) +
-                tm_dots(col="pred_exp", n = 7,
-                        style = "fisher",
-                        midpoint = 1,
-                        legend.format = list(text.separator = "à", 
-                                             decimal.mark = ",", 
-                                             big.mark = " ",
-                                             digits = 2),
-                        palette = "-RdBu", 
-                        title = paste0('effet de la spline bivariée\n(edf = ', 
-                                       round(results$edf), ')')) +
-              tm_shape(data_mtl) + 
-                tm_borders('darkgrey', lwd = 0.01) + 
-              tm_layout(frame=FALSE, legend.outside = TRUE) + 
-              tm_scale_bar(breaks = c(0,10))
 
+tmap_mode("plot")
+map_spline <- tm_shape(sf_pred)+
+  tm_dots(
+    fill = "pred_exp",
+    fill.scale = tm_scale_intervals(
+      style = "fisher",
+      n = 7,
+      midpoint = 1,
+      values = "-brewer.rd_bu",
+      label.format = legende_parametres
+      ),
+      fill.legend  = tm_legend(
+        title = paste0("effet de la \nspline bivariée\n(edf = ", 
+                                       round(results$edf), ")"),
+        frame = FALSE,
+        position = tm_pos_out("right", pos.v = "center")
+        )
+      ) +
+  tm_shape(data_mtl) +
+    tm_borders('darkgrey', lwd = 0.01) + 
+  tm_layout(frame = FALSE) +
+  tm_scale_bar(breaks = c(0,10),
+               position = tm_pos_out("right", pos.v = "bottom")
+               )
 map_spline
 ```
 
@@ -1038,16 +1089,40 @@ pred_df$effet_sp <- exp(pred_df$log_ratio)
 results_mrf <- summary(gam2)
 
 # on peut maintenant cartographier cet effet
-map_mrf <- tm_shape(pred_df) +
-  tm_fill(col="effet_sp", n = 7,
-          style = "jenks",
-          midpoint = exp(0),
-          legend.format = list(text.separator = "à", 
-                               decimal.mark = ",", 
-                               big.mark = " ",digits = 2),
-          palette = "-RdBu", title = paste0('Effet du MRF\n(edf = ', round(results_mrf$edf), ')')) +
-  tm_layout(frame=FALSE, legend.outside = TRUE) + 
-  tm_scale_bar(breaks = c(0,10))
+# map_mrf <- tm_shape(pred_df) +
+#   tm_fill(col="effet_sp", n = 7,
+#           style = "jenks",
+#           midpoint = exp(0),
+#           legend.format = list(text.separator = "à", 
+#                                decimal.mark = ",", 
+#                                big.mark = " ",digits = 2),
+#           palette = "-RdBu", title = paste0('Effet du MRF\n(edf = ', round(results_mrf$edf), ')')) +
+#   tm_layout(frame=FALSE, legend.outside = TRUE) + 
+#   tm_scale_bar(breaks = c(0,10))
+
+
+map_mrf <- tm_shape(pred_df)+
+  tm_polygons(
+    col = NULL,
+    fill = "effet_sp",
+    fill.scale = tm_scale_intervals(
+      style = "jenks",
+      n = 7,
+      midpoint = exp(0),
+      values = "-brewer.rd_bu",
+      label.format = legende_parametres
+      ),
+      fill.legend  = tm_legend(
+        title = paste0('Effet du MRF\n(edf = ', 
+                       round(results_mrf$edf), ')'),
+        frame = FALSE,
+        position = tm_pos_out("right", pos.v = "center")
+        )
+      ) +
+  tm_shape(data_mtl) +
+    tm_borders('darkgrey', lwd = 0.01) + 
+  tm_layout(frame = FALSE)
+
 tmap_arrange(map_spline, map_mrf, nrow = 2)
 ```
 

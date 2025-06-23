@@ -43,7 +43,6 @@ modele_mco <- lm(formule, data = LyonIris)
 summary(modele_mco)
 
 ## Matrice de contiguïté (Rook)
-
 nb_rook <- poly2nb(LyonIris, queen = FALSE)
 w_rook <- nb2listw(nb_rook, zero.policy = TRUE, style = "W")
 
@@ -53,16 +52,31 @@ lm.morantest(modele_mco, w_rook)
 # Cartographie des résidus
 LyonIris$MCO.Residus <- modele_mco$residuals
 tmap_mode("plot")
+
+legende_parametres <- list(text.separator = "à",
+                           text.less.than = "Moins de",
+                           text.or.more =  "et plus",
+                           decimal.mark = ",",
+                           big.mark = " ")
+
 tm_shape(LyonIris)+
-         tm_borders(col="gray25", lwd=.5)+
-         tm_fill(col="MCO.Residus", n = 6, style = "pretty", 
-                 legend.format = list(text.separator = "à",
-                                      decimal.mark = ","),
-                 midpoint = 0,
-                 palette = "-RdBu", 
-                 title = "MCO") +
-         tm_layout(frame = FALSE)+ 
-         tm_scale_bar(breaks = c(0,5))
+  tm_polygons(
+    col="gray25", lwd=.5,
+    fill = "MCO.Residus",
+    fill.scale = tm_scale_intervals(
+      n = 6,
+      midpoint = 0,
+      style = "pretty",
+      values = "-brewer.rd_bu",
+      label.format = legende_parametres
+      ),
+      fill.legend  = tm_legend(
+        title = "MCO",
+        frame = FALSE,
+        position = tm_pos_out("right", pos.v = "center")
+        )
+      ) +
+  tm_layout(frame = FALSE)
 ```
 
 
@@ -70,10 +84,250 @@ tm_shape(LyonIris)+
 
 ### Exercice 1 {#sec-11021}
 
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+
+library(sf, quietly = TRUE)
+library(ggplot2, quietly = TRUE)
+library(tmap, quietly = TRUE)
+library(dplyr, quietly = TRUE)
+library(ggpubr, quietly = TRUE)
+library(cowplot, quietly = TRUE)
+library(spdep, quietly = TRUE)
+library(DHARMa, quietly = TRUE)
+library(nlme, quietly = TRUE)
+library(car, quietly = TRUE)
+library(sf, quietly = TRUE)
+
+load("data/Lyon.Rdata")
+LyonIris <- st_centroid(LyonIris)
+XY <- st_coordinates(LyonIris)
+LyonIris$X <- XY[,1]
+LyonIris$Y <- XY[,2]
+
+## Construction du modèle MCO
+modele_MCO <- lm(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
+                 data = LyonIris)
+summary(modele_MCO)
+
+## Autocorrélation spatiale des résidus du modèle MCO 
+LyonIris$residual_lm <- residuals(modele_MCO)
+knn_list <- knearneigh(LyonIris, k = 10)
+nb_list <- knn2nb(knn_list, sym = TRUE)
+listw <- nb2listwdist(nb_list, LyonIris, style = 'W', type = 'idw', alpha = 2)
+moran.mc(LyonIris$residual_lm, listw, nsim = 999)
+
+# Exponentielle
+modelExp <- gls(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
+                data = LyonIris,
+                correlation = corExp(form = ~X+Y, nugget = TRUE))
+
+# Gaussienne
+modelGau <- gls(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
+                data = LyonIris,
+                correlation = corGaus(form = ~X+Y, nugget = TRUE))
+
+# Sphérique
+modelSph <- gls(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
+                data = LyonIris,
+                 correlation = corSpher(form=~X+Y, nugget = TRUE))
+
+# Rationelle quadratique
+modelRatio <- gls(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
+                 data = LyonIris,
+                 correlation = corRatio(form = ~X+Y, nugget = TRUE))
+
+# Comparaison des modèles avec l'AIC
+AIC(modelExp, modelGau, modelSph, modelRatio)
+struc <- modelExp$modelStruct$corStruct
+print(struc)
+
+## Structure exponentielle
+corExpo <- function(n, r, d) {
+  return((1 - n) * exp(-r / d))
+}
+
+distances <- seq(0, 10000, 50)
+
+df_corr <- data.frame(
+  distance = distances, 
+  correlation = corExpo(n = 0.01718, 
+                        d = 3279.694, 
+                        r = distances
+                        )
+)
+
+ggplot(df_corr) + 
+  geom_line(aes(x = distance, y = correlation)) + 
+  theme_bw() + 
+  labs(title = 'Structure de corrélation du modèle GLS (exponentielle)')
+
+# Résidus du modèle GLS exponentielle
+LyonIris$residual_gls <- residuals(modelExp, type = "normalized")
+moran.mc(LyonIris$residual_gls, listw, nsim = 999)
+qqPlot(LyonIris$residual_gls)
+# subset(LyonIris, LyonIris$residual_gls > 2)
+
+# Comparaison des modèles MCO et GLS
+library(knitr, quietly = TRUE)
+library(kableExtra, quietly = TRUE)
+
+s1 <- summary(modele_MCO)
+s2 <- summary(modelGau)
+
+df1 <- data.frame(s1$coefficients[,c(1,2,4)])
+df2 <- data.frame(s2$tTable[,c(1,2,4)])
+
+kable(cbind(df1, df2), digits = 3,
+             col.names = c('coeff.', 'err. std.', 'val. p',
+                           'coeff.', 'err. std.', 'val. p')) %>% 
+  kable_classic() %>% 
+  add_header_above(c(' ' = 1, "Modèle linéaire" = 3, "Modèle GLS (exp)" = 3))
+```
+
 ### Exercice 2 {#sec-11022}
+
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+
+load("data/Lyon.Rdata")
+library(spdep)
+library(spatialreg)
+library(tmap)
+
+## Construction du modèle MCO
+modele_MCO <- lm(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
+                 data = LyonIris)
+
+# Construire un matrice de contiguïté (Queen)
+nbs <- poly2nb(LyonIris, queen = TRUE)
+listw <- nb2listw(nbs, style = 'B', zero.policy = TRUE)
+
+# I de Moran sur les résidus du modèles MCO
+moran.mc(residuals(modele_MCO), listw = listw, nsim = 999)
+
+# Construire le modèle CAR
+modele_car <- spautolm(
+  NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
+  data = LyonIris,
+  listw = listw,
+  family = 'CAR',
+  zero.policy = TRUE
+)
+
+summary(modele_car)
+
+# I de Moran sur les résidus du modèle CAR
+moran.mc(residuals(modele_car), listw = listw, nsim = 999)
+
+# Cartographie de l'effet spatial
+LyonIris$car_term <- modele_car$fit$signal_stochastic
+
+legende_parametres <- list(text.separator = "à",
+                           decimal.mark = ",",
+                           big.mark = " ")
+
+tm_shape(LyonIris) +
+    tm_polygons(col = NULL,
+                fill ="car_term",
+                fill.scale = tm_scale_intervals(
+                  n = 7, style = "fisher", midpoint = 1,
+                  label.format = legende_parametres,
+                  values = "-brewer.rd_bu"),
+                fill.legend = tm_legend(
+                  title = "Terme spatial \ndu modèle CAR",
+                  frame = FALSE, 
+                  position = tm_pos_out("right", pos.v = "center"))
+                ) +                
+  tm_layout(frame=FALSE) + 
+  tm_scalebar(breaks = c(0,10),
+              position = tm_pos_out("right", "bottom"))
+```
+
 
 ### Exercice 3 {#sec-11023}
 
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+
+library(ggplot2, quietly = TRUE)
+library(tmap, quietly = TRUE)
+library(dplyr, quietly = TRUE)
+library(spaMM, quietly = TRUE)
+library(spdep, quietly = TRUE)
+library(DHARMa, quietly = TRUE)
+
+load("data/Lyon.Rdata")
+
+## Construction du modèle GLM gaussien
+modele_glm  <- glm(NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
+                  family = gaussian,
+                  data = LyonIris)
+
+# Construire un matrice de contiguïté (Queen)
+nbs <- poly2nb(LyonIris, queen = TRUE)
+listw <- nb2listw(nbs, style = 'B', zero.policy = TRUE)
+
+# I de Moran sur les résidus du modèles MCO
+moran.mc(residuals(modele_glm), listw = listw, nsim = 999)
+
+# Construire le modèle GLMM de type CAR
+LyonIris$oid <- 1:nrow(LyonIris)
+queen_nb <- poly2nb(LyonIris, queen = TRUE)
+wmat <- matrix(0, ncol = length(queen_nb), nrow = length(queen_nb))
+for(i in 1:length(queen_nb)){
+  wmat[i, queen_nb[[i]]] <- 1
+}
+
+model_car <- fitme(
+  NO2 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed + 
+        adjacency(1|oid),
+  data = st_drop_geometry(LyonIris),
+  adjMatrix = wmat,
+  family = gaussian()
+)
+
+summary(modele_car)
+
+# I de Moran sur les résidus du modèle CAR
+moran.mc(residuals(modele_car), listw = listw, nsim = 999)
+
+# Cartographie de l'effet spatial
+pred_df <- LyonIris
+vars <- c('Pct0_14', 'Pct_65', 'Pct_Img', 'Pct_brevet')
+for(var in vars){
+  pred_df[[var]] <- 0
+}
+
+pred_df$pred <- as.numeric(predict(model_car,
+                                   newdata = pred_df,
+                                   type = 'link'))
+
+pred_df$pred <- pred_df$pred - mean(pred_df$pred)
+
+tm_shape(pred_df) +
+    tm_polygons(col = NULL,
+                fill ="pred",
+                fill.scale = tm_scale_intervals(
+                  n = 7, style = "fisher", 
+                  label.format = legende_parametres,
+                  values = "-brewer.rd_bu"),
+                fill.legend = tm_legend(
+                  title = "Effet aléatoire \nspatial",
+                  frame = FALSE, 
+                  position = tm_pos_out("right", pos.v = "center"))
+                ) +                
+  tm_layout(frame=FALSE)
+```
 
 ## Exercices du chapitre 3 {#sec-1103}
 
@@ -370,15 +624,22 @@ for(e in vars_indep){
 legendes_parametres <- list(text.separator = "à",
                             decimal.mark = ",",
                             big.mark = " ")
-tm_shape(LyonIris)+
-  tm_borders(col="gray25", lwd=.5)+
-  tm_fill(col="GWR.R2", 
-          palette="YlOrBr", 
-          n=5, style="quantile",
-          legend.format = legendes_parametres,
-          title = "R2 locaux")+
-  tm_layout(frame = FALSE)+
-  tm_scale_bar(breaks=c(0,5))
+
+tm_shape(LyonIris) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "GWR.R2",
+    fill.scale = tm_scale_intervals(
+      style = "quantile", n = 5, 
+      values = "brewer.yl_or_br",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "R2 locaux",
+      frame = FALSE, 
+      position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE) +
+  tm_scale(breaks = c(0, 5))
 
 # Cartographie des valeurs de t locales
 ## Paramètres pour la légende 
@@ -390,46 +651,86 @@ legende.parametres <- list(text.separator = "à",
 
 ## Cartographie
 classes_intervalles = c(-Inf, -3.29, -2.58, -1.96, 1.96, 2.58, 3.29, Inf)
-carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-          tm_fill(col="GWR.T_Pct0_14", palette="-RdBu", 
-                  midpoint = NA,
-                  breaks = classes_intervalles,
-                  legend.format = legende.parametres,
-                  title = "Moins de 15 ans (%)")+
-          tm_layout(frame = FALSE, legend.outside = TRUE)
 
-carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-          tm_fill(col="GWR.T_Pct_65", palette="-RdBu",
-                  midpoint = NA,
-                  breaks = classes_intervalles,
-                  legend.format = legende.parametres,
-                  title = "65 ans et plus (%)")+
-          tm_layout(frame = FALSE, legend.outside = TRUE)
+carte1 <- tm_shape(LyonIris) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "GWR.T_Pct0_14",
+    fill.scale = tm_scale_intervals(
+      breaks = classes_intervalles,
+      midpoint = 0,
+      values = "-brewer.rd_bu",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "Moins de 15 ans (%)",
+      frame = FALSE, 
+      position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE)
 
-carte3 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-          tm_fill(col="GWR.T_Pct_Img", palette="-RdBu", 
-                  midpoint = NA,
-                  breaks = classes_intervalles,
-                  legend.format = legende.parametres,
-                  title = "Immigrants (%)")+
-          tm_layout(frame = FALSE, legend.outside = TRUE)
+carte2 <- tm_shape(LyonIris) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "GWR.T_Pct_65",
+    fill.scale = tm_scale_intervals(
+      breaks = classes_intervalles,
+      midpoint = 0,
+      values = "-brewer.rd_bu",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "65 ans et plus (%)",
+      frame = FALSE, 
+      position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE)
 
-carte4 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-          tm_fill(col="GWR.B_Pct_brevet", palette="-RdBu", 
-                  midpoint = NA,
-                  breaks = classes_intervalles,
-                  legend.format = legende.parametres,
-                  title = "Faible scolarité (%)")+
-          tm_layout(frame = FALSE, legend.outside = TRUE)
+carte3 <- tm_shape(LyonIris) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "GWR.T_Pct_Img",
+    fill.scale = tm_scale_intervals(
+      breaks = classes_intervalles,
+      midpoint = 0,
+      values = "-brewer.rd_bu",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "Immigrants (%)",
+      frame = FALSE, 
+      position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE)
 
-carte5 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-          tm_fill(col="GWR.T_NivVieMed", palette="-RdBu", 
-                 midpoint = NA,
-                 breaks = classes_intervalles,
-                 legend.format = legende.parametres,
-                 title = "Niveau de vie (€1000)")+
-          tm_layout(frame = FALSE, legend.outside = TRUE)+
-          tm_scale_bar(breaks=c(0,5))
+carte4 <- tm_shape(LyonIris) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "GWR.B_Pct_brevet",
+    fill.scale = tm_scale_intervals(
+      breaks = classes_intervalles,
+      midpoint = 0,
+      values = "-brewer.rd_bu",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "Faible scolarité (%)",
+      frame = FALSE, 
+      position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE)
+
+carte5 <- tm_shape(LyonIris) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "GWR.T_NivVieMed",
+    fill.scale = tm_scale_intervals(
+      breaks = classes_intervalles,
+      midpoint = 0,
+      values = "-brewer.rd_bu",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "Niveau de vie (€1000)",
+      frame = FALSE, 
+      position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE)
 
 tmap_arrange(carte1, carte2, carte3, carte4, carte5, ncol = 2, nrow=3)
 ```
@@ -448,7 +749,377 @@ tmap_arrange(carte1, carte2, carte3, carte4, carte5, ncol = 2, nrow=3)
 
 ### Exercice 1 {#sec-11101}
 
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+
+library(sf, quietly = TRUE)
+library(ggplot2, quietly = TRUE)
+library(tmap, quietly = TRUE)
+library(dplyr, quietly = TRUE)
+library(ggpubr, quietly = TRUE)
+library(mgcv, quietly = TRUE)
+library(spdep, quietly = TRUE)
+library(collapse, quietly = TRUE)
+library(gratia, quietly = TRUE)
+
+load("data/Lyon.Rdata")
+xy <- st_coordinates(st_centroid(LyonIris))
+LyonIris$X <- xy[,1]
+LyonIris$Y <- xy[,2]
+
+# Modèle non spatial avec une distribution gaussienne
+model1 <- gam(NO2 ~ 
+                Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed,
+              data = LyonIris, method = 'REML',
+              family = gaussian(link = "identity"))
+summary(model1)
+
+# Modèle intégrant uniquement une constante variant spatialement
+model2 <- gam(NO2 ~ 
+                Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed  +
+                s(X,Y, bs = 'gp'),
+              data = LyonIris, method = 'REML',
+              family = gaussian(link = "identity"))
+summary(model2)
+
+# Modèle intégrant intégrant les coefficients variant spatialement
+model3 <- gam(NO2 ~ 
+                s(X,Y, bs = 'gp', k = 25, by = Pct0_14) + 
+                s(X,Y, bs = 'gp', k = 25, by = Pct_brevet) + 
+                s(X,Y, bs = 'gp', k = 25, by = Pct_65) + 
+                s(X,Y, bs = 'gp', k = 25, by = NivVieMed),
+              data = LyonIris, method = 'REML',
+              family = gaussian(link = "identity"))
+summary(model3)
+round(concurvity(model3),3)
+
+# Modèle intégrant intégrant avec uniquement le niveau de vie variant spatialement
+model3 <- gam(NO2 ~ Pct0_14 + Pct_brevet + Pct_65 +
+                s(X,Y, bs = 'gp', k = 25, by = NivVieMed),
+              data = LyonIris, method = 'REML',
+              family = gaussian(link = "identity"))
+summary(model3)
+
+comp_df <- AIC(model1, model2, model3)
+comp_df$REML <- c(model1$gcv.ubre, model2$gcv.ubre, model3$gcv.ubre)
+comp_df$R2 <- c(summary(model1)$r.sq, 
+                summary(model2)$r.sq, 
+                summary(model3)$r.sq)
+
+knitr::kable(comp_df, row.names = TRUE, digits = 2)
+
+LyonIris$residual_1 <- residuals(model1, type = 'scaled.pearson')
+LyonIris$residual_2 <- residuals(model2, type = 'scaled.pearson')
+LyonIris$residual_3 <- residuals(model3, type = 'scaled.pearson')
+
+knn_list <- knearneigh(st_centroid(LyonIris), k = 10)
+nb_list <- knn2nb(knn_list, sym = TRUE)
+listw <- nb2listwdist(nb_list, st_centroid(LyonIris), style = 'W', type = 'idw', alpha = 2)
+
+test1 <- moran.mc(LyonIris$residual_1, listw = listw, nsim = 999)
+test2 <- moran.mc(LyonIris$residual_2, listw = listw, nsim = 999)
+test3 <- moran.mc(LyonIris$residual_3, listw = listw, nsim = 999)
+
+tableau <- data.frame(
+  variable = c('residus1', 'residus2', 'residus3'),
+  I = c(test1$statistic, test2$statistic, test3$statistic),
+  P = c(test1$p.value, test2$p.value, test3$p.value)
+)
+print(tableau)
+summary(model3)
+
+# Cartographie des effets spatiaux
+library(terra)
+library(gratia)
+library(matrixStats)
+
+mask_data <- LyonIris %>% 
+  st_union() %>% 
+  vect()
+
+# Préparation d'un ensemble de points de prédictions formant une grille 
+# régulière de quadrats de 200 mètres de coté
+bbox <- st_bbox(mask_data)
+coords <-  expand.grid(
+  X = seq(bbox$xmin, bbox$xmax, 100),
+  Y = seq(bbox$ymin, bbox$ymax, 100)
+)
+
+# Création du dataframe pour les prédictions
+pred_df <- coords
+pred_df$Pct0_14 <- 0
+pred_df$Pct_brevet <- 0
+pred_df$Pct_65 <- 0
+pred_df$NivVieMed <- mean(LyonIris$NivVieMed)
+
+# Prédictions à partir du modèle
+preds <- predict(model3, newdata = pred_df, type = 'terms')
+preds <- data.frame(preds)
+preds <- cbind(pred_df[, c("X", "Y")], preds)
+names(preds) <- c("X", "Y", "Pct0_14", "Pct_brevet", "Pct_65", "spline_NivVieMed")
+
+# Conversion des prédictions en objets raster pour la cartographie
+vars <- c("X", "Y","spline_NivVieMed")
+data_rast <- as.matrix(preds[, vars])
+raster_NivVieMed <- rast(data_rast[,c(1,2,3)],type = 'xyz')
+crs(raster_NivVieMed) <- crs(LyonIris)
+
+# Cartographie de l'effet spatial de niveau de vie
+legende_parametres <- list(text.separator = "à",
+                           decimal.mark = ",",
+                           big.mark = " "
+                           )
+tmap_options(frame = FALSE, legend.frame = FALSE)
+
+tm_shape(mask(raster_NivVieMed, mask_data)) + 
+  tm_raster(
+    col.scale = tm_scale_intervals(
+      n = 6,     
+      midpoint = 0,
+      style = "pretty",
+      values = '-brewer.rd_bu',
+      label.format = legende_parametres),
+    col.legend = tm_legend(title = "Niveau de vie",
+                           position = tm_pos_out(pos.h = "left", pos.v = "top")
+                           )
+    )
+```
+
 ### Exercice 2 {#sec-11102}
+
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+
+load("data/Lyon.Rdata")
+library(sf, quietly = TRUE)
+library(ggplot2, quietly = TRUE)
+library(tmap, quietly = TRUE)
+library(dplyr, quietly = TRUE)
+library(spdep, quietly = TRUE)
+library(DHARMa, quietly = TRUE)
+library(sdmTMB, quietly = TRUE)
+
+# Récupération en mise à l'échelle des coordonnées spatiales (division par 100)
+vars <- c('Pct0_14', 'Pct_65', 'Pct_Img', 'Pct_brevet', 'NivVieMed')
+XY <- st_coordinates(st_centroid(LyonIris))
+LyonIris <- LyonIris[, c("NO2", vars)]
+LyonIris$X <- XY[,1] / 100
+LyonIris$Y <- XY[,2] / 100
+
+# Standardisation des différentes variables quantitatives
+for(var in vars){
+  LyonIris[[paste0('cr_', var)]] <- 
+    scale(LyonIris[[var]], center = TRUE, scale = TRUE)
+}
+
+# Réalisation de la mesh
+mesh1 <- make_mesh(st_drop_geometry(LyonIris), c('X', 'Y'), cutoff = 20)
+mesh2 <- make_mesh(st_drop_geometry(LyonIris), c('X', 'Y'), cutoff = 1)
+mesh3 <- make_mesh(st_drop_geometry(LyonIris), c('X', 'Y'), cutoff = 5)
+
+plot(mesh1)
+plot(mesh2)
+plot(mesh3)
+```
 
 ### Exercice 3 {#sec-11103}
 
+```{r}
+#| echo: true 
+#| message: false 
+#| warning: false 
+#| eval: false
+
+# Premier modèle avec uniquement la constante variant spatialement
+model1 <- sdmTMB(
+  data = st_drop_geometry(LyonIris),
+  formula = NO2 ~ 
+    cr_Pct0_14 + cr_Pct_65 + cr_Pct_Img + cr_Pct_brevet + cr_NivVieMed,
+  mesh = mesh2,
+  family = gaussian(link = "identity"),
+  spatial = TRUE
+)
+
+# Analyse des résidus simulés du modèle
+simulations <- simulate(model1, nsim = 500, type = "mle-mvn")
+resids <- dharma_residuals(simulations, model1, return_DHARMa = TRUE)
+plot(resids)
+
+# Second modèle qui fait aussi varier spatialement les variables indépendantes
+model2 <- sdmTMB(
+  data = st_drop_geometry(LyonIris),
+  formula = NO2 ~ 
+    cr_Pct0_14 + cr_Pct_65 + cr_Pct_Img + cr_Pct_brevet + cr_NivVieMed,
+  mesh = mesh2,
+  spatial = TRUE,
+  spatial_varying = ~ 1 + cr_Pct0_14 + cr_Pct_65 + 
+    cr_Pct_Img + cr_Pct_brevet + cr_NivVieMed,
+  family = gaussian(link = "identity"),
+)
+
+# Identification des variables qui varient spatialement
+tidy(model2, effects = 'ran_pars', conf.int = TRUE) %>% 
+  knitr::kable(digits = 3)
+
+# Troisième modèle avec uniquement les variables à faire
+# varier spatialement
+model3 <- sdmTMB(
+  data = st_drop_geometry(LyonIris),
+  formula = NO2 ~ 
+    cr_Pct0_14 + cr_Pct_65 + cr_Pct_Img + cr_Pct_brevet + cr_NivVieMed,
+  mesh = mesh2,
+  spatial = TRUE,
+  spatial_varying = ~ 1 + cr_Pct_Img + cr_NivVieMed,
+  family = gaussian(link = "identity"),
+)
+
+# analyse des résidus simulés du modèle
+simulations <- simulate(model3, nsim = 500, type = "mle-mvn")
+resids <- dharma_residuals(simulations, model3, return_DHARMa = TRUE)
+plot(resids)
+
+caic1 <- cAIC(model1)
+caic2 <- cAIC(model2)
+caic3 <- cAIC(model3)
+print(c(caic1, caic2, caic3))
+
+# Extraction des coefficients et de leurs intervalles de confiance
+tab_fixe <- tidy(model3, effects = 'fixed', conf.int = TRUE)
+
+# Récupération des écarts types
+vars <- c('Pct0_14', 'Pct_65', 'Pct_Img', 'Pct_brevet', 'NivVieMed')
+sd_values <- sapply(vars, function(x){
+  sd(LyonIris[[x]])
+})
+sd_df <- data.frame(
+  sd = c(1,sd_values),
+  var = c('(Intercept)', paste0('cr_',vars))
+)
+# Application des écarts types aux effets estimés
+ids <- match(tab_fixe$term, sd_df$var)
+tab_fixe$estimate_std <- tab_fixe$estimate
+print(tab_fixe)
+
+for(col in c("estimate", "conf.low", "conf.high")){
+  tab_fixe[[col]] <- tab_fixe[[col]] / sd_df$sd[ids]
+}
+tab_fixe$std.error <- NULL
+
+# Extraction des prédictions
+preds <- predict(model3, type = 'link')
+
+# Récupération de la constante spatiale
+LyonIris$rand_intercept <- preds$omega_s
+
+# Extraction de 999 simulations des valeurs locales des coefficients spatiaux
+library(matrixStats)
+set.seed(888)
+preds2 <- predict(model3, type = 'link', nsim = 999, sims_var = 'zeta_s')
+
+# Extraction de 999 simulations des valeurs locales de la constante spatiale
+preds3 <- predict(model3, type = 'link', nsim = 999, sims_var = 'omega_s')
+
+# Pour chacun des coefficients spatiaux, déterminer si la variation spatiale est 
+# significativement différente de 0 au seuil 0.05
+pvals <- sapply(preds2, function(tab){
+  qtl <- rowQuantiles(tab, probs = c(0.025, 0.975))
+  test <- ((qtl[,1] < 0) & (qtl[,2] < 0)) | ((qtl[,1] > 0) & (qtl[,2] > 0))
+  return(test)
+})
+pvals <- data.frame(pvals)
+
+# idem avec la constante spatiale
+qtl <- rowQuantiles(preds3, probs = c(0.025, 0.975))
+test <- ((qtl[,1] < 0) & (qtl[,2] < 0)) | ((qtl[,1] > 0) & (qtl[,2] > 0))
+LyonIris$rand_intercept_sign <- test
+table(LyonIris$rand_intercept_sign)
+
+# Récupération des coefficients spatiaux pour nos différentes variables 
+# avec un effet spatial
+sp_vars <- c('cr_Pct_Img', 'cr_NivVieMed')
+for(var in sp_vars){
+  # récupération du coefficient fixe de base
+  base_coeff <- tab_fixe$estimate_std[tab_fixe$term == var]
+  # récupération des variations spatiales du coefficient
+  sp_coeff <- preds[[paste0('zeta_s_', var)]]
+  # addition et conversion vers l'échelle originale des données 
+  loc_coeff <- (base_coeff + sp_coeff) / sd_df$sd[sd_df$var == var]
+  LyonIris[[paste0('sp_coeff_', var)]] <- loc_coeff
+  LyonIris[[paste0('sp_sign_', var)]] <- pvals[[var]]
+}
+table(LyonIris$sp_sign_cr_Pct_Img)
+table(LyonIris$sp_sign_cr_NivVieMed)
+
+legende_parametres <- list(text.separator = "à",
+                           decimal.mark = ",",
+                           big.mark = " ",
+                           digits = 2)
+
+tmap_options(frame = FALSE, legend.frame = FALSE)
+
+tm_shape(LyonIris) +
+  tm_polygons(
+    col = NULL,
+    fill = 'rand_intercept',
+    fill.scale = tm_scale_intervals(
+      style = 'fisher', n = 7, midpoint = 0,
+      values = '-brewer.rd_bu',
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "Constante aléatoire spatial", 
+      position = tm_pos_out("center", "bottom"),
+      orientation = "landscape")
+  ) +
+  tm_shape(subset(LyonIris, !LyonIris$rand_intercept_sign)) +
+  tm_polygons(col = NULL, fill = 'grey') +
+  tm_add_legend(type = 'polygons', 
+                position = tm_pos_out("center", "bottom"),
+                labels = 'non significatif', 
+                col = NA)
+
+tm_shape(LyonIris) +
+  tm_polygons(
+    col = NULL,
+    fill = 'sp_coeff_cr_Pct_Img',
+    fill.scale = tm_scale_intervals(
+      style = 'fisher', n = 7, midpoint = 0,
+      values = '-brewer.rd_bu',
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "Constante aléatoire spatial", 
+      position = tm_pos_out("center", "bottom"),
+      orientation = "landscape")
+  ) +
+  tm_shape(subset(LyonIris, !LyonIris$sp_sign_cr_Pct_Img)) +
+  tm_polygons(col = NULL, fill = 'grey') +
+  tm_add_legend(type = 'polygons', 
+                position = tm_pos_out("center", "bottom"),
+                labels = 'non significatif', 
+                col = NA)
+
+tm_shape(LyonIris) +
+  tm_polygons(
+    col = NULL,
+    fill = 'sp_coeff_cr_NivVieMed',
+    fill.scale = tm_scale_intervals(
+      style = 'fisher', n = 7, midpoint = 0,
+      values = '-brewer.rd_bu',
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "Constante aléatoire spatial", 
+      position = tm_pos_out("center", "bottom"),
+      orientation = "landscape")
+  ) +
+  tm_shape(subset(LyonIris, !LyonIris$sp_sign_cr_NivVieMed)) +
+  tm_polygons(col = NULL, fill = 'grey') +
+  tm_add_legend(type = 'polygons', 
+                position = tm_pos_out("center", "bottom"),
+                labels = 'non significatif', 
+                col = NA)
+```

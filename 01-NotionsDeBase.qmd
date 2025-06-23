@@ -4,13 +4,13 @@ Avant d'explorer les différents types de régressions spatiales dans les chapit
 
 Certaines sections de ce chapitre sont adaptées du manuel suivant : Apparicio P. et J. Gelb (2024). *Méthodes d’analyse spatiales : un grand bol d’R*. Université de Sherbrooke, Département de géomatique appliquée. fabriqueREL. Licence CC BY-SA.
 
-::: bloc_objectif
-::: bloc_objectif-header
+:::::: bloc_objectif
+:::: bloc_objectif-header
 ::: bloc_objectif-icon
 :::
 
 **Objectifs d'apprentissage visés dans ce chapitre**
-:::
+::::
 
 ::: bloc_objectif-body
 À la fin de ce chapitre, vous devriez être en mesure de :
@@ -20,20 +20,20 @@ Certaines sections de ce chapitre sont adaptées du manuel suivant : Apparicio 
 -   comprendre la notion de variable spatialement décalée;
 -   calculer une mesure d'autocorrélation spatiale globale (*I* de Moran) dans R;
 -   évaluer la dépendance spatiale d'un modèle de régression multiple en calculant le *I* de Moran sur ses résidus.
-
-
 :::
-:::
+::::::
 
-::: bloc_package
-::: bloc_package-header
+:::::: bloc_package
+:::: bloc_package-header
 ::: bloc_package-icon
 :::
 
 **Liste des *packages* utilisés dans ce chapitre**
-:::
+::::
 
 ::: bloc_package-body
+-   Pour manipuler des données :
+    -   `dplyr` pour structurer des données.
 -   Pour importer et manipuler des fichiers géographiques :
     -   `sf` pour importer et manipuler des données vectorielles.
 -   Pour cartographier des données :
@@ -43,24 +43,24 @@ Certaines sections de ce chapitre sont adaptées du manuel suivant : Apparicio 
 -   Pour les mesures d'autocorrélation spatiale :
     -   `spdep` pour construire des matrices de pondération spatiales et calculer le *I* de Moran.
 :::
-:::
+::::::
 
 ## Description des jeux de données utilisés dans le manuel {#sec-011}
 
 Plusieurs jeux de données sont utilisés dans ce livre et sont déjà structurés et disponibles au format `.Rdata`.
 
-::: bloc_attention
-::: bloc_attention-header
+:::::: bloc_attention
+:::: bloc_attention-header
 ::: bloc_attention-icon
 :::
 
 **Manipulation, structuration et cartographie de données spatiales**
-:::
+::::
 
 ::: bloc_attention-body
 Ce livre n'a pas pour objectif de traiter la phase préparatoire consistant à structurer les données spatiales dans R avant l'application de modèles de régression spatiale. Nous partons du principe que les lectrices et lecteurs maîtrisent déjà l'utilisation des *packages* `sf` et `tmap` pour manipuler, structurer et cartographier des données spatiales. Si ce n'est pas le cas, nous vous encourageons à consulter le chapitre intitulé [*Manipulation des données spatiales dans R*](https://serieboldr.github.io/MethodesAnalyseSpatiale/01-ManipulationDonneesSpatiales.html) [@RBoldAirMethodesAnalysesSpatiales].
 :::
-:::
+::::::
 
 ### Jeu de données sur l'agglomération de Lyon {#sec-0111}
 
@@ -186,36 +186,63 @@ legende_parametres <- list(text.separator = "à",
                            digits = 2)
 
 carte1 <- tm_shape(data_mtl) +
-          tm_fill(col = "prt_tc", 
-                  n = 5, 
-                  palette = "Reds",
-                  style = "quantile",
-                  legend.format = legende_parametres,
-                  title = 'Transport en commun') +
-           tm_layout(frame = FALSE, legend.outside = TRUE)
+  tm_polygons(
+    col = NULL,
+    fill = "prt_tc",
+    fill.scale = tm_scale_intervals(
+      n = 5,
+      style = "quantile",
+      values = "brewer.or_rd",
+      label.format = legende_parametres
+    ),
+    fill.legend  = tm_legend(
+      title = "Transport \n en commun",
+      position = tm_pos_out(),
+      frame = FALSE,
+      na.show = FALSE
+    )
+  ) +
+  tm_layout(frame = FALSE)
 
 carte2 <- tm_shape(data_mtl) +
-          tm_fill(col = "prt_auto", 
-                  n = 5, 
-                  palette = "Reds",
-                  style = "quantile",
-                  legend.format = legende_parametres,
-                  title = 'Automobile') +
-           tm_layout(frame = FALSE, legend.outside = TRUE)
+  tm_polygons(
+    col = NULL,
+    fill = "prt_auto",
+    fill.scale = tm_scale_intervals(
+      n = 5,
+      style = "quantile",
+      values = "brewer.or_rd",
+      label.format = legende_parametres
+    ),
+    fill.legend  = tm_legend(
+      title = "Automobile",
+      position = tm_pos_out(),
+      frame = FALSE
+    )
+  ) +
+  tm_layout(frame = FALSE)
 
 carte3 <- tm_shape(data_mtl) +
-          tm_fill(col = "prt_actif", 
-                  n = 5, 
-                  palette = "Reds",
-                  style = "quantile",
-                  legend.format = legende_parametres,
-                  title = 'Transport actif') +
-           tm_layout(frame = FALSE, legend.outside = TRUE) + 
-           tm_scale_bar(breaks = c(0,10))
-          
+  tm_polygons(
+    col = NULL,
+    fill = "prt_auto",
+    fill.scale = tm_scale_intervals(
+      n = 5,
+      style = "quantile",
+      values = "brewer.or_rd",
+      label.format = legende_parametres
+    ),
+    fill.legend  = tm_legend(
+      title = "Transport actif",
+      position = tm_pos_out(),
+      frame = FALSE
+    )
+  ) +
+  tm_layout(frame = FALSE) +
+  tm_scalebar(breaks  = c(0, 5), position = c("right", "bottom"))
+
 tmap_arrange(carte1, carte2, carte3, ncol=2, nrow=2)
 ```
-
 
 ### Jeu de données sur Barcelone {#sec-0113}
 
@@ -270,36 +297,31 @@ knitr::kable(stats,
 
 ![Cartographie des variables du jeu de données de Barcelone](images/Chap01/FigureDataBarcelone.png){#fig-barceloneCarto width="100%" fig-align="center"}
 
-### Jeu de données sur les taux de décès dde la COVID19 dans les comtés des États-Unis {#sec-0114}
+### Jeu de données sur le taux de décès de la COVID-19 dans les comtés des États-Unis {#sec-0114}
 
-Quatrièmement, nous utiliserons un jeu mis l'étude de @kaashoek2022evolving. Dans cet article, les auteurs cherchent à déterminer quels sont les facteurs socio-économiques, politiques, et sanitaires qui ont été associés avec une prévalence de décès de COVID19 dans les différents comtés des États-Unis. Les données de l'article ont été publiées en [accès ouvert](https://github.com/ctesta01/spatial_poisson_covid/tree/main). Nous nous concentrons spécifiquement sur les données utilisées pour réaliser modèle spatial appliqué à la troisième période d'étude.
+Quatrièmement, nous utiliserons un jeu de données spatiales issu de l'étude de @kaashoek2022evolving. Dans cet article, les auteures et auteurs cherchent à déterminer quels sont les facteurs socio-économiques, politiques, et sanitaires associés avec la prévalence de décès de COVID-19 dans les différents comtés des États-Unis. Les données de l’article sont en [accès libre](https://github.com/ctesta01/spatial_poisson_covid/tree/main). Nous nous concentrons spécifiquement sur les données utilisées pour réaliser un modèle spatial appliqué à la troisième période d’étude.
 
-L'objectif de ce modèle est donc de prédire le nombre de décès de COVID19 par comté pour la période octobre 2020 à février 2021. Il s'agit de la période pendant laquelle le nombre de cas était le plus élevé pour l'ensemble du pays. La première période correspond aux premiers pics épidémiques (férvier - mai 2020) et à l'apparition des premiers clusters de contagions. La seconde période a été marquée par l'adoption des premières mesures sanitaires et une poursuite de la contamination vers les états plus éloignés et moins peuplés. 
+L’objectif de ce modèle est de prédire le nombre de décès de COVID-19 par comté pour la période d’octobre 2020 à février 2021. Durant cette période, le nombre de cas était le plus élevé pour l’ensemble du pays. La première période correspond aux premiers pics épidémiques (février à mai 2020) et à l’apparition des premiers agrégats spatiaux de contagion. La seconde période a été marquée par l’adoption des premières mesures sanitaires et une poursuite de la contamination vers les états plus éloignés et moins peuplés.
 
-Les variables intégrées peuvent être regroupées dans trois groupes : 
+Les variables de ce jeu de données sont regroupées en trois ensembles :
 
-1. Les variables socio-démographiques. L'hypothèse originale étant que dans les milieux plus défavorisés et moins éduqués, l'épidémie a fait plus de victimes. De même, les personnes âgées étaient particulièrement à risque pendant la pendémie, ainsi que les personnes fragilisées vivant dans des établissements de soin.
+-   **Variables socio-démographiques**. L'hypothèse originale étant que dans les milieux plus défavorisés et moins éduqués, l'épidémie a fait plus de victimes. De même, les personnes âgées étaient particulièrement à risque pendant la pandémie, ainsi que les personnes fragilisées vivant dans des établissements de soin.
+    -   `income` : niveau de revenu médian (\$).
+    -   `per_black` : pourcentage de la population étant afro-américaine.
+    -   `per_hispanic` : pourcentage de la population étant hispanique.
+    -   `per_atleast_hs` : part de la population disposant d'un diplôme de fin d'études secondaires.
+    -   `X65plus` : part de la population ayant 65 ans et plus.
+    -   `per_nursing` : part de la population vivant dans des établissements de soin.
+-   **Variables politiques.** L'hypothèse originale est que certains partis politiques ont moins mis en place de mesures sanitaires ce qui a eu un impact sur le nombre de décès dans les comtés. Les comportements de la population ont aussi été affectés par les orientations politiques menant à une adoption moins systématique des gestes barrières par exemple.
+    -   `political_leaning` : niveau d'orientation politique, calculé comme la différence entre les votes républicains (votes pour Donald Trump) et les votes démocrates (votes pour Joe Biden), divisé par le total de votants. Une valeur positive indique un état avec une tendance plus républicaine et une valeur négative indique un état à tendance plus démocrate. Ces données proviennent des données électorale du New York Times de 2020.
+    -   `strict_p3` : niveau d'intensité de mise en place de mesures sanitaires. Il s'agit d'un score développé par le *Oxford COVID-19 Government Response Tracker* avec des valeurs allant de 0 (absence de mesures) à 100 (mesures les plus importantes). Ces données sont obtenues à l'échelle des États.
+-   **Variables de contagion**. Plusieurs facteurs expliquent la propagation de la maladie tels que la proximité aux aéroports, les niveaux de mobilité dans les comtés ou encore le port du masque.
+    -   `density` : densité de population du comté.
+    -   `google_p3` : niveaux de mobilité pour le motif du travail selon les données de *Google Mobility*. Cet indicateur est comparatif par rapport à une tendance habituelle et est exprimé en pourcentage. Une mobilité plus importante serait associée à une moins bonne distanciation sociale entre individus de ménages différents.
+    -   `dist_to_airport` : la distance à l'aéroport internationnal le plus proche.
+    -   `mask_usage_p3` : estimation de la proportion des personnes portant le masque la plupart du temps ou tout le temps en public. Ces données proviennent d'une enquête effectuée par Facebook (*Facebook’s COVID-19 symptom survey*).
 
-* `income` : le niveau de revenu médian ($)
-* `per_black` : le pourcentage de la population étant afro-américaine
-* `per_hispanic` : le pourcentage de la population étant hispanique
-* `per_atleast_hs` : la part de la population disposant d'un dilôme de fin d'étude secondaire
-* `X65plus` : part de la population ayant 65 ans et plus
-* `per_nursing` : part de la population vivant dans des établissements de soin
-
-2. Les variables politiques. L'hypothèse originale est que certains partis politiques ont moins mis en place de mesures sanitaires ce qui a eu un impact sur le nombre de décès dans les contés. Les comportements de la population ont aussi été affectés par les orientations politiques menant à une adoption moins systématique par exemple des gestes barrières.
-
-* `political_leaning` : le niveau d'orientation politique, calculé comme la différence entre les votes républicains (votes pour Donald Trump) et les votes démocrates (votes pour Joe Biden), divisé par le total de votant. Une valeur positive indique un état avec une tendance plus républicaine et une valeur négative indique à état à tendance plus démocrate. Ces données proviennent des données électorale du New York Times de 2020.
-* `strict_p3` : le niveau d'intensité de mise en place de mesures sanitaires. Il s'agit d'un score développé par le *Oxford COVID-19 Government Response Tracker* avec des valeurs allant de 0 (absence de mesures) à 100 (mesures les plus importantes). Ces données sont obtenues à l'échelle des États.
-
-3. Les variables de contagions. Plusieurs facteurs expliquent la propagation de la maladie tels que la proximité aux aéroports, les niveaux de mobilité dans les contés ou encore le port du masque.
-
-* `density` : la densité de population du conté
-* `google_p3` : les niveaux de mobilité pour le motif travail selon les données de Google Mobility. Cet indicateur est comparatif par rapport à une tendance habituelle et est exprimé en pourcentage. Une mobilité plus importante serait associée à une moins bonne distanciation sociale entre individus de ménages différents.
-* `dist_to_airport` : la distance à l'aéroport internationnal le plus proche.
-* `mask_usage_p3` : estimation de la proportion des personnes portant le masque la plupart du temps ou tout le temps en public. Ces données proviennent d'une enquête effectuée par Facebook (*Facebook’s COVID-19 symptom survey*).
-
-Les cartes ci-dessous illustrent la variable dépendante (taux de décès) et trois variables indépendantes. 
+Les cartes ci-dessous illustrent la variable dépendante (taux de décès) et trois variables indépendantes.
 
 ```{r}
 #| echo: false 
@@ -309,7 +331,6 @@ Les cartes ci-dessous illustrent la variable dépendante (taux de décès) et tr
 #| label: fig-expcar1
 #| fig-cap: Distribution spatiale de différentes données utilisées pour le modèle
 #| fig-align: center
-
 
 library(sf, quietly = TRUE)
 library(ggplot2, quietly = TRUE)
@@ -322,15 +343,15 @@ library(DHARMa, quietly = TRUE)
 # Chargement des données
 covid_data <- readRDS('data/chap02/covid_usa.rds')
 
-# recodage des valeurs négatives pour le nombre de décès
+# Recodage des valeurs négatives pour le nombre de décès
 covid_data$deaths_3 <- ifelse(covid_data$deaths_3 < 0, 
                               0, 
                               covid_data$deaths_3
                               )
 
-# conservation uniquement des contés unique
-covid_data <- covid_data %>% 
-  group_by(FIPS) %>% 
+# Conservation uniquement des comtés unique
+covid_data <- covid_data %>%
+  group_by(FIPS) %>%
   slice_head(n = 1)
   
 
@@ -347,20 +368,25 @@ moran_i <- moran.mc(covid_data$rate_3,
 # Texte pour la valeur du I de Moran
 moran_text <- format(as.numeric(round(moran_i$statistic,3)) , decimal.mark =",")
 
-
 # Cartographie de la variable
-map1 <- tm_shape(covid_data) +
-  tm_fill(col="rate_3", n = 7,
-          style = "jenks",
-          legend.format = list(text.separator = "à", 
-                               decimal.mark = ",", 
-                               big.mark = " ",
-                               digits = 2),
-          palette = "YlOrBr", title = 'taux de décès') +
-  tm_layout(frame=FALSE, legend.outside = TRUE) + 
-  tm_scale_bar(breaks = c(0,10)) + 
-  tm_xlab(paste0('I de Moran = ', moran_text))
-
+carte1 <- tm_shape(covid_data) +
+  tm_polygons(
+    col = NULL,
+    fill = "rate_3",
+    fill.scale = tm_scale_intervals(
+      n = 7,
+      style = "jenks",
+      values = "brewer.or_rd",
+      label.format = legende_parametres,
+      label.na = "Sans données"
+    ),
+    fill.legend  = tm_legend(
+      title = paste0("Taux de décès\n", "(I de Moran = ", moran_text, ")"),
+      position = tm_pos_out(),
+      frame = FALSE
+    )
+  ) +
+  tm_layout(frame = FALSE)
 
 # Calcul du I de moran de la variable
 moran_i <- moran.mc(covid_data$political_leaning, 
@@ -371,18 +397,25 @@ moran_i <- moran.mc(covid_data$political_leaning,
 # Texte pour la valeur du I de Moran
 moran_text <- format(as.numeric(round(moran_i$statistic,3)) , decimal.mark =",")
 
-map2 <- tm_shape(covid_data) +
-  tm_fill(col="political_leaning", n = 7,
-          style = "equal",
-          midpoint = 0,
-          legend.format = list(text.separator = "à", 
-                               decimal.mark = ",", 
-                               big.mark = " ",
-                               digits = 2),
-          palette = "-RdBu", title = 'orientation politique') +
-  tm_layout(frame=FALSE, legend.outside = TRUE) + 
-  tm_scale_bar(breaks = c(0,10)) + 
-  tm_xlab(paste0('I de Moran = ', moran_text))
+carte2 <- tm_shape(covid_data) +
+  tm_polygons(
+    col = NULL,
+    fill = "political_leaning",
+    fill.scale = tm_scale_intervals(
+      n = 7,
+      style = "equal",
+      midpoint = 0,
+      values = "-brewer.rd_bu",
+      label.format = legende_parametres,
+      label.na = "Sans données"
+    ),
+    fill.legend  = tm_legend(
+      title = paste0("Orientation politiques\n", "(I de Moran = ", moran_text, ")"),
+      position = tm_pos_out(),
+      frame = FALSE
+    )
+  ) +
+  tm_layout(frame = FALSE)
 
 
 # Calcul du I de moran de la variable
@@ -394,18 +427,24 @@ moran_i <- moran.mc(covid_data$strict_p3,
 # Texte pour la valeur du I de Moran
 moran_text <- format(as.numeric(round(moran_i$statistic,3)) , decimal.mark =",")
 
-map3 <- tm_shape(covid_data) +
-  tm_fill(col="strict_p3", n = 7,
-          style = "jenks",
-          legend.format = list(text.separator = "à", 
-                               decimal.mark = ",", 
-                               big.mark = " ",
-                               digits = 2),
-          palette = "Greens", title = 'mesures sanitaires') +
-  tm_layout(frame=FALSE, legend.outside = TRUE) + 
-  tm_scale_bar(breaks = c(0,10)) + 
-  tm_xlab(paste0('I de Moran = ', moran_text))
-
+carte3 <- tm_shape(covid_data) +
+  tm_polygons(
+    col = NULL,
+    fill = "strict_p3",
+    fill.scale = tm_scale_intervals(
+      n = 7,
+      style = "jenks",
+      values = "brewer.greens",
+      label.format = legende_parametres,
+      label.na = "Sans données"
+    ),
+    fill.legend  = tm_legend(
+      title = paste0("Mesures sanitaires\n", "(I de Moran = ", moran_text, ")"),
+      position = tm_pos_out(),
+      frame = FALSE
+    )
+  ) +
+  tm_layout(frame = FALSE)
 
 # Calcul du I de moran de la variable
 moran_i <- moran.mc(covid_data$google_p3, 
@@ -416,42 +455,47 @@ moran_i <- moran.mc(covid_data$google_p3,
 # Texte pour la valeur du I de Moran
 moran_text <- format(as.numeric(round(moran_i$statistic,3)) , decimal.mark =",")
 
-map4 <- tm_shape(covid_data) +
-  tm_fill("google_p3", n = 6,
-          legend.format = list(text.separator = "à", 
-                               decimal.mark = ",", 
-                               big.mark = " ",
-                               digits = 0),
-          title = 'mobilité'
-          )+
-  tm_layout(frame=FALSE, legend.outside = TRUE) + 
-  tm_scale_bar(breaks = c(0,10)) + 
-  tm_xlab(paste0('I de Moran = ', moran_text))
+carte4 <- tm_shape(covid_data) +
+  tm_polygons(
+    col = NULL,
+    fill = "google_p3",
+    fill.scale = tm_scale_intervals(
+      n = 6,
+      style = "jenks",
+      values = "-brewer.blues",
+      label.format = legende_parametres,
+      label.na = "Sans données",
+    ),
+    fill.legend  = tm_legend(
+      title = paste0("Mobilité\n", "(I de Moran = ", moran_text, ")"),
+      position = tm_pos_out(),
+      frame = FALSE
+    )
+  ) +
+  tm_layout(frame = FALSE)
 
-
-tmap_arrange(map1, map2, map3, map4, ncol = 2, nrow = 2)
-
+tmap_arrange(carte1, carte2, carte3, carte4, ncol = 2, nrow = 2)
 ```
 
 ### Jeu de données sur les prix des Airbnb de l'Île de Montréal {#sec-0115}
 
-Ce jeu de donnée comporte 2500 logements airbnb pour lesquels nous connaissons un ensemble d'informations sur la nature du logement, son propriétaire ainsi que l'environnement à proximité du logement. Les données sont mises à disposition par l'organisation [Inside Airbnb](https://insideairbnb.com/fr/get-the-data/). La version utilisée ici a été téléchargée en 2023 et est échantillon aléatoire de tous les logements disponibles.
+Ce jeu de donnée comporte 2 500 logements Airbnb pour lesquels nous connaissons un ensemble d'informations sur la nature du logement, son propriétaire ainsi que l'environnement à proximité du logement. Les données sont mises à disposition par l'organisation [Inside Airbnb](https://insideairbnb.com/fr/get-the-data/). La version utilisée ici a été téléchargée en 2023 et constitue un échantillon aléatoire de tous les logements disponibles.
 
-Nous avons notamment accès aux variables suivantes : 
+Nous avons notamment accès aux variables suivantes :
 
-* `price` : le prix en dollars du logement pour une nuit
-* `private` : une variable binaire indiquant si le logement est privé ou partagé
-* `stationnement_gratuit` : une variable binaire indiquant si le logement dispose d'un stationnement gratuit
-* `jardin_ou_cours` : une variable binaire indiquant si le logement dispose d'un jardin ou d'une cours
-* `bedrooms` : une variable de comptage indiquant le nombre de chambres dans le logement
-* `super_hote` : une variable binaire indiquant si l'hôte à le statut *super-hôte*
-* `number_of_reviews` : une variable de comptage indiquant le nombre d'évaluations reçues par le logement
-* `review_scores_rating` : une variable continue indiquant la note sur 100 du logement
-* `metro_500m` : une variable binaire indiquant si le logement est à moins de 500m d'une station de métro
-* `prt_veg_500m` : une variable continue indiquant la part de la superficie du logement dans un rayon de 500 couverte par de la végétation haute (arbres).
+-   `price` : prix en dollars du logement pour une nuit.
+-   `private` : variable binaire indiquant si le logement est privé ou partagé.
+-   `stationnement_gratuit` : variable binaire indiquant si le logement dispose d'un stationnement gratuit.
+-   `jardin_ou_cours` : variable binaire indiquant si le logement dispose d'un jardin ou d'une cour.
+-   `bedrooms` : variable de comptage indiquant le nombre de chambres dans le logement.
+-   `super_hote` : variable binaire indiquant si l'hôte à le statut *super-hôte.*
+-   `number_of_reviews` : variable de comptage indiquant le nombre d'évaluations reçues par le logement.
+-   `review_scores_rating` : variable continue indiquant la note sur 100 du logement.
+-   `metro_500m` : variable binaire indiquant si le logement est à moins de 500 m d'une station de métro.
+-   `prt_veg_500m` : variable continue indiquant la part de la superficie du logement dans un rayon de 500 couverte par de la végétation haute (arbres).
 
 ```{r}
-#| echo: true 
+#| echo: false 
 #| message: false 
 #| eval: true
 #| warning: false
@@ -476,33 +520,47 @@ library(car, quietly = TRUE)
 # Chargement des données
 data_airbnb <- readRDS('data/airbnb.rds')
 
-
 ggplot(data_airbnb) + 
-  geom_histogram(aes(x = price), fill = 'grey', color = 'black', bins = 30) + 
+  geom_histogram(aes(x = price), 
+                 fill = 'wheat', color = 'black', bins = 30) + 
   theme_bw() + 
-  labs(x = 'prix par nuit ($)',
-       y = 'effectif'
+  labs(x = 'Prix par nuit ($)',
+       y = 'Effectif'
        )
 
 tm_shape(data_airbnb[order(data_airbnb$price),]) + 
-  tm_dots('price', title = 'prix par nuit ($)', size = 0.1)
-
+  tm_dots(fill = 'price',
+          fill.scale = tm_scale_intervals(
+            n = 5,
+            style = "pretty",
+            values = "brewer.or_rd",
+            label.format = list(text.separator = "à",
+                                digits = 0),
+            label.na = "Sans données",
+          ),
+          fill.legend = tm_legend(
+            title = "Prix par nuit ($)",
+            frame = FALSE,
+            position = c("left", "top")
+          ),
+          size = 0.3) +
+  tm_layout(frame = FALSE)
 ```
 
 ## Matrices de pondération spatiale {#sec-012}
 
-::: bloc_objectif
-::: bloc_objectif-header
+:::::: bloc_objectif
+:::: bloc_objectif-header
 ::: bloc_objectif-icon
 :::
 
 **Utilité des matrices de pondération spatiale**
-:::
+::::
 
 ::: bloc_objectif-body
 Ces matrices permettent de définir les relations spatiales entre les entités spatiales d'une couche géographique, et plus spécifiquement la manière de mesurer leur relation d'adjacence (voisinage) ou de proximité (distance). Nous verrons qu'elles sont largement utilisées dans les régressions spatiales, notamment dans les modèles d'économétrie spatiale abordés dans la seconde partie du livre. Elles sont aussi nécessaires au calcul des mesures d'autocorrélation globales ou locales ([section @sec-0142]) et à la construction des variables spatialement décalées ([section @sec-013]).
 :::
-:::
+::::::
 
 Il existe huit principales matrices de pondération spatiale regroupées en deux grandes catégories : celles de contiguïté (basées sur l'adjacence) et celles de proximité (basées sur la distance) (@tbl-TabMatricesSpatiales). Lorsque la couche géographique est composée de points, seules les matrices de proximité peuvent être utilisées.
 
@@ -697,18 +755,18 @@ Une autre façon très utilisée pour définir une matrice de proximité à part
 
 Il est recommandé de standardiser les matrices de pondération en ligne. La somme de la matrice de pondération sera alors égale au nombre d'entités spatiales de la couche géographique.
 
-::: bloc_attention
-::: bloc_attention-header
+:::::: bloc_attention
+:::: bloc_attention-header
 ::: bloc_attention-icon
 :::
 
 **Quel est l'intérêt de la standardisation?**
-:::
+::::
 
 ::: bloc_attention-body
 Nous verrons dans les sections suivantes que ces matrices sont utilisées pour évaluer le degré d'autocorrélation spatiale globale et locale. Or, il est fréquent de comparer les valeurs des mesures d'autocorrélation spatiale obtenues avec différentes matrices d'adjacence et de proximité (contiguïté selon le partage d'un nœud, d'une frontière commune; inverse de la distance, inverse de la distance au carré, etc.). Autrement dit, la standardisation des matrices de pondération spatiale permet de vérifier si le degré de (dis)ressemblance des entités spatiales en fonction d'une variable donnée est plus fort avec une matrice de contiguïté, d'inverse de la distance, d'inverse de la distance au carré, etc.
 :::
-:::
+::::::
 
 Pour illustrer comment réaliser une standardisation, nous utilisons une couche géographique comprenant peu d'entités spatiales, soit celle des quatre arrondissements de la ville de Sherbrooke (@fig-Arrond).
 
@@ -803,13 +861,13 @@ kableExtra::pack_rows(my_table,
 
 ### Mise en œuvre dans R {#sec-0124}
 
-::: bloc_attention
-::: bloc_attention-header
+:::::: bloc_attention
+:::: bloc_attention-header
 ::: bloc_attention-icon
 :::
 
-**Construction des matrices dans R avec le *package* `spdep`**.
-:::
+**Construction des matrices dans R avec le *package*`spdep`**.
+::::
 
 ::: bloc_attention-body
 Le *package* `spdep` dispose de différentes fonctions pour construire des matrices de contiguïté, de connectivité et de distance :
@@ -824,7 +882,7 @@ Le *package* `spdep` dispose de différentes fonctions pour construire des matri
 
 -   `knn2nb` pour des matrices selon le critère des plus proches voisins.
 :::
-:::
+::::::
 
 #### Matrices de pondération spatiale selon la contiguïté {#sec-01241}
 
@@ -942,13 +1000,13 @@ w_inv_distances  <- mat2listw(inv_distances, style = "W")
 w_inv_distances2 <- mat2listw(inv_distances2, style = "W")
 ```
 
-::: bloc_astuce
-::: bloc_astuce-header
+:::::: bloc_astuce
+:::: bloc_astuce-header
 ::: bloc_astuce-icon
 :::
 
 **Intégration d'autres types de distance**
-:::
+::::
 
 ::: bloc_astuce-body
 À la [section @sec-0122], nous avons vu que plusieurs types de distance peuvent être utilisés : cartésiennes (euclidienne et de Manhattan) et réticulaires (chemin le plus rapide à pied, à vélo, en automobile et en transport en commun).
@@ -957,7 +1015,7 @@ Pour construire une matrice avec la distance de Manhattan, vous devez changer la
 
 Pour intégrer une distance réticulaire, vous devez la calculer, soit [dans R](https://serieboldr.github.io/MethodesAnalyseSpatiale/01-ManipulationDonneesSpatiales.html) [@RBoldAirMethodesAnalysesSpatiales], soit dans un logiciel de système d'information géographique (QGIS ou ArcGIS Pro avec l'extension *Network Analyst* par exemple) et l'importer dans R. Le reste du code sera alors identique.
 :::
-:::
+::::::
 
 Nous avons vu qu'il est possible d'utiliser une matrice en fixant une distance maximale au-delà de laquelle les pondérations sont mises à 0 (@eq-MatriceDistance2). Le code ci-dessous permet de créer des matrices de pondération standardisée avec l'inverse de la distance et l'inverse de la distance au carré avec des seuils de 2500 et de 5000 mètres.
 
@@ -996,13 +1054,13 @@ Spécifier un seuil de distance trop réduit peut toutefois être problématique
 summary(w_inv_distances_1000, zero.policy = TRUE)
 ```
 
-::: bloc_attention
-::: bloc_attention-header
+:::::: bloc_attention
+:::: bloc_attention-header
 ::: bloc_attention-icon
 :::
 
 **Réduction de la taille des matrices de distance**
-:::
+::::
 
 ::: bloc_attention-body
 Plusieurs logiciels (notamment ArcGIS Pro et GeoDa) réduisent par défaut la taille des matrices de distance de la façon suivante : 1) construction d'une matrice de distance uniquement pour l'entité la plus proche (la matrice résultante est donc de dimension $n \times 1$); 2) obtention de la distance maximale dans cette matrice, soit la distance la plus grande entre une entité spatiale et celle la plus proche; 3) construction de la matrice de distance finale avec comme seuil la distance maximale obtenue à l'étape précédente.
@@ -1013,7 +1071,7 @@ Cette réduction procure deux avantages importants :
 
 -   Comme décrit plus haut, il est préférable d'**éviter d'avoir une matrice de distances avec des entités spatiales sans voisins**, puisque cela a un impact négatif sur les mesures d'autocorrélation spatiale.
 :::
-:::
+::::::
 
 La syntaxe ci-dessous permet ainsi de construire des matrices de pondération (inverse de la distance et inverse de la distance au carré) à partir de la distance maximale d'un SR et son voisin le plus proche.
 
@@ -1076,13 +1134,13 @@ w_k4 <-  nb2listw(k4, zero.policy = FALSE, style = "W")
 w_k5 <-  nb2listw(k5, zero.policy = FALSE, style = "W")
 ```
 
-::: bloc_astuce
-::: bloc_astuce-header
+:::::: bloc_astuce
+:::: bloc_astuce-header
 ::: bloc_astuce-icon
 :::
 
 **L'ensemble des matrices en quelques lignes de code!**
-:::
+::::
 
 ::: bloc_astuce-body
 ```{r}
@@ -1156,26 +1214,26 @@ save(w_queen, w_rook,
      file = "data/chap01/MatricesPonderations.Rdata")
 ```
 :::
-:::
+::::::
 
 ## Variable spatialement décalée {#sec-013}
 
 À partir des matrices de pondérations standardisées en ligne, qu'elles soient de contiguïté ou de proximité, il est possible de calculer une version spatialement décalée d'une variable initiale. De la sorte, pour une entité spatiale *i*, il est possible de connaître la valeur moyenne d'une variable pour ses entités voisines ou proches (dépendamment si la matrice est définie selon la contiguïté ou la proximité). Au [chapitre @sec-chap02], nous verrons que ces variables spatiales décalées sont utilisées dans plusieurs modèles d'économétrie spatiale.
 
-::: bloc_notes
-::: bloc_notes-header
+:::::: bloc_notes
+:::: bloc_notes-header
 ::: bloc_notes-icon
 :::
 
 **Comment calculer une variable spatialement décalée avec une matrice de pondération spatiale?**
-:::
+::::
 
 ::: bloc_notes-body
 À la @fig-Chap01FigureVariableSpatialementDecalee, nous détaillons le calcul de la valeur d'une variable spatialement décalée pour l'entité spatiale **A** à partir d'une matrice de contiguïté (selon le partage d'un segment) standardisée en ligne. Notez que **A** est adjacente à quatre entités spatiales (b, c, d et e).
 
 ![Illustration du calcul d'une variable spatialement décalée](images/Chap01/FigureVariableSpatialementDecalee.png){#fig-Chap01FigureVariableSpatialementDecalee width="55%" fig-align="center"}
 :::
-:::
+::::::
 
 La fonction `lag.listw` du *package* `spdep` permet de créer une variable spatialement décalée en spécifiant la matrice de pondération spatiale et un vecteur numérique : `wzx <- lag.listw(listW, zx)`. Dans la syntaxe ci-dessous, nous créons une version spatiale décalée de la variable *dioxyde d'azote* (`NO2`) de la couche `sf` *LyonIris* avec une matrice de pondération spatiale standardisée en ligne (définie selon la contiguïté avec le partage d'un segment, `w_rook`), puis nous cartographions les deux versions de la variable (initiale et spatialement décalée) à la @fig-Chap01FigureVariableSpatialementDecalee2.
 
@@ -1192,7 +1250,7 @@ library(tmap)
 library(spdep)
 load("data/Lyon.Rdata")
 # Matrice de pondération spatiale standardisée en ligne selon la contiguïté 
-w_rook<- nb2listw(poly2nb(LyonIris, queen = FALSE), zero.policy = TRUE, style = "W")
+w_rook <- nb2listw(poly2nb(LyonIris, queen = FALSE), zero.policy = TRUE, style = "W")
 
 # Variable spatialement décalée
 LyonIris$W_NO2 <- lag.listw(w_rook, LyonIris$NO2)
@@ -1204,18 +1262,45 @@ legende_parametres <- list(text.separator = "à",
                            big.mark = " ")
 
 carte1 <- tm_shape(LyonIris)+
-            tm_borders(col = "gray25", lwd=.2)+
-            tm_fill(col = "NO2", palette = "Reds", n = 5, style = "quantile",
-                  legend.format = legende_parametres,
-        		      title = "(a) Variable initiale (NO2)")+
-          tm_layout(frame = FALSE)+tm_scale_bar(breaks=c(0,5))
+            tm_polygons(
+             col = "gray25",
+             lwd=.2,
+             fill = "NO2",
+              fill.scale = tm_scale_intervals(
+                n = 4,
+                style = "quantile",
+                values = "brewer.reds",
+                label.format = legende_parametres
+              ),
+              fill.legend  = tm_legend(
+                title = "(a) Variable initiale",
+                position = c("right", "bottom"),
+                frame = FALSE
+              )
+            ) +
+            tm_layout(frame = FALSE) +
+            tm_scalebar(breaks  = c(0, 2),
+                position = c("center", "bottom"))
 
 carte2 <- tm_shape(LyonIris)+
-            tm_borders(col = "gray25", lwd=.2)+
-            tm_fill(col = "W_NO2", palette = "Reds", n = 5, style = "quantile",
-        		      legend.format = legende_parametres,
-        		      title = "(b) Spatialement décalée (NO2)")+
-          tm_layout(frame = FALSE)
+            tm_polygons(
+              col = "gray25",
+              lwd=.2, 
+              fill = "W_NO2",
+              fill.scale = tm_scale_intervals(
+                n = 4,
+                style = "quantile",
+                values = "brewer.reds",
+                label.format = legende_parametres
+              ),
+              fill.legend  = tm_legend(
+                title = "(b) Spatialement décalée",
+                position = c("right", "bottom"),
+                frame = FALSE
+              )
+            ) +
+            tm_layout(frame = FALSE)
+
 
 tmap_arrange(carte1, carte2, ncol = 2, nrow = 1)
 ```
@@ -1230,12 +1315,14 @@ L'autocorrélation spatiale permet d'estimer la corrélation d'une variable par 
 
 -   **(c) Absence d'autocorrélation spatiale** : lorsque les valeurs de la variable sont distribuées aléatoirement dans l'espace; autrement dit, lorsqu'il n'y a pas de relation entre le voisinage ou la proximité des entités spatiales et leur degré de ressemblance.
 
-::: bloc_objectif
-::: bloc_objectif-header
+:::::: bloc_objectif
+:::: bloc_objectif-header
 ::: bloc_objectif-icon
 :::
+
 **Différentes mesures d'autocorrélation spatiale**
-:::
+::::
+
 ::: bloc_objectif-body
 Nous distinguons habituellement les statistiques d'autocorrélation spatiale globales et locales :
 
@@ -1245,7 +1332,7 @@ Nous distinguons habituellement les statistiques d'autocorrélation spatiale glo
 
 Nous aborderons ici uniquement une **statistique d'autocorrélation spatiale globale**, soit le ***I*** **de Moran**, pour évaluer l'autocorrélation spatiale d'une variable continue. Pour aborder une panoplie de mesures globales ou locales, nous vous invitons à consulter le chapitre intitulé [*Autocorrélation spatiale*](https://serieboldr.github.io/MethodesAnalyseSpatiale/02-Autocorrelation.html) [@RBoldAirMethodesAnalysesSpatiales].
 :::
-:::
+::::::
 
 ### Formulation du *I* de Moran {#sec-0141}
 
@@ -1263,14 +1350,15 @@ $$ {#eq-MoranIa}
 
 -   $\bar{x}$, la valeur moyenne de la variable $X$ à l'étude.
 
+:::::: bloc_notes
+:::: bloc_notes-header
+::: bloc_notes-icon
+:::
 
-::: bloc_notes
-::: bloc_notes-header 
-::: bloc_notes-icon 
-:::
 **Standardisation de la matrice de pondération et *I* de Moran**
-:::
-::: bloc_notes-body 
+::::
+
+::: bloc_notes-body
 Nous avons vu que si la matrice de pondération spatiale est standardisée en ligne ([section @sec-0123]), alors chaque ligne de la matrice vaut 1 et la somme de l'ensemble des valeurs de la matrice est égale au nombre d'entités spatiales ($n$). Or, dans l'@eq-MoranIa, $\Sigma_{i=1}^n \Sigma_{j=1}^n w_{ij}$ représente la somme des pondérations de la matrice, soit $n$ si elles sont standardisées en ligne. Puisque $\frac{n}{n}=1$, alors l'équation du *I* de Moran est simplifiée comme suit :
 
 $$
@@ -1279,7 +1367,7 @@ $$ {#eq-MoranIb}
 
 Comme évoqué dans la [section @sec-0123], cela démontre l'intérêt de la standardisation : la comparaison des valeurs du *I* de Moran obtenues avec différentes matrices de contiguïté afin de sélectionner (éventuellement) celle avec laquelle l'autocorrélation spatiale est la plus forte.
 :::
-:::
+::::::
 
 ### Interprétation du *I* de Moran {#sec-0142}
 
@@ -1293,7 +1381,6 @@ Avec une matrice standardisée, la statistique du *I* de Moran varie de -1 à 1 
 
 Les limites de -1 et 1 sont les maximums théoriques du *I* de Moran. Dans la pratique, elles sont limitées par la matrice spatiale utilisée dans le calcul. En effet, selon la matrice spatiale, le maximum du *I* de Moran peut être inférieur à 1, et son minimum supérieur à -1. Le calcul de ces bornes propres à chaque matrice spatiale peut se faire en utilisant les maximums et minimums des valeurs propres de $\frac{W+W^T}{2}$, quand la matrice spatiale est standardisée. À titre d'exemple, nous calculons ci-dessous les maximums et minimums possibles pour une matrice de contiguïté selon le partage d'un nœud (*Queen*) pour les 506 IRIS de l'agglomération de Lyon. Il apparaît ainsi que pour la matrice de contiguïté selon le partage d'un nœud (*Queen*), quelle que soit la variable analysée, la valeur de *I* de Moran ne pourra pas dépasser les limites -0,64 et 1,04.
 
-
 ```{r}
 #| echo: true
 #| eval: true
@@ -1306,6 +1393,7 @@ queen_mat <- listw2mat(w_queen)
 values <- range(eigen((queen_mat + t(queen_mat))/2)$values)
 print(round(values,2))
 ```
+
 ### Significativité du *I* de Moran {#sec-0143}
 
 Comme pour le coefficient de corrélation calculé entre deux variables, il est possible de tester la significativité de la valeur du *I* de Moran obtenue. Sans que nous détaillions les calculs de significativité, notez qu'il existe trois manières de tester la significativité :
@@ -1316,28 +1404,28 @@ Comme pour le coefficient de corrélation calculé entre deux variables, il est 
 
 -   selon des permutations Monte-Carlo (habituellement avec 999 échantillons).
 
-::: bloc_aller_loin
-::: bloc_aller_loin-header
+:::::: bloc_aller_loin
+:::: bloc_aller_loin-header
 ::: bloc_aller_loin-icon
 :::
 
 **Comment calculer les trois tests de significativité du *I* de Moran?**
-:::
+::::
 
 ::: bloc_aller_loin-body
 Pour une description détaillée du calcul des trois tests, consultez l'ouvrage de Jean Dubé et Diego Legros [-@dube2014econometrie].
 :::
-:::
+::::::
 
-### Mise en œuvre dans R  {#sec-0144}
+### Mise en œuvre dans R {#sec-0144}
 
-::: bloc_objectif
-::: bloc_objectif-header
+:::::: bloc_objectif
+:::: bloc_objectif-header
 ::: bloc_objectif-icon
 :::
 
 **Calcul du *I* de Moran dans R**
-:::
+::::
 
 ::: bloc_objectif-body
 Pour illustrer le calcul de *I* de Moran dans R, nous utilisons la couche des IRIS de l'agglomération de Lyon. Les étapes suivantes sont réalisées :
@@ -1346,7 +1434,7 @@ Pour illustrer le calcul de *I* de Moran dans R, nous utilisons la couche des IR
 2.  Comparer les valeurs de significativité (*p*) pour une variable continue (`NO2`).
 3.  Pour cette même variable, trouver avec quelle matrice la valeur du *I* de Moran est la plus forte.
 :::
-:::
+::::::
 
 #### Étape 1. Construction des matrices de pondération spatiale {#sec-01441}
 
@@ -1574,10 +1662,10 @@ ggplot(data=moran_resultats, aes(x=reorder(Matrices,MoranIs), y=MoranIs)) +
   coord_flip()
 ```
 
-
 #### Étape 4. Comparaison des valeurs du *I* de Moran pour plusieurs variables avec la même matrice {#sec-01444}
 
 La syntaxe ci-dessous permet de calculer la statistique du *I* de Moran pour plusieurs variables avec la même matrice de pondération spatiale (ici, matrice de contiguïté selon le partage d'un segment).
+
 ```{r}
 #| echo: true
 #| message: false
@@ -1626,6 +1714,7 @@ ggplot(data=moran_resultats2, aes(x=reorder(Variable,MoranIs), y=MoranIs)) +
 	xlab("Variable continue") + ylab("I de Moran")+ 
 	coord_flip()
 ```
+
 ## Bref retour sur la régression linéaire multiple {#sec-015}
 
 À titre de rappel, la régression linéaire multiple permet d'exprimer une variable d'intérêt, habituellement notée par le terme variable dépendante ($y$) en fonction de plusieurs variables que l'on pense liées, théoriquement, à la variable d'intérêt. Celles-ci sont habituellement désignées comme des variables explicatives ou indépendantes (notées $x_k$).
@@ -1650,7 +1739,7 @@ Où :
 
 -   $\varepsilon_i$, est le terme d'erreur, soit la partie de la valeur de la variable dépendante qui n'est pas expliquée par le modèle de régression. Le terme d'erreur est habituellement supposé de moyenne nulle, de variance homogène et indépendant.
 
-À noter que le terme d'erreur est, par définition, inobservable. En revanche, il est possible d'approximer cette valeur en calculant le résidu, $\hat{\varepsilon}_i$, parfois aussi noté $\hat{e}_i$ (équations -@eq-regmultiple2 et -@eq-regmultiple3).
+À noter que le terme d'erreur est, par définition, inobservable. En revanche, il est possible d'approximer cette valeur en calculant le résidu, $\hat{\varepsilon}_i$, parfois aussi noté $\hat{e}_i$ (équations [-@eq-regmultiple2] et [-@eq-regmultiple3]).
 
 $$
 \hat{\varepsilon}_i = \hat{y}_i - y_i
@@ -1741,24 +1830,25 @@ $$ {#eq-DP}
 
 Ces effets sont habituellement l'essence de l'intérêt des modèles de régression. Par exemple, une variation de deux unités de la variable $x_k$ devrait entraîner une variation dans $y$ de $2\beta_k$ unités, toutes choses étant égales par ailleurs. Cette analyse est souvent le centre d'intérêt des modèles de régression, bien que l'interprétation causale ne soit pas nécessairement directe [@dube2024integrated].
 
-::: bloc_aller_loin
-::: bloc_aller_loin-header
+:::::: bloc_aller_loin
+:::: bloc_aller_loin-header
 ::: bloc_aller_loin-icon
 :::
 
 **Régression linéaire multiple**
-:::
+::::
 
 ::: bloc_aller_loin-body
 Afin de bien maîtriser les principes de base et les hypothèses de la régression linéaire multiple, de mesurer la qualité d'ajustement du modèle, d'introduire des variables explicatives particulières (variable qualitative dichotomique ou polytomique, variable d'interaction, etc.), d'interpréter les résultats d'un modèle de régression et de le mettre en œuvre dans R, nous vous invitons à lire le chapitre intitulé [Régression linéaire multiple](https://serieboldr.github.io/MethodesQuantitatives/07-regressionlineaire.html) [@RBoldAirMethodesQuanti].
 :::
-:::
+::::::
 
 ## Pourquoi recourir à des régressions spatiales? {#sec-016}
 
 Deux motivations principales peuvent conduire à réaliser des régressions spatiales : la **dépendance spatiale** ou l'**hétérogénéité** du modèle de régression classique appliqué à des données spatiales [@chi2019spatial, p. 41-43].
 
 ### Dépendance spatiale {#sec-0171}
+
 Dans un modèle, les résidus ($\epsilon$) sont la différence entre les valeurs observées ($y_i$) et les valeurs prédites par le modèle ($\widehat{y_i}$). Une des hypothèses de la régression linéaire multiple est que les observations doivent être indépendantes les unes des autres (*indépendance du terme d'erreur*). Le non-respect de cette hypothèse produit des résultats biaisés, notamment pour les coefficients de régression. Un simple test d'autocorrélation spatiale entre les résidus permet de vérifier si cette hypothèse est respectée ([section @sec-014]).
 
 Le rejet de cette hypothèse d’indépendance rend les coefficients estimés, selon la forme fonctionnelle postulée (ou processus générateur des données – PGD) par le modèle, biaisés et/ou biaise le calcul des écarts-types, invalidant ainsi les tests de significativité usuels. La présence d’autocorrélation spatiale entre les résidus est donc un premier test nécessaire pour s’assurer de la qualité des résultats issus du modèle de régression linéaire.
@@ -1778,7 +1868,7 @@ load("data/Lyon.Rdata")
 ## Modèle MCO
 modele_MCO <- lm(PM25 ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed, data = LyonIris)
 summary(modele_MCO)
-``` 
+```
 
 Pour vérifier la dépendance spatiale du modèle, nous calculons le *I* de Moran sur les résidus avec la fonction `lm.morantest` du *package* `spdep` et nous cartographions les résidus avec le *package* `tmap`. La statistique du *I* de Moran sur les résidus (*I* = 0,66, *p* \< 0,001) indique clairement que le modèle MCO a un problème de dépendance spatiale et que ses coefficients de régression reportés plus haut sont certainement biaisés. Aussi, la cartographie des coefficients de régression montre des résidus positifs dans les IRIS des quartiers centraux, tandis que les résidus négatifs sont concentrés dans les IRIS des quartiers ou des municipalités périphériques (@fig-ResidusMCOchap1). Par conséquent, le recours à des régressions spatiales est certainement nécessaire pour remédier à ce problème de dépendance spatiale du modèle MCO.
 
@@ -1793,12 +1883,13 @@ Pour vérifier la dépendance spatiale du modèle, nous calculons le *I* de Mora
 #| fig-cap: "Cartographie des résidus d'un modèle MCO"
 library(spdep)
 library(tmap)
+
 ## Modèle MCO
 LyonIris$MCO.Residus <- modele_MCO$residuals
 
 ## Matrice de contiguïté
 nb_rook <- poly2nb(LyonIris, queen = TRUE)
-w_rook<- nb2listw(nb_rook, zero.policy = TRUE, style = "W")
+w_rook <- nb2listw(nb_rook, zero.policy = TRUE, style = "W")
 
 # I de Moran sur les résidus du modèle global (MCO)
 lm.morantest(modele_MCO, w_rook)
@@ -1806,29 +1897,35 @@ lm.morantest(modele_MCO, w_rook)
 # Cartographie des résidus
 tmap_mode("plot")
 tm_shape(LyonIris)+
-         tm_borders(col = "gray25", lwd=.5)+
-         tm_fill(col = "MCO.Residus", 
-                 n = 6, 
-                 style = "pretty", 
-                 legend.format = list(text.separator = "à",
-                                      decimal.mark = ","),
-                 midpoint = 0,
-                 palette = "-RdBu", 
-                 title = "MCO") +
-         tm_layout(frame = FALSE)+ 
-         tm_scale_bar(breaks = c(0,5))
+  tm_polygons(
+    col = "gray25",
+    lwd=.2,
+    fill = "MCO.Residus",
+    fill.scale = tm_scale_intervals(
+      n = 6,
+      midpoint = 0,
+      style = "pretty",
+      values = "-brewer.rd_bu",
+      label.format = legende_parametres
+      ),
+      fill.legend  = tm_legend(
+        title = "Résidus",
+        frame = FALSE,
+        position = tm_pos_out("right", pos.v = "center")
+        )
+      ) +
+      tm_layout(frame = FALSE)
 ```
 
-
-::: bloc_aller_loin
-::: bloc_aller_loin-header
+:::::: bloc_aller_loin
+:::: bloc_aller_loin-header
 ::: bloc_aller_loin-icon
 :::
+
 **Dépendance spatiale et méthodes de régression spatiale : quelles solutions?**
-:::
+::::
+
 ::: bloc_aller_loin-body
-
-
 Les **modèles des moindres carrés généralisés** (GLS) et les **modèles linéaires généralisés à effets mixtes** (GLMM) permettent d'ajuster la corrélation spatiale sur les termes d'erreur.
 
 Le **modèle d'autorégression conditionnelle** (CAR) permet de tenir compte de la dépendance locale de la variable dépendante ([chapitre @sec-chap02]).
@@ -1837,24 +1934,26 @@ Le **modèle d'autorégression conditionnelle** (CAR) permet de tenir compte de 
 
 **Les modèles linéaires généralisés** (GAM) ([chapitre @sec-chap06]) permettent d’introduire des lissages spatiaux pour capturer les tendances spatiales soit de manière continue (avec une spline bivariée sur les coordonnées géographiques), soit de manière discrète (avec un lissage par champ aléatoire de Markov). Aussi, les **modèles linéaires généralisés avec des vecteurs spatiaux** ([chapitre @sec-chap07]) permettent de capturer les tendances spatiales en résumant la matrice de pondération spatiale $W$.
 :::
-:::
+::::::
 
 ### Hétérogénéité spatiale {#sec-0172}
 
 L’hétérogénéité ou la non-stationnarité (***spatial heterogeneity*** ou ***nonstationarity***) se manifeste quand les relations entre la variable dépendante et les variables indépendantes varient dans l'espace (en d'autres termes à travers les entités spatiales du jeu de données). Cela contrevient ainsi à l'hypothèse de l’homogénéité spatiale ou de stationnarité spatiale selon laquelle les coefficients du modèle doivent être constant dans l'espace.
 
-::: bloc_aller_loin
-::: bloc_aller_loin-header
+:::::: bloc_aller_loin
+:::: bloc_aller_loin-header
 ::: bloc_aller_loin-icon
 :::
+
 **Hétérogénéité ou non-stationnarité spatiale et méthodes de régression spatiale : quelles solutions?**
-:::
+::::
+
 ::: bloc_aller_loin-body
 **Les régressions géographiquement pondérées** ([chapitre @sec-chap08] et [chapitre @sec-chap09]), sont des outils d'exploration particulièrement adaptés pour cartographier et analyser l'instabilité des relations entre la variable dépendante et les variables indépendantes d'un modèle de régression.
 
 Les **modèles généralisés additifs** (GAM) et les **modèles généralisés à effet mixtes** (GLMM) permmettent aussi d'intégrer des coefficients variant spatialement ([chapitre @sec-chap09])
 :::
-:::
+::::::
 
 ## Quiz de révision {#sec-017}
 
@@ -1872,13 +1971,14 @@ render_quizz(Chap01Quiz)
 
 ## Exercices de révision {#sec-018}
 
-
-::: bloc_exercice
-::: bloc_exercice-header
+:::::: bloc_exercice
+:::: bloc_exercice-header
 ::: bloc_exercice-icon
 :::
-**Exercice 2.** Matrice de contiguïté selon le partage d'un segment et le I de Moran
-:::
+
+**Exercice 1.** Matrice de contiguïté selon le partage d'un segment et le I de Moran
+::::
+
 ::: bloc_exercice-body
 ```{r}
 #| echo: true 
@@ -1896,16 +1996,19 @@ library(spdep)
 # I de Moran sur la variable Lden selon des permutations Monte-Carlo
 à compléter
 ```
+
 Correction à la [section @sec-11011].
 :::
-:::
+::::::
 
-::: bloc_exercice
-::: bloc_exercice-header
+:::::: bloc_exercice
+:::: bloc_exercice-header
 ::: bloc_exercice-icon
 :::
+
 **Exercice 2.** Modèle MCO et dépendance spatiale
-:::
+::::
+
 ::: bloc_exercice-body
 ```{r}
 #| echo: true 
@@ -1928,6 +2031,7 @@ formule <- "Lden ~ Pct0_14 + Pct_65 + Pct_Img + Pct_brevet + NivVieMed"
 # Cartographie des résidus
 à compléter
 ```
+
 Correction à la [section @sec-11012].
 :::
-:::
+::::::

@@ -262,7 +262,7 @@ $$ {#eq-gls9}
 
 Nous modélisons donc la variable *y* en formulant le postulat qu'elle suit une distribution binomiale, et nous prédisons la probabilité *p* d'observer l'évènement $y=1$. Cette probabilité est conditionnée par notre équation de régression, transformée par la fonction de lien logistique. Cette dernière garantit que la prédiction du modèle sera comprise entre 0 et 1 (une probabilité). Finalement, l'autocorrélation spatiale est captée comme une variable latente normalement distribuée, centrée sur 0 et présentant une structure d'autocorrélation spatiale représentée par la matrice de covariance $\Omega$.
 
-## Mise en oeuvre et analyse dans R {#sec-094}
+## Mise en œuvre et analyse dans R {#sec-094}
 
 Pour illustrer la réalisation de différents modèles GLS, nous utilisons le jeu de données sur le prix des logements Airbnb ([section @sec-0112]) sur l'Île de Montréal. Ce jeu de donnée comporte 2500 logements airbnb pour lesquels nous connaissons un ensemble d'informations sur la nature du logement, son propriétaire ainsi que l'environnement à proximité du logement. Nous tentons ici de modéliser le prix de ces logements à la nuit.
 

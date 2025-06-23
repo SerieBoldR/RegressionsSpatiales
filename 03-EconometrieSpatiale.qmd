@@ -256,13 +256,30 @@ legende_parametres <- list(text.separator = "à",
                            decimal.mark = ",", 
                            big.mark = " ")
 lm.morantest(modele_SLX, w_rook, alternative="two.sided")
+
 LyonIris$SLX.Residus <- residuals(modele_SLX)
+
+tmap_mode("plot")
 tm_shape(LyonIris)+
-  tm_fill(col = "SLX.Residus", n = 5, style = "quantile", 
-          legend.format = legende_parametres,
-          palette = "-RdBu", title = "Résidus") +
-tm_layout(frame = FALSE) + 
-tm_scale_bar(breaks = c(0,5))
+  tm_polygons(
+    col = NULL,
+    lwd=.2,
+    fill = "SLX.Residus",
+    fill.scale = tm_scale_intervals(
+      n = 5,
+      midpoint = 0,
+      style = "quantile",
+      values = "-brewer.rd_bu",
+      label.format = legende_parametres
+      ),
+      fill.legend  = tm_legend(
+        title = "Résidus",
+        frame = FALSE,
+        position = tm_pos_out("right", pos.v = "center")
+        )
+      ) +
+  tm_layout(frame = FALSE) +
+  tm_scale_bar(breaks = c(0,5))
 ```
 
 ### Modèle SAR : autocorrélation spatiale sur la variable dépendante {#sec-0312}
@@ -383,11 +400,25 @@ legende_parametres <- list(text.separator = "à",
                            big.mark = " ")
 
 tm_shape(LyonIris)+
-  tm_fill(col = "SAR.Residus", n = 5, style = "quantile", 
-          legend.format = legende_parametres,
-          palette = "-RdBu", title = "Résidus") +
-tm_layout(frame=FALSE) + 
-tm_scale_bar(breaks = c(0,5))
+  tm_polygons(
+    col = NULL,
+    lwd=.2,
+    fill = "SAR.Residus",
+    fill.scale = tm_scale_intervals(
+      n = 5,
+      midpoint = 0,
+      style = "quantile",
+      values = "-brewer.rd_bu",
+      label.format = legende_parametres
+      ),
+      fill.legend  = tm_legend(
+        title = "Résidus",
+        frame = FALSE,
+        position = tm_pos_out("right", pos.v = "center")
+        )
+      ) +
+  tm_layout(frame = FALSE) +
+  tm_scale_bar(breaks = c(0,5))
 ```
 
 ### Modèle SEM : autocorrélation spatiale sur le terme d'erreur {#sec-0313}

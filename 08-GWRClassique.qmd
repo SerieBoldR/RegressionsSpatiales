@@ -315,56 +315,105 @@ legende_parametres <- list(text.separator = "à",
                            big.mark = " ")
 
 # Cartographie du R2
-carte0 <- tm_shape(LyonIris)+
-          tm_borders(col="gray25", lwd=.2)+
-          tm_fill(col="GWR.R2", 
-        		  palette="YlOrBr", 
-        		  n=5, style="quantile",
-        		  legend.format = legende_parametres,
-        		  title = "R2 locaux")+
-          tm_layout(frame=FALSE)+
-          tm_scale_bar(breaks=c(0,5))
+carte0 <- tm_shape(LyonIris) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "GWR.R2",
+    fill.scale = tm_scale_intervals(
+      style = "quantile", n = 5, 
+      values = "brewer.yl_or_br",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "R2 locaux",
+      frame = FALSE, 
+      position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE) +
+  tm_scale(breaks = c(0, 5))
 
+
+# Cartographie des valeurs de t
 classes_intervalles = c(-Inf, -3.29, -2.58, -1.96, 1.96, 2.58, 3.29, Inf)
-carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
-            tm_fill(col="GWR.T_Pct0_14", palette="-RdBu", 
-                  midpoint = NA,
-                  breaks = classes_intervalles,
-                  legend.format = legende_parametres,
-                  title = "Moins de 15 ans (%)")+
-          tm_layout(frame=FALSE, legend.outside = TRUE)
+carte1 <- tm_shape(LyonIris) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "GWR.T_Pct0_14",
+    fill.scale = tm_scale_intervals(
+      breaks = classes_intervalles,
+      midpoint = 0,
+      values = "-brewer.rd_bu",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "Moins de 15 ans (%)",
+      frame = FALSE, 
+      position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE)
 
-carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
-            tm_fill(col="GWR.T_Pct_65", palette="-RdBu",
-                  midpoint = NA,
-                  breaks = classes_intervalles,
-                  legend.format = legende_parametres,
-                  title = "65 ans et plus (%)")+
-          tm_layout(frame=FALSE, legend.outside = TRUE)
+carte2 <- tm_shape(LyonIris) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "GWR.T_Pct_65",
+    fill.scale = tm_scale_intervals(
+      breaks = classes_intervalles,
+      midpoint = 0,
+      values = "-brewer.rd_bu",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "65 ans et plus (%)",
+      frame = FALSE, 
+      position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE)
 
-carte3 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
-           tm_fill(col="GWR.T_Pct_Img", palette="-RdBu", 
-                  midpoint = NA,
-                  breaks = classes_intervalles,
-                  legend.format = legende_parametres,
-                  title = "Immigrants (%)")+
-          tm_layout(frame=FALSE, legend.outside = TRUE)
+carte3 <- tm_shape(LyonIris) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "GWR.T_Pct_Img",
+    fill.scale = tm_scale_intervals(
+      breaks = classes_intervalles,
+      midpoint = 0,
+      values = "-brewer.rd_bu",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "Immigrants (%)",
+      frame = FALSE, 
+      position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE)
 
-carte4 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
-            tm_fill(col="GWR.T_Pct_brevet", palette="-RdBu", 
-                  midpoint = NA,
-                  breaks = classes_intervalles,
-                  legend.format = legende_parametres,
-                  title = "Faible scolarité (%)")+
-          tm_layout(frame=FALSE, legend.outside = TRUE)
+carte4 <- tm_shape(LyonIris) +
+  tm_borders(col = "gray25", lwd = .2) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "GWR.T_Pct_brevet",
+    fill.scale = tm_scale_intervals(
+      breaks = classes_intervalles,
+      midpoint = 0,
+      values = "-brewer.rd_bu",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "Faible scolarité (%)",
+      frame = FALSE, 
+      position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE)
 
-carte5 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.2)+
-            tm_fill(col="GWR.T_NivVieMed", palette="-RdBu", 
-                 midpoint = NA,
-                 breaks = classes_intervalles,
-                 legend.format = legende_parametres,
-                 title = "Niveau de vie (€1000)")+
-          tm_layout(frame=FALSE, legend.outside = TRUE)
+carte5 <- tm_shape(LyonIris) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "GWR.T_NivVieMed",
+    fill.scale = tm_scale_intervals(
+      breaks = classes_intervalles,
+      midpoint = 0,
+      values = "-brewer.rd_bu",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "Niveau de vie (€1000)",
+      frame = FALSE, 
+      position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE)
 
 tmap_arrange(carte0, carte1, carte2, carte3, carte4, carte5, ncol = 2, nrow=3)
 ```
@@ -409,15 +458,33 @@ LyonIris$plus_sign <-  factor(plus_sign,
                                         "Imigrants (27)", 
                                         "Moins de 15 ans (124)"))
 
-carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-            tm_fill(col="nb_signif_1.96", palette="Reds",
-                 title = "Nombre de variables \nsignificatives au seuil de 5%")+
-          tm_layout(frame=FALSE)+ tm_scale_bar(breaks=c(0,5))
+carte1 <- tm_shape(LyonIris) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "nb_signif_1.96",
+    fill.scale = tm_scale_categorical(
+      values = "brewer.reds",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "Nombre de variables \nsignificatives \nau seuil de 5%",
+      frame = FALSE, 
+        position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE)
 
-carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-            tm_fill(col="plus_sign", palette="Set1", 
-                 title = "Variable la plus significative")+
-          tm_layout(frame=FALSE)
+carte2 <- tm_shape(LyonIris) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "plus_sign",
+    fill.scale = tm_scale_categorical(
+      values = "brewer.set1",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "Variable la \nplus significative",
+      frame = FALSE, 
+        position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE)
 
 tmap_arrange(carte1, carte2, ncol=2, nrow=1)
 ```
@@ -630,26 +697,43 @@ moran.test(LyonIris$GWR.Residus, rook_w, randomisation = FALSE)
 ## Cartographie des résidus du modèle MCO
 tmap_mode("plot")
 carte1 <- tm_shape(LyonIris)+
-            tm_borders(col="gray25", lwd=.5)+
-            tm_fill(col="MCO.Residus", n = 6, style = "pretty", 
-                  legend.format = list(text.separator = "à",
-                                       decimal.mark = ","),
-                  midpoint = 0,
-                  palette = "-RdBu", 
-                  title = "MCO") +
-            tm_layout(frame=FALSE)
+  tm_polygons(
+    col="gray25", lwd=.5,
+    fill = "MCO.Residus",
+    fill.scale = tm_scale_intervals(
+      n = 5,
+      midpoint = 0,
+      style = "pretty",
+      values = "-brewer.rd_bu",
+      label.format = legende_parametres
+      ),
+      fill.legend  = tm_legend(
+        title = "MCO",
+        frame = FALSE,
+        position = tm_pos_out("right", pos.v = "center")
+        )
+      ) +
+  tm_layout(frame = FALSE)
 
 ## Cartographie des résidus du modèle GWR
 carte2 <- tm_shape(LyonIris)+
-            tm_borders(col="gray25", lwd=.5)+
-            tm_fill(col="GWR.Residus", n = 6, style = "pretty", 
-                  legend.format = list(text.separator = "à",
-                                       decimal.mark = ","),
-                  midpoint = 0,
-                  palette = "-RdBu", 
-                  title = "GWR") +
-            tm_layout(frame=FALSE) + 
-            tm_scale_bar(breaks = c(0,5))
+  tm_polygons(
+    col="gray25", lwd=.5,
+    fill = "GWR.Residus",
+    fill.scale = tm_scale_intervals(
+      n = 5,
+      midpoint = 0,
+      style = "pretty",
+      values = "-brewer.rd_bu",
+      label.format = legende_parametres
+      ),
+      fill.legend  = tm_legend(
+        title = "GWR",
+        frame = FALSE,
+        position = tm_pos_out("right", pos.v = "center")
+        )
+      ) +
+  tm_layout(frame = FALSE)
 
 tmap_arrange(carte1, carte2, nrow = 1)
 ```
@@ -707,17 +791,27 @@ Le code ci-dessous permet ensuite de cartographier les R^2^ locaux de la GWR (@f
 library(tmap)
 # Paramètres pour la légende 
 legende_parametres <- list(text.separator = "à",
-                           decimal.mark = ",")
+                           decimal.mark = ",",
+                           big.mark = " ")
 
 tm_shape(LyonIris)+
-  tm_borders(col="gray25", lwd=.5)+
-  tm_fill(col="GWR.R2", 
-		  palette="YlOrBr", 
-		  n=5, style="quantile",
-		  legend.format = legende_parametres,
-		  title = "R2 locaux")+
-tm_layout(frame=FALSE)+
-tm_scale_bar(breaks=c(0,5))
+  tm_polygons(
+    col="gray25", lwd=.5,
+    fill = "GWR.R2",
+    fill.scale = tm_scale_intervals(
+      n = 5,
+      style = "quantile",
+      values = "brewer.yl_or_br",
+      label.format = legende_parametres
+      ),
+      fill.legend  = tm_legend(
+        title = "R2 locaux",
+        frame = FALSE,
+        position = tm_pos_out("right", pos.v = "center")
+        )
+      ) +
+  tm_layout(frame = FALSE) +
+  tm_scalebar(breaks = c(0,5))
 ```
 
 
@@ -740,36 +834,82 @@ legende_parametres <- list(text.separator = "à",
                            decimal.mark = ",",
                            big.mark = " ")
 
-carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-            tm_fill(col="GWR.B_Pct0_14", palette="YlOrBr", n=4, style="pretty",
-		              legend.format = legende_parametres,
-                  title = "Moins de 15 ans (%)")+
-          tm_layout(frame=FALSE, legend.outside = TRUE)
+carte1 <- tm_shape(LyonIris) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "GWR.B_Pct0_14",
+    fill.scale = tm_scale_intervals(
+      style = "pretty", n = 4,
+      values = "brewer.yl_or_br",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "Moins de 15 ans (%)",
+      frame = FALSE, 
+      position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE)
 
-carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-            tm_fill(col="GWR.B_Pct_65", palette="YlOrBr", n=4, style="pretty", 
-		              legend.format = legende_parametres,
-                  title = "65 ans et plus (%)")+
-          tm_layout(frame=FALSE, legend.outside = TRUE)
+carte2 <- tm_shape(LyonIris) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "GWR.B_Pct_65",
+    fill.scale = tm_scale_intervals(
+      style = "pretty", n = 4,
+      values = "brewer.yl_or_br",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "65 ans et plus (%)",
+      frame = FALSE, 
+      position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE)
 
-carte3 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-            tm_fill(col="GWR.B_Pct_Img", palette="YlOrBr", n=4, style="pretty", 
-		              legend.format = legende_parametres,
-                  title = "Immigrants (%)")+
-          tm_layout(frame=FALSE, legend.outside = TRUE)
+carte3 <- tm_shape(LyonIris) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "GWR.B_Pct_Img",
+    fill.scale = tm_scale_intervals(
+      style = "pretty", n = 4,
+      values = "brewer.yl_or_br",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "Immigrants (%)",
+      frame = FALSE, 
+      position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE)
 
-carte4 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-            tm_fill(col="GWR.B_Pct_brevet", palette="YlOrBr", n=4, style="pretty", 
-		              legend.format = legende_parametres,
-                  title = "Faible scolarité (%)")+
-          tm_layout(frame=FALSE, legend.outside = TRUE)
+carte4 <- tm_shape(LyonIris) +
+  tm_borders(col = "gray25", lwd = .2) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "GWR.B_Pct_brevet",
+    fill.scale = tm_scale_intervals(
+      style = "pretty", n = 4,
+      values = "brewer.yl_or_br",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "Faible scolarité (%)",
+      frame = FALSE, 
+      position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE)
 
-carte5 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5,)+
-            tm_fill(col="GWR.B_NivVieMed", palette="YlOrBr", n=4, style="pretty",
-		              legend.format = legende_parametres,
-                  title = "Niveau de vie (€1000)")+
-          tm_layout(frame=FALSE, legend.outside = TRUE)+
-          tm_scale_bar(breaks=c(0,5))
+carte5 <- tm_shape(LyonIris) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "GWR.B_NivVieMed",
+    fill.scale = tm_scale_intervals(
+      style = "pretty", n = 4,
+      values = "brewer.yl_or_br",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "Niveau de vie (€1000)",
+      frame = FALSE, 
+      position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE) +
+  tm_scalebar(breaks=c(0,5))
 
 tmap_arrange(carte1, carte2, carte3, carte4, carte5, ncol = 2, nrow=3)
 ```
@@ -800,46 +940,87 @@ legende_parametres <- list(text.separator = "à",
                            big.mark = " ")
 
 # Construction des cartes
-carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-            tm_fill(col="GWR.T_Pct0_14", palette="-RdBu", 
-                  midpoint = NA,
-                  breaks = classes_intervalles,
-                  legend.format = legende_parametres,
-                  title = "Moins de 15 ans (%)")+
-          tm_layout(frame=FALSE, legend.outside = TRUE)
+carte1 <- tm_shape(LyonIris) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "GWR.T_Pct0_14",
+    fill.scale = tm_scale_intervals(
+      breaks = classes_intervalles,
+      midpoint = 0,
+      values = "-brewer.rd_bu",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "Moins de 15 ans (%)",
+      frame = FALSE, 
+      position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE)
 
-carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-            tm_fill(col="GWR.T_Pct_65", palette="-RdBu",
-                  midpoint = NA,
-                  breaks = classes_intervalles,
-                  legend.format = legende_parametres,
-                  title = "65 ans et plus (%)")+
-          tm_layout(frame=FALSE, legend.outside = TRUE)
+carte2 <- tm_shape(LyonIris) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "GWR.T_Pct_65",
+    fill.scale = tm_scale_intervals(
+      breaks = classes_intervalles,
+      midpoint = 0,
+      values = "-brewer.rd_bu",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "65 ans et plus (%)",
+      frame = FALSE, 
+      position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE)
 
-carte3 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-            tm_fill(col="GWR.T_Pct_Img", palette="-RdBu", 
-                  midpoint = NA,
-                  breaks = classes_intervalles,
-                  legend.format = legende_parametres,
-                  title = "Immigrants (%)")+
-          tm_layout(frame=FALSE, legend.outside = TRUE)
+carte3 <- tm_shape(LyonIris) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "GWR.T_Pct_Img",
+    fill.scale = tm_scale_intervals(
+      breaks = classes_intervalles,
+      midpoint = 0,
+      values = "-brewer.rd_bu",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "Immigrants (%)",
+      frame = FALSE, 
+      position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE)
 
-carte4 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-            tm_fill(col="GWR.T_Pct_brevet", palette="-RdBu", 
-                  midpoint = NA,
-                  breaks = classes_intervalles,
-                  legend.format = legende_parametres,
-                  title = "Faible scolarité (%)")+
-          tm_layout(frame=FALSE, legend.outside = TRUE)
+carte4 <- tm_shape(LyonIris) +
+  tm_borders(col = "gray25", lwd = .2) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "GWR.T_Pct_brevet",
+    fill.scale = tm_scale_intervals(
+      breaks = classes_intervalles,
+      midpoint = 0,
+      values = "-brewer.rd_bu",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "Faible scolarité (%)",
+      frame = FALSE, 
+      position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE)
 
-carte5 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-            tm_fill(col="GWR.T_NivVieMed", palette="-RdBu", 
-                 midpoint = NA,
-                 breaks = classes_intervalles,
-                 legend.format = legende_parametres,
-                 title = "Niveau de vie (€1000)")+
-          tm_layout(frame=FALSE, legend.outside = TRUE)+
-          tm_scale_bar(breaks=c(0,5))
+carte5 <- tm_shape(LyonIris) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "GWR.T_NivVieMed",
+    fill.scale = tm_scale_intervals(
+      breaks = classes_intervalles,
+      midpoint = 0,
+      values = "-brewer.rd_bu",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "Niveau de vie (€1000)",
+      frame = FALSE, 
+      position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE) +
+  tm_scalebar(breaks=c(0,5))
 
 # Combinaison des cartes dans la même figure
 tmap_arrange(carte1, carte2, carte3, carte4, carte5, ncol = 2, nrow=3)
@@ -874,14 +1055,34 @@ LyonIris$nb_signif_2.58 <- as.factor(rowSums(lyon_df > 2.58))
 LyonIris$plus_sign      <- as.factor(plus_sign)
 
 ## Cartographie
-carte1 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-          tm_fill(col="nb_signif_1.96", palette="Reds",
-                 title = "Sign. au seuil de 5%")+
-          tm_layout(frame=FALSE)+ tm_scale_bar(breaks=c(0,5))
-carte2 <- tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-          tm_fill(col="nb_signif_2.58", palette="Reds", 
-                 title = "Sign. au seuil de 1%")+
-          tm_layout(frame=FALSE)
+carte1 <- tm_shape(LyonIris) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "nb_signif_1.96",
+    fill.scale = tm_scale_categorical(
+      values = "brewer.reds",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "Sign. au seuil de 5 %",
+      frame = FALSE, 
+      position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE)
+
+carte2 <- tm_shape(LyonIris) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "nb_signif_2.58",
+    fill.scale = tm_scale_categorical(
+      values = "brewer.reds",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "Sign. au seuil de 1 %",
+      frame = FALSE, 
+      position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE) 
+
 tmap_arrange(carte1, carte2, ncol=2, nrow=1)
 ```
 
@@ -898,10 +1099,21 @@ Finalement, le code ci-dessous permet de repérer la variable la plus significat
 #| fig-align: center
 #| fig-cap: "Variable indépendante la plus significative au seuil de 5 %"
 #| out-width: 85%
-tm_shape(LyonIris)+ tm_borders(col="gray25", lwd=.5)+
-  tm_fill(col="plus_sign", palette="Set1", 
-          title = "Variable la plus significative")+
-tm_layout(frame=FALSE)+ tm_scale_bar(breaks=c(0,5))
+
+tm_shape(LyonIris) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "plus_sign",
+    fill.scale = tm_scale_categorical(
+      values = "brewer.set1",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "Variable la plus significative",
+      frame = FALSE, 
+      position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE) + 
+  tm_scalebar(breaks=c(0,5), position = c("right", "bottom"))
 ```
 
 
@@ -1026,30 +1238,40 @@ legende_parametres <- list(text.separator = "à",
                            decimal.mark = ",",
                            big.mark = " ")
 
-classes_intervalles = c(-Inf, -3.29, -2.58, -1.96, 1.96, 2.58, 3.29, Inf)
-
 # Cartographie du R2
-carte1 <- tm_shape(gwr_resultats)+
-            tm_borders(col="gray25", lwd=.5)+
-            tm_fill(col="Local_R2",
-                    palette="YlOrBr", 
-                    n=5, 
-                    style="quantile",
-                    legend.format = legende_parametres,
-                    title = "R2 locaux")+
-          tm_layout(frame=FALSE)+
-          tm_scale_bar(breaks=c(0,5))
+carte1 <- tm_shape(gwr_resultats) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "Local_R2",
+    fill.scale = tm_scale_intervals(
+      style="quantile", n = 5,
+      midpoint = NA,
+      values = "brewer.yl_or_br",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "Valeur de t\nNiveau de vie (€1000)",
+      frame = FALSE, 
+      position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE)
 
 # Cartographie d'une valeur de t
-carte2 <- tm_shape(gwr_resultats)+ 
-            tm_borders(col="gray25", lwd=.5)+
-            tm_fill(col="NivVieMed_TV", 
-                    palette="-RdBu",
-                    midpoint = NA,
-                    breaks = classes_intervalles,
-                    legend.format = legende_parametres,
-                    title = "Valeur de t\nNiveau de vie (€1000)")+
-            tm_layout(frame=FALSE)
+classes_intervalles = c(-Inf, -3.29, -2.58, -1.96, 1.96, 2.58, 3.29, Inf)
+carte2 <- tm_shape(gwr_resultats) +
+  tm_polygons(
+    col = "gray25", lwd = .2,
+    fill = "NivVieMed_TV",
+    fill.scale = tm_scale_intervals(
+      breaks = classes_intervalles,
+      midpoint = NA,
+      values = "-brewer.rd_bu",
+      label.format = legende_parametres),
+    fill.legend = tm_legend(
+      title = "Valeur de t\nNiveau de vie (€1000)",
+      frame = FALSE, 
+      position = tm_pos_out("right", pos.v = "center"))
+    ) +
+  tm_layout(frame = FALSE)
 
 tmap_arrange(carte1, carte2)
 ```

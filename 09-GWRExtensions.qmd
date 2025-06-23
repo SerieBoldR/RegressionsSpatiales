@@ -58,7 +58,7 @@ Dans le [chapitre @sec-chap08], nous avons présenté les trois formes classique
 
 #### Formulation de la GWR mixte {#sec-09112}
 
-### Mise en oeuvre de la GWR mixte dans R {#sec-0912}
+### Mise en œuvre de la GWR mixte dans R {#sec-0912}
 
 ## Régression géographiquement pondérée multiéchelle {#sec-092}
 
@@ -68,7 +68,7 @@ Dans le [chapitre @sec-chap08], nous avons présenté les trois formes classique
 
 #### Formulation de la GWR mixte {#sec-09212}
 
-### Mise en oeuvre de la MGWR dans R {#sec-0922}
+### Mise en œuvre de la MGWR dans R {#sec-0922}
 
 ## Régression géographiquement pondérée mixte avec des variables spatialement décalée {#sec-093}
 
@@ -78,7 +78,7 @@ Dans le [chapitre @sec-chap08], nous avons présenté les trois formes classique
 
 #### Formulation de la MGWR-SAR {#sec-09312}
 
-### Mise en oeuvre de la MGWR-SAR dans R {#sec-0932}
+### Mise en œuvre de la MGWR-SAR dans R {#sec-0932}
 
 ## Quiz de révision {#sec-094}
 
