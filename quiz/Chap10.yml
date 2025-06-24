@@ -15,7 +15,7 @@
      - "additionnées"
      - "multipliées"
      - "divisées"
-     - "soutraites"
+     - "soustraites"
   help: "Relisez au besoin la [section @sec-1011]."
   
 - label: "Quels sont les risques associés avec l'ajout de splines pour faire varier spatialement les coefficients d'un modèle GAM?"
@@ -44,16 +44,16 @@
   answers:
      - "Le test général de significativité d'une spline tend à être optimiste."
      - "Même si une spline a un effet général significatif, il est possible que ses effets locaux ne soient pas significativement différents de zéro."
-     - "Ne pas tenir compte de la significativité locale risque d'entrainer une sur-interprétation des résultats"
+     - "Ne pas tenir compte de la significativité locale risque d'entrainer une surinterprétation des résultats"
   help: "Relisez au besoin la [section @sec-1011]."
 
 - label: "Dans un modèle GLMM, comment les effets aléatoires permettent-ils de capturer la variation spatiale d'un coefficient?"
   type: mc
   response: [1,2]
   answers:
-     - "En ajustant un effet aléatoire avec une structure de covariance spatiale sur le coefficient en question"
-     - "En ajoutant au modèle un processus gaussien sur le coefficient en question"
-     - "En ajoutant une interaction entre le coefficients en question et les coordonnées géographiques"
-     - "En ajoutant des fonctions de base spatiales combinées au coefficient en question"
-  help: "Relisez au besoin la [section @sec-1031]."
+     - "En ajustant un effet aléatoire avec une structure de covariance spatiale sur le coefficient en question."
+     - "En ajoutant au modèle un processus gaussien sur le coefficient en question."
+     - "En ajoutant une interaction entre le coefficient et les coordonnées géographiques."
+     - "En ajoutant des fonctions de base spatiales combinées au coefficient en question."
+  help: "Relisez au besoin la [section @sec-1021]."
   

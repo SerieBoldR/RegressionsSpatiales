@@ -13,7 +13,7 @@
 
 -   comprendre comment les modèles GAM et GLMM peuvent être adaptés pour explorer l’hétérogénéité spatiale;
 -   utiliser une spline pour une variable indépendante dans un modèle GAM;
--   comprendre le notion de concurvité pour un modèle GAM;
+-   comprendre la notion de concurvité pour un modèle GAM;
 -   Introduire un effet aléatoire spatial pour une variable indépendante dans un modèle linéaire généralisé à effets mixtes (GLMM);
 -   mettre en pratique ces modèles spatiaux dans R.
 :::
@@ -43,12 +43,11 @@
 ::::::
 
 
-Dans les deux chapitres précédents, nous avons présenté la GWR et ses différentes extensions qui permettent d'explorer comment les relations entre la variable dépendante et les variables indépendantes d'un modèle de régression varient localement. Contrairement aux autres modèles abordés jusqu'ici, la GWR permet de répondre au problème de l'hétérogénéité spatiale plutôt que celui de la dépendance spatiale ([section @sec-0172]). Cependant, la GWR fait l'objet des plusieurs critiques décrites précédemment ([section @sec-084]). En effet, bien qu'elle constitue une technique puissante d'exploration de données, elle comprend plusieurs limites d'ordre statistique qui restreignent fortement son utilisation dans le cadre d’analyses inférentielles.
+Dans les deux chapitres précédents, nous avons présenté la GWR et ses différentes extensions qui permettent d'explorer comment les relations entre la variable dépendante et les variables indépendantes d'un modèle de régression varient localement. Contrairement aux autres modèles abordés jusqu'ici, la GWR permet de répondre au problème de l'hétérogénéité spatiale plutôt que celui de la dépendance spatiale ([section @sec-0172]). Cependant, la GWR fait l'objet des multiples critiques décrites précédemment ([section @sec-084]). En effet, bien qu'elle constitue une technique puissante d'exploration de données, elle comprend plusieurs limites d'ordre statistique qui restreignent fortement son utilisation dans le cadre d’analyses inférentielles.
 
-Avec le développement de logiciels et de *packages* permettant de construire des modèles complexes, notamment les modèles à effets mixtes, de nouvelles approches ont été proposés pour intégrer la question de l'hétérogénéité spatiale dans les modèles. Nous verrons ici comment les modèles GAM et GLMM peuvent être utilisés pour faire varier spatialement les coefficients de régression, tout en évitant les limites propres à la GWR. Ces modèles peuvent être regroupés sous le terme de modèles à coefficients variant spatialement (*spatially varying coefficients models* ou SVCM).
+Avec le développement de logiciels et de *packages* permettant de construire des modèles complexes, notamment les modèles à effets mixtes, de nouvelles approches ont été proposées pour intégrer la question de l'hétérogénéité spatiale dans les modèles. Nous verrons ici comment les modèles GAM et GLMM peuvent être utilisés pour faire varier spatialement les coefficients de régression, tout en évitant les limites propres à la GWR. Ces modèles peuvent être regroupés sous le terme de modèles à coefficients variant spatialement (*spatially varying coefficients models* ou SVCM).
 
 Les modèles SVCM offrent deux avantages principaux comparativement aux modèles GWR. D'une part, ils permettent de capturer directement l'hétérogénéité spatiale dans un seul modèle tandis que la GWR produit une équation de régression pour chaque entité spatiale ([section @sec-0812]). D'autre part, les modèles SVCM ne nécessitent pas de spécifier une zone d'influence (*bandwidth*). De la sorte, les conditions d'application des modèles de régression sont ainsi (plus) faciles à satisfaire.
-
 
 ## Hétérogénéité spatiale et modèles généralisés additifs (GAM) {#sec-101}
 
@@ -75,7 +74,7 @@ avec :
 -   $f$, une fonction modélisant l'impact de l'espace.
 -   $sp$, une matrice de coordonnées cartésiennes ou une matrice de contiguïté spatiale.
 
-La spline $f(sp)$ permet d'augmenter ou de réduire spatialement la valeur prédite pour l'espérance de $y$. Elle peut être vue comme une forme de bonus ou de malus local accordé à la constante. Pour étendre cet usage au cas des coefficients de régression variant spatialement, il est possible de construire une spline similaire, **mais qui est multipliée par la variable indépendante dont le coefficient doit varier spatialement**. Cette formulation suppose donc que la variation spatiale du coefficient doit suivre une tendance lisse. Le modèle peut donc être modifié de la façon suivante :
+La spline $f(sp)$ permet d'augmenter ou de réduire spatialement la valeur prédite pour l'espérance de $y$. Elle peut être vue comme une forme de bonus ou de malus local accordée à la constante. Pour étendre cet usage au cas des coefficients de régression variant spatialement, il est possible de construire une spline similaire, **mais qui est multipliée par la variable indépendante dont le coefficient doit varier spatialement**. Cette formulation suppose donc que la variation spatiale du coefficient doit suivre une tendance lisse. Le modèle peut donc être modifié de la façon suivante :
 
 $$
 \begin{aligned}
@@ -97,7 +96,7 @@ Ce modèle permet de choisir quelles variables dépendantes doivent avoir des ef
 ::::
 
 ::: bloc_attention-body
-Il n'est pas obligatoire de conserver la première spline faisant varier la constante du modèle. Cette dernière peut devenir inutile, une fois que certains coefficients de régression aient été autorisés à varier spatialement. Par ailleurs, il est possible que les différentes splines spatiales d'un modèle se superposent et génèrent alors un problème de **concurvité**.
+Il n'est pas obligatoire de conserver la première spline faisant varier la constante du modèle. Cette dernière peut devenir inutile, une fois que certains coefficients de régression ont été autorisés à varier spatialement. Par ailleurs, il est possible que les différentes splines spatiales d'un modèle se superposent et génèrent alors un problème de **concurvité**.
 
 La concurvité est l'équivalent de la **multicolinéarité**, mais pour les fonctions lisses estimées par les splines. Si deux termes non linéaires ont une forte concurvité, cela signifie que l'un des deux termes peut englober l'autre. Ce problème est fréquent dans un modèle où plusieurs coefficients varient spatialement avec des splines.
 :::
@@ -178,7 +177,7 @@ Pour le troisième modèle (`model3`), nous autorisons plusieurs coefficients à
 -   la présence d'une station de métro à moins de 500 mètres;
 -   la densité de la couverture végétale dans un rayon de 500 mètres.
 
-Notez que nous avons retiré la constante variant spatialement (`s(X,Y, bs = 'gp')`). En effet, après plusieurs tests, il s'est avéré que cet effet spatial était capable de résumer à lui seul les effets des coefficients variant spatialement (phénomène de concurvité). Nous allons donc comparer le modèle 2 avec cette constante spatiale et le modèle 3 privilégiant des coefficients variant spatialement.
+Notez que nous avons retiré la constante variant spatialement (`s(X,Y, bs = 'gp')`). En effet, après plusieurs tests, il s'est avéré que cet effet spatial était capable de résumer à lui seul les effets des coefficients variant spatialement (phénomène de concurvité). Nous comparons donc le modèle 2 avec cette constante spatiale et le modèle 3 privilégiant des coefficients variant spatialement.
 
 ```{r}
 #| echo: true 
@@ -220,9 +219,9 @@ model3 <- gam(log_price ~ bedrooms +
 round(concurvity(model3),3)
 ```
 
-Les valeurs de concurvité ci-dessus indiquent pour chaque terme du modèle s'il peut être inclus dans un autre terme non linéaire. Il s'agit d'une extension du concept de multicolinéarité aux termes non linéaires. Les valeurs sont comprises entre 0 (absence de concurvité) et 1 (concurvité parfaite). Le terme `para` indique la partie paramétrique du modèle (les effets linéaires). Trois estimations de la concurvité sont fournis : pessimistes (`worst`), optimistes (`observed`) et équilibrées (`estimate`). Dans notre cas, les valeurs de la ligne `estimate` pour les termes non linéaires sont toutes relativement faibles, indiquant que ces derniers ne peuvent pas se substituer les uns aux autres. Notez ici que le *package* `mgcv` utilise une méthode d'estimation robuste qui est peu affectée par une concurvité modérée. Cependant, des valeurs supérieures à 0,8 devraient être considérées comme problématiques.
+Les valeurs de concurvité ci-dessus indiquent pour chaque terme du modèle s'il peut être inclus dans un autre terme non linéaire. Il s'agit d'une extension de la notion de multicolinéarité aux termes non linéaires. Les valeurs sont comprises entre 0 (absence de concurvité) et 1 (concurvité parfaite). Le terme `para` indique la partie paramétrique du modèle (les effets linéaires). Trois estimations de la concurvité sont fournies : pessimistes (`worst`), optimistes (`observed`) et équilibrées (`estimate`). Dans notre cas, les valeurs de la ligne `estimate` pour les termes non linéaires sont toutes relativement faibles, indiquant que ces derniers ne peuvent pas se substituer les uns aux autres. Notez ici que le *package* `mgcv` utilise une méthode d'estimation robuste qui est peu affectée par une concurvité modérée. Cependant, des valeurs supérieures à 0,8 devraient être considérées comme problématiques.
 
-Nous comparons les trois modèles en nous basant sur trois mesures : l'`AIC`, le `REML` et le `R2` qui signalent que le modèle 2 semble être le plus intéressant (moins de paramètres, plus faibles valeurs pour l'AIC et le REML, valeur de R^2^ la plus élevée; @tbl-ComparaisonModelesGAM). Toutefois, ce modèle fourni peu d'informations sur les variations spatiales des facteurs explicatifs du prix des Airbnb. Il est donc pertinent d'analyser en détail le troisième modèle.
+Nous comparons les trois modèles en nous basant sur trois mesures : l'`AIC`, le `REML` et le `R2` qui signalent que le modèle 2 semble être le plus intéressant (moins de paramètres, plus faibles valeurs pour l'AIC et le REML, valeur de R^2^ la plus élevée; @tbl-ComparaisonModelesGAM). Toutefois, ce modèle fournit peu d'informations sur les variations spatiales des facteurs explicatifs du prix des Airbnb. Il est donc pertinent d'analyser en détail le troisième modèle.
 
 ```{r}
 #| label: tbl-ComparaisonModelesGAM
@@ -285,7 +284,7 @@ Le test du *I* de Moran sur les résidus n'indique pas de présence d'autocorré
 summary(model3)
 ```
 
-Nous constatons que les trois splines ont des effets significativement différents de 0 (premier test; voir la section `Approximate significance of smooth terms`). Par conséquent, nous utilisons la méthode des effets marginaux pour représenter leurs coefficients dans l'espace et valider leur significativité localement (second test). Le package `mgcv` facilite l'extraction de ces effets grâce à la fonction `predict` et la paramètre `type = 'terms'`, qui va garder séparément les contributions des différentes composantes du modèle.
+Nous constatons que les trois splines ont des effets significativement différents de 0 (premier test; voir la section `Approximate significance of smooth terms`). Par conséquent, nous utilisons la méthode des effets marginaux pour représenter leurs coefficients dans l'espace et valider leur significativité localement (second test). Le package `mgcv` facilite l'extraction de ces effets grâce à la fonction `predict` avec le paramètre `type = 'terms'`, qui va garder séparément les contributions des différentes composantes du modèle.
 
 Puisque nous modélisons le logarithme du prix des logements, il convient de transformer les coefficients avec la fonction exponentielle pour les interpréter dans l'échelle originale (\$); leurs effets sont ainsi multiplicatifs plutôt qu'additifs.
 
@@ -377,7 +376,7 @@ legende_parametres <- list(text.separator = "à",
                            big.mark = " "
                            )
 
-tmap_options(frame = FALSE, legend.frame = FALSE)
+tmap_options(frame = FALSE)
 
 tm_shape(mask(raster_private, mask_data)) + 
   tm_raster(
@@ -387,6 +386,7 @@ tm_shape(mask(raster_private, mask_data)) +
       values = '-brewer.rd_bu',
       label.format = legende_parametres),
     col.legend = tm_legend(title = "Coefficient logement privé (exp)",
+                           frame = FALSE,
                            position = tm_pos_in(pos.h = "left", pos.v = "top"))
     ) +
   tm_shape(data_airbnb) + tm_dots(size = .1)
@@ -399,6 +399,7 @@ tm_shape(mask(raster_veg, mask_data)) +
       values = '-brewer.rd_bu',
       label.format = legende_parametres),
     col.legend = tm_legend(title = "Coefficient couverture végétale (exp)",
+                           frame = FALSE,
                            position = tm_pos_in(pos.h = "left", pos.v = "top"),
                            )
     ) +
@@ -414,6 +415,7 @@ tm_shape(mask(raster_metro, mask_data)) +
       midpoint = 1,
       label.format = legende_parametres),
     col.legend = tm_legend(title = "Coefficient métro à 500 m (exp)",
+                           frame = FALSE,
                            position = tm_pos_in(pos.h = "left", pos.v = "top")
                            )
     ) +
@@ -424,6 +426,7 @@ tm_shape(mask(raster_metro, mask_data)) +
              lwd = 4,
              col.scale = tm_scale_categorical(values = metro_colors),
              col.legend = tm_legend(title = "Ligne de métro",
+                                    frame = FALSE,
                                     position = tm_pos_in(pos.h = "left", pos.v = "top"),
                                     )
              ) +
@@ -434,13 +437,13 @@ Les figures [-@fig-htgam1-1] à [-@fig-htgam1-3] illustrent les trois splines aj
 
 Pour le métro (@fig-htgam1-3), il est important de ne pas interpréter les valeurs en dehors de la zone dans laquelle nous avons des stations de métro. En effet, les splines ont tendance à mal interpoler les valeurs en dehors de l'étendue observée, car elles se contentent de prolonger la tendance. Nous observons que les prix des logements Airbnb tendent à être plus faibles le long de la ligne bleue, mais aussi le long de la portion Ouest de la ligne verte. Il s'agit d'une réduction relativement faible (\< 10 %). À proximité de la station Berry-UQAM, permettant la connexion entre les lignes orange, jaune et verte, nous pouvons observer des prix des Airbnb légèrement plus élevés de 15 % à 30 % pour les Airbnb à moins de 500 mètres d'une ligne de métro.
 
-Une augmentation de 25 points de pourcentage de la densité végétale est associée avec des réductions de prix pouvant allant jusqu'à 20 % (@fig-htgam1-2). Ces réductions suivent généralement un gradiant concentrique autour du centre-ville. Proche du Mont-Royal, l'impact de la densité végétal est légèrement positif avec une augmentation des prix atteignant 5 %. Dans l'Ouest, dans l'arrondissement Pointe-Claire, l'impact du couvert végétal semble plus élevé encore (de 5 à 10 %). Cependant, nous disposons d'assez peu d'observations pour confirmer cette observation.
+Une augmentation de 25 points de pourcentage de la densité végétale est associée avec des réductions de prix pouvant allant jusqu'à 20 % (@fig-htgam1-2). Ces réductions suivent généralement un gradient concentrique autour du centre-ville. Proche du Mont-Royal, l'impact de la densité végétal est légèrement positif avec une augmentation des prix atteignant 5 %. Dans l'Ouest, dans l'arrondissement Pointe-Claire, l'impact du couvert végétal semble plus élevé encore (de 5 à 10 %). Cependant, nous disposons d'assez peu d'observations pour confirmer cette observation.
 
 Le fait que le logement soit privé a toujours un impact positif le prix du logement. Cependant, cet effet est bien supérieur au Centre-Ville et dans les quartiers centraux dans lesquels le prix des Airbnb est au moins doublé. Plus on s'éloigne du Centre-Ville, plus l'effet diminue, atteignant par exemple une augmentation de seulement 50 % au niveau de l'arrondissement Montréal-Est.
 
 **Attention**, cette interprétation repose uniquement sur les valeurs moyennes prédites pour les coefficients variant spatialement. Si la valeur de *p* d'une spline est significative pour le modèle général (premier test), cela ne veut pas dire que sa contribution est significativement différente de zéro sur l'ensemble de son domaine de définition (second test).
 
-Nous calculons donc ci-dessous des pseudo valeurs de *p* locales pour déterminer si les coefficients locaux sont significativement différents de zéro. Pour ce faire, nous utilisons deux approches. La première est basée sur une approximation via une distribution normale. Elle est considérée valide lorsque le nombre d'observations est grand.
+Nous calculons donc ci-dessous des pseudovaleurs de *p* locales pour déterminer si les coefficients locaux sont significativement différents de zéro. Pour ce faire, nous utilisons deux approches. La première est basée sur une approximation via une distribution normale. Elle est considérée valide lorsque le nombre d'observations est grand.
 
 ```{r}
 #| echo: true 
@@ -489,6 +492,7 @@ tm_shape(mask(raster_private, mask_data)) +
       values = colors,
       label.format = legende_parametres),
     col.legend = tm_legend(title = "Valeur de p (norm.) pour le \ncoefficient logement privé",
+                           frame = FALSE,
                            position = tm_pos_in(pos.h = "left", pos.v = "top")
                            )
     ) +
@@ -502,6 +506,7 @@ tm_shape(mask(raster_veg, mask_data)) +
       values = colors,
       label.format = legende_parametres),
     col.legend = tm_legend(title = "Valeur de p (norm.) pour le \ncoefficient couverture végétale",
+                           frame = FALSE,
                            position = tm_pos_in(pos.h = "left", pos.v = "top")
                            )
     ) +
@@ -515,14 +520,17 @@ tm_shape(mask(raster_metro, mask_data)) +
       values = colors,
       label.format = legende_parametres),
     col.legend = tm_legend(title = "Valeur de p (norm.) pour le \ncoefficient métro à 500 m",
-                           position = tm_pos_in(pos.h = "left", pos.v = "top"),
-                           frame = FALSE)) +
+                           frame = FALSE,
+                           position = tm_pos_in(pos.h = "left", pos.v = "top")
+                           )
+    ) +
   tm_shape(metro) + 
     tm_lines(col = 'route_name',
              lwd = 4,
              col.scale = tm_scale_categorical(
                values = metro_colors),
              col.legend = tm_legend(title = "Ligne de métro",
+                                    frame = FALSE,
                                     position = tm_pos_in(pos.h = "left", pos.v = "top")
                                     )
              ) +
@@ -594,7 +602,7 @@ raster_metro <- rast(data_rast[,c(1,2,4)],type = 'xyz')
 crs(raster_metro) <- crs(data_airbnb)
 
 colors <- rev(c('#F7F7F7','#D1E5F0', '#92C5DE', '#4393C3', '#2166AC'))
-tmap_options(frame = FALSE, legend.frame = FALSE)
+tmap_options(frame = FALSE)
 
 tm_shape(mask(raster_private, mask_data)) + 
   tm_raster(
@@ -603,7 +611,8 @@ tm_shape(mask(raster_private, mask_data)) +
       values = colors,
       label.format = legende_parametres),
     col.legend = tm_legend(title = "Valeur de p (sim.) pour le \ncoefficient logement privé",
-                           position = tm_pos_in(pos.h = "left", pos.v = "top")
+                           position = tm_pos_in(pos.h = "left", pos.v = "top"),
+                           frame = FALSE
                            )
     ) +
   tm_shape(data_airbnb) + tm_dots(size = .1)
@@ -615,7 +624,8 @@ tm_shape(mask(raster_veg, mask_data)) +
       values = colors,
       label.format = legende_parametres),
     col.legend = tm_legend(title = "valeur de p (sim.) pour le \ncoefficient couverture végétale",
-                           position = tm_pos_in(pos.h = "left", pos.v = "top")
+                           position = tm_pos_in(pos.h = "left", pos.v = "top"),
+                           frame = FALSE
                            )
     ) +
   tm_shape(data_airbnb) + tm_dots(size = .1)
@@ -627,7 +637,8 @@ tm_shape(mask(raster_metro, mask_data)) +
       values = colors,
       label.format = legende_parametres),
     col.legend = tm_legend(title = "Valeur de p (sim.) pour le \ncoefficient métro à 500 m",
-                           position = tm_pos_in(pos.h = "left", pos.v = "top")
+                           position = tm_pos_in(pos.h = "left", pos.v = "top"),
+                           frame = FALSE
                            )
     ) +
   tm_shape(metro) + 
@@ -636,7 +647,8 @@ tm_shape(mask(raster_metro, mask_data)) +
              col.scale = tm_scale_categorical(
                values = metro_colors),
              col.legend = tm_legend(title = "Ligne de métro",
-                                    position = tm_pos_in(pos.h = "left", pos.v = "top")
+                                    position = tm_pos_in(pos.h = "left", pos.v = "top"),
+                                    frame = FALSE
                                     )
              ) +
   tm_shape(data_airbnb) + tm_dots(size = .1)
@@ -646,11 +658,11 @@ Les cartes des figures [-@fig-ht2ln-1] à [-@fig-ht2sim-3] illustrent la distrib
 
 ## Modèles linéaires généralisés à effets mixtes (GLMM) {#sec-102}
 
-Dans cette section, nous expliquons comment un effet aléatoire peut être utilisé pour permettre à un coefficient de varier spatialement dans un modèle GLMM. Pour un rappel sur les GLMM et les effets aléatoires, vous pouvez consulter le [chapitre sur les GLMM](https://serieboldr.com/MethodesQuantitatives/09-GLMM.html) du livre *Méthodes quantitatives en sciences sociales : un grand bol d'R* [@RBoldAirMethodesQuanti]. Vous pouvez également relire la [section @sec-023] de ce manuel dans laquelle nous avons expliqué comment un effet aléatoire peut être utilisé pour modéliser un effet spatial.
+Dans cette section, nous expliquons comment utiliser un effet aléatoire pour permettre à un coefficient de varier spatialement dans un modèle GLMM. Pour un rappel sur les GLMM et les effets aléatoires, vous pouvez consulter le [chapitre sur les GLMM](https://serieboldr.com/MethodesQuantitatives/09-GLMM.html) du livre *Méthodes quantitatives en sciences sociales : un grand bol d'R* [@RBoldAirMethodesQuanti]. Vous pouvez également relire la [section @sec-023] de ce manuel dans laquelle nous avons expliqué comment un effet aléatoire peut être utilisé pour modéliser un effet spatial.
 
 ### Effets aléatoires et coefficients variant spatialement {#sec-1021}
 
-Pour rappel, un effet aléatoire dans un modèle est un terme dont nous supposons que les valeurs proviennent d'une distribution normale. La forme la plus courante d'un effet aléatoire est l'intercepte aléatoire, permettant de contrôler les effets de groupes. En effet, il est primordial de contrôler le fait que deux observations provenant d'un même groupe ou plus de chances de ressembler que deux observations provenant de groupes différents. Dans la [section @sec-023], nous avons montré comment introduire une structure de covariance spatiale (CAR, Matérn, exponentielle, etc.) pour un effet aléatoire. Cette structure permet ainsi de tenir compte du fait que deux observations proches spatialement ont plus de chance de se ressembler que deux observations lointaines.
+À titre de rappel, un effet aléatoire dans un modèle est un terme dont nous supposons que les valeurs proviennent d'une distribution normale. La forme la plus courante d'un effet aléatoire est la constante aléatoire, permettant de contrôler les effets de groupes. En effet, il est primordial de contrôler le fait que deux observations provenant d'un même groupe ou plus de chances de ressembler que deux observations provenant de groupes différents. Dans la [section @sec-023], nous avons montré comment introduire une structure de covariance spatiale (CAR, Matérn, exponentielle, etc.) pour un effet aléatoire. Cette structure permet ainsi de tenir compte du fait que deux observations proches spatialement ont plus de chance de se ressembler que deux observations lointaines.
 
 Nous avions notamment formulé le GLMM suivant :
 
@@ -679,7 +691,7 @@ Avec :
 -   $l$, les variables dont les effets varient dans l'espace.
 -   $\eta_j$ un effet aléatoire provenant d'une distribution normale centrée sur 0 et suivant une structure d'autocorrélation spatiale $\Phi_j$. Puisque cet effet est centré sur 0, $\beta_j$ représente l'effet moyen attendu du coefficient sur l'ensemble du territoire. Les valeurs de $\eta_j$ correspondent donc à des bonus ou malus locaux qui viennent renforcer ou réduire l'effet de $\beta_j$.
 
-Les effets aléatoires que nous avions observés dans la [section @sec-023] (*car*, *matérn*, *exponentiel*, *sphérique*, etc.) peuvent être utilisés pour paramétrer $\Omega$ et $\Phi$ en fonction de la relation spatiale à modéliser (distance ou contiguïté) et selon leur adéquation aux données. Notez que puisque nos effets aléatoires spatiaux proviennent de distributions normales multivariées, ils sont souvent appelés des *processus gaussiens*.
+Les effets aléatoires que nous avions observés dans la [section @sec-023] (CAR, fonctions Matérn, exponentielle, sphérique, etc.) peuvent être utilisés pour paramétrer $\Omega$ et $\Phi$ en fonction de la relation spatiale à modéliser (distance ou contiguïté) et selon leur adéquation aux données. Notez que puisque nos effets aléatoires spatiaux proviennent de distributions normales multivariées, ils sont souvent appelés des *processus gaussiens*.
 
 Il est toujours préférable d'utiliser un modèle moins complexe pour décrire un phénomène (principe de parcimonie). Il est donc essentiel de s'assurer que l'ajout de coefficients variant spatialement se justifie dans un modèle. Pour cela, il est possible d'utiliser l'AIC ou d'autres critères similaires (BIC, DIC, REML). Il est aussi important de vérifier si la variance estimée de ces effets aléatoires est significativement différente de zéro. En effet, si ce n'est pas le cas, cela signifie que l'effet aléatoire n'a essentiellement aucune variance et donc aucun impact dans le modèle.
 
@@ -695,9 +707,9 @@ Il est toujours préférable d'utiliser un modèle moins complexe pour décrire 
 ::: bloc_attention-body
 Le fait que la variance d'un effet aléatoire est différente de zéro ne signifie pas pour autant que les valeurs estimées de cet effet aléatoire sont significativement différentes de zéro.
 
-Dans le cas des GLMM avec coefficients variant spatialement, nous formulons l'hypothèse que la variation locale d'un coefficient provient d'un processus gaussien spatial. La variance de ce processus gaussien peut être significativement différente de zéro, mais les réalisations de ce processus peuvent ne pas être significativement différentes de zéro. En d'autres termes, les bonus et malus locaux des coefficients peuvent être tellement faibles et incertains que leurs contributions finales au modèle est anecdotique, et ce, même si la variance de l'effet aléatoire est significative. Il est donc important lorsque l'on cartographie les coefficients variant spatialement de bien indiquer où ceux-ci sont significativement différents de zéro. Il s'agit exactement du même enjeu qu'avec les *splines* spatiales présentées plus tôt.
+Dans le cas des GLMM avec coefficients variant spatialement, nous formulons l'hypothèse que la variation locale d'un coefficient provient d'un processus gaussien spatial. La variance de ce processus gaussien peut être significativement différente de zéro, mais les réalisations de ce processus peuvent ne pas être significativement différentes de zéro. En d'autres termes, les bonus et malus locaux des coefficients peuvent être tellement faibles et incertains que leurs contributions finales au modèle sont anecdotiques, et ce, même si la variance de l'effet aléatoire est significative. Il est donc important lorsque l'on cartographie les coefficients variant spatialement de bien indiquer où ceux-ci sont significativement différents de zéro. Il s'agit exactement du même enjeu qu'avec les *splines* spatiales présentées plus tôt.
 
-Prenons un exemple avec un modèle fictif. Admettons que pour ce modèle, nous avons estimé un coefficient fixe $\beta_j = 0.5$ qui est significatif au seuil de $p < 0.01$. Ce coefficient représente l'effet moyen de la variable $j$ quand nous ne savons pas où nous nous trouvons sur le territoire, soit l'effet moyen sur l'ensemble du territoire. Admettons aussi que nous avons estimé un effet aléatoire suivant un processus gaussien spatial dont la variance est de $\sigma = 0.1$ et que cette variance est significativement différente de zéro. Pour un emplacement $i$, notre modèle a déterminé que la valeur de l'effet aléatoire est de $\eta_j = 0.05$, mais que cet effet n'est pas significativement différent de zéro avec $p = 0.15$. Le coefficient au point $i$ peut être calculé par la simple somme des deux effets: $\beta_{ji} = \beta_j + \eta_j$, mais il ne sera pas statistiquement différent de $\beta_j$ puisque $\eta_j$ n'est pas lui même significativement différent de zéro.
+Prenons un exemple avec un modèle fictif. Admettons que pour ce modèle, nous avons estimé un coefficient fixe $\beta_j = 0.5$ qui est significatif au seuil de $p < 0.01$. Ce coefficient représente l'effet moyen de la variable $j$ quand nous ne savons pas où nous nous trouvons sur le territoire, soit l'effet moyen sur l'ensemble du territoire. Admettons aussi que nous avons estimé un effet aléatoire suivant un processus gaussien spatial dont la variance est de $\sigma = 0.1$ et que cette variance est significativement différente de zéro. Pour un emplacement $i$, notre modèle a déterminé que la valeur de l'effet aléatoire est de $\eta_j = 0.05$, mais que cet effet n'est pas significativement différent de zéro avec $p = 0.15$. Le coefficient au point $i$ peut être calculé par la simple somme des deux effets : $\beta_{ji} = \beta_j + \eta_j$, mais il ne sera pas statistiquement différent de $\beta_j$ puisque $\eta_j$ n'est pas lui-même significativement différent de zéro.
 
 Il serait aussi possible d'avoir une situation différente dans laquelle $\beta_j$ n'est pas significatif : $\beta_j = 0.05$ avec $p = 0.35$. Dans cette situation, l'effet général de $\beta_j$ est proche de zéro sur l'ensemble du territoire. Admettons maintenant que $\eta_j = 0.15$ avec $p < 0.01$. Cela signifierait que pour le point du territoire $i$, l'effet de la variable $j$ est $x_j \times(\beta_j + \eta_j)$. Cependant, puisque l'effet général $\beta_j$ n'est pas différent de zéro, alors il est possible de dire que l'effet local est uniquement dû à $\eta_j$.
 :::
@@ -709,9 +721,9 @@ Pour illustrer comment des effets aléatoires peuvent être utilisés pour faire
 
 Il existe actuellement assez peu de *packages* R pour ajuster ce type de modèle. `spBayes` et `INLA` sont très flexibles, mais utilisent des méthodes d'ajustement bayésiennes que nous ne couvrons pas dans ce livre. Pour les méthodes fréquentistes, les choix sont assez limités avec les *packages* `varycoef` et `sdmTMB`. Le premier ne permet pas d'ajuster des GLM et se limite à des modèles linéaires classique (`family = gaussian`). Par conséquent, nous utiliserons ici uniquement le *package* `sdmTMB`.
 
-Puisque l'estimation d'effets aléatoires spatiaux est relativement coûteuse en temps de calcul, `sdmTMB` utilise une stratégie relativement récente (*Stochastic Partial Differential Equation*) consistant à approximer ces effets aléatoires [@lindgren2011explicit]. L'idée générale est de découper la zone d'étude en un ensemble de triangles (*mesh*) dont les extrémités sont appelés des nœuds (oui, comme pour une *spline*). L'effet aléatoire spatial est estimé pour chaque nœud, et les valeurs entre les nœuds sont ensuite calculées par interpolation bilinéaire. Ces effets aléatoires suivent des processus gaussiens discrets (*Markov random field*) avec des matrices de covariance suivant une structure Matérn. Cette méthode d'estimation est particulièrement efficace, car elle simplifie grandement le calcul de l'effet aléatoire. Le processus gaussien continu (*gaussian field*) est approximé par un processus gaussien discret (*gaussian markov random field*). Cette formulation permet de limiter la dépendance spatiale continue à une dépendance spatiale de voisinage, ce qui réduit considérablement la taille des matrices à manipuler pour estimer les effets aléatoires.
+Puisque l'estimation d'effets aléatoires spatiaux est relativement coûteuse en temps de calcul, `sdmTMB` utilise une stratégie relativement récente (*Stochastic Partial Differential Equation*) consistant à approximer ces effets aléatoires [@lindgren2011explicit]. L'idée générale est de découper la zone d'étude en un ensemble de triangles (*mesh*) dont les extrémités sont appelées des nœuds (oui, comme pour une *spline*). L'effet aléatoire spatial est estimé pour chaque nœud, et les valeurs entre les nœuds sont ensuite calculées par interpolation bilinéaire. Ces effets aléatoires suivent des processus gaussiens discrets (*Markov random field*) avec des matrices de covariance suivant une structure Matérn. Cette méthode d'estimation est particulièrement efficace, car elle simplifie grandement le calcul de l'effet aléatoire. Le processus gaussien continu (*gaussian field*) est approximé par un processus gaussien discret (*gaussian markov random field*). Cette formulation permet de limiter la dépendance spatiale continue à une dépendance spatiale de voisinage, ce qui réduit considérablement la taille des matrices à manipuler pour estimer les effets aléatoires.
 
-Pour faciliter l'ajustement du modèle avec `sdmTMB`, il est nécessaire que les différentes variables continues soient centrées et réduites. Nous allons également transformer les coordonnées géographiques en dizaines de kilomètres. Il est également nécessaire de créer une *mesh*. Cette dernière doit être suffisamment précise pour résumer efficacement les relations spatiales étudiées. Cependant, plus la *mesh* est fine, plus le temps de calcul est important car plus le nombre d'effets aléatoires à estimer est grand.
+Pour faciliter l'ajustement du modèle avec `sdmTMB`, il est nécessaire que les différentes variables continues soient centrées et réduites. Nous allons également transformer les coordonnées géographiques en dizaines de kilomètres. Il est également nécessaire de créer une *mesh*. Cette dernière doit être suffisamment précise pour résumer efficacement les relations spatiales étudiées. Cependant, plus la *mesh* est fine, plus le temps de calcul est important, car plus le nombre d'effets aléatoires à estimer est grand.
 
 ```{r}
 #| echo: true 
@@ -743,7 +755,7 @@ covid_data$deaths_3 <- ifelse(covid_data$deaths_3 < 0,
                               covid_data$deaths_3
                               )
 
-# Conservation uniquement des comtés unique
+# Conservation des comtés uniques
 covid_data <- covid_data %>% 
   group_by(FIPS) %>% 
   slice_head(n = 1)
@@ -780,7 +792,7 @@ plot(mesh2)
 plot(mesh3)
 ```
 
-Maintenant que nous disposons de notre *mesh* et que nous avons appliqué les transformations aux données, nous ajustons un modèle de référence dans lequel aucun coefficient ne varie spatialement. Nous avons seulement un intercepte spatial, tel que nous l'avions également fait dans la [section @sec-0232].
+Maintenant que nous disposons de notre *mesh* et que nous avons appliqué les transformations aux données, nous ajustons un modèle de référence dans lequel aucun coefficient ne varie spatialement. Nous avons seulement une constante spatiale, comme réalisé dans la [section @sec-0232].
 
 ```{r}
 #| echo: true 
@@ -788,7 +800,7 @@ Maintenant que nous disposons de notre *mesh* et que nous avons appliqué les tr
 #| eval: true
 #| warning: false
 #| label: fig-heteroresid1
-#| fig-cap: 'Résidus simulés du modèle sans coefficients variant spatialement'
+#| fig-cap: 'Résidus simulés du modèle sans coefficient variant spatialement'
 
 # Calcul d'un modèle nul qui sera utilisé pour calculer les différents 
 # pseudos R2
@@ -892,7 +904,7 @@ La @fig-heteroresid1B montre que le modèle parvient tout de même à effectuer 
 
 Nous considérons ici plusieurs coefficients pouvant avoir un effet variant spatialement. Par exemple, l'intensité des inégalités socio-économiques varie d'un État à l'autre, ce qui pourrait se traduire par des effets plus ou moins prononcés des variables socio-économiques. Les variables sur l'application des mesures sanitaires ou sur la mobilité sont de moins bonne qualité, nous éviterons donc de les faire varier spatialement pour éviter des risques de surinterprétation. La distance à l'aéroport le plus proche pourrait aussi avoir un effet variant spatialement, car tous les aéroports n'ont probablement pas eu la même contribution lors de la pandémie.
 
-Nous commençons donc avec un modèle ajoutant ces différents effets pour ensuite retirer ceux qui ne sont pas significatifs.
+Nous construisons ainsi un modèle avec ces différents effets pour ensuite retirer ceux qui ne sont pas significatifs.
 
 ```{r}
 #| echo: false 
@@ -944,7 +956,7 @@ knitr::kable(tableau, digits = 3,
              format.args = list(decimal.mark = ',', big.mark = " "))
 ```
 
-Le @tbl-Model2EffetsSpatiaux indique clairement que trois de nos sept coefficients spatiaux n'ont pas de variation spatiale significative (`conf.low < 0.01`). Nous allons donc réajuster le modèle en retirant ces trois termes (`cr_dist_to_airport, cr_per_hispanic, cr_per_black`).
+Le @tbl-Model2EffetsSpatiaux indique clairement que trois de nos sept coefficients spatiaux n'ont pas de variation spatiale significative (`IC 2,5 % < 0.01`). Nous allons donc réajuster le modèle en retirant ces trois termes (`cr_dist_to_airport, cr_per_hispanic, cr_per_black`).
 
 ```{r}
 #| echo: false 
@@ -991,7 +1003,7 @@ resids <- dharma_residuals(simulations, model2, return_DHARMa = TRUE)
 plot(resids)
 ```
 
-La nouvelle version du modèle incluant nos coefficients variant significativement spatialement obtient également des bons résidus simulés (@fig-heteroresid2).
+La nouvelle version du modèle incluant nos coefficients variant significativement spatialement obtient également de bons résidus simulés (@fig-heteroresid2).
 
 ```{r}
 #| label: tbl-R2Model2
@@ -1036,9 +1048,9 @@ caic2 <- cAIC(model2)
 print(c(caic1, caic2))
 ```
 
-Le AIC conditionnel du second modèle est plus petit que celui du premier modèle, indiquant un meilleur ajustement. À titre de rappel, l'AIC conditionnel est une version du AIC plus adaptée pour comparer des modèles à effets mixtes si leurs effets aléatoires sont différents (voir la [section @sec-0232]). 
+L'AIC conditionnel du second modèle est plus petit que celui du premier modèle, indiquant un meilleur ajustement. À titre de rappel, l'AIC conditionnel est une version du AIC plus adaptée pour comparer des modèles à effets mixtes si leurs effets aléatoires sont différents (voir la [section @sec-0232]). 
 
-Nous pouvons à présent analyser les effets fixes du modèle. Pour rappel, les variables indépendantes ont été centrées et réduites. Nous devons donc diviser les coefficients par les écarts types originaux de nos variables indépendantes pour permettre une interprétation dans l'échelle originale des données. Nous devons aussi les mettre en exponentiel afin de pouvoir les interpréter (puisque la fonction de lien est la fonction log).
+Nous pouvons à présent analyser les effets fixes du modèle. Pour rappel, les variables indépendantes ont été centrées et réduites. Nous devons donc diviser les coefficients par les écarts types originaux de nos variables indépendantes pour permettre une interprétation dans l'échelle originale des données. Nous devons aussi les mettre en exponentiel afin de pouvoir les interpréter, puisque la fonction de lien est la fonction log.
 
 ```{r}
 #| echo: true 
@@ -1072,13 +1084,14 @@ for(col in c("estimate", "conf.low", "conf.high")){
   tab_fixe[[col]] <- exp(tab_fixe[[col]] / sd_df$sd[ids])
 }
 tab_fixe$std.error <- NULL
+tab_fixe[1, 1] <- "constante"
 
 knitr::kable(tab_fixe, digits = 3,
              format.args = list(decimal.mark = ',', big.mark = " "),
              col.names = c('terme','coefficient', 'IC 2,5%', 'IC 97,5%', 'coefficient standardisé'))
 ```
 
-Finalement, nous pouvons extraire les effets aléatoires du modèle et plus spécifiquement nos coefficients variant spatialement. Pour cela, nous devons additionner le coefficient général et sa variation spatiale. Puisque nous avons centré et réduit nos variables, nous devons diviser les coefficients obtenu par l'écart type original de ces variables pour pouvoir les interpréter dans leur échelle originale. Efi, il nous reste à appliquer la fonction exponentielle pour obtenir l'effet local multiplicatif des variables indépendantes sur le taux de décès. La fonction `predict` du package `sdmTMB` permet d'extraire à la fois les valeurs prédites mais aussi les coefficients spatiaux du modèle.
+Finalement, nous pouvons extraire les effets aléatoires du modèle et plus spécifiquement nos coefficients variant spatialement. Pour cela, nous devons additionner le coefficient général et sa variation spatiale. Puisque nous avons centré et réduit nos variables, nous devons diviser les coefficients obtenus par l'écart type original de ces variables pour pouvoir les interpréter dans leur échelle originale. Effet, il reste à appliquer la fonction exponentielle pour obtenir l'effet local multiplicatif des variables indépendantes sur le taux de décès. La fonction `predict` du package `sdmTMB` permet d'extraire à la fois les valeurs prédites, mais aussi les coefficients spatiaux du modèle.
 
 ```{r}
 #| echo: true 
@@ -1108,7 +1121,7 @@ data_mode1$rand_intercept <- exp(preds$omega_s)
 # Extraction de 999 simulations des valeurs locales des coefficients spatiaux
 preds2 <- predict(model2, type = 'link', nsim = 999, sims_var = 'zeta_s')
 
-# Extraction de 999 simulations des valeurs locales de l'intercepte spatial
+# Extraction de 999 simulations des valeurs locales de la constante spatiale
 preds3 <- predict(model2, type = 'link', nsim = 999, sims_var = 'omega_s')
 
 # Pour chacun des coefficients spatiaux, déterminer si la variation spatiale est 
@@ -1149,8 +1162,7 @@ legende_parametres <- list(text.separator = "à",
                            decimal.mark = ",",
                            big.mark = " ",
                            digits = 2)
-
-tmap_options(frame = FALSE, legend.frame = FALSE)
+tmap_options(frame = FALSE)
 
 tm_shape(data_mode1) +
   tm_polygons(
@@ -1161,8 +1173,9 @@ tm_shape(data_mode1) +
       values = '-brewer.rd_bu',
       label.format = legende_parametres),
     fill.legend = tm_legend(
-      title = "Coef. diplôme d'études secondaires", 
+      title = "Coef. pour le diplôme d'études secondaires", 
       position = tm_pos_out("center", "bottom"),
+      frame = FALSE,
       orientation = "landscape")
   ) +
   tm_shape(subset(data_mode1, !data_mode1$sp_sign_cr_per_atleast_hs)) +
@@ -1181,8 +1194,9 @@ tm_shape(data_mode1) +
       values = '-brewer.rd_bu',
       label.format = legende_parametres),
     fill.legend = tm_legend(
-      title = "Coef. revenu", 
+      title = "Coef. pour le revenu", 
       position = tm_pos_out("center", "bottom"),
+      frame = FALSE,
       orientation = "landscape")
   ) +
   tm_shape(subset(data_mode1, !data_mode1$sp_sign_cr_income)) +
@@ -1201,8 +1215,9 @@ tm_shape(data_mode1) +
       values = '-brewer.rd_bu',
       label.format = legende_parametres),
     fill.legend = tm_legend(
-      title = "Coef. population en soin de longue durée", 
+      title = "Coef. pour la population en soin de longue durée", 
       position = tm_pos_out("center", "bottom"),
+      frame = FALSE,
       orientation = "landscape")
   ) +
   tm_shape(subset(data_mode1, !data_mode1$sp_sign_cr_per_nursing)) +
@@ -1221,8 +1236,9 @@ tm_shape(data_mode1) +
       values = '-brewer.rd_bu',
       label.format = legende_parametres),
     fill.legend = tm_legend(
-      title = "Coef. 65 ans et plus", 
+      title = "Coef. pour les 65 ans et plus", 
       position = tm_pos_out("center", "bottom"),
+      frame = FALSE,
       orientation = "landscape")
   ) +
   tm_shape(subset(data_mode1, !data_mode1$sp_sign_cr_X65plus)) +
@@ -1241,8 +1257,9 @@ tm_shape(data_mode1) +
       values = '-brewer.rd_bu',
       label.format = legende_parametres),
     fill.legend = tm_legend(
-      title = "Intercepte aléatoire spatial", 
+      title = "Constante aléatoire spatial", 
       position = tm_pos_out("center", "bottom"),
+      frame = FALSE,
       orientation = "landscape")
   ) +
   tm_shape(subset(data_mode1, !data_mode1$rand_intercept_sign)) +
@@ -1253,7 +1270,7 @@ tm_shape(data_mode1) +
                 col = NA)
 ```
 
-Attention, dans les cartes ci-dessus ([-@fig-glmmheterospacecoeff-1] à [-@fig-glmmheterospacecoeff-5]), les comtés grisés correspondent à des comtés pour lesquels le coefficient cartographié n'a pas significativement varié spatialement. Dans ces cas-ci, l'effet qui s'applique dans le Comté est tout simplement l'effet fixe général pour ce coefficient.
+Attention, dans les cartes ci-dessus (figures [-@fig-glmmheterospacecoeff-1] à [-@fig-glmmheterospacecoeff-5]), les comtés grisés correspondent à des comtés pour lesquels le coefficient cartographié n'a pas significativement varié spatialement. Dans ces cas-ci, l'effet qui s'applique dans le comté est tout simplement l'effet fixe général pour ce coefficient.
 
 Premièrement, nous remarquons que les variations spatiales des coefficients du niveau d'éducation et du revenu sont toutes les deux beaucoup trop faibles pour avoir un impact réellement significatif. Il serait donc plus prudent de considérer que ces deux coefficients ne varient pas spatialement.
 
@@ -1261,7 +1278,7 @@ Deuxièmement, pour le coefficient associé à la population en soin de longue d
 
 Troisièmement, le pourcentage de la population de 65 ans et plus a un effet variant un peu plus spatialement avec deux zones dans lesquels elle est associée avec une réduction du taux de décès (États de New York, New Hampshire, Vermont, Massachusetts, Connecticut et Rhode Island, et l'ouest des États de Washington et de l'Oregon); et trois zones dans lesquelles elle est associée avec une augmentation du taux de décès (États de l'Iowa, Nebraska, Kansas, Ohio et Floride).
 
-Finalement, l'intercepte spatial montre un impact significatif dans un plus grand nombre de Comtés. L’ouest des États-Unis tend à avoir des taux de décès plus élevés (jusqu'à 2,5 fois) toutes choses étant égales par ailleurs. À l'inverse, le Nord Ouest avec les États de Washington, de l'Idaho, de l'Oregon et le Nord de la Californie sont caractérisés par des taux plus faibles (jusqu'à 50 %). Dans l'est, l'État de New York et la Pennsylvanie sont aussi caractérisés par des taux plus élevés, alors que la Virginie et la Caroline du Nord ont tendance à avoir des taux plus faibles.
+Finalement, la constante spatiale montre un impact significatif dans un plus grand nombre de Comtés. L’ouest des États-Unis tend à avoir des taux de décès plus élevés (jusqu'à 2,5 fois) toutes choses étant égales par ailleurs. À l'inverse, le nord-ouest avec les États de Washington, de l'Idaho, de l'Oregon et le nord de la Californie sont caractérisés par des taux plus faibles (jusqu'à 50 %). Dans l'est, l'État de New York et la Pennsylvanie sont aussi caractérisés par des taux plus élevés, alors que la Virginie et la Caroline du Nord ont tendance à avoir des taux plus faibles.
 
 ## Quiz de révision {#sec-103}
 
@@ -1289,7 +1306,7 @@ render_quizz(Chap10Quiz)
 
 ::: bloc_exercice-body
 
-Complétez le code ci-dessous. Vous constaterez que la constance
+Complétez le code ci-dessous.
 
 ```{r}
 #| echo: true 
@@ -1409,7 +1426,7 @@ legende_parametres <- list(text.separator = "à",
                            decimal.mark = ",",
                            big.mark = " "
                            )
-tmap_options(frame = FALSE, legend.frame = FALSE)
+tmap_options(frame = FALSE)
 
 tm_shape(mask(raster_NivVieMed, mask_data)) + 
   tm_raster(
@@ -1420,7 +1437,8 @@ tm_shape(mask(raster_NivVieMed, mask_data)) +
       values = '-brewer.rd_bu',
       label.format = legende_parametres),
     col.legend = tm_legend(title = "Niveau de vie",
-                           position = tm_pos_out(pos.h = "left", pos.v = "top")
+                           position = tm_pos_out(pos.h = "left", pos.v = "top"),
+                           frame = FALSE
                            )
     )
 ```
@@ -1615,7 +1633,7 @@ legende_parametres <- list(text.separator = "à",
                            big.mark = " ",
                            digits = 2)
 
-tmap_options(frame = FALSE, legend.frame = FALSE)
+tmap_options(frame = FALSE)
 
 tm_shape(LyonIris) +
   tm_polygons(
@@ -1628,6 +1646,7 @@ tm_shape(LyonIris) +
     fill.legend = tm_legend(
       title = "Constante aléatoire spatial", 
       position = tm_pos_out("center", "bottom"),
+      frame = FALSE,
       orientation = "landscape")
   ) +
   tm_shape(subset(LyonIris, !LyonIris$rand_intercept_sign)) +
@@ -1648,6 +1667,7 @@ tm_shape(LyonIris) +
     fill.legend = tm_legend(
       title = "Constante aléatoire spatial", 
       position = tm_pos_out("center", "bottom"),
+      frame = FALSE,
       orientation = "landscape")
   ) +
   tm_shape(subset(LyonIris, !LyonIris$sp_sign_cr_Pct_Img)) +
@@ -1668,6 +1688,7 @@ tm_shape(LyonIris) +
     fill.legend = tm_legend(
       title = "Constante aléatoire spatial", 
       position = tm_pos_out("center", "bottom"),
+      frame = FALSE,
       orientation = "landscape")
   ) +
   tm_shape(subset(LyonIris, !LyonIris$sp_sign_cr_NivVieMed)) +

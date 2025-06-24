@@ -14,7 +14,7 @@
 -   connaître les différents modèles spatiaux des modèles intégrant une structure de covariance spatiale;
 -   connaître les différentes fonctions pour construire un modèle des moindres carrés généralisés (GLS) spatial;
 -   comprendre l'introduction d'une matrice de contiguïté dans un modèle d’autorégression conditionnelle (CAR);
--   comprendre le passage du GLS et du CAR vers les modèles à effets mixtes (GLMM);
+-   comprendre le passage des modèles GLS et CAR vers les modèles à effets mixtes (GLMM);
 -   mettre en pratique ces modèles spatiaux dans R.
 :::
 ::::::
@@ -48,7 +48,7 @@
 
 
 
-Dans ce chapitre, nous abordons un ensemble de modèles visant à corriger le problème de la dépendance spatiale dans un modèle de régression [section @sec-016], et ce, en exploitant la matrice de variance-covariance des résidus. À titre de rappel, dans le modèle MCO classique, plusieurs hypothèses sont formulées concernant les résidus qui doivent être :
+Dans ce chapitre, nous abordons des modèles visant à corriger le problème de la dépendance spatiale d'un modèle ([section @sec-016]), et ce, en exploitant la matrice de variance-covariance des résidus. À titre de rappel, dans le modèle MCO classique, plusieurs hypothèses sont formulées concernant les résidus qui doivent être :
 
 1.  normalement distribués;
 
@@ -90,7 +90,7 @@ La méthode des moindres carrés généralisés (GLS) est une méthode d'estimat
 
 ### Description du modèle GLS {#sec-0211}
 
-L'idée générale d'un modèle GLS est de modifier la matrice de variance-covariance pour y encoder directement la dépendance spatiale qui existe entre les observations. Concrètrement, il s'agit de remplacer les 0 de la matrice identité par des valeurs représentant le degré de corrélation spatiale entre les observations.
+L'idée générale d'un modèle GLS est de modifier la matrice de variance-covariance pour y encoder directement la dépendance spatiale qui existe entre les observations. Concrètement, il s'agit de remplacer les 0 de la matrice identité par des valeurs représentant le degré de corrélation spatiale entre les observations.
 
 $$
 \operatorname{cov}=\sigma^2\times\left(\begin{array}{cccc}
@@ -207,7 +207,7 @@ ggplot(df_total) +
 
 ```
 
-La @fig-gls1 illustre ces cinq fonctions. Notons ici que toutes ces fonctions n'ont besoin que d'un seul paramètre appelé le *range* qui contrôle la vitesse à laquelle la corrélation diminue. Seule la fonction Matérn a un second paramètre nommé $\nu$ qui contrôle son niveau de lissage (ici fixé à 0,3). Il est difficile de déterminer à l'avance qu'elle sera la fonction la plus adéquate pour un modèle. L'idéal est donc d'ajuster chaque modèle possible, puis de les comparer pour identifier celui produit les meilleurs résultats.
+La @fig-gls1 illustre ces cinq fonctions qui n'ont besoin que d'un seul paramètre appelé le *range*, contrôlant la vitesse à laquelle la corrélation diminue. Seule la fonction Matérn a un second paramètre nommé $\nu$ qui contrôle son niveau de lissage (fixé ici à 0,3). Il est difficile de déterminer à l'avance qu'elle sera la fonction la plus adéquate pour un modèle. L'idéal est donc d'ajuster chaque modèle possible, puis de les comparer (notamment avec la mesure d'AIC) pour identifier celui qui produit les meilleurs résultats.
 
 La figure ci-dessous illustre différentes réalisations d'un processus spatial suivant une structure de corrélation de type gaussienne. Les vignettes B, C et D de cette figure représentent des résidus normalement distribués, centrés sur zéro et suivant une structure de corrélation spatiale que peut capturer un modèle GLS. Quant à la première vignette avec `range = 0`, elle représente des résidus normalement distribués, centrés sur zéro et sans structure d'autocorrélation spatiale.
 
@@ -277,9 +277,9 @@ Un des avantages importants du GLS est qu'il reste facile à interpréter. En ef
 ::: bloc_attention-body
 Puisque le modèle GLS modélise l'autocorrélation spatiale en se basant sur une fonction qui tient compte des distances entre les observations, plusieurs points doivent être gardés à l'esprit quant à son utilisation :
 
-1.  La distance entre les observations doit être une bonne représentation de l'espace géographique des données. Il faut donc privilégier ce type de modèle avec des données ponctuelles plutôt que polygonales et irrégulières, car les distances entre les centroïdes de ces dernières ne représentent pas bien leurs tailles variables.
+1.  La distance entre les observations doit être une bonne représentation de l'espace géographique des données. Il faut donc privilégier ce type de modèle avec des entités spatiales ponctuelles plutôt que polygonales et irrégulières, car les distances entre les centroïdes de ces dernières ne représentent pas bien leurs tailles variables.
 2.  Les distances entre les observations doivent être symétriques.
-3.  On dit que la prise en compte de l'autocorrélation spatiale est paramétrique, car elle suit une fonction prédéterminée.
+3.  La prise en compte de l'autocorrélation spatiale est paramétrique, car elle suit une fonction prédéterminée.
 4.  La fonction modélisant l'autocorrélation spatiale est isotrope, elle ne tient pas compte des directions, mais seulement des distances.
 5.  Deux entités avec exactement la même localisation sont donc parfaitement corrélées entre elles. Dans les faits, les *packages* ajustant des modèles GLS renvoient des erreurs lorsque des observations partagent exactement la même localisation.
 :::
@@ -287,7 +287,7 @@ Puisque le modèle GLS modélise l'autocorrélation spatiale en se basant sur un
 
 ### Mise en œuvre et analyse dans R {#sec-0212}
 
-Pour illustrer la réalisation de différents modèles GLS, nous utilisons le jeu de données sur le prix des logements Airbnb sur l'Île de Montréal ([section @sec-0115]). Ce jeu de donnée comporte 2500 logements airbnb pour lesquels nous connaissons un ensemble d'informations sur la nature du logement, son propriétaire ainsi que l'environnement à proximité du logement. Nous tentons ici de modéliser le prix par nuit de ces logements (\@fig-glsdescribrep).
+Pour illustrer la réalisation de différents modèles GLS, nous utilisons le jeu de données sur le prix des logements Airbnb sur l'île de Montréal ([section @sec-0115]). Ce jeu de donnée comporte 2500 logements airbnb pour lesquels nous connaissons un ensemble d'informations sur la nature du logement, son propriétaire ainsi que l'environnement à proximité du logement. Nous tentons ici de modéliser le prix par nuit de ces logements (figures [-@fig-glsdescribrep-1] à [-@fig-glsdescribrep-2]).
 
 ```{r}
 #| echo: true 
@@ -361,7 +361,7 @@ data_airbnb$jardin_ou_cours <- factor(data_airbnb$Garden_or_backyard, levels = c
 data_airbnb$super_hote <- factor(data_airbnb$super_hote, levels = c('NO', 'YES'))
 data_airbnb$metro_500m <- factor(data_airbnb$has_metro_500m, levels = c('NO', 'YES'))
 
-# Nous regarderons l'impact de 10 évaluations supplementaires
+# Nous regarderons l'impact de 10 évaluations supplémentaires
 data_airbnb$number_of_reviews <- data_airbnb$number_of_reviews / 10
 
 model_data <- data_airbnb %>%
@@ -388,7 +388,7 @@ summary(model1)
 
 ```
 
-Le modèle MCO explique un peu plus que 45 % de la variance du prix des logements.
+Le modèle MCO explique près de 45 % de la variance du prix des logements.
 
 ```{r}
 #| echo: true 
@@ -405,7 +405,7 @@ test <- moran.mc(model_data$residual_lm, listw, nsim = 999)
 print(test)
 ```
 
-Nous avons cependant une autocorrélation spatiale résiduelle faible, mais significative avec un *I* de moran de `r format(round(as.numeric(test$statistic),2), decimal.mark = ",")`.
+Nous avons cependant une autocorrélation spatiale résiduelle faible, mais significative avec un *I* de Moran de `r format(round(as.numeric(test$statistic),2), decimal.mark = ",")`.
 
 ```{r}
 #| echo: true 
@@ -420,7 +420,7 @@ plot(simulateResiduals(model1))
 
 ```
 
-Les résidus semblent bien suivre une distribution normale et avoir une variance homogène. Pour régler le problème de l'autocorrélation spatiale, nous allons utiliser la méthode des moindres carrés généralisés (GLS). Nous allons pour cela utiliser le *package* `nlme` qui offre quatre fonctions différentes pour créer une structure de covariance spatiale.
+Les résidus semblent bien suivre une distribution normale et avoir une variance homogène (@fig-glslmresid). Pour régler le problème de l'autocorrélation spatiale, nous allons utiliser la méthode des moindres carrés généralisés (GLS), avec le *package* `nlme` qui offre quatre fonctions différentes pour créer une structure de covariance spatiale.
 
 ```{r}
 #| echo: true 
@@ -458,7 +458,7 @@ modelSph <- gls(
   correlation = corSpher(form =  ~ X + Y, nugget = TRUE)
 )
 
-# Rationelle quadratique
+# Rationnelle quadratique
 modelRatio <- gls(
   log_price ~ private + bedrooms +
     stationnement_gratuit + jardin_ou_cours +
@@ -500,7 +500,7 @@ Le modèle avec la structure de covariance basée sur la fonction quadratique ra
 #| eval: true
 #| warning: false
 #| label: fig-glscorstruc
-#| fig-cap: Fonction de corrélation etimée par le modèle GLS
+#| fig-cap: Fonction de corrélation estimée par le modèle GLS
 #| fig-align: center
 #| out-width: 75%
 
@@ -528,7 +528,7 @@ ggplot(df_corr) +
 
 ```
 
-Nous constatons que le modèle prévoit une autocorrélation spatiale positive, mais relativement faible pour les observations dans un rayon relativement limité. Il y a donc de fortes chances que les conclusions de ce modèle soient très proches de celle du modèle linéaire simple. Pour tester la distribution des résidus d'un modèle GLS, il est important d'utiliser les résidus *normalisés* qui tiennent compte de la structure de corrélation introduite dans le modèle [@galecki2013linear].
+Nous constatons que le modèle prévoit une autocorrélation spatiale positive, mais relativement faible pour les observations dans un rayon relativement limité. Il y a donc de fortes chances que les conclusions de ce modèle soient très proches de celles du modèle MCO. Pour tester la distribution des résidus d'un modèle GLS, il est important d'utiliser les résidus normalisés qui tiennent compte de la structure de corrélation introduite dans le modèle [@galecki2013linear].
 
 ```{r}
 #| echo: true 
@@ -545,7 +545,7 @@ test <- moran.mc(model_data$residual_gls, listw, nsim = 999)
 print(test)
 ```
 
-Notre modèle GLS a donc pu retirer l'autocorrélation qui restait dans les résidus du notre modèle MCO original. Nous pouvons donc à présent vérifier la distribution de ses résidus.
+Notre modèle GLS a donc pu retirer l'autocorrélation qui restait dans les résidus du modèle MCO initial. Nous pouvons donc à présent vérifier la distribution de ses résidus.
 
 ```{r}
 #| echo: true 
@@ -606,19 +606,19 @@ kable(cbind(df1, df2),
 
 Il est intéressant de constater que même en corrigeant une autocorrélation spatiale des résidus relativement minime, nous obtenons des résultats assez différents pour ces deux modèles. Commençons par regarder les éléments qui font consensus pour les deux modèles.
 
--   Un logement entier privé plutôt qu'un logement partagé a un impact positif et significatif sur le prix à la nuit. Les deux modèles donnent un coefficient d'environ `r format(round(df1$Estimate[[2]],3), decimal.mark = ",")` sur l'échelle logarithme. Ceci signifie qu'un logement privé coûte en moyenne `r format(round(exp(df1$Estimate[[2]]),2), decimal.mark = ",")` qu'un logement partagé.
+-   Un logement entier privé plutôt qu'un logement partagé a un impact positif et significatif sur le prix à la nuit. Les deux modèles donnent un coefficient d'environ `r format(round(df1$Estimate[[2]],3), decimal.mark = ",")` sur l'échelle logarithmique. Ceci signifie qu'un logement privé coûte en moyenne `r format(round(exp(df1$Estimate[[2]]),2), decimal.mark = ",")` qu'un logement partagé.
 -   Chaque chambre supplémentaire fait augmenter le prix du logement d'environ `r format(round(df1$Estimate[[3]],3), decimal.mark = ",")` sur l'échelle logarithme. Cela signifie qu'une chambre supplémentaire augmente le prix moyen d'un logement de `r format(round(exp(df1$Estimate[[3]]) * 100 - 100,2), decimal.mark = ",")`%.
 -   Une note moyenne pour les évaluations plus élevée est aussi associée à un prix plus élevé. Une augmentation de 10 points de pourcentage du score est associée avec une augmentation du prix moyen du logement de `r format(round(exp(df1$Estimate[[7]]*10) * 100 - 100,2), decimal.mark = ",")`  %.
 -   Le qualificatif de *super hôte* ou encore la présence d'un jardin ou d'une cour ne semblent pas avoir d'impact significatif.
 
 Les deux modèles ont aussi des points de désaccord importants :
 
--   Pour le modèle linéaire simple, le fait de disposer d'un stationnement gratuit avec le logement a un impact non significatif. Pour le modèle GLS, le fait de disposer d'un stationnement contribue à augmenter le prix par nuit de `r format(round(exp(df2$Value[[4]]) * 100 - 100,2), decimal.mark = ",")`% (p = `r format(round(df2$p.value[[4]],3), decimal.mark = ",")`.
--   Le modèle linéaire simple indiquait que la densité de végétation dans un rayon de 500 mètres réduisait le prix des logements. Par contre, la présence d'une station de métro dans un rayon de 500 mètres était associée à une augmentation du prix des logements. Le modèle GLS indique que ces deux effets sont non significatifs. Ceci s'explique vraisemblablement par la prise en compte de l'espace par le modèle GLS.
+-   Pour le modèle MCO, le fait de disposer d'un stationnement gratuit avec le logement a un impact non significatif. Pour le modèle GLS, il contribue à augmenter le prix par nuit de `r format(round(exp(df2$Value[[4]]) * 100 - 100,2), decimal.mark = ",")`% (p = `r format(round(df2$p.value[[4]],3), decimal.mark = ",")`).
+-   Le modèle MCO indiquait que la densité de végétation dans un rayon de 500 mètres réduisait le prix des logements. Par contre, la présence d'une station de métro dans un rayon de 500 mètres était associée à une augmentation du prix des logements. Le modèle GLS indique que ces deux effets sont non significatifs. Ceci s'explique vraisemblablement par la prise en compte de l'espace par le modèle GLS.
 
 ## Modèle d'autorégression conditionnelle (CAR) {#sec-022}
 
-Le modèle d'autorégression conditionnelle (CAR) modifie lui aussi la matrice de variance-covariance des résidus du modèle. Cependant, il n'est pas estimé par la méthode des moindres carrés généralisés, mais plutôt par maximum de vraissemblance ou avec des méthodes bayesiennes.
+Le modèle d'autorégression conditionnelle (CAR) modifie lui aussi la matrice de variance-covariance des résidus du modèle. Cependant, il n'est pas estimé par la méthode des moindres carrés généralisés, mais plutôt par maximum de vraisemblance ou avec des méthodes bayésiennes.
 
 ### Description du modèle CAR
 
@@ -635,9 +635,9 @@ Avec :
 
 -   $W$, une matrice spatiale binaire symétrique de taille $n \times n$. $W_{ij} = 1$ indiquant que les observations $i$ et $j$ sont voisines
 -   $D$, une matrice indiquant pour chaque observation son nombre de voisins. Donc seule sa diagonale comporte des valeurs positives, toutes les autres cellules sont remplies de zéros.
--   $\rho$, le paramètre d'autocorrélation spatiale. Il varie généralement entre 0 (modèle sans autocorrélation spatiale) et 1. Lorsqu'il augmente, les valeurs de la matrice de variance-covariance en dehors de la diagonale augmentent, indiquant une plus forte autocorrélation spatiale entre voisin.
+-   $\rho$, le paramètre d'autocorrélation spatiale. Il varie généralement entre 0 (modèle sans autocorrélation spatiale) et 1. Lorsqu'il augmente, les valeurs de la matrice de variance-covariance en dehors de la diagonale augmentent, indiquant une plus forte autocorrélation spatiale entre voisins.
 
-Ce modèle formule donc une hypothèse de dépendance conditionnelle entre les résidus des observations voisines. Le modèle CAR s'inspire directement des chaînes et des champs de Markov dont il tire une propriété centrale : la valeur de l'effet spatial d'une observation *i* ne dépend que de celles de ses observations voisines *j*. Pour mieux visualiser l'impact du paramètre $\rho$, nous pouvons visualiser à la @fig-carexamples différentes réalisations d'une distribution normale centrée sur zéro avec une structure de variance-covariance suivant un modèle CAR.
+Ce modèle formule donc une hypothèse de dépendance conditionnelle entre les résidus des observations voisines. Le modèle CAR s'inspire directement des chaînes et des champs de Markov dont il tire une propriété centrale : la valeur de l'effet spatial d'une observation *i* ne dépend que de celles de ses observations voisines *j*. Pour comprendre l'impact du paramètre $\rho$, nous pouvons visualiser à la @fig-carexamples différentes réalisations d'une distribution normale centrée sur zéro avec une structure de variance-covariance suivant un modèle CAR.
 
 ```{r}
 #| echo: false 
@@ -645,7 +645,7 @@ Ce modèle formule donc une hypothèse de dépendance conditionnelle entre les r
 #| eval: true
 #| warning: false
 #| label: fig-carexamples
-#| fig-cap: Exemple de différentes réalisation d'une variable suivant un modèle CAR
+#| fig-cap: Exemples de réalisations d'une variable avec une distribution normale avec un modèle CAR
 #| fig-align: center
 #| out-width: '100%'
 
@@ -696,6 +696,8 @@ legende_parametres <- list(text.separator = "à",
                            big.mark = " ",
                            digits = 2)
 
+tmap_options(frame = FALSE)
+
 carte1 <- tm_shape(sr_mtl) +
   tm_polygons(
     col = NULL, lwd = .2,
@@ -711,8 +713,7 @@ carte1 <- tm_shape(sr_mtl) +
     ) +
   tm_title(paste0('rho = 0,999 (I de Moran = ', 
                   format(round(moran1$I,2), decimal.mark =","), ')'),
-           size = .85) +
-  tm_layout(frame = FALSE)
+           size = .85)
 
 carte2 <- tm_shape(sr_mtl) +
   tm_polygons(
@@ -729,8 +730,7 @@ carte2 <- tm_shape(sr_mtl) +
     ) +
   tm_title(paste0('rho = 0,99 (I de Moran = ', 
                   format(round(moran2$I,2), decimal.mark =","), ')'),
-           size = .85) +
-  tm_layout(frame = FALSE)
+           size = .85)
 
 
 carte3 <- tm_shape(sr_mtl) +
@@ -748,8 +748,7 @@ carte3 <- tm_shape(sr_mtl) +
     ) +
   tm_title(paste0('rho = 0,8 (I de Moran = ', 
                   format(round(moran3$I,2), decimal.mark =","), ')'),
-           size = .85) +
-  tm_layout(frame = FALSE)
+           size = .85)
 
 
 carte4 <- tm_shape(sr_mtl) +
@@ -767,13 +766,12 @@ carte4 <- tm_shape(sr_mtl) +
     ) +
   tm_title(paste0('rho = 0,5 (I de Moran = ', 
                   format(round(moran4$I,2), decimal.mark =","), ')'),
-           size = .85) +
-  tm_layout(frame = FALSE)
+           size = .85)
 
 tmap_arrange(carte1, carte2, carte3, carte4, ncol = 2, nrow = 2)
 ```
 
-Comme le modèle GLS, le modèle CAR est relativement facile à utiliser, car il est possible d'interpréter directement les coefficients du modèle. En revanche, le paramètre $rho$ contrôlant l'autocorrélation spatiale ne peut pas être interpréter directement, car il dépend directement de la matrice spatiale *W*. On peut seulement indiquer si sa valeur est positive (autocorrélation spatiale positive) ou négative (autocorrélation spatiale négative). Il est généralement pertinent de cartographier le terme spatial du modèle CAR afin d'évaluer visuellement son degré d'autocorrélation spatiale.
+Comme le modèle GLS, le modèle CAR est relativement facile à utiliser, car il est possible d'interpréter directement les coefficients régression du modèle. En revanche, le paramètre $rho$ contrôlant l'autocorrélation spatiale ne peut pas être interprété directement, car il dépend directement de la matrice spatiale *W*. On peut seulement indiquer si sa valeur est positive (autocorrélation spatiale positive) ou négative (autocorrélation spatiale négative). Il est généralement pertinent de cartographier le terme spatial du modèle CAR afin d'évaluer visuellement son degré d'autocorrélation spatiale.
 
 ### Mise en œuvre et analyse dans R
 
@@ -858,7 +856,7 @@ Sd <- sqrt(model_car$fit$s2)
 ggplot(df) + 
   geom_histogram(aes(x=residus_car,y =..density..),bins=30,fill="white",color="black")+
   stat_function(aes(x=residus_car),fun = dnorm, args = list(mean = Mean, sd = Sd),color="red",size=1) + 
-  labs(x = 'résidus du modèle CAR', y = '')
+  labs(x = 'résidus', y = '')
 
 ```
 
@@ -893,7 +891,7 @@ kbl(tab_coeff,
     digits = 3,
     row.names = FALSE,
   	format.args = list(decimal.mark = ',', big.mark = " "),
-  	col.names = c('Variable',"Coefficient","exp(coefficent)","Valeur de p"),
+  	col.names = c('Variable',"Coefficient","exp(coefficient)","Valeur de p"),
   	align= c('l',"r","r","r"),
   	format = "markdown", linesep = "") %>%
         kable_styling() %>%
@@ -932,15 +930,15 @@ tm_shape(data_mtl) +
 
 ```
 
-À la @fig-carresid2, nous observons des zones pour lesquelles le modèle s'attend à voir des valeurs plus élevées ou plus faibles que ce qui est seulement capturé par les variables dépendantes. Premièrement, la couronne nord est marquée par valeurs négatives avec une réduction du ratio entre les parts modales du transport collectif et la voiture allant de 40 à 60 %. Une tendance similaire s'observe pour l'arrondissement Saint-Laurent et les municipalités de Mont-Royal, Westmount et Côte-Saint-Luc, ainsi que le centre et le sud de Laval. En revanche, on observe des valeurs plus élevées (multiplication par deux) du ratio à Rivière-des-Pairies-Pointe-aux-Tremble et à Longueuil sur la Rive-Sud.
+À la @fig-carresid2, nous repérons des zones pour lesquelles le modèle s'attend à obtenir des valeurs systématiquement plus élevées ou plus faibles que celles capturées par les variables indépendantes. Premièrement, la couronne nord est marquée par valeurs négatives avec une réduction du ratio entre les parts modales du transport collectif et la voiture allant de 40 à 60 %. Une tendance similaire s'observe pour l'arrondissement Saint-Laurent et les municipalités de Mont-Royal, Westmount et Côte-Saint-Luc, ainsi que le centre et le sud de Laval. En revanche, on observe des valeurs plus élevées (multiplication par deux) du ratio à Rivière-des-Pairies-Pointe-aux-Tremble et à Longueuil sur la Rive-Sud.
 
 ## Modèles linéaires généralisés à effets mixtes {#sec-023}
 
-Nous avons vu qu'un modèle GLS ([section @sec-021]) ou un modèle CAR ([section @sec-022]) est construit en modifiant la structure de covariance d'un modèle linéaire classique (MCO). Toutefois, le principe de la structure de covariance est difficile à généraliser pour des distributions autres que la distribution normale. Ainsi, il est complexe d'utiliser les modèles CAR et GLS pour des variables binaires, et encore plus pour des variables de comptage ou multinomiale. Plus généralement, il est difficile d’intégrer la dimension spatiale dans un modèle de type GLM en modifiant simplement la structure de covariance.
+Nous avons vu qu'un modèle GLS ([section @sec-021]) ou un modèle CAR ([section @sec-022]) est construit en modifiant la structure de covariance d'un modèle linéaire classique (MCO). Toutefois, le principe de la structure de covariance est difficile à généraliser pour des distributions autres que la distribution normale. Ainsi, il est complexe d'utiliser les modèles CAR et GLS pour des variables binaires, et encore plus pour des variables de comptage ou nominale à plusieurs modalités. Plus généralement, il est difficile d’intégrer la dimension spatiale dans un modèle de type GLM en modifiant simplement la structure de covariance.
 
 ### Du GLS et du CAR aux GLMM {#sec-0231}
 
-Nous montrons ci-dessous comment les modèles GLS et CAR peuvent être reformulés comme des modèles GLMM. Cette explication reste volontairement relativement simplifiée, car elle ne tient pas compte du fait que ces modèles utilisent différentes approches d'estimation. En reprenant les formulations des modèles GLS et CAR, il est possible des unifier en une seule :
+Nous montrons ci-dessous comment les modèles GLS et CAR peuvent être reformulés comme des modèles GLMM. Cette explication reste volontairement relativement simplifiée, car elle ne tient pas compte du fait que ces modèles utilisent différentes approches d'estimation. En reprenant les formulations des modèles GLS et CAR, il est possible de les unifier en une seule :
 
 $$
 \begin{aligned}
@@ -1025,24 +1023,23 @@ library(DHARMa, quietly = TRUE)
 # Chargement des données
 covid_data <- readRDS('data/chap02/covid_usa.rds')
 
-# recodage des valeurs négatives pour le nombre de décès
+# Recodage des valeurs négatives pour le nombre de décès
 covid_data$deaths_3 <- ifelse(covid_data$deaths_3 < 0, 
                               0, 
                               covid_data$deaths_3
                               )
 
-# conservation uniquement des comtés unique
+# Conservation des comtés uniques
 covid_data <- covid_data %>% 
   group_by(FIPS) %>% 
   slice_head(n = 1)
   
-
 # Matrice de de contiguïté selon le partage d'un nœud 
 queen_nb <- poly2nb(covid_data, queen = TRUE)
 queen_w <- nb2listw(queen_nb, style = 'W', zero.policy = TRUE)
 ```
 
-Nous commençons donc par ajuster un modèle non spatial.
+Nous commençons par ajuster un modèle non spatial.
 
 ```{r}
 #| echo: true 
@@ -1079,7 +1076,7 @@ resid <- simulateResiduals(model_poisson)
 plot(resid)
 ```
 
-La @fig-poiss1 indique clairement un problème dans la distribution des résidus simulés du modèle : ils présentent une dispersion bien plus dispersée qu'attendue pour un modèle de Poisson. Ce phénomène s'explique probablement par la présence d'autocorrélation spatiale dans les résidus (variance supplémentaire non prise en compte), mais aussi par une mauvaise spécification du modèle. Dans ce contexte, il convient de tester une autre distribution, soit la distribution négative binomiale.
+La @fig-poiss1 indique clairement un problème dans la distribution des résidus simulés du modèle : ils présentent une dispersion bien plus dispersée qu'attendu pour un modèle de Poisson. Ce phénomène s'explique probablement par la présence d'autocorrélation spatiale dans les résidus (variance supplémentaire non prise en compte), mais aussi par une mauvaise spécification du modèle. Dans ce contexte, il convient de tester une autre distribution, soit la distribution négative binomiale.
 
 ```{r}
 #| echo: true 
@@ -1105,8 +1102,7 @@ plot(resid)
 
 ```
 
-
-La @fig-nb1 indique une bien meilleure distribution des résidus. Intéressons-nous matinenant à la présence éventuelle d'autocorrélation spatiale des résidus. Puisque le modèle assume une distribution négative binomiale, nous utilisons les résidus de Pearson pour calculer le *I* de Moran, puisqu'ils sont standardisés et tiennent compte de l'hétéroscédasticité.
+La @fig-nb1 indique une bien meilleure distribution des résidus. Intéressons-nous maintenant à la présence éventuelle d'autocorrélation spatiale des résidus. Puisque le modèle assume une distribution négative binomiale, nous utilisons les résidus de Pearson pour calculer le *I* de Moran, puisqu'ils sont standardisés et tiennent compte de l'hétéroscédasticité.
 
 ```{r}
 #| echo: true 
@@ -1122,6 +1118,11 @@ print(test)
 ```
 
 Nous constatons que le *I* de Moran obtenu sur les résidus simulés est élevé `r gsub('.',',',round(as.numeric(test$statistic),2), fixed = TRUE)`. Il faut donc opter pour un modèle contrôlant la dépendance spatiale. Nous testons ici deux modèles GLMM avec un effet aléatoire : l'un avec une structure de corrélation CAR et l'autre une structure de corrélation avec la fonction Matérn.
+
+
+#### Modèle GLMM avec un effet aléatoire de type CAR {#sec-02321}
+
+Nous construisons ainsi une matrice de contiguïté `wmat` qui est introduite dans le modèle GLMM avec le paramètre `adjMatrix = wmat` de la fonction `fitme` du *package* `spaMM`.
 
 ```{r}
 #| echo: true 
@@ -1168,7 +1169,6 @@ Le modèle GLMM avec un effet aléatoire de type CAR est parvenu à réduire sig
 #| fig-cap: Valeurs ajustées de l'effet aléatoire spatial CAR
 #| fig-align: center
 
-
 pred_df <- data_mode1
 
 vars <- c('income', 'per_black', 'per_hispanic', 'per_atleast_hs',
@@ -1205,12 +1205,13 @@ tm_shape(pred_df) +
                   position = tm_pos_out("right", pos.v = "center"))
                 ) +                
   tm_layout(frame=FALSE) +
-  tm_credits("L'effet spatial a été centré sur 0 et mis en exponentiel.",
+  tm_credits("L'effet spatial a été centré sur 0 et mis en exponentielle.",
              position = c("LEFT", "BOTTOM"), size = 0.8)
 ```
+
 Le terme spatial obtenu (@fig-nb2) correspond globalement à celui présenté par les auteurs sur le dépôt github hébergeant leur données. Nous pouvons à présent interpréter les coefficients de notre modèle. 
 
-Pour un modèle GLMM, le calcul des valeurs de *p* pose certaines difficultés, car le nombre de degrés de liberté est difficile à estimer. En effet, l'inclusion d'un effet aléatoire, particulièrement un effet aléatoire spatial, génère un nombre de degrés flous au modèle. Pour notre modèle, considérant le grand nombre d'observations (plus de 2600), il serait acceptable d'utiliser l'approche classique basée sur la distribution *t* pour calculer des valeurs de *p* . Deux autres alternatives sont possibles : les tests basés sur le rapport de vraisemblance ou une approche par *bootstrap* pour obtenir des intervalles de confiance. Si cette dernière approche est la plus robuste, elle est beaucoup plus coûteuse en temps de calcul.
+Pour un modèle GLMM, le calcul des valeurs de *p* pose certaines difficultés, car le nombre de degrés de liberté est difficile à estimer. En effet, l'inclusion d'un effet aléatoire, particulièrement un effet aléatoire spatial, génère un nombre de degrés flous au modèle. Pour notre modèle, considérant le grand nombre d'observations (plus de 2600), il serait acceptable d'utiliser l'approche classique basée sur la distribution *t* pour calculer des valeurs de *p*. Deux autres alternatives sont possibles : les tests basés sur le rapport de vraisemblance ou une approche par *bootstrap* pour obtenir des intervalles de confiance. Si cette dernière approche est la plus robuste, elle est beaucoup plus coûteuse en temps de calcul.
 
 ```{r}
 #| echo: true 
@@ -1234,14 +1235,16 @@ knitr::kable(df[c(1,2,4,5)],
 
 ```
 
-À la lecture du @tbl-ResultatsModelCAR, plusieurs constats peuvent être avancées :
+À la lecture du @tbl-ResultatsModelCAR, plusieurs constats peuvent être avancés :
 
 -   Le revenu est négativement associé avec le taux de décès. Cependant, cet effet est relativement faible. Un revenu médian supérieur de 1000 \$ est associé à une réduction du taux de décès de `r paste0(format(round(100 * (1 - exp(df[['Estimate']][[2]])),2), decimal.mark = ","),' %')`. 
 -   La concentration de personnes d'origines afro-américaines ou hispaniques est associée avec un plus au taux de décès. Pour ces deux groupes, une augmentation de 10 points de pourcentage correspond respectivement à des augmentations des taux de décès de `r paste0(format(round((exp(10*df[['Estimate']][[3]]) * 100) - 100,2), decimal.mark = ","),' %')` et `r paste0(format(round((exp(10*df[['Estimate']][[4]]) * 100) - 100,2), decimal.mark = ","),' %')`. 
 -   Un des effets les plus forts est probablement la part de la population vivant dans des établissements de soins. Chaque augmentation d'un point de pourcentage de cette population est associée avec une augmentation de `r paste0(format(round((exp(df[['Estimate']][[6]]) * 100) - 100,2), decimal.mark = ","),' %')` du taux de décès.
 -   Il est intéressant de constater que l'alignement politique joue un rôle non négligeable. Toutes choses étant égales par ailleurs, un comté à tendance républicaine (+0,5) plutôt que démocrate (-0,25) a ainsi un taux de décès `r paste0(format(round((exp(0.75*df[['Estimate']][[8]]) * 100) - 100,2), decimal.mark = ","),' %')` plus élevé.
 
-À ce stade, nous pourrions envisager une autre structure spatiale pour notre effet aléatoire. En l’occurrence, le package `spaMM` permet notamment d'utiliser une structure de covariance de type Matérn ou Cauchy basées sur les distances entre les observations. Considérant que les comtés américains sont relativement uniformément distribués, nous pourrions tester cette approche et la comparer au modèle CAR.
+#### Modèle GLMM avec un effet aléatoire avec la fonction Matérn {#sec-02322}
+
+À ce stade, nous pourrions envisager une autre structure spatiale pour notre effet aléatoire. Le package `spaMM` permet notamment d'utiliser une structure de covariance de type Matérn ou Cauchy basées sur les distances entre les observations. Considérant que les comtés américains sont relativement uniformément distribués, nous pourrions tester cette approche et la comparer au modèle CAR.
 
 ```{r}
 #| echo: false 
@@ -1255,7 +1258,7 @@ model_matern <- readRDS('data/chap02/model_glmm_matern.rds')
 model_cauchy <- readRDS('data/chap02/model_glmm_cauchy.rds')
 ```
 
-Pour spécifier la structure de corrélation spatiale, le package `spaMM` à besoin des coordonnées des observations en longitude et latitude. Nous reprojectons donc nos observations dans le système de référence *4326*.
+Pour spécifier la structure de corrélation spatiale, le package `spaMM` à besoin des coordonnées des observations en longitude et latitude. Par conséquent, Nous reprojectons la couche géographique dans le système de référence EPSG:4326.
 
 ```{r}
 #| echo: true 
@@ -1348,7 +1351,7 @@ simresid <- simulateResiduals(model_cauchy)
 plot(simresid)
 ```
 
-Pour le modèle avec la structure de corrélation Cauchy, les résidus semblent encore moins bien distribués. Il faudrait donc probablement éviter de se fier à ce troisième modèle.
+Pour le modèle avec la structure de corrélation Cauchy, les résidus semblent encore moins bien distribués. Il faudrait donc probablement éviter de se fier aux résultats de ce troisième modèle.
 
 La @fig-glmmcorstruct illustre la fonction de corrélation ajustée pour les deux modèles pour leurs effets aléatoires. Nous représentons notamment la corrélation selon la distance, mais aussi un graphique montrant la corrélation attendue en prenant un comté de référence. Notez ici que le *package* `spaMM` applique une transformation aux distances lors du calcul de la matrice de covariance spatiale de l'effet aléatoire. Pour retrouver ces distances, il est nécessaire de passer par la fonction `make_scaled_dist`.
 
@@ -1361,7 +1364,7 @@ La @fig-glmmcorstruct illustre la fonction de corrélation ajustée pour les deu
 #| label: fig-glmmcorstruct
 #| fig-align: center
 #| layout-ncol: 2
-#| fig-cap: "Structures de corrélations ajustées par le modèle"
+#| fig-cap: "Structures de corrélation ajustées par le modèle"
 #| fig-subcap: 
 #|   - "Structure Cauchy"
 #|   - "Structures Cauchy et Matérn : effet de la distance"
@@ -1396,11 +1399,11 @@ df_corr$corr_cauchy <- CauchyCorr(df_corr$dists_4326,
 
 # Représentation des fonctions
 plot_corr <- ggplot(df_corr) +
-  geom_line(aes(x = dists, y = corr_matern, color = 'Matern')) +
+  geom_line(aes(x = dists, y = corr_matern, color = 'Matérn')) +
   geom_line(aes(x = dists, y = corr_cauchy, color = 'Cauchy')) +
   theme_bw() +
-  scale_color_manual(values = c('Matern' = '#669bbc', 'Cauchy' = '#c1121f')) +
-  labs(x = 'distance (km)', y = 'corrélation', colour = 'structure de \ncorrélation')
+  scale_color_manual(values = c('Matérn' = '#669bbc', 'Cauchy' = '#c1121f')) +
+  labs(x = 'distance (km)', y = 'corrélation', colour = 'Structure de \ncorrélation')
 
 # Représentation cartographique des fonctions
 data_mode1$corr_mat <- df_corr$corr_matern
@@ -1411,44 +1414,7 @@ legende_parametres <- list(text.separator = "à",
                                decimal.mark = ",", 
                                big.mark = " ",
                                digits = 1)
-
-
-tm_shape(pred_df) +
-    tm_polygons(col = NULL,
-                fill ="pred",
-                fill.scale = tm_scale_intervals(
-                  n = 7, style = "fisher", 
-                  midpoint = 1,
-                  label.format = legende_parametres,
-                  values = "-brewer.rd_bu"),
-                fill.legend = tm_legend(
-                  title = "Effet aléatoire \nspatial",
-                  frame = FALSE, 
-                  position = tm_pos_out("right", pos.v = "center"))
-                ) +                
-  tm_layout(frame=FALSE) +
-  tm_credits("L'effet spatial a été centré sur 0 et mis en exponentiel.",
-             position = c("LEFT", "BOTTOM"), size = 0.8)
-
-
-
-map_corr_mat <- tm_shape(data_mode1) +
-  tm_polygons(
-    fill = "corr_mat",
-    fill.scale = tm_scale_intervals(
-      breaks = c(0, 0.2, 0.4, 0.6, 0.8, 1),
-      style = 'fixed',
-      values = "brewer.blues",
-      label.format = legende_parametres,
-    ),
-    fill.legend = tm_legend(
-      title = 'corrélation Matérn',
-      legend.is.portrait = TRUE,
-      frame = FALSE,
-      position = tm_pos_out(cell.h = "center", cell.v = "bottom")
-    )
-  ) +
-  tm_layout(frame = FALSE)
+tmap_options(frame = FALSE)
 
 map_corr_mat <- tm_shape(data_mode1) +
   tm_polygons(
@@ -1466,8 +1432,7 @@ map_corr_mat <- tm_shape(data_mode1) +
       frame = FALSE,
       position = tm_pos_out(cell.h = "center", cell.v = "bottom")
     )
-  ) +
-  tm_layout(frame = FALSE)
+  )
 
 map_corr_cau <- tm_shape(data_mode1) +
   tm_polygons(
@@ -1485,8 +1450,7 @@ map_corr_cau <- tm_shape(data_mode1) +
       frame = FALSE,
       position = tm_pos_out(cell.h = "center", cell.v = "bottom")
     )
-  ) +
-  tm_layout(frame = FALSE)
+  )
 
 map_corr_cau
 plot_corr
@@ -1494,10 +1458,9 @@ map_corr_mat
 
 ```
 
-Nous pouvons observer que la fonction de corrélation Cauchy est probablement peu adaptée à nos données. Elle semble bien trop lisser les résultats en autorisant des corrélations importantes entre des comtés éloignés. 
-Pour la fonction Matérn, la corrélation est réduite de moitié au-delà de 260 km, et tombe à zéro aux alentours de 2000 km.
+Nous constatons que la fonction de corrélation Cauchy est probablement peu adaptée à nos données (figures [-@fig-glmmcorstruct-1] et [-@fig-glmmcorstruct-2]). Elle semble bien trop lisser les résultats en autorisant des corrélations importantes entre des comtés éloignés. Pour la fonction Matérn, la corrélation est réduite de moitié au-delà de 260 km, et tombe à zéro aux alentours de 2000 km (@fig-glmmcorstruct-2).
 
-Pour visualiser la contribution de ces effets aléatoires dans les modèles, nous pouvons les cartographier. Puisque les structures de corrélation Matérn et Cauchy se basent sur des coordonnées géographiques, elle est de nature continue. Nous allons donc les représenter comme des variables continues spatialement. Notez également que puisque notre modèle a une fonction de lien `log`, nous pouvons prendre ce terme spatial centré sur 0 et le transformer avec la fonction `exp`. Ainsi, nous verrons l'impact de l'espace sur le taux d'infection en effet multiplicatif. Les valeurs proches de 1 indiqueront donc les comtés des États-Unis dans lesquels la tendance spatiale est moyenne. Des valeurs supérieures à 1 indiqueront des comtés dans lesquels toutes choses étant égales par ailleurs, le taux d'infection a été plus élevé.
+Pour visualiser la contribution de ces effets aléatoires dans les modèles, il suffit de les cartographier. Puisque les structures de corrélation Matérn et Cauchy se basent sur des coordonnées géographiques, elle est de nature continue. Nous les représentons donc comme des variables continues spatialement. Notez également que puisque notre modèle a une fonction de lien `log`, nous pouvons prendre ce terme spatial centré sur 0 et le transformer avec la fonction `exp`. Ainsi, nous verrons l'impact de l'espace sur le taux d'infection en effet multiplicatif. Les valeurs proches de 1 indiqueront donc les comtés des États-Unis dans lesquels la tendance spatiale est moyenne. Des valeurs supérieures à 1 indiqueront des comtés dans lesquels toutes choses étant égales par ailleurs, le taux d'infection a été plus élevé (@fig-glmmRESp).
 
 ```{r}
 #| echo: true 
@@ -1530,7 +1493,7 @@ pred_df <- expand.grid(
   st_as_sf(coords = c('X', 'Y'), crs = st_crs(data_mode1), remove = FALSE) %>% 
   st_transform(4326)
 
-# Nécessité ici d'extraire les longitudes et latitudes pour le package spaMM
+# Nécessité d'extraire les longitudes et latitudes pour le package spaMM
 lonlat <- st_coordinates(pred_df)
 pred_df$longitude <- lonlat[,1]
 pred_df$latitude <- lonlat[,2]
@@ -1592,6 +1555,7 @@ legende_parametres <- list(text.separator = "à",
                                decimal.mark = ",", 
                                big.mark = " ",
                                digits = 2)
+tmap_options(frame = FALSE)
 
 cauchy_re_map <- tm_shape(mask(raster_cauchy,usa)) +
   tm_raster(
@@ -1610,8 +1574,7 @@ cauchy_re_map <- tm_shape(mask(raster_cauchy,usa)) +
     )
   ) +
   tm_shape(data_mode1) + 
-    tm_borders(col = 'darkgrey', lwd = 0.01) + 
-  tm_layout(frame = FALSE)
+    tm_borders(col = 'darkgrey', lwd = 0.01)
 
 matern_re_map <- tm_shape(mask(raster_matern,usa)) +
   tm_raster(
@@ -1630,8 +1593,7 @@ matern_re_map <- tm_shape(mask(raster_matern,usa)) +
     )
   ) +
   tm_shape(data_mode1) + 
-    tm_borders('darkgrey', lwd = 0.01) + 
-  tm_layout(frame = FALSE)
+    tm_borders('darkgrey', lwd = 0.01)
 
 tmap_arrange(cauchy_re_map, 
              matern_re_map, 
@@ -1639,11 +1601,16 @@ tmap_arrange(cauchy_re_map,
 
 ```
 
-Les deux cartes sont extrêmement similaires avec seulement des changements mineures. Pour terminer, nous pouvons comparer la qualité d'ajustement des trois modèles GLMM avec les AIC (@tbl-TroisModelesAIC).
+Les deux cartes sont extrêmement similaires avec uniquement des changements mineurs (@fig-glmmRESp). 
+
+
+#### Compararaison des trois modèles GLMM avec des effets aléatoires spatiaux {#sec-02323}
+
+Pour terminer, nous pouvons comparer la qualité d'ajustement des trois modèles GLMM avec les AIC (@tbl-TroisModelesAIC).
 
 ```{r}
 #| label: tbl-TroisModelesAIC
-#| tbl-cap: Valeurs des AIC marginal et conditionnel pour les trois modèles
+#| tbl-cap: Valeurs des AIC marginaux et conditionnels pour les trois modèles
 #| #| echo: true 
 #| message: false 
 #| eval: true
@@ -1653,6 +1620,13 @@ models <- list(model_car, model_matern, model_cauchy)
 aics <- lapply(models, spaMM::AIC.HLfit, verbose = FALSE)
 aics <- t(do.call(rbind, aics))
 colnames(aics) <- c('Car', 'Matérn', 'Cauchy')
+
+rownames(aics) <- c(
+  "AIC marginal", 
+  "AIC conditionnel", 
+  "AIC avec surdispersion", 
+  "Degrés de liberté"
+)
 
 knitr::kable(aics, 
              digits = 0,
@@ -1669,7 +1643,7 @@ knitr::kable(aics,
 ::::
 
 ::: bloc_notes-body
-Le package `spAMM` donne plusieurs versions du AIC pour la sélection de modèles. L'AIC conditionnel et l'AIC marginal ont des visées différentes et peuvent être privilégiés selon les objectifs de l'étude.
+Le *package* `spAMM` fournit plusieurs versions du AIC pour la sélection de modèles. L'AIC conditionnel et l'AIC marginal ont des visées différentes et peuvent être privilégiés selon les objectifs de l'étude.
 
 1.  L'**AIC marginal** considère que les effets aléatoires ne sont pas observés et sont donc *marginalisés* dans son calcul. Il est préférable de l'utiliser lorsque l'on s'intéresse avant tout aux effets fixes du modèle ou lorsque les prédictions porteront sur de nouvelles observations qui ne faisaient pas partie des données originales.
 2.  L'**AIC conditionnel** considère que les effets aléatoires ont été observés, son calcul est donc conditionné par les valeurs des effets aléatoires. Il est préférable de l'utiliser si les prédictions futures se font sur des entités déjà observées et dont l'effet propre est connu. Typiquement, lorsque des splines pénalisées sont intégrées dans un modèle pour faire du lissage et sont estimées comme des effets aléatoires, le *AIC* conditionnel est préféré [@safken2021conditional].
@@ -1706,7 +1680,8 @@ df_total <- cbind(
 )
 rownames(df_total)[1] <- "constante"
 
-knitr::kable(df_total, digits = 3,
+knitr::kable(df_total, 
+             digits = 3,
              row.names = TRUE,
              format.args = list(decimal.mark = ',', big.mark = " "),
              col.names = c('exp(coef.)', 'p','exp(coef.)', 'p')
@@ -1714,7 +1689,7 @@ knitr::kable(df_total, digits = 3,
   add_header_above(.,c(' ' = 1,'CAR'=2,'Matérn'=2))
 ```
 
-Il est intéressant de constater que les deux modèles partagent essentiellement les mêmes conclusions à quelques exceptions près (@tbl-ModelesCauchyMatern). Selon le modèle utilisant la structure CAR pour l'effet aléatoire, l'effet du pourcentage de personnes de 65 ans et plus est non significatif. Pour le modèle avec une structure Matérn, la valeur de *p* est inférieure à 0,05 avec un coefficient en expontentielle de `r format(round(df2$exp[[7]], 3), decimal.mark = ",")`. Ainsi, une augmentation de 10 points de pourcentage sur cette variable correspondrait à une augmentation de `r paste0(format(round((exp(10*df2[['Estimate']][[7]]) * 100) - 100,2), decimal.mark = ","),' %')` du taux de décès. À contrario, l'effet du port du masque est significatif dans le modèle avec la structure de corrélation CAR, mais pas dans celui avec la corrélation Matérn. Cependant, rappelons que la fiabilité de cette donnée est assez limitée; elle a aussi une variation assez faible allant de 85 % à 100 %. Une augmentation de 5 points de pourcentage serait associée avec une réduction du taux de décès de `r paste0(format(round(100 * (1 - exp(5 * df[['Estimate']][[10]])),2), decimal.mark = ","),' %')`.
+Il est intéressant de constater que les deux modèles partagent essentiellement les mêmes conclusions à quelques exceptions près (@tbl-ModelesCauchyMatern). Selon le modèle utilisant la structure CAR pour l'effet aléatoire, l'effet du pourcentage de personnes de 65 ans et plus est non significatif. Pour le modèle avec une structure Matérn, la valeur de *p* est inférieure à 0,05 avec un coefficient en exponentielle de `r format(round(df2$exp[[7]], 3), decimal.mark = ",")`. Ainsi, une augmentation de 10 points de pourcentage sur cette variable correspondrait à une augmentation de `r paste0(format(round((exp(10*df2[['Estimate']][[7]]) * 100) - 100,2), decimal.mark = ","),' %')` du taux de décès. À contrario, l'effet du port du masque est significatif dans le modèle avec la structure de corrélation CAR, mais pas dans celui avec la corrélation Matérn. Cependant, rappelons que la fiabilité de cette donnée est assez limitée; elle a aussi une variation assez faible allant de 85 % à 100 %. Une augmentation de 5 points de pourcentage serait associée avec une réduction du taux de décès de `r paste0(format(round(100 * (1 - exp(5 * df[['Estimate']][[10]])),2), decimal.mark = ","),' %')`.
 
 Le choix du modèle est donc crucial pour l'interprétation des résultats. Puisque l'emphase dans l'analyse porte avant tout sur les effets fixes (l'effet aléatoire spatial est uniquement utilisé pour réduire la corrélation spatiale des résultats), alors privilégier le modèle avec le meilleur *AIC* marginal est aussi un choix qui se justifierait, en l’occurrence le modèle avec la structure de corrélation *Matérn*.
 

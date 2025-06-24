@@ -378,7 +378,7 @@ window.Quarto = {
 <li>connaître les différents modèles spatiaux des modèles intégrant une structure de covariance spatiale;</li>
 <li>connaître les différentes fonctions pour construire un modèle des moindres carrés généralisés (GLS) spatial;</li>
 <li>comprendre l’introduction d’une matrice de contiguïté dans un modèle d’autorégression conditionnelle (CAR);</li>
-<li>comprendre le passage du GLS et du CAR vers les modèles à effets mixtes (GLMM);</li>
+<li>comprendre le passage des modèles GLS et CAR vers les modèles à effets mixtes (GLMM);</li>
 <li>mettre en pratique ces modèles spatiaux dans R.</li>
 </ul>
 </div>
@@ -422,7 +422,7 @@ window.Quarto = {
 </ul>
 </div>
 </div>
-<p>Dans ce chapitre, nous abordons un ensemble de modèles visant à corriger le problème de la dépendance spatiale dans un modèle de régression <a href="01-NotionsDeBase.html#sec-016" class="quarto-xref">section&nbsp;<span>1.6</span></a>, et ce, en exploitant la matrice de variance-covariance des résidus. À titre de rappel, dans le modèle MCO classique, plusieurs hypothèses sont formulées concernant les résidus qui doivent être&nbsp;:</p>
+<p>Dans ce chapitre, nous abordons des modèles visant à corriger le problème de la dépendance spatiale d’un modèle (<a href="01-NotionsDeBase.html#sec-016" class="quarto-xref">section&nbsp;<span>1.6</span></a>), et ce, en exploitant la matrice de variance-covariance des résidus. À titre de rappel, dans le modèle MCO classique, plusieurs hypothèses sont formulées concernant les résidus qui doivent être&nbsp;:</p>
 <ol type="1">
 <li><p>normalement distribués;</p></li>
 <li><p>centrés sur 0;</p></li>
@@ -453,7 +453,7 @@ window.Quarto = {
 <p>La méthode des moindres carrés généralisés (GLS) est une méthode d’estimation qui a été développée pour ajuster les paramètres d’un modèle de régression lorsqu’il existe une corrélation différente de zéro entre les résidus du modèle <span class="citation" data-cites="aitken1936iv">(<a href="references.html#ref-aitken1936iv" role="doc-biblioref">Aitken 1936</a>)</span>. Ce type de modèle est donc parfaitement adapté à l’analyse de données spatialisées puisqu’il permet de corriger très spécifiquement l’enjeu de dépendance spatiale, soit la présence d’autocorrélation spatiale dans les résidus.</p>
 <section id="sec-0211" class="level3" data-number="2.1.1">
 <h3 data-number="2.1.1" class="anchored" data-anchor-id="sec-0211"><span class="header-section-number">2.1.1</span> Description du modèle GLS</h3>
-<p>L’idée générale d’un modèle GLS est de modifier la matrice de variance-covariance pour y encoder directement la dépendance spatiale qui existe entre les observations. Concrètrement, il s’agit de remplacer les 0 de la matrice identité par des valeurs représentant le degré de corrélation spatiale entre les observations.</p>
+<p>L’idée générale d’un modèle GLS est de modifier la matrice de variance-covariance pour y encoder directement la dépendance spatiale qui existe entre les observations. Concrètement, il s’agit de remplacer les 0 de la matrice identité par des valeurs représentant le degré de corrélation spatiale entre les observations.</p>
 <p><span id="eq-gls3"><span class="math display">\[
 \operatorname{cov}=\sigma^2\times\left(\begin{array}{cccc}
 1 &amp; \lambda_{1-2} &amp; \cdots &amp; \lambda_{1-n} \\
@@ -498,7 +498,7 @@ Figure&nbsp;2.1: Fonctions de corrélation spatiale classiques
 </div>
 </div>
 </div>
-<p>La <a href="#fig-gls1" class="quarto-xref">figure&nbsp;<span>2.1</span></a> illustre ces cinq fonctions. Notons ici que toutes ces fonctions n’ont besoin que d’un seul paramètre appelé le <em>range</em> qui contrôle la vitesse à laquelle la corrélation diminue. Seule la fonction Matérn a un second paramètre nommé <span class="math inline">\(\nu\)</span> qui contrôle son niveau de lissage (ici fixé à 0,3). Il est difficile de déterminer à l’avance qu’elle sera la fonction la plus adéquate pour un modèle. L’idéal est donc d’ajuster chaque modèle possible, puis de les comparer pour identifier celui produit les meilleurs résultats.</p>
+<p>La <a href="#fig-gls1" class="quarto-xref">figure&nbsp;<span>2.1</span></a> illustre ces cinq fonctions qui n’ont besoin que d’un seul paramètre appelé le <em>range</em>, contrôlant la vitesse à laquelle la corrélation diminue. Seule la fonction Matérn a un second paramètre nommé <span class="math inline">\(\nu\)</span> qui contrôle son niveau de lissage (fixé ici à 0,3). Il est difficile de déterminer à l’avance qu’elle sera la fonction la plus adéquate pour un modèle. L’idéal est donc d’ajuster chaque modèle possible, puis de les comparer (notamment avec la mesure d’AIC) pour identifier celui qui produit les meilleurs résultats.</p>
 <p>La figure ci-dessous illustre différentes réalisations d’un processus spatial suivant une structure de corrélation de type gaussienne. Les vignettes B, C et D de cette figure représentent des résidus normalement distribués, centrés sur zéro et suivant une structure de corrélation spatiale que peut capturer un modèle GLS. Quant à la première vignette avec <code>range = 0</code>, elle représente des résidus normalement distribués, centrés sur zéro et sans structure d’autocorrélation spatiale.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
@@ -525,9 +525,9 @@ Figure&nbsp;2.2: Exemple de variables continues suivant une structure de corrél
 <div class="bloc_attention-body">
 <p>Puisque le modèle GLS modélise l’autocorrélation spatiale en se basant sur une fonction qui tient compte des distances entre les observations, plusieurs points doivent être gardés à l’esprit quant à son utilisation&nbsp;:</p>
 <ol type="1">
-<li>La distance entre les observations doit être une bonne représentation de l’espace géographique des données. Il faut donc privilégier ce type de modèle avec des données ponctuelles plutôt que polygonales et irrégulières, car les distances entre les centroïdes de ces dernières ne représentent pas bien leurs tailles variables.</li>
+<li>La distance entre les observations doit être une bonne représentation de l’espace géographique des données. Il faut donc privilégier ce type de modèle avec des entités spatiales ponctuelles plutôt que polygonales et irrégulières, car les distances entre les centroïdes de ces dernières ne représentent pas bien leurs tailles variables.</li>
 <li>Les distances entre les observations doivent être symétriques.</li>
-<li>On dit que la prise en compte de l’autocorrélation spatiale est paramétrique, car elle suit une fonction prédéterminée.</li>
+<li>La prise en compte de l’autocorrélation spatiale est paramétrique, car elle suit une fonction prédéterminée.</li>
 <li>La fonction modélisant l’autocorrélation spatiale est isotrope, elle ne tient pas compte des directions, mais seulement des distances.</li>
 <li>Deux entités avec exactement la même localisation sont donc parfaitement corrélées entre elles. Dans les faits, les <em>packages</em> ajustant des modèles GLS renvoient des erreurs lorsque des observations partagent exactement la même localisation.</li>
 </ol>
@@ -536,7 +536,7 @@ Figure&nbsp;2.2: Exemple de variables continues suivant une structure de corrél
 </section>
 <section id="sec-0212" class="level3" data-number="2.1.2">
 <h3 data-number="2.1.2" class="anchored" data-anchor-id="sec-0212"><span class="header-section-number">2.1.2</span> Mise en œuvre et analyse dans R</h3>
-<p>Pour illustrer la réalisation de différents modèles GLS, nous utilisons le jeu de données sur le prix des logements Airbnb sur l’Île de Montréal (<a href="01-NotionsDeBase.html#sec-0115" class="quarto-xref">section&nbsp;<span>1.1.5</span></a>). Ce jeu de donnée comporte 2500 logements airbnb pour lesquels nous connaissons un ensemble d’informations sur la nature du logement, son propriétaire ainsi que l’environnement à proximité du logement. Nous tentons ici de modéliser le prix par nuit de ces logements (@fig-glsdescribrep).</p>
+<p>Pour illustrer la réalisation de différents modèles GLS, nous utilisons le jeu de données sur le prix des logements Airbnb sur l’île de Montréal (<a href="01-NotionsDeBase.html#sec-0115" class="quarto-xref">section&nbsp;<span>1.1.5</span></a>). Ce jeu de donnée comporte 2500 logements airbnb pour lesquels nous connaissons un ensemble d’informations sur la nature du logement, son propriétaire ainsi que l’environnement à proximité du logement. Nous tentons ici de modéliser le prix par nuit de ces logements (figures <a href="#fig-glsdescribrep-1" class="quarto-xref"><span>2.3</span></a> à <a href="#fig-glsdescribrep-2" class="quarto-xref"><span>2.4</span></a>).</p>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tmap, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
@@ -579,7 +579,7 @@ Figure&nbsp;2.2: Exemple de variables continues suivant une structure de corrél
 <span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>      <span class="at">position =</span> <span class="fu">tm_pos_in</span>(<span class="st">"center"</span>, <span class="st">"top"</span>))</span>
 <span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">frame =</span> <span class="cn">TRUE</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell quarto-layout-panel" data-layout-ncol="2" data-layout-align="center">
+<div class="cell quarto-layout-panel" data-layout-align="center" data-layout-ncol="2">
 <div class="quarto-layout-row">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-glsdescribrep-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -617,7 +617,7 @@ Figure&nbsp;2.4: Géographie du prix des logements Airbnb à Montréal
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>data_airbnb<span class="sc">$</span>super_hote <span class="ot">&lt;-</span> <span class="fu">factor</span>(data_airbnb<span class="sc">$</span>super_hote, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">'NO'</span>, <span class="st">'YES'</span>))</span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>data_airbnb<span class="sc">$</span>metro_500m <span class="ot">&lt;-</span> <span class="fu">factor</span>(data_airbnb<span class="sc">$</span>has_metro_500m, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">'NO'</span>, <span class="st">'YES'</span>))</span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Nous regarderons l'impact de 10 évaluations supplementaires</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Nous regarderons l'impact de 10 évaluations supplémentaires</span></span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>data_airbnb<span class="sc">$</span>number_of_reviews <span class="ot">&lt;-</span> data_airbnb<span class="sc">$</span>number_of_reviews <span class="sc">/</span> <span class="dv">10</span></span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>model_data <span class="ot">&lt;-</span> data_airbnb <span class="sc">%&gt;%</span></span>
@@ -672,7 +672,7 @@ Multiple R-squared:  0.4422,    Adjusted R-squared:  0.4399
 F-statistic: 198.2 on 9 and 2250 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 </div>
-<p>Le modèle MCO explique un peu plus que 45&nbsp;% de la variance du prix des logements.</p>
+<p>Le modèle MCO explique près de 45&nbsp;% de la variance du prix des logements.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>model_data<span class="sc">$</span>residual_lm <span class="ot">&lt;-</span> <span class="fu">residuals</span>(model1)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -693,7 +693,7 @@ statistic = 0.12418, observed rank = 1000, p-value = 0.001
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
-<p>Nous avons cependant une autocorrélation spatiale résiduelle faible, mais significative avec un <em>I</em> de moran de 0,12.</p>
+<p>Nous avons cependant une autocorrélation spatiale résiduelle faible, mais significative avec un <em>I</em> de Moran de 0,12.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">simulateResiduals</span>(model1))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -709,7 +709,7 @@ Figure&nbsp;2.5: Diagnostic des résidus du modèle linéaire
 </div>
 </div>
 </div>
-<p>Les résidus semblent bien suivre une distribution normale et avoir une variance homogène. Pour régler le problème de l’autocorrélation spatiale, nous allons utiliser la méthode des moindres carrés généralisés (GLS). Nous allons pour cela utiliser le <em>package</em> <code>nlme</code> qui offre quatre fonctions différentes pour créer une structure de covariance spatiale.</p>
+<p>Les résidus semblent bien suivre une distribution normale et avoir une variance homogène (<a href="#fig-glslmresid" class="quarto-xref">figure&nbsp;<span>2.5</span></a>). Pour régler le problème de l’autocorrélation spatiale, nous allons utiliser la méthode des moindres carrés généralisés (GLS), avec le <em>package</em> <code>nlme</code> qui offre quatre fonctions différentes pour créer une structure de covariance spatiale.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Exponentielle</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>modelExp <span class="ot">&lt;-</span> <span class="fu">gls</span>(</span>
@@ -741,7 +741,7 @@ Figure&nbsp;2.5: Diagnostic des résidus du modèle linéaire
 <span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">correlation =</span> <span class="fu">corSpher</span>(<span class="at">form =</span>  <span class="sc">~</span> X <span class="sc">+</span> Y, <span class="at">nugget =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Rationelle quadratique</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Rationnelle quadratique</span></span>
 <span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>modelRatio <span class="ot">&lt;-</span> <span class="fu">gls</span>(</span>
 <span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>  log_price <span class="sc">~</span> private <span class="sc">+</span> bedrooms <span class="sc">+</span></span>
 <span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>    stationnement_gratuit <span class="sc">+</span> jardin_ou_cours <span class="sc">+</span></span>
@@ -799,13 +799,13 @@ modelRatio 13 2720.437</code></pre>
 <img src="02-GLS_CAR_GLMM_files/figure-html/fig-glscorstruc-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-glscorstruc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.6: Fonction de corrélation etimée par le modèle GLS
+Figure&nbsp;2.6: Fonction de corrélation estimée par le modèle GLS
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>Nous constatons que le modèle prévoit une autocorrélation spatiale positive, mais relativement faible pour les observations dans un rayon relativement limité. Il y a donc de fortes chances que les conclusions de ce modèle soient très proches de celle du modèle linéaire simple. Pour tester la distribution des résidus d’un modèle GLS, il est important d’utiliser les résidus <em>normalisés</em> qui tiennent compte de la structure de corrélation introduite dans le modèle <span class="citation" data-cites="galecki2013linear">(<a href="references.html#ref-galecki2013linear" role="doc-biblioref">Gałecki et al. 2013</a>)</span>.</p>
+<p>Nous constatons que le modèle prévoit une autocorrélation spatiale positive, mais relativement faible pour les observations dans un rayon relativement limité. Il y a donc de fortes chances que les conclusions de ce modèle soient très proches de celles du modèle MCO. Pour tester la distribution des résidus d’un modèle GLS, il est important d’utiliser les résidus normalisés qui tiennent compte de la structure de corrélation introduite dans le modèle <span class="citation" data-cites="galecki2013linear">(<a href="references.html#ref-galecki2013linear" role="doc-biblioref">Gałecki et al. 2013</a>)</span>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>model_data<span class="sc">$</span>residual_gls <span class="ot">&lt;-</span> <span class="fu">residuals</span>(modelRatio, <span class="at">type =</span> <span class="st">"normalized"</span>)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -826,7 +826,7 @@ statistic = 0.023265, observed rank = 932, p-value = 0.068
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
-<p>Notre modèle GLS a donc pu retirer l’autocorrélation qui restait dans les résidus du notre modèle MCO original. Nous pouvons donc à présent vérifier la distribution de ses résidus.</p>
+<p>Notre modèle GLS a donc pu retirer l’autocorrélation qui restait dans les résidus du modèle MCO initial. Nous pouvons donc à présent vérifier la distribution de ses résidus.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqPlot</span>(model_data<span class="sc">$</span>residual_gls)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1023,21 +1023,21 @@ Modèle GLS
 </div>
 <p>Il est intéressant de constater que même en corrigeant une autocorrélation spatiale des résidus relativement minime, nous obtenons des résultats assez différents pour ces deux modèles. Commençons par regarder les éléments qui font consensus pour les deux modèles.</p>
 <ul>
-<li>Un logement entier privé plutôt qu’un logement partagé a un impact positif et significatif sur le prix à la nuit. Les deux modèles donnent un coefficient d’environ 0,654 sur l’échelle logarithme. Ceci signifie qu’un logement privé coûte en moyenne 1,92 qu’un logement partagé.</li>
+<li>Un logement entier privé plutôt qu’un logement partagé a un impact positif et significatif sur le prix à la nuit. Les deux modèles donnent un coefficient d’environ 0,654 sur l’échelle logarithmique. Ceci signifie qu’un logement privé coûte en moyenne 1,92 qu’un logement partagé.</li>
 <li>Chaque chambre supplémentaire fait augmenter le prix du logement d’environ 0,181 sur l’échelle logarithme. Cela signifie qu’une chambre supplémentaire augmente le prix moyen d’un logement de 19,88%.</li>
 <li>Une note moyenne pour les évaluations plus élevée est aussi associée à un prix plus élevé. Une augmentation de 10&nbsp;points de pourcentage du score est associée avec une augmentation du prix moyen du logement de 6,67 &nbsp;%.</li>
 <li>Le qualificatif de <em>super hôte</em> ou encore la présence d’un jardin ou d’une cour ne semblent pas avoir d’impact significatif.</li>
 </ul>
 <p>Les deux modèles ont aussi des points de désaccord importants&nbsp;:</p>
 <ul>
-<li>Pour le modèle linéaire simple, le fait de disposer d’un stationnement gratuit avec le logement a un impact non significatif. Pour le modèle GLS, le fait de disposer d’un stationnement contribue à augmenter le prix par nuit de 5,1% (p = 0,015.</li>
-<li>Le modèle linéaire simple indiquait que la densité de végétation dans un rayon de 500&nbsp;mètres réduisait le prix des logements. Par contre, la présence d’une station de métro dans un rayon de 500&nbsp;mètres était associée à une augmentation du prix des logements. Le modèle GLS indique que ces deux effets sont non significatifs. Ceci s’explique vraisemblablement par la prise en compte de l’espace par le modèle GLS.</li>
+<li>Pour le modèle MCO, le fait de disposer d’un stationnement gratuit avec le logement a un impact non significatif. Pour le modèle GLS, il contribue à augmenter le prix par nuit de 5,1% (p = 0,015).</li>
+<li>Le modèle MCO indiquait que la densité de végétation dans un rayon de 500&nbsp;mètres réduisait le prix des logements. Par contre, la présence d’une station de métro dans un rayon de 500&nbsp;mètres était associée à une augmentation du prix des logements. Le modèle GLS indique que ces deux effets sont non significatifs. Ceci s’explique vraisemblablement par la prise en compte de l’espace par le modèle GLS.</li>
 </ul>
 </section>
 </section>
 <section id="sec-022" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="sec-022"><span class="header-section-number">2.2</span> Modèle d’autorégression conditionnelle (CAR)</h2>
-<p>Le modèle d’autorégression conditionnelle (CAR) modifie lui aussi la matrice de variance-covariance des résidus du modèle. Cependant, il n’est pas estimé par la méthode des moindres carrés généralisés, mais plutôt par maximum de vraissemblance ou avec des méthodes bayesiennes.</p>
+<p>Le modèle d’autorégression conditionnelle (CAR) modifie lui aussi la matrice de variance-covariance des résidus du modèle. Cependant, il n’est pas estimé par la méthode des moindres carrés généralisés, mais plutôt par maximum de vraisemblance ou avec des méthodes bayésiennes.</p>
 <section id="description-du-modèle-car" class="level3" data-number="2.2.1">
 <h3 data-number="2.2.1" class="anchored" data-anchor-id="description-du-modèle-car"><span class="header-section-number">2.2.1</span> Description du modèle CAR</h3>
 <p>Le modèle CAR a été conçu pour travailler sur des entités polygonales en tenant compte de leur matrice de voisinage. Un modèle CAR peut donc être formulé de la façon suivante&nbsp;:</p>
@@ -1051,9 +1051,9 @@ Modèle GLS
 <ul>
 <li><span class="math inline">\(W\)</span>, une matrice spatiale binaire symétrique de taille <span class="math inline">\(n \times n\)</span>. <span class="math inline">\(W_{ij} = 1\)</span> indiquant que les observations <span class="math inline">\(i\)</span> et <span class="math inline">\(j\)</span> sont voisines</li>
 <li><span class="math inline">\(D\)</span>, une matrice indiquant pour chaque observation son nombre de voisins. Donc seule sa diagonale comporte des valeurs positives, toutes les autres cellules sont remplies de zéros.</li>
-<li><span class="math inline">\(\rho\)</span>, le paramètre d’autocorrélation spatiale. Il varie généralement entre 0 (modèle sans autocorrélation spatiale) et 1. Lorsqu’il augmente, les valeurs de la matrice de variance-covariance en dehors de la diagonale augmentent, indiquant une plus forte autocorrélation spatiale entre voisin.</li>
+<li><span class="math inline">\(\rho\)</span>, le paramètre d’autocorrélation spatiale. Il varie généralement entre 0 (modèle sans autocorrélation spatiale) et 1. Lorsqu’il augmente, les valeurs de la matrice de variance-covariance en dehors de la diagonale augmentent, indiquant une plus forte autocorrélation spatiale entre voisins.</li>
 </ul>
-<p>Ce modèle formule donc une hypothèse de dépendance conditionnelle entre les résidus des observations voisines. Le modèle CAR s’inspire directement des chaînes et des champs de Markov dont il tire une propriété centrale&nbsp;: la valeur de l’effet spatial d’une observation <em>i</em> ne dépend que de celles de ses observations voisines <em>j</em>. Pour mieux visualiser l’impact du paramètre <span class="math inline">\(\rho\)</span>, nous pouvons visualiser à la <a href="#fig-carexamples" class="quarto-xref">figure&nbsp;<span>2.8</span></a> différentes réalisations d’une distribution normale centrée sur zéro avec une structure de variance-covariance suivant un modèle CAR.</p>
+<p>Ce modèle formule donc une hypothèse de dépendance conditionnelle entre les résidus des observations voisines. Le modèle CAR s’inspire directement des chaînes et des champs de Markov dont il tire une propriété centrale&nbsp;: la valeur de l’effet spatial d’une observation <em>i</em> ne dépend que de celles de ses observations voisines <em>j</em>. Pour comprendre l’impact du paramètre <span class="math inline">\(\rho\)</span>, nous pouvons visualiser à la <a href="#fig-carexamples" class="quarto-xref">figure&nbsp;<span>2.8</span></a> différentes réalisations d’une distribution normale centrée sur zéro avec une structure de variance-covariance suivant un modèle CAR.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-carexamples" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -1062,13 +1062,13 @@ Modèle GLS
 <img src="02-GLS_CAR_GLMM_files/figure-html/fig-carexamples-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-carexamples-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.8: Exemple de différentes réalisation d’une variable suivant un modèle CAR
+Figure&nbsp;2.8: Exemples de réalisations d’une variable avec une distribution normale avec un modèle CAR
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>Comme le modèle GLS, le modèle CAR est relativement facile à utiliser, car il est possible d’interpréter directement les coefficients du modèle. En revanche, le paramètre <span class="math inline">\(rho\)</span> contrôlant l’autocorrélation spatiale ne peut pas être interpréter directement, car il dépend directement de la matrice spatiale <em>W</em>. On peut seulement indiquer si sa valeur est positive (autocorrélation spatiale positive) ou négative (autocorrélation spatiale négative). Il est généralement pertinent de cartographier le terme spatial du modèle CAR afin d’évaluer visuellement son degré d’autocorrélation spatiale.</p>
+<p>Comme le modèle GLS, le modèle CAR est relativement facile à utiliser, car il est possible d’interpréter directement les coefficients régression du modèle. En revanche, le paramètre <span class="math inline">\(rho\)</span> contrôlant l’autocorrélation spatiale ne peut pas être interprété directement, car il dépend directement de la matrice spatiale <em>W</em>. On peut seulement indiquer si sa valeur est positive (autocorrélation spatiale positive) ou négative (autocorrélation spatiale négative). Il est généralement pertinent de cartographier le terme spatial du modèle CAR afin d’évaluer visuellement son degré d’autocorrélation spatiale.</p>
 </section>
 <section id="mise-en-œuvre-et-analyse-dans-r" class="level3" data-number="2.2.2">
 <h3 data-number="2.2.2" class="anchored" data-anchor-id="mise-en-œuvre-et-analyse-dans-r"><span class="header-section-number">2.2.2</span> Mise en œuvre et analyse dans R</h3>
@@ -1139,7 +1139,7 @@ alternative hypothesis: greater</code></pre>
 <span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df) <span class="sc">+</span> </span>
 <span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x=</span>residus_car,<span class="at">y =</span>..density..),<span class="at">bins=</span><span class="dv">30</span>,<span class="at">fill=</span><span class="st">"white"</span>,<span class="at">color=</span><span class="st">"black"</span>)<span class="sc">+</span></span>
 <span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="fu">aes</span>(<span class="at">x=</span>residus_car),<span class="at">fun =</span> dnorm, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">mean =</span> Mean, <span class="at">sd =</span> Sd),<span class="at">color=</span><span class="st">"red"</span>,<span class="at">size=</span><span class="dv">1</span>) <span class="sc">+</span> </span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'résidus du modèle CAR'</span>, <span class="at">y =</span> <span class="st">''</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'résidus'</span>, <span class="at">y =</span> <span class="st">''</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-carresid" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1167,7 +1167,7 @@ Tableau&nbsp;2.2: Résultats des modèles MCO et GLS
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">Variable</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">Coefficient</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">exp(coefficent)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">exp(coefficient)</th>
 <th style="text-align: right;" data-quarto-table-cell-role="th">Valeur de p</th>
 </tr>
 </thead>
@@ -1269,15 +1269,15 @@ Figure&nbsp;2.10: Résidus du modèle CAR
 </div>
 </div>
 </div>
-<p>À la <a href="#fig-carresid2" class="quarto-xref">figure&nbsp;<span>2.10</span></a>, nous observons des zones pour lesquelles le modèle s’attend à voir des valeurs plus élevées ou plus faibles que ce qui est seulement capturé par les variables dépendantes. Premièrement, la couronne nord est marquée par valeurs négatives avec une réduction du ratio entre les parts modales du transport collectif et la voiture allant de 40 à 60&nbsp;%. Une tendance similaire s’observe pour l’arrondissement Saint-Laurent et les municipalités de Mont-Royal, Westmount et Côte-Saint-Luc, ainsi que le centre et le sud de Laval. En revanche, on observe des valeurs plus élevées (multiplication par deux) du ratio à Rivière-des-Pairies-Pointe-aux-Tremble et à Longueuil sur la Rive-Sud.</p>
+<p>À la <a href="#fig-carresid2" class="quarto-xref">figure&nbsp;<span>2.10</span></a>, nous repérons des zones pour lesquelles le modèle s’attend à obtenir des valeurs systématiquement plus élevées ou plus faibles que celles capturées par les variables indépendantes. Premièrement, la couronne nord est marquée par valeurs négatives avec une réduction du ratio entre les parts modales du transport collectif et la voiture allant de 40 à 60&nbsp;%. Une tendance similaire s’observe pour l’arrondissement Saint-Laurent et les municipalités de Mont-Royal, Westmount et Côte-Saint-Luc, ainsi que le centre et le sud de Laval. En revanche, on observe des valeurs plus élevées (multiplication par deux) du ratio à Rivière-des-Pairies-Pointe-aux-Tremble et à Longueuil sur la Rive-Sud.</p>
 </section>
 </section>
 <section id="sec-023" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="sec-023"><span class="header-section-number">2.3</span> Modèles linéaires généralisés à effets mixtes</h2>
-<p>Nous avons vu qu’un modèle GLS (<a href="#sec-021" class="quarto-xref">section&nbsp;<span>2.1</span></a>) ou un modèle CAR (<a href="#sec-022" class="quarto-xref">section&nbsp;<span>2.2</span></a>) est construit en modifiant la structure de covariance d’un modèle linéaire classique (MCO). Toutefois, le principe de la structure de covariance est difficile à généraliser pour des distributions autres que la distribution normale. Ainsi, il est complexe d’utiliser les modèles CAR et GLS pour des variables binaires, et encore plus pour des variables de comptage ou multinomiale. Plus généralement, il est difficile d’intégrer la dimension spatiale dans un modèle de type GLM en modifiant simplement la structure de covariance.</p>
+<p>Nous avons vu qu’un modèle GLS (<a href="#sec-021" class="quarto-xref">section&nbsp;<span>2.1</span></a>) ou un modèle CAR (<a href="#sec-022" class="quarto-xref">section&nbsp;<span>2.2</span></a>) est construit en modifiant la structure de covariance d’un modèle linéaire classique (MCO). Toutefois, le principe de la structure de covariance est difficile à généraliser pour des distributions autres que la distribution normale. Ainsi, il est complexe d’utiliser les modèles CAR et GLS pour des variables binaires, et encore plus pour des variables de comptage ou nominale à plusieurs modalités. Plus généralement, il est difficile d’intégrer la dimension spatiale dans un modèle de type GLM en modifiant simplement la structure de covariance.</p>
 <section id="sec-0231" class="level3" data-number="2.3.1">
 <h3 data-number="2.3.1" class="anchored" data-anchor-id="sec-0231"><span class="header-section-number">2.3.1</span> Du GLS et du CAR aux GLMM</h3>
-<p>Nous montrons ci-dessous comment les modèles GLS et CAR peuvent être reformulés comme des modèles GLMM. Cette explication reste volontairement relativement simplifiée, car elle ne tient pas compte du fait que ces modèles utilisent différentes approches d’estimation. En reprenant les formulations des modèles GLS et CAR, il est possible des unifier en une seule&nbsp;:</p>
+<p>Nous montrons ci-dessous comment les modèles GLS et CAR peuvent être reformulés comme des modèles GLMM. Cette explication reste volontairement relativement simplifiée, car elle ne tient pas compte du fait que ces modèles utilisent différentes approches d’estimation. En reprenant les formulations des modèles GLS et CAR, il est possible de les unifier en une seule&nbsp;:</p>
 <p><span id="eq-glmm1"><span class="math display">\[
 \begin{aligned}
 &amp;y = \beta_0 + \beta X + \epsilon\\
@@ -1341,23 +1341,22 @@ Figure&nbsp;2.10: Résidus du modèle CAR
 <span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Chargement des données</span></span>
 <span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>covid_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">'data/chap02/covid_usa.rds'</span>)</span>
 <span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="co"># recodage des valeurs négatives pour le nombre de décès</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Recodage des valeurs négatives pour le nombre de décès</span></span>
 <span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>covid_data<span class="sc">$</span>deaths_3 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(covid_data<span class="sc">$</span>deaths_3 <span class="sc">&lt;</span> <span class="dv">0</span>, </span>
 <span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>                              <span class="dv">0</span>, </span>
 <span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>                              covid_data<span class="sc">$</span>deaths_3</span>
 <span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>                              )</span>
 <span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a><span class="co"># conservation uniquement des comtés unique</span></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Conservation des comtés uniques</span></span>
 <span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>covid_data <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span> </span>
 <span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(FIPS) <span class="sc">%&gt;%</span> </span>
 <span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">1</span>)</span>
 <span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Matrice de de contiguïté selon le partage d'un nœud </span></span>
-<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>queen_nb <span class="ot">&lt;-</span> <span class="fu">poly2nb</span>(covid_data, <span class="at">queen =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>queen_w <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(queen_nb, <span class="at">style =</span> <span class="st">'W'</span>, <span class="at">zero.policy =</span> <span class="cn">TRUE</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Matrice de de contiguïté selon le partage d'un nœud </span></span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>queen_nb <span class="ot">&lt;-</span> <span class="fu">poly2nb</span>(covid_data, <span class="at">queen =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>queen_w <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(queen_nb, <span class="at">style =</span> <span class="st">'W'</span>, <span class="at">zero.policy =</span> <span class="cn">TRUE</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Nous commençons donc par ajuster un modèle non spatial.</p>
+<p>Nous commençons par ajuster un modèle non spatial.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>data_mode1 <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(covid_data)</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -1388,7 +1387,7 @@ Figure&nbsp;2.11: Distribution des résidus simulés du modèle poisson
 </div>
 </div>
 </div>
-<p>La <a href="#fig-poiss1" class="quarto-xref">figure&nbsp;<span>2.11</span></a> indique clairement un problème dans la distribution des résidus simulés du modèle&nbsp;: ils présentent une dispersion bien plus dispersée qu’attendue pour un modèle de Poisson. Ce phénomène s’explique probablement par la présence d’autocorrélation spatiale dans les résidus (variance supplémentaire non prise en compte), mais aussi par une mauvaise spécification du modèle. Dans ce contexte, il convient de tester une autre distribution, soit la distribution négative binomiale.</p>
+<p>La <a href="#fig-poiss1" class="quarto-xref">figure&nbsp;<span>2.11</span></a> indique clairement un problème dans la distribution des résidus simulés du modèle&nbsp;: ils présentent une dispersion bien plus dispersée qu’attendu pour un modèle de Poisson. Ce phénomène s’explique probablement par la présence d’autocorrélation spatiale dans les résidus (variance supplémentaire non prise en compte), mais aussi par une mauvaise spécification du modèle. Dans ce contexte, il convient de tester une autre distribution, soit la distribution négative binomiale.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>model_nb <span class="ot">&lt;-</span> <span class="fu">fitme</span>(</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  deaths_3 <span class="sc">~</span> <span class="fu">offset</span>(<span class="fu">log</span>(population)) <span class="sc">+</span> </span>
@@ -1415,7 +1414,7 @@ Figure&nbsp;2.12: Distribution des résidus simulés du modèle négatif binomia
 </div>
 </div>
 </div>
-<p>La <a href="#fig-nb1" class="quarto-xref">figure&nbsp;<span>2.12</span></a> indique une bien meilleure distribution des résidus. Intéressons-nous matinenant à la présence éventuelle d’autocorrélation spatiale des résidus. Puisque le modèle assume une distribution négative binomiale, nous utilisons les résidus de Pearson pour calculer le <em>I</em> de Moran, puisqu’ils sont standardisés et tiennent compte de l’hétéroscédasticité.</p>
+<p>La <a href="#fig-nb1" class="quarto-xref">figure&nbsp;<span>2.12</span></a> indique une bien meilleure distribution des résidus. Intéressons-nous maintenant à la présence éventuelle d’autocorrélation spatiale des résidus. Puisque le modèle assume une distribution négative binomiale, nous utilisons les résidus de Pearson pour calculer le <em>I</em> de Moran, puisqu’ils sont standardisés et tiennent compte de l’hétéroscédasticité.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>queen_nb <span class="ot">&lt;-</span> <span class="fu">poly2nb</span>(data_mode1, <span class="at">queen =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>queen_w <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(queen_nb, <span class="at">style =</span> <span class="st">'W'</span>, <span class="at">zero.policy =</span> <span class="cn">TRUE</span>)</span>
@@ -1434,6 +1433,9 @@ alternative hypothesis: greater</code></pre>
 </div>
 </div>
 <p>Nous constatons que le <em>I</em> de Moran obtenu sur les résidus simulés est élevé 0,36. Il faut donc opter pour un modèle contrôlant la dépendance spatiale. Nous testons ici deux modèles GLMM avec un effet aléatoire&nbsp;: l’un avec une structure de corrélation CAR et l’autre une structure de corrélation avec la fonction Matérn.</p>
+<section id="sec-02321" class="level4" data-number="2.3.2.1">
+<h4 data-number="2.3.2.1" class="anchored" data-anchor-id="sec-02321"><span class="header-section-number">2.3.2.1</span> Modèle GLMM avec un effet aléatoire de type CAR</h4>
+<p>Nous construisons ainsi une matrice de contiguïté <code>wmat</code> qui est introduite dans le modèle GLMM avec le paramètre <code>adjMatrix = wmat</code> de la fonction <code>fitme</code> du <em>package</em> <code>spaMM</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spaMM)</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -1468,7 +1470,7 @@ data:  residuals(model_car, type = "pearson")
 weights: queen_w  
 number of simulations + 1: 1000 
 
-statistic = -0.018803, observed rank = 68, p-value = 0.932
+statistic = -0.018804, observed rank = 68, p-value = 0.932
 alternative hypothesis: greater</code></pre>
 </div>
 </div>
@@ -1510,7 +1512,7 @@ alternative hypothesis: greater</code></pre>
 <span id="cb33-34"><a href="#cb33-34" aria-hidden="true" tabindex="-1"></a>                  <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"right"</span>, <span class="at">pos.v =</span> <span class="st">"center"</span>))</span>
 <span id="cb33-35"><a href="#cb33-35" aria-hidden="true" tabindex="-1"></a>                ) <span class="sc">+</span>                </span>
 <span id="cb33-36"><a href="#cb33-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">frame=</span><span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb33-37"><a href="#cb33-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_credits</span>(<span class="st">"L'effet spatial a été centré sur 0 et mis en exponentiel."</span>,</span>
+<span id="cb33-37"><a href="#cb33-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_credits</span>(<span class="st">"L'effet spatial a été centré sur 0 et mis en exponentielle."</span>,</span>
 <span id="cb33-38"><a href="#cb33-38" aria-hidden="true" tabindex="-1"></a>             <span class="at">position =</span> <span class="fu">c</span>(<span class="st">"LEFT"</span>, <span class="st">"BOTTOM"</span>), <span class="at">size =</span> <span class="fl">0.8</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-nb2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -1526,7 +1528,7 @@ Figure&nbsp;2.13: Valeurs ajustées de l’effet aléatoire spatial CAR
 </div>
 </div>
 <p>Le terme spatial obtenu (<a href="#fig-nb2" class="quarto-xref">figure&nbsp;<span>2.13</span></a>) correspond globalement à celui présenté par les auteurs sur le dépôt github hébergeant leur données. Nous pouvons à présent interpréter les coefficients de notre modèle.</p>
-<p>Pour un modèle GLMM, le calcul des valeurs de <em>p</em> pose certaines difficultés, car le nombre de degrés de liberté est difficile à estimer. En effet, l’inclusion d’un effet aléatoire, particulièrement un effet aléatoire spatial, génère un nombre de degrés flous au modèle. Pour notre modèle, considérant le grand nombre d’observations (plus de 2600), il serait acceptable d’utiliser l’approche classique basée sur la distribution <em>t</em> pour calculer des valeurs de <em>p</em> . Deux autres alternatives sont possibles&nbsp;: les tests basés sur le rapport de vraisemblance ou une approche par <em>bootstrap</em> pour obtenir des intervalles de confiance. Si cette dernière approche est la plus robuste, elle est beaucoup plus coûteuse en temps de calcul.</p>
+<p>Pour un modèle GLMM, le calcul des valeurs de <em>p</em> pose certaines difficultés, car le nombre de degrés de liberté est difficile à estimer. En effet, l’inclusion d’un effet aléatoire, particulièrement un effet aléatoire spatial, génère un nombre de degrés flous au modèle. Pour notre modèle, considérant le grand nombre d’observations (plus de 2600), il serait acceptable d’utiliser l’approche classique basée sur la distribution <em>t</em> pour calculer des valeurs de <em>p</em>. Deux autres alternatives sont possibles&nbsp;: les tests basés sur le rapport de vraisemblance ou une approche par <em>bootstrap</em> pour obtenir des intervalles de confiance. Si cette dernière approche est la plus robuste, elle est beaucoup plus coûteuse en temps de calcul.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">summary</span>(model_car, <span class="at">verbose =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>beta_table)</span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>pvals <span class="ot">&lt;-</span> <span class="fu">anova</span>(model_car)</span>
@@ -1655,15 +1657,18 @@ Tableau&nbsp;2.3: Résultats du modèle CAR
 </figure>
 </div>
 </div>
-<p>À la lecture du <a href="#tbl-ResultatsModelCAR" class="quarto-xref">tableau&nbsp;<span>2.3</span></a>, plusieurs constats peuvent être avancées&nbsp;:</p>
+<p>À la lecture du <a href="#tbl-ResultatsModelCAR" class="quarto-xref">tableau&nbsp;<span>2.3</span></a>, plusieurs constats peuvent être avancés&nbsp;:</p>
 <ul>
 <li>Le revenu est négativement associé avec le taux de décès. Cependant, cet effet est relativement faible. Un revenu médian supérieur de 1000&nbsp;$ est associé à une réduction du taux de décès de 0,87 %.</li>
 <li>La concentration de personnes d’origines afro-américaines ou hispaniques est associée avec un plus au taux de décès. Pour ces deux groupes, une augmentation de 10&nbsp;points de pourcentage correspond respectivement à des augmentations des taux de décès de 3,5 % et 7,94 %.</li>
 <li>Un des effets les plus forts est probablement la part de la population vivant dans des établissements de soins. Chaque augmentation d’un point de pourcentage de cette population est associée avec une augmentation de 75,13 % du taux de décès.</li>
 <li>Il est intéressant de constater que l’alignement politique joue un rôle non négligeable. Toutes choses étant égales par ailleurs, un comté à tendance républicaine (+0,5) plutôt que démocrate (-0,25) a ainsi un taux de décès 38,32 % plus élevé.</li>
 </ul>
-<p>À ce stade, nous pourrions envisager une autre structure spatiale pour notre effet aléatoire. En l’occurrence, le package <code>spaMM</code> permet notamment d’utiliser une structure de covariance de type Matérn ou Cauchy basées sur les distances entre les observations. Considérant que les comtés américains sont relativement uniformément distribués, nous pourrions tester cette approche et la comparer au modèle CAR.</p>
-<p>Pour spécifier la structure de corrélation spatiale, le package <code>spaMM</code> à besoin des coordonnées des observations en longitude et latitude. Nous reprojectons donc nos observations dans le système de référence <em>4326</em>.</p>
+</section>
+<section id="sec-02322" class="level4" data-number="2.3.2.2">
+<h4 data-number="2.3.2.2" class="anchored" data-anchor-id="sec-02322"><span class="header-section-number">2.3.2.2</span> Modèle GLMM avec un effet aléatoire avec la fonction Matérn</h4>
+<p>À ce stade, nous pourrions envisager une autre structure spatiale pour notre effet aléatoire. Le package <code>spaMM</code> permet notamment d’utiliser une structure de covariance de type Matérn ou Cauchy basées sur les distances entre les observations. Considérant que les comtés américains sont relativement uniformément distribués, nous pourrions tester cette approche et la comparer au modèle CAR.</p>
+<p>Pour spécifier la structure de corrélation spatiale, le package <code>spaMM</code> à besoin des coordonnées des observations en longitude et latitude. Par conséquent, Nous reprojectons la couche géographique dans le système de référence EPSG:4326.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extraction des coordonnées XY des centroïdes des comtés</span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>lonlat <span class="ot">&lt;-</span> data_mode1 <span class="sc">%&gt;%</span> </span>
@@ -1760,7 +1765,7 @@ Figure&nbsp;2.14: Distribution des résidus simulés du modèle négatif binomia
 </div>
 </div>
 </div>
-<p>Pour le modèle avec la structure de corrélation Cauchy, les résidus semblent encore moins bien distribués. Il faudrait donc probablement éviter de se fier à ce troisième modèle.</p>
+<p>Pour le modèle avec la structure de corrélation Cauchy, les résidus semblent encore moins bien distribués. Il faudrait donc probablement éviter de se fier aux résultats de ce troisième modèle.</p>
 <p>La <a href="#fig-glmmcorstruct" class="quarto-xref">figure&nbsp;<span>2.15</span></a> illustre la fonction de corrélation ajustée pour les deux modèles pour leurs effets aléatoires. Nous représentons notamment la corrélation selon la distance, mais aussi un graphique montrant la corrélation attendue en prenant un comté de référence. Notez ici que le <em>package</em> <code>spaMM</code> applique une transformation aux distances lors du calcul de la matrice de covariance spatiale de l’effet aléatoire. Pour retrouver ces distances, il est nécessaire de passer par la fonction <code>make_scaled_dist</code>.</p>
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Récupération des distances </span></span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>dists_4326 <span class="ot">&lt;-</span> <span class="fu">make_scaled_dist</span>(lonlat, <span class="at">rho =</span> <span class="dv">1</span>, <span class="at">return_matrix =</span> <span class="cn">TRUE</span>)</span>
@@ -1791,11 +1796,11 @@ Figure&nbsp;2.14: Distribution des résidus simulés du modèle négatif binomia
 <span id="cb43-27"><a href="#cb43-27" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb43-28"><a href="#cb43-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Représentation des fonctions</span></span>
 <span id="cb43-29"><a href="#cb43-29" aria-hidden="true" tabindex="-1"></a>plot_corr <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_corr) <span class="sc">+</span></span>
-<span id="cb43-30"><a href="#cb43-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> dists, <span class="at">y =</span> corr_matern, <span class="at">color =</span> <span class="st">'Matern'</span>)) <span class="sc">+</span></span>
+<span id="cb43-30"><a href="#cb43-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> dists, <span class="at">y =</span> corr_matern, <span class="at">color =</span> <span class="st">'Matérn'</span>)) <span class="sc">+</span></span>
 <span id="cb43-31"><a href="#cb43-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> dists, <span class="at">y =</span> corr_cauchy, <span class="at">color =</span> <span class="st">'Cauchy'</span>)) <span class="sc">+</span></span>
 <span id="cb43-32"><a href="#cb43-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb43-33"><a href="#cb43-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">'Matern'</span> <span class="ot">=</span> <span class="st">'#669bbc'</span>, <span class="st">'Cauchy'</span> <span class="ot">=</span> <span class="st">'#c1121f'</span>)) <span class="sc">+</span></span>
-<span id="cb43-34"><a href="#cb43-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'distance (km)'</span>, <span class="at">y =</span> <span class="st">'corrélation'</span>, <span class="at">colour =</span> <span class="st">'structure de </span><span class="sc">\n</span><span class="st">corrélation'</span>)</span>
+<span id="cb43-33"><a href="#cb43-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">'Matérn'</span> <span class="ot">=</span> <span class="st">'#669bbc'</span>, <span class="st">'Cauchy'</span> <span class="ot">=</span> <span class="st">'#c1121f'</span>)) <span class="sc">+</span></span>
+<span id="cb43-34"><a href="#cb43-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'distance (km)'</span>, <span class="at">y =</span> <span class="st">'corrélation'</span>, <span class="at">colour =</span> <span class="st">'Structure de </span><span class="sc">\n</span><span class="st">corrélation'</span>)</span>
 <span id="cb43-35"><a href="#cb43-35" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb43-36"><a href="#cb43-36" aria-hidden="true" tabindex="-1"></a><span class="co"># Représentation cartographique des fonctions</span></span>
 <span id="cb43-37"><a href="#cb43-37" aria-hidden="true" tabindex="-1"></a>data_mode1<span class="sc">$</span>corr_mat <span class="ot">&lt;-</span> df_corr<span class="sc">$</span>corr_matern</span>
@@ -1806,30 +1811,30 @@ Figure&nbsp;2.14: Distribution des résidus simulés du modèle négatif binomia
 <span id="cb43-42"><a href="#cb43-42" aria-hidden="true" tabindex="-1"></a>                               <span class="at">decimal.mark =</span> <span class="st">","</span>, </span>
 <span id="cb43-43"><a href="#cb43-43" aria-hidden="true" tabindex="-1"></a>                               <span class="at">big.mark =</span> <span class="st">" "</span>,</span>
 <span id="cb43-44"><a href="#cb43-44" aria-hidden="true" tabindex="-1"></a>                               <span class="at">digits =</span> <span class="dv">1</span>)</span>
-<span id="cb43-45"><a href="#cb43-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-45"><a href="#cb43-45" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_options</span>(<span class="at">frame =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb43-46"><a href="#cb43-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-47"><a href="#cb43-47" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(pred_df) <span class="sc">+</span></span>
-<span id="cb43-48"><a href="#cb43-48" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_polygons</span>(<span class="at">col =</span> <span class="cn">NULL</span>,</span>
-<span id="cb43-49"><a href="#cb43-49" aria-hidden="true" tabindex="-1"></a>                <span class="at">fill =</span><span class="st">"pred"</span>,</span>
-<span id="cb43-50"><a href="#cb43-50" aria-hidden="true" tabindex="-1"></a>                <span class="at">fill.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
-<span id="cb43-51"><a href="#cb43-51" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n =</span> <span class="dv">7</span>, <span class="at">style =</span> <span class="st">"fisher"</span>, </span>
-<span id="cb43-52"><a href="#cb43-52" aria-hidden="true" tabindex="-1"></a>                  <span class="at">midpoint =</span> <span class="dv">1</span>,</span>
-<span id="cb43-53"><a href="#cb43-53" aria-hidden="true" tabindex="-1"></a>                  <span class="at">label.format =</span> legende_parametres,</span>
-<span id="cb43-54"><a href="#cb43-54" aria-hidden="true" tabindex="-1"></a>                  <span class="at">values =</span> <span class="st">"-brewer.rd_bu"</span>),</span>
-<span id="cb43-55"><a href="#cb43-55" aria-hidden="true" tabindex="-1"></a>                <span class="at">fill.legend =</span> <span class="fu">tm_legend</span>(</span>
-<span id="cb43-56"><a href="#cb43-56" aria-hidden="true" tabindex="-1"></a>                  <span class="at">title =</span> <span class="st">"Effet aléatoire </span><span class="sc">\n</span><span class="st">spatial"</span>,</span>
-<span id="cb43-57"><a href="#cb43-57" aria-hidden="true" tabindex="-1"></a>                  <span class="at">frame =</span> <span class="cn">FALSE</span>, </span>
-<span id="cb43-58"><a href="#cb43-58" aria-hidden="true" tabindex="-1"></a>                  <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"right"</span>, <span class="at">pos.v =</span> <span class="st">"center"</span>))</span>
-<span id="cb43-59"><a href="#cb43-59" aria-hidden="true" tabindex="-1"></a>                ) <span class="sc">+</span>                </span>
-<span id="cb43-60"><a href="#cb43-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">frame=</span><span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb43-61"><a href="#cb43-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_credits</span>(<span class="st">"L'effet spatial a été centré sur 0 et mis en exponentiel."</span>,</span>
-<span id="cb43-62"><a href="#cb43-62" aria-hidden="true" tabindex="-1"></a>             <span class="at">position =</span> <span class="fu">c</span>(<span class="st">"LEFT"</span>, <span class="st">"BOTTOM"</span>), <span class="at">size =</span> <span class="fl">0.8</span>)</span>
-<span id="cb43-63"><a href="#cb43-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-47"><a href="#cb43-47" aria-hidden="true" tabindex="-1"></a>map_corr_mat <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(data_mode1) <span class="sc">+</span></span>
+<span id="cb43-48"><a href="#cb43-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
+<span id="cb43-49"><a href="#cb43-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="cn">NULL</span>,</span>
+<span id="cb43-50"><a href="#cb43-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"corr_mat"</span>,</span>
+<span id="cb43-51"><a href="#cb43-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
+<span id="cb43-52"><a href="#cb43-52" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.2</span>, <span class="fl">0.4</span>, <span class="fl">0.6</span>, <span class="fl">0.8</span>, <span class="dv">1</span>),</span>
+<span id="cb43-53"><a href="#cb43-53" aria-hidden="true" tabindex="-1"></a>      <span class="at">style =</span> <span class="st">'fixed'</span>,</span>
+<span id="cb43-54"><a href="#cb43-54" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="st">"brewer.reds"</span>,</span>
+<span id="cb43-55"><a href="#cb43-55" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres,</span>
+<span id="cb43-56"><a href="#cb43-56" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb43-57"><a href="#cb43-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.legend =</span> <span class="fu">tm_legend</span>(</span>
+<span id="cb43-58"><a href="#cb43-58" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">'Corrélation Matérn'</span>,</span>
+<span id="cb43-59"><a href="#cb43-59" aria-hidden="true" tabindex="-1"></a>      <span class="at">orientation =</span> <span class="st">"landscape"</span>,</span>
+<span id="cb43-60"><a href="#cb43-60" aria-hidden="true" tabindex="-1"></a>      <span class="at">frame =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb43-61"><a href="#cb43-61" aria-hidden="true" tabindex="-1"></a>      <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="at">cell.h =</span> <span class="st">"center"</span>, <span class="at">cell.v =</span> <span class="st">"bottom"</span>)</span>
+<span id="cb43-62"><a href="#cb43-62" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb43-63"><a href="#cb43-63" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb43-64"><a href="#cb43-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-65"><a href="#cb43-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-66"><a href="#cb43-66" aria-hidden="true" tabindex="-1"></a>map_corr_mat <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(data_mode1) <span class="sc">+</span></span>
-<span id="cb43-67"><a href="#cb43-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
-<span id="cb43-68"><a href="#cb43-68" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"corr_mat"</span>,</span>
+<span id="cb43-65"><a href="#cb43-65" aria-hidden="true" tabindex="-1"></a>map_corr_cau <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(data_mode1) <span class="sc">+</span></span>
+<span id="cb43-66"><a href="#cb43-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
+<span id="cb43-67"><a href="#cb43-67" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="cn">NULL</span>,</span>
+<span id="cb43-68"><a href="#cb43-68" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"corr_cau"</span>,</span>
 <span id="cb43-69"><a href="#cb43-69" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
 <span id="cb43-70"><a href="#cb43-70" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.2</span>, <span class="fl">0.4</span>, <span class="fl">0.6</span>, <span class="fl">0.8</span>, <span class="dv">1</span>),</span>
 <span id="cb43-71"><a href="#cb43-71" aria-hidden="true" tabindex="-1"></a>      <span class="at">style =</span> <span class="st">'fixed'</span>,</span>
@@ -1837,55 +1842,16 @@ Figure&nbsp;2.14: Distribution des résidus simulés du modèle négatif binomia
 <span id="cb43-73"><a href="#cb43-73" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres,</span>
 <span id="cb43-74"><a href="#cb43-74" aria-hidden="true" tabindex="-1"></a>    ),</span>
 <span id="cb43-75"><a href="#cb43-75" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.legend =</span> <span class="fu">tm_legend</span>(</span>
-<span id="cb43-76"><a href="#cb43-76" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">'corrélation Matérn'</span>,</span>
-<span id="cb43-77"><a href="#cb43-77" aria-hidden="true" tabindex="-1"></a>      <span class="at">legend.is.portrait =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb43-76"><a href="#cb43-76" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">'Corrélation Cauchy'</span>,</span>
+<span id="cb43-77"><a href="#cb43-77" aria-hidden="true" tabindex="-1"></a>      <span class="at">orientation =</span> <span class="st">"landscape"</span>,</span>
 <span id="cb43-78"><a href="#cb43-78" aria-hidden="true" tabindex="-1"></a>      <span class="at">frame =</span> <span class="cn">FALSE</span>,</span>
 <span id="cb43-79"><a href="#cb43-79" aria-hidden="true" tabindex="-1"></a>      <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="at">cell.h =</span> <span class="st">"center"</span>, <span class="at">cell.v =</span> <span class="st">"bottom"</span>)</span>
 <span id="cb43-80"><a href="#cb43-80" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb43-81"><a href="#cb43-81" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb43-82"><a href="#cb43-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">frame =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb43-83"><a href="#cb43-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-84"><a href="#cb43-84" aria-hidden="true" tabindex="-1"></a>map_corr_mat <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(data_mode1) <span class="sc">+</span></span>
-<span id="cb43-85"><a href="#cb43-85" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
-<span id="cb43-86"><a href="#cb43-86" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="cn">NULL</span>,</span>
-<span id="cb43-87"><a href="#cb43-87" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"corr_mat"</span>,</span>
-<span id="cb43-88"><a href="#cb43-88" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
-<span id="cb43-89"><a href="#cb43-89" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.2</span>, <span class="fl">0.4</span>, <span class="fl">0.6</span>, <span class="fl">0.8</span>, <span class="dv">1</span>),</span>
-<span id="cb43-90"><a href="#cb43-90" aria-hidden="true" tabindex="-1"></a>      <span class="at">style =</span> <span class="st">'fixed'</span>,</span>
-<span id="cb43-91"><a href="#cb43-91" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="st">"brewer.reds"</span>,</span>
-<span id="cb43-92"><a href="#cb43-92" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres,</span>
-<span id="cb43-93"><a href="#cb43-93" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb43-94"><a href="#cb43-94" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.legend =</span> <span class="fu">tm_legend</span>(</span>
-<span id="cb43-95"><a href="#cb43-95" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">'Corrélation Matérn'</span>,</span>
-<span id="cb43-96"><a href="#cb43-96" aria-hidden="true" tabindex="-1"></a>      <span class="at">orientation =</span> <span class="st">"landscape"</span>,</span>
-<span id="cb43-97"><a href="#cb43-97" aria-hidden="true" tabindex="-1"></a>      <span class="at">frame =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb43-98"><a href="#cb43-98" aria-hidden="true" tabindex="-1"></a>      <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="at">cell.h =</span> <span class="st">"center"</span>, <span class="at">cell.v =</span> <span class="st">"bottom"</span>)</span>
-<span id="cb43-99"><a href="#cb43-99" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb43-100"><a href="#cb43-100" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb43-101"><a href="#cb43-101" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">frame =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb43-102"><a href="#cb43-102" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-103"><a href="#cb43-103" aria-hidden="true" tabindex="-1"></a>map_corr_cau <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(data_mode1) <span class="sc">+</span></span>
-<span id="cb43-104"><a href="#cb43-104" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
-<span id="cb43-105"><a href="#cb43-105" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="cn">NULL</span>,</span>
-<span id="cb43-106"><a href="#cb43-106" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"corr_cau"</span>,</span>
-<span id="cb43-107"><a href="#cb43-107" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
-<span id="cb43-108"><a href="#cb43-108" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.2</span>, <span class="fl">0.4</span>, <span class="fl">0.6</span>, <span class="fl">0.8</span>, <span class="dv">1</span>),</span>
-<span id="cb43-109"><a href="#cb43-109" aria-hidden="true" tabindex="-1"></a>      <span class="at">style =</span> <span class="st">'fixed'</span>,</span>
-<span id="cb43-110"><a href="#cb43-110" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="st">"brewer.blues"</span>,</span>
-<span id="cb43-111"><a href="#cb43-111" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres,</span>
-<span id="cb43-112"><a href="#cb43-112" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb43-113"><a href="#cb43-113" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.legend =</span> <span class="fu">tm_legend</span>(</span>
-<span id="cb43-114"><a href="#cb43-114" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">'Corrélation Cauchy'</span>,</span>
-<span id="cb43-115"><a href="#cb43-115" aria-hidden="true" tabindex="-1"></a>      <span class="at">orientation =</span> <span class="st">"landscape"</span>,</span>
-<span id="cb43-116"><a href="#cb43-116" aria-hidden="true" tabindex="-1"></a>      <span class="at">frame =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb43-117"><a href="#cb43-117" aria-hidden="true" tabindex="-1"></a>      <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="at">cell.h =</span> <span class="st">"center"</span>, <span class="at">cell.v =</span> <span class="st">"bottom"</span>)</span>
-<span id="cb43-118"><a href="#cb43-118" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb43-119"><a href="#cb43-119" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb43-120"><a href="#cb43-120" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">frame =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb43-121"><a href="#cb43-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-122"><a href="#cb43-122" aria-hidden="true" tabindex="-1"></a>map_corr_cau</span>
-<span id="cb43-123"><a href="#cb43-123" aria-hidden="true" tabindex="-1"></a>plot_corr</span>
-<span id="cb43-124"><a href="#cb43-124" aria-hidden="true" tabindex="-1"></a>map_corr_mat</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb43-81"><a href="#cb43-81" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb43-82"><a href="#cb43-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-83"><a href="#cb43-83" aria-hidden="true" tabindex="-1"></a>map_corr_cau</span>
+<span id="cb43-84"><a href="#cb43-84" aria-hidden="true" tabindex="-1"></a>plot_corr</span>
+<span id="cb43-85"><a href="#cb43-85" aria-hidden="true" tabindex="-1"></a>map_corr_mat</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div id="fig-glmmcorstruct" class="quarto-layout-panel">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-glmmcorstruct-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1928,27 +1894,15 @@ Figure&nbsp;2.14: Distribution des résidus simulés du modèle négatif binomia
 </figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-glmmcorstruct" style="flex-basis: 50.0%;justify-content: center;">
-<div id="fig-glmmcorstruct-4" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
-<figure class="quarto-float quarto-subfloat-fig figure">
-<div aria-describedby="fig-glmmcorstruct-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="02-GLS_CAR_GLMM_files/figure-html/fig-glmmcorstruct-4.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%" data-ref-parent="fig-glmmcorstruct">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-glmmcorstruct-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-(d) Structure Cauchy
-</figcaption>
-</figure>
-</div>
-</div>
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-glmmcorstruct-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.15: Structures de corrélations ajustées par le modèle
+Figure&nbsp;2.15: Structures de corrélation ajustées par le modèle
 </figcaption>
 </figure>
 </div>
-<p>Nous pouvons observer que la fonction de corrélation Cauchy est probablement peu adaptée à nos données. Elle semble bien trop lisser les résultats en autorisant des corrélations importantes entre des comtés éloignés. Pour la fonction Matérn, la corrélation est réduite de moitié au-delà de 260&nbsp;km, et tombe à zéro aux alentours de 2000&nbsp;km.</p>
-<p>Pour visualiser la contribution de ces effets aléatoires dans les modèles, nous pouvons les cartographier. Puisque les structures de corrélation Matérn et Cauchy se basent sur des coordonnées géographiques, elle est de nature continue. Nous allons donc les représenter comme des variables continues spatialement. Notez également que puisque notre modèle a une fonction de lien <code>log</code>, nous pouvons prendre ce terme spatial centré sur 0 et le transformer avec la fonction <code>exp</code>. Ainsi, nous verrons l’impact de l’espace sur le taux d’infection en effet multiplicatif. Les valeurs proches de 1 indiqueront donc les comtés des États-Unis dans lesquels la tendance spatiale est moyenne. Des valeurs supérieures à 1 indiqueront des comtés dans lesquels toutes choses étant égales par ailleurs, le taux d’infection a été plus élevé.</p>
+<p>Nous constatons que la fonction de corrélation Cauchy est probablement peu adaptée à nos données (figures <a href="#fig-glmmcorstruct-1" class="quarto-xref"><span>2.15 (a)</span></a> et <a href="#fig-glmmcorstruct-2" class="quarto-xref"><span>2.15 (b)</span></a>). Elle semble bien trop lisser les résultats en autorisant des corrélations importantes entre des comtés éloignés. Pour la fonction Matérn, la corrélation est réduite de moitié au-delà de 260&nbsp;km, et tombe à zéro aux alentours de 2000&nbsp;km (<a href="#fig-glmmcorstruct-2" class="quarto-xref">figure&nbsp;<span>2.15 (b)</span></a>).</p>
+<p>Pour visualiser la contribution de ces effets aléatoires dans les modèles, il suffit de les cartographier. Puisque les structures de corrélation Matérn et Cauchy se basent sur des coordonnées géographiques, elle est de nature continue. Nous les représentons donc comme des variables continues spatialement. Notez également que puisque notre modèle a une fonction de lien <code>log</code>, nous pouvons prendre ce terme spatial centré sur 0 et le transformer avec la fonction <code>exp</code>. Ainsi, nous verrons l’impact de l’espace sur le taux d’infection en effet multiplicatif. Les valeurs proches de 1 indiqueront donc les comtés des États-Unis dans lesquels la tendance spatiale est moyenne. Des valeurs supérieures à 1 indiqueront des comtés dans lesquels toutes choses étant égales par ailleurs, le taux d’infection a été plus élevé (<a href="#fig-glmmRESp" class="quarto-xref">figure&nbsp;<span>2.16</span></a>).</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -1971,7 +1925,7 @@ Figure&nbsp;2.15: Structures de corrélations ajustées par le modèle
 <span id="cb44-19"><a href="#cb44-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_as_sf</span>(<span class="at">coords =</span> <span class="fu">c</span>(<span class="st">'X'</span>, <span class="st">'Y'</span>), <span class="at">crs =</span> <span class="fu">st_crs</span>(data_mode1), <span class="at">remove =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb44-20"><a href="#cb44-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="dv">4326</span>)</span>
 <span id="cb44-21"><a href="#cb44-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-22"><a href="#cb44-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Nécessité ici d'extraire les longitudes et latitudes pour le package spaMM</span></span>
+<span id="cb44-22"><a href="#cb44-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Nécessité d'extraire les longitudes et latitudes pour le package spaMM</span></span>
 <span id="cb44-23"><a href="#cb44-23" aria-hidden="true" tabindex="-1"></a>lonlat <span class="ot">&lt;-</span> <span class="fu">st_coordinates</span>(pred_df)</span>
 <span id="cb44-24"><a href="#cb44-24" aria-hidden="true" tabindex="-1"></a>pred_df<span class="sc">$</span>longitude <span class="ot">&lt;-</span> lonlat[,<span class="dv">1</span>]</span>
 <span id="cb44-25"><a href="#cb44-25" aria-hidden="true" tabindex="-1"></a>pred_df<span class="sc">$</span>latitude <span class="ot">&lt;-</span> lonlat[,<span class="dv">2</span>]</span>
@@ -2033,26 +1987,26 @@ Figure&nbsp;2.15: Structures de corrélations ajustées par le modèle
 <span id="cb44-81"><a href="#cb44-81" aria-hidden="true" tabindex="-1"></a>                               <span class="at">decimal.mark =</span> <span class="st">","</span>, </span>
 <span id="cb44-82"><a href="#cb44-82" aria-hidden="true" tabindex="-1"></a>                               <span class="at">big.mark =</span> <span class="st">" "</span>,</span>
 <span id="cb44-83"><a href="#cb44-83" aria-hidden="true" tabindex="-1"></a>                               <span class="at">digits =</span> <span class="dv">2</span>)</span>
-<span id="cb44-84"><a href="#cb44-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-85"><a href="#cb44-85" aria-hidden="true" tabindex="-1"></a>cauchy_re_map <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(<span class="fu">mask</span>(raster_cauchy,usa)) <span class="sc">+</span></span>
-<span id="cb44-86"><a href="#cb44-86" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_raster</span>(</span>
-<span id="cb44-87"><a href="#cb44-87" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"cauchy_re"</span>,</span>
-<span id="cb44-88"><a href="#cb44-88" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
-<span id="cb44-89"><a href="#cb44-89" aria-hidden="true" tabindex="-1"></a>      <span class="at">style =</span> <span class="st">'fisher'</span>,</span>
-<span id="cb44-90"><a href="#cb44-90" aria-hidden="true" tabindex="-1"></a>      <span class="at">midpoint =</span> <span class="dv">1</span>,</span>
-<span id="cb44-91"><a href="#cb44-91" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="st">"-brewer.rd_bu"</span>,</span>
-<span id="cb44-92"><a href="#cb44-92" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres</span>
-<span id="cb44-93"><a href="#cb44-93" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb44-94"><a href="#cb44-94" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.legend =</span> <span class="fu">tm_legend</span>(</span>
-<span id="cb44-95"><a href="#cb44-95" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">'Effet aléatoire Cauchy'</span>,</span>
-<span id="cb44-96"><a href="#cb44-96" aria-hidden="true" tabindex="-1"></a>      <span class="at">orientation =</span> <span class="st">"portrait"</span>,</span>
-<span id="cb44-97"><a href="#cb44-97" aria-hidden="true" tabindex="-1"></a>      <span class="at">frame =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb44-98"><a href="#cb44-98" aria-hidden="true" tabindex="-1"></a>      <span class="at">position =</span> <span class="fu">tm_pos_in</span>(<span class="at">pos.h =</span> <span class="st">"right"</span>, <span class="at">pos.v =</span> <span class="st">"bottom"</span>)</span>
-<span id="cb44-99"><a href="#cb44-99" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb44-100"><a href="#cb44-100" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb44-101"><a href="#cb44-101" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(data_mode1) <span class="sc">+</span> </span>
-<span id="cb44-102"><a href="#cb44-102" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_borders</span>(<span class="at">col =</span> <span class="st">'darkgrey'</span>, <span class="at">lwd =</span> <span class="fl">0.01</span>) <span class="sc">+</span> </span>
-<span id="cb44-103"><a href="#cb44-103" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">frame =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb44-84"><a href="#cb44-84" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_options</span>(<span class="at">frame =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb44-85"><a href="#cb44-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-86"><a href="#cb44-86" aria-hidden="true" tabindex="-1"></a>cauchy_re_map <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(<span class="fu">mask</span>(raster_cauchy,usa)) <span class="sc">+</span></span>
+<span id="cb44-87"><a href="#cb44-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_raster</span>(</span>
+<span id="cb44-88"><a href="#cb44-88" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"cauchy_re"</span>,</span>
+<span id="cb44-89"><a href="#cb44-89" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
+<span id="cb44-90"><a href="#cb44-90" aria-hidden="true" tabindex="-1"></a>      <span class="at">style =</span> <span class="st">'fisher'</span>,</span>
+<span id="cb44-91"><a href="#cb44-91" aria-hidden="true" tabindex="-1"></a>      <span class="at">midpoint =</span> <span class="dv">1</span>,</span>
+<span id="cb44-92"><a href="#cb44-92" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="st">"-brewer.rd_bu"</span>,</span>
+<span id="cb44-93"><a href="#cb44-93" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres</span>
+<span id="cb44-94"><a href="#cb44-94" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb44-95"><a href="#cb44-95" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.legend =</span> <span class="fu">tm_legend</span>(</span>
+<span id="cb44-96"><a href="#cb44-96" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">'Effet aléatoire Cauchy'</span>,</span>
+<span id="cb44-97"><a href="#cb44-97" aria-hidden="true" tabindex="-1"></a>      <span class="at">orientation =</span> <span class="st">"portrait"</span>,</span>
+<span id="cb44-98"><a href="#cb44-98" aria-hidden="true" tabindex="-1"></a>      <span class="at">frame =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb44-99"><a href="#cb44-99" aria-hidden="true" tabindex="-1"></a>      <span class="at">position =</span> <span class="fu">tm_pos_in</span>(<span class="at">pos.h =</span> <span class="st">"right"</span>, <span class="at">pos.v =</span> <span class="st">"bottom"</span>)</span>
+<span id="cb44-100"><a href="#cb44-100" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb44-101"><a href="#cb44-101" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb44-102"><a href="#cb44-102" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(data_mode1) <span class="sc">+</span> </span>
+<span id="cb44-103"><a href="#cb44-103" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_borders</span>(<span class="at">col =</span> <span class="st">'darkgrey'</span>, <span class="at">lwd =</span> <span class="fl">0.01</span>)</span>
 <span id="cb44-104"><a href="#cb44-104" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb44-105"><a href="#cb44-105" aria-hidden="true" tabindex="-1"></a>matern_re_map <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(<span class="fu">mask</span>(raster_matern,usa)) <span class="sc">+</span></span>
 <span id="cb44-106"><a href="#cb44-106" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_raster</span>(</span>
@@ -2071,12 +2025,11 @@ Figure&nbsp;2.15: Structures de corrélations ajustées par le modèle
 <span id="cb44-119"><a href="#cb44-119" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb44-120"><a href="#cb44-120" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb44-121"><a href="#cb44-121" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(data_mode1) <span class="sc">+</span> </span>
-<span id="cb44-122"><a href="#cb44-122" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_borders</span>(<span class="st">'darkgrey'</span>, <span class="at">lwd =</span> <span class="fl">0.01</span>) <span class="sc">+</span> </span>
-<span id="cb44-123"><a href="#cb44-123" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">frame =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb44-124"><a href="#cb44-124" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-125"><a href="#cb44-125" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_arrange</span>(cauchy_re_map, </span>
-<span id="cb44-126"><a href="#cb44-126" aria-hidden="true" tabindex="-1"></a>             matern_re_map, </span>
-<span id="cb44-127"><a href="#cb44-127" aria-hidden="true" tabindex="-1"></a>             <span class="at">ncol =</span> <span class="dv">1</span>, <span class="at">nrow =</span> <span class="dv">2</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb44-122"><a href="#cb44-122" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_borders</span>(<span class="st">'darkgrey'</span>, <span class="at">lwd =</span> <span class="fl">0.01</span>)</span>
+<span id="cb44-123"><a href="#cb44-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-124"><a href="#cb44-124" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_arrange</span>(cauchy_re_map, </span>
+<span id="cb44-125"><a href="#cb44-125" aria-hidden="true" tabindex="-1"></a>             matern_re_map, </span>
+<span id="cb44-126"><a href="#cb44-126" aria-hidden="true" tabindex="-1"></a>             <span class="at">ncol =</span> <span class="dv">1</span>, <span class="at">nrow =</span> <span class="dv">2</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-glmmRESp" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
@@ -2090,21 +2043,32 @@ Figure&nbsp;2.16: Cartographie des effets aléatoires Matérn et Cauchy
 </div>
 </div>
 </div>
-<p>Les deux cartes sont extrêmement similaires avec seulement des changements mineures. Pour terminer, nous pouvons comparer la qualité d’ajustement des trois modèles GLMM avec les AIC (<a href="#tbl-TroisModelesAIC" class="quarto-xref">tableau&nbsp;<span>2.4</span></a>).</p>
+<p>Les deux cartes sont extrêmement similaires avec uniquement des changements mineurs (<a href="#fig-glmmRESp" class="quarto-xref">figure&nbsp;<span>2.16</span></a>).</p>
+</section>
+<section id="sec-02323" class="level4" data-number="2.3.2.3">
+<h4 data-number="2.3.2.3" class="anchored" data-anchor-id="sec-02323"><span class="header-section-number">2.3.2.3</span> Compararaison des trois modèles GLMM avec des effets aléatoires spatiaux</h4>
+<p>Pour terminer, nous pouvons comparer la qualité d’ajustement des trois modèles GLMM avec les AIC (<a href="#tbl-TroisModelesAIC" class="quarto-xref">tableau&nbsp;<span>2.4</span></a>).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>models <span class="ot">&lt;-</span> <span class="fu">list</span>(model_car, model_matern, model_cauchy)</span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>aics <span class="ot">&lt;-</span> <span class="fu">lapply</span>(models, spaMM<span class="sc">::</span>AIC.HLfit, <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>aics <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">do.call</span>(rbind, aics))</span>
 <span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(aics) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'Car'</span>, <span class="st">'Matérn'</span>, <span class="st">'Cauchy'</span>)</span>
 <span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(aics, </span>
-<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">digits =</span> <span class="dv">0</span>,</span>
-<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">format.args =</span> <span class="fu">list</span>(<span class="at">big.mark =</span> <span class="st">" "</span>),</span>
-<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">row.names =</span> <span class="cn">TRUE</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(aics) <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"AIC marginal"</span>, </span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"AIC conditionnel"</span>, </span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"AIC avec surdispersion"</span>, </span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Degrés de liberté"</span></span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(aics, </span>
+<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a>             <span class="at">digits =</span> <span class="dv">0</span>,</span>
+<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a>             <span class="at">format.args =</span> <span class="fu">list</span>(<span class="at">big.mark =</span> <span class="st">" "</span>),</span>
+<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a>             <span class="at">row.names =</span> <span class="cn">TRUE</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div id="tbl-TroisModelesAIC" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-TroisModelesAIC-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Tableau&nbsp;2.4: Valeurs des AIC marginal et conditionnel pour les trois modèles
+Tableau&nbsp;2.4: Valeurs des AIC marginaux et conditionnels pour les trois modèles
 </figcaption>
 <div aria-describedby="tbl-TroisModelesAIC-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -2119,25 +2083,25 @@ Tableau&nbsp;2.4: Valeurs des AIC marginal et conditionnel pour les trois modèl
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">marginal AIC:</td>
+<td style="text-align: left;">AIC marginal</td>
 <td style="text-align: right;">23 087</td>
 <td style="text-align: right;">22 773</td>
 <td style="text-align: right;">22 768</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">conditional AIC:</td>
+<td style="text-align: left;">AIC conditionnel</td>
 <td style="text-align: right;">19 764</td>
 <td style="text-align: right;">22 307</td>
 <td style="text-align: right;">22 361</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">dispersion AIC:</td>
+<td style="text-align: left;">AIC avec surdispersion</td>
 <td style="text-align: right;">23 061</td>
 <td style="text-align: right;">22 747</td>
 <td style="text-align: right;">22 742</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">effective df:</td>
+<td style="text-align: left;">Degrés de liberté</td>
 <td style="text-align: right;">548</td>
 <td style="text-align: right;">1 923</td>
 <td style="text-align: right;">2 125</td>
@@ -2157,7 +2121,7 @@ Tableau&nbsp;2.4: Valeurs des AIC marginal et conditionnel pour les trois modèl
 <p><strong>AIC conditionnel et AIC marginal</strong></p>
 </div>
 <div class="bloc_notes-body">
-<p>Le package <code>spAMM</code> donne plusieurs versions du AIC pour la sélection de modèles. L’AIC conditionnel et l’AIC marginal ont des visées différentes et peuvent être privilégiés selon les objectifs de l’étude.</p>
+<p>Le <em>package</em> <code>spAMM</code> fournit plusieurs versions du AIC pour la sélection de modèles. L’AIC conditionnel et l’AIC marginal ont des visées différentes et peuvent être privilégiés selon les objectifs de l’étude.</p>
 <ol type="1">
 <li>L’<strong>AIC marginal</strong> considère que les effets aléatoires ne sont pas observés et sont donc <em>marginalisés</em> dans son calcul. Il est préférable de l’utiliser lorsque l’on s’intéresse avant tout aux effets fixes du modèle ou lorsque les prédictions porteront sur de nouvelles observations qui ne faisaient pas partie des données originales.</li>
 <li>L’<strong>AIC conditionnel</strong> considère que les effets aléatoires ont été observés, son calcul est donc conditionné par les valeurs des effets aléatoires. Il est préférable de l’utiliser si les prédictions futures se font sur des entités déjà observées et dont l’effet propre est connu. Typiquement, lorsque des splines pénalisées sont intégrées dans un modèle pour faire du lissage et sont estimées comme des effets aléatoires, le <em>AIC</em> conditionnel est préféré <span class="citation" data-cites="safken2021conditional">(<a href="references.html#ref-safken2021conditional" role="doc-biblioref">Säfken et al. 2021</a>)</span>.</li>
@@ -2186,12 +2150,13 @@ Tableau&nbsp;2.4: Valeurs des AIC marginal et conditionnel pour les trois modèl
 <span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(df_total)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"constante"</span></span>
 <span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(df_total, <span class="at">digits =</span> <span class="dv">3</span>,</span>
-<span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a>             <span class="at">row.names =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb46-23"><a href="#cb46-23" aria-hidden="true" tabindex="-1"></a>             <span class="at">format.args =</span> <span class="fu">list</span>(<span class="at">decimal.mark =</span> <span class="st">','</span>, <span class="at">big.mark =</span> <span class="st">" "</span>),</span>
-<span id="cb46-24"><a href="#cb46-24" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">'exp(coef.)'</span>, <span class="st">'p'</span>,<span class="st">'exp(coef.)'</span>, <span class="st">'p'</span>)</span>
-<span id="cb46-25"><a href="#cb46-25" aria-hidden="true" tabindex="-1"></a>             ) <span class="sc">%&gt;%</span> </span>
-<span id="cb46-26"><a href="#cb46-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_header_above</span>(.,<span class="fu">c</span>(<span class="st">' '</span> <span class="ot">=</span> <span class="dv">1</span>,<span class="st">'CAR'</span><span class="ot">=</span><span class="dv">2</span>,<span class="st">'Matérn'</span><span class="ot">=</span><span class="dv">2</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(df_total, </span>
+<span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a>             <span class="at">digits =</span> <span class="dv">3</span>,</span>
+<span id="cb46-23"><a href="#cb46-23" aria-hidden="true" tabindex="-1"></a>             <span class="at">row.names =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb46-24"><a href="#cb46-24" aria-hidden="true" tabindex="-1"></a>             <span class="at">format.args =</span> <span class="fu">list</span>(<span class="at">decimal.mark =</span> <span class="st">','</span>, <span class="at">big.mark =</span> <span class="st">" "</span>),</span>
+<span id="cb46-25"><a href="#cb46-25" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">'exp(coef.)'</span>, <span class="st">'p'</span>,<span class="st">'exp(coef.)'</span>, <span class="st">'p'</span>)</span>
+<span id="cb46-26"><a href="#cb46-26" aria-hidden="true" tabindex="-1"></a>             ) <span class="sc">%&gt;%</span> </span>
+<span id="cb46-27"><a href="#cb46-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_header_above</span>(.,<span class="fu">c</span>(<span class="st">' '</span> <span class="ot">=</span> <span class="dv">1</span>,<span class="st">'CAR'</span><span class="ot">=</span><span class="dv">2</span>,<span class="st">'Matérn'</span><span class="ot">=</span><span class="dv">2</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div id="tbl-ModelesCauchyMatern" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ModelesCauchyMatern-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -2326,8 +2291,9 @@ Matérn
 </figure>
 </div>
 </div>
-<p>Il est intéressant de constater que les deux modèles partagent essentiellement les mêmes conclusions à quelques exceptions près (<a href="#tbl-ModelesCauchyMatern" class="quarto-xref">tableau&nbsp;<span>2.5</span></a>). Selon le modèle utilisant la structure CAR pour l’effet aléatoire, l’effet du pourcentage de personnes de 65&nbsp;ans et plus est non significatif. Pour le modèle avec une structure Matérn, la valeur de <em>p</em> est inférieure à 0,05 avec un coefficient en expontentielle de 1,007. Ainsi, une augmentation de 10&nbsp;points de pourcentage sur cette variable correspondrait à une augmentation de 7,44 % du taux de décès. À contrario, l’effet du port du masque est significatif dans le modèle avec la structure de corrélation CAR, mais pas dans celui avec la corrélation Matérn. Cependant, rappelons que la fiabilité de cette donnée est assez limitée; elle a aussi une variation assez faible allant de 85&nbsp;% à 100&nbsp;%. Une augmentation de 5&nbsp;points de pourcentage serait associée avec une réduction du taux de décès de 14,64 %.</p>
+<p>Il est intéressant de constater que les deux modèles partagent essentiellement les mêmes conclusions à quelques exceptions près (<a href="#tbl-ModelesCauchyMatern" class="quarto-xref">tableau&nbsp;<span>2.5</span></a>). Selon le modèle utilisant la structure CAR pour l’effet aléatoire, l’effet du pourcentage de personnes de 65&nbsp;ans et plus est non significatif. Pour le modèle avec une structure Matérn, la valeur de <em>p</em> est inférieure à 0,05 avec un coefficient en exponentielle de 1,007. Ainsi, une augmentation de 10&nbsp;points de pourcentage sur cette variable correspondrait à une augmentation de 7,44 % du taux de décès. À contrario, l’effet du port du masque est significatif dans le modèle avec la structure de corrélation CAR, mais pas dans celui avec la corrélation Matérn. Cependant, rappelons que la fiabilité de cette donnée est assez limitée; elle a aussi une variation assez faible allant de 85&nbsp;% à 100&nbsp;%. Une augmentation de 5&nbsp;points de pourcentage serait associée avec une réduction du taux de décès de 14,64 %.</p>
 <p>Le choix du modèle est donc crucial pour l’interprétation des résultats. Puisque l’emphase dans l’analyse porte avant tout sur les effets fixes (l’effet aléatoire spatial est uniquement utilisé pour réduire la corrélation spatiale des résultats), alors privilégier le modèle avec le meilleur <em>AIC</em> marginal est aussi un choix qui se justifierait, en l’occurrence le modèle avec la structure de corrélation <em>Matérn</em>.</p>
+</section>
 </section>
 </section>
 <section id="sec-024" class="level2" data-number="2.4">

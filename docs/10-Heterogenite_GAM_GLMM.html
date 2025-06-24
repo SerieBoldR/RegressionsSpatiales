@@ -368,7 +368,7 @@ window.Quarto = {
 <ul>
 <li>comprendre comment les modèles GAM et GLMM peuvent être adaptés pour explorer l’hétérogénéité spatiale;</li>
 <li>utiliser une spline pour une variable indépendante dans un modèle GAM;</li>
-<li>comprendre le notion de concurvité pour un modèle GAM;</li>
+<li>comprendre la notion de concurvité pour un modèle GAM;</li>
 <li>Introduire un effet aléatoire spatial pour une variable indépendante dans un modèle linéaire généralisé à effets mixtes (GLMM);</li>
 <li>mettre en pratique ces modèles spatiaux dans R.</li>
 </ul>
@@ -407,8 +407,8 @@ window.Quarto = {
 </ul>
 </div>
 </div>
-<p>Dans les deux chapitres précédents, nous avons présenté la GWR et ses différentes extensions qui permettent d’explorer comment les relations entre la variable dépendante et les variables indépendantes d’un modèle de régression varient localement. Contrairement aux autres modèles abordés jusqu’ici, la GWR permet de répondre au problème de l’hétérogénéité spatiale plutôt que celui de la dépendance spatiale (<a href="01-NotionsDeBase.html#sec-0172" class="quarto-xref">section&nbsp;<span>1.6.2</span></a>). Cependant, la GWR fait l’objet des plusieurs critiques décrites précédemment (<a href="08-GWRClassique.html#sec-084" class="quarto-xref">section&nbsp;<span>8.4</span></a>). En effet, bien qu’elle constitue une technique puissante d’exploration de données, elle comprend plusieurs limites d’ordre statistique qui restreignent fortement son utilisation dans le cadre d’analyses inférentielles.</p>
-<p>Avec le développement de logiciels et de <em>packages</em> permettant de construire des modèles complexes, notamment les modèles à effets mixtes, de nouvelles approches ont été proposés pour intégrer la question de l’hétérogénéité spatiale dans les modèles. Nous verrons ici comment les modèles GAM et GLMM peuvent être utilisés pour faire varier spatialement les coefficients de régression, tout en évitant les limites propres à la GWR. Ces modèles peuvent être regroupés sous le terme de modèles à coefficients variant spatialement (<em>spatially varying coefficients models</em> ou SVCM).</p>
+<p>Dans les deux chapitres précédents, nous avons présenté la GWR et ses différentes extensions qui permettent d’explorer comment les relations entre la variable dépendante et les variables indépendantes d’un modèle de régression varient localement. Contrairement aux autres modèles abordés jusqu’ici, la GWR permet de répondre au problème de l’hétérogénéité spatiale plutôt que celui de la dépendance spatiale (<a href="01-NotionsDeBase.html#sec-0172" class="quarto-xref">section&nbsp;<span>1.6.2</span></a>). Cependant, la GWR fait l’objet des multiples critiques décrites précédemment (<a href="08-GWRClassique.html#sec-084" class="quarto-xref">section&nbsp;<span>8.4</span></a>). En effet, bien qu’elle constitue une technique puissante d’exploration de données, elle comprend plusieurs limites d’ordre statistique qui restreignent fortement son utilisation dans le cadre d’analyses inférentielles.</p>
+<p>Avec le développement de logiciels et de <em>packages</em> permettant de construire des modèles complexes, notamment les modèles à effets mixtes, de nouvelles approches ont été proposées pour intégrer la question de l’hétérogénéité spatiale dans les modèles. Nous verrons ici comment les modèles GAM et GLMM peuvent être utilisés pour faire varier spatialement les coefficients de régression, tout en évitant les limites propres à la GWR. Ces modèles peuvent être regroupés sous le terme de modèles à coefficients variant spatialement (<em>spatially varying coefficients models</em> ou SVCM).</p>
 <p>Les modèles SVCM offrent deux avantages principaux comparativement aux modèles GWR. D’une part, ils permettent de capturer directement l’hétérogénéité spatiale dans un seul modèle tandis que la GWR produit une équation de régression pour chaque entité spatiale (<a href="08-GWRClassique.html#sec-0812" class="quarto-xref">section&nbsp;<span>8.1.2</span></a>). D’autre part, les modèles SVCM ne nécessitent pas de spécifier une zone d’influence (<em>bandwidth</em>). De la sorte, les conditions d’application des modèles de régression sont ainsi (plus) faciles à satisfaire.</p>
 <section id="sec-101" class="level2" data-number="10.1">
 <h2 data-number="10.1" class="anchored" data-anchor-id="sec-101"><span class="header-section-number">10.1</span> Hétérogénéité spatiale et modèles généralisés additifs (GAM)</h2>
@@ -432,7 +432,7 @@ window.Quarto = {
 <li><span class="math inline">\(f\)</span>, une fonction modélisant l’impact de l’espace.</li>
 <li><span class="math inline">\(sp\)</span>, une matrice de coordonnées cartésiennes ou une matrice de contiguïté spatiale.</li>
 </ul>
-<p>La spline <span class="math inline">\(f(sp)\)</span> permet d’augmenter ou de réduire spatialement la valeur prédite pour l’espérance de <span class="math inline">\(y\)</span>. Elle peut être vue comme une forme de bonus ou de malus local accordé à la constante. Pour étendre cet usage au cas des coefficients de régression variant spatialement, il est possible de construire une spline similaire, <strong>mais qui est multipliée par la variable indépendante dont le coefficient doit varier spatialement</strong>. Cette formulation suppose donc que la variation spatiale du coefficient doit suivre une tendance lisse. Le modèle peut donc être modifié de la façon suivante&nbsp;:</p>
+<p>La spline <span class="math inline">\(f(sp)\)</span> permet d’augmenter ou de réduire spatialement la valeur prédite pour l’espérance de <span class="math inline">\(y\)</span>. Elle peut être vue comme une forme de bonus ou de malus local accordée à la constante. Pour étendre cet usage au cas des coefficients de régression variant spatialement, il est possible de construire une spline similaire, <strong>mais qui est multipliée par la variable indépendante dont le coefficient doit varier spatialement</strong>. Cette formulation suppose donc que la variation spatiale du coefficient doit suivre une tendance lisse. Le modèle peut donc être modifié de la façon suivante&nbsp;:</p>
 <p><span id="eq-hetero2"><span class="math display">\[
 \begin{aligned}
 &amp;y \sim D(\mu,\theta)\\
@@ -449,7 +449,7 @@ window.Quarto = {
 <p><strong>Enjeux de concurvité</strong></p>
 </div>
 <div class="bloc_attention-body">
-<p>Il n’est pas obligatoire de conserver la première spline faisant varier la constante du modèle. Cette dernière peut devenir inutile, une fois que certains coefficients de régression aient été autorisés à varier spatialement. Par ailleurs, il est possible que les différentes splines spatiales d’un modèle se superposent et génèrent alors un problème de <strong>concurvité</strong>.</p>
+<p>Il n’est pas obligatoire de conserver la première spline faisant varier la constante du modèle. Cette dernière peut devenir inutile, une fois que certains coefficients de régression ont été autorisés à varier spatialement. Par ailleurs, il est possible que les différentes splines spatiales d’un modèle se superposent et génèrent alors un problème de <strong>concurvité</strong>.</p>
 <p>La concurvité est l’équivalent de la <strong>multicolinéarité</strong>, mais pour les fonctions lisses estimées par les splines. Si deux termes non linéaires ont une forte concurvité, cela signifie que l’un des deux termes peut englober l’autre. Ce problème est fréquent dans un modèle où plusieurs coefficients varient spatialement avec des splines.</p>
 </div>
 </div>
@@ -521,7 +521,7 @@ window.Quarto = {
 <li>la présence d’une station de métro à moins de 500&nbsp;mètres;</li>
 <li>la densité de la couverture végétale dans un rayon de 500&nbsp;mètres.</li>
 </ul>
-<p>Notez que nous avons retiré la constante variant spatialement (<code>s(X,Y, bs = 'gp')</code>). En effet, après plusieurs tests, il s’est avéré que cet effet spatial était capable de résumer à lui seul les effets des coefficients variant spatialement (phénomène de concurvité). Nous allons donc comparer le modèle&nbsp;2 avec cette constante spatiale et le modèle 3 privilégiant des coefficients variant spatialement.</p>
+<p>Notez que nous avons retiré la constante variant spatialement (<code>s(X,Y, bs = 'gp')</code>). En effet, après plusieurs tests, il s’est avéré que cet effet spatial était capable de résumer à lui seul les effets des coefficients variant spatialement (phénomène de concurvité). Nous comparons donc le modèle&nbsp;2 avec cette constante spatiale et le modèle 3 privilégiant des coefficients variant spatialement.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pour les variables dichotomiques, il est plus facile de les recoder comme </span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># des variables binaires pour ce type de modèle</span></span>
@@ -562,8 +562,8 @@ observed 0.997          0.739             0.677               0.800
 estimate 0.997          0.619             0.559               0.516</code></pre>
 </div>
 </div>
-<p>Les valeurs de concurvité ci-dessus indiquent pour chaque terme du modèle s’il peut être inclus dans un autre terme non linéaire. Il s’agit d’une extension du concept de multicolinéarité aux termes non linéaires. Les valeurs sont comprises entre 0 (absence de concurvité) et 1 (concurvité parfaite). Le terme <code>para</code> indique la partie paramétrique du modèle (les effets linéaires). Trois estimations de la concurvité sont fournis&nbsp;: pessimistes (<code>worst</code>), optimistes (<code>observed</code>) et équilibrées (<code>estimate</code>). Dans notre cas, les valeurs de la ligne <code>estimate</code> pour les termes non linéaires sont toutes relativement faibles, indiquant que ces derniers ne peuvent pas se substituer les uns aux autres. Notez ici que le <em>package</em> <code>mgcv</code> utilise une méthode d’estimation robuste qui est peu affectée par une concurvité modérée. Cependant, des valeurs supérieures à 0,8 devraient être considérées comme problématiques.</p>
-<p>Nous comparons les trois modèles en nous basant sur trois mesures&nbsp;: l’<code>AIC</code>, le <code>REML</code> et le <code>R2</code> qui signalent que le modèle&nbsp;2 semble être le plus intéressant (moins de paramètres, plus faibles valeurs pour l’AIC et le REML, valeur de R<sup>2</sup> la plus élevée; <a href="#tbl-ComparaisonModelesGAM" class="quarto-xref">tableau&nbsp;<span>10.1</span></a>). Toutefois, ce modèle fourni peu d’informations sur les variations spatiales des facteurs explicatifs du prix des Airbnb. Il est donc pertinent d’analyser en détail le troisième modèle.</p>
+<p>Les valeurs de concurvité ci-dessus indiquent pour chaque terme du modèle s’il peut être inclus dans un autre terme non linéaire. Il s’agit d’une extension de la notion de multicolinéarité aux termes non linéaires. Les valeurs sont comprises entre 0 (absence de concurvité) et 1 (concurvité parfaite). Le terme <code>para</code> indique la partie paramétrique du modèle (les effets linéaires). Trois estimations de la concurvité sont fournies&nbsp;: pessimistes (<code>worst</code>), optimistes (<code>observed</code>) et équilibrées (<code>estimate</code>). Dans notre cas, les valeurs de la ligne <code>estimate</code> pour les termes non linéaires sont toutes relativement faibles, indiquant que ces derniers ne peuvent pas se substituer les uns aux autres. Notez ici que le <em>package</em> <code>mgcv</code> utilise une méthode d’estimation robuste qui est peu affectée par une concurvité modérée. Cependant, des valeurs supérieures à 0,8 devraient être considérées comme problématiques.</p>
+<p>Nous comparons les trois modèles en nous basant sur trois mesures&nbsp;: l’<code>AIC</code>, le <code>REML</code> et le <code>R2</code> qui signalent que le modèle&nbsp;2 semble être le plus intéressant (moins de paramètres, plus faibles valeurs pour l’AIC et le REML, valeur de R<sup>2</sup> la plus élevée; <a href="#tbl-ComparaisonModelesGAM" class="quarto-xref">tableau&nbsp;<span>10.1</span></a>). Toutefois, ce modèle fournit peu d’informations sur les variations spatiales des facteurs explicatifs du prix des Airbnb. Il est donc pertinent d’analyser en détail le troisième modèle.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>comp_df <span class="ot">&lt;-</span> <span class="fu">AIC</span>(model1, model2, model3)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>comp_df<span class="sc">$</span>REML <span class="ot">&lt;-</span> <span class="fu">c</span>(model1<span class="sc">$</span>gcv.ubre, model2<span class="sc">$</span>gcv.ubre, model3<span class="sc">$</span>gcv.ubre)</span>
@@ -689,7 +689,7 @@ R-sq.(adj) =  0.461   Deviance explained = 45.3%
 -REML = 1422.6  Scale est. = 1         n = 2260</code></pre>
 </div>
 </div>
-<p>Nous constatons que les trois splines ont des effets significativement différents de 0 (premier test; voir la section <code>Approximate significance of smooth terms</code>). Par conséquent, nous utilisons la méthode des effets marginaux pour représenter leurs coefficients dans l’espace et valider leur significativité localement (second test). Le package <code>mgcv</code> facilite l’extraction de ces effets grâce à la fonction <code>predict</code> et la paramètre <code>type = 'terms'</code>, qui va garder séparément les contributions des différentes composantes du modèle.</p>
+<p>Nous constatons que les trois splines ont des effets significativement différents de 0 (premier test; voir la section <code>Approximate significance of smooth terms</code>). Par conséquent, nous utilisons la méthode des effets marginaux pour représenter leurs coefficients dans l’espace et valider leur significativité localement (second test). Le package <code>mgcv</code> facilite l’extraction de ces effets grâce à la fonction <code>predict</code> avec le paramètre <code>type = 'terms'</code>, qui va garder séparément les contributions des différentes composantes du modèle.</p>
 <p>Puisque nous modélisons le logarithme du prix des logements, il convient de transformer les coefficients avec la fonction exponentielle pour les interpréter dans l’échelle originale ($); leurs effets sont ainsi multiplicatifs plutôt qu’additifs.</p>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gratia)</span>
@@ -766,7 +766,7 @@ R-sq.(adj) =  0.461   Deviance explained = 45.3%
 <span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a>                           <span class="at">big.mark =</span> <span class="st">" "</span></span>
 <span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a>                           )</span>
 <span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_options</span>(<span class="at">frame =</span> <span class="cn">FALSE</span>, <span class="at">legend.frame =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_options</span>(<span class="at">frame =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(<span class="fu">mask</span>(raster_private, mask_data)) <span class="sc">+</span> </span>
 <span id="cb9-79"><a href="#cb9-79" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_raster</span>(</span>
@@ -776,48 +776,52 @@ R-sq.(adj) =  0.461   Deviance explained = 45.3%
 <span id="cb9-83"><a href="#cb9-83" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="st">'-brewer.rd_bu'</span>,</span>
 <span id="cb9-84"><a href="#cb9-84" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
 <span id="cb9-85"><a href="#cb9-85" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.legend =</span> <span class="fu">tm_legend</span>(<span class="at">title =</span> <span class="st">"Coefficient logement privé (exp)"</span>,</span>
-<span id="cb9-86"><a href="#cb9-86" aria-hidden="true" tabindex="-1"></a>                           <span class="at">position =</span> <span class="fu">tm_pos_in</span>(<span class="at">pos.h =</span> <span class="st">"left"</span>, <span class="at">pos.v =</span> <span class="st">"top"</span>))</span>
-<span id="cb9-87"><a href="#cb9-87" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb9-88"><a href="#cb9-88" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(data_airbnb) <span class="sc">+</span> <span class="fu">tm_dots</span>(<span class="at">size =</span> .<span class="dv">1</span>)</span>
-<span id="cb9-89"><a href="#cb9-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-90"><a href="#cb9-90" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(<span class="fu">mask</span>(raster_veg, mask_data)) <span class="sc">+</span> </span>
-<span id="cb9-91"><a href="#cb9-91" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_raster</span>(</span>
-<span id="cb9-92"><a href="#cb9-92" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
-<span id="cb9-93"><a href="#cb9-93" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="fl">0.8</span>, <span class="fl">0.9</span>, <span class="fl">0.95</span>, <span class="dv">1</span>, <span class="fl">1.05</span>, <span class="fl">1.1</span>, <span class="fl">1.2</span>),     </span>
-<span id="cb9-94"><a href="#cb9-94" aria-hidden="true" tabindex="-1"></a>      <span class="at">midpoint =</span> <span class="dv">1</span>,</span>
-<span id="cb9-95"><a href="#cb9-95" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="st">'-brewer.rd_bu'</span>,</span>
-<span id="cb9-96"><a href="#cb9-96" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
-<span id="cb9-97"><a href="#cb9-97" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.legend =</span> <span class="fu">tm_legend</span>(<span class="at">title =</span> <span class="st">"Coefficient couverture végétale (exp)"</span>,</span>
-<span id="cb9-98"><a href="#cb9-98" aria-hidden="true" tabindex="-1"></a>                           <span class="at">position =</span> <span class="fu">tm_pos_in</span>(<span class="at">pos.h =</span> <span class="st">"left"</span>, <span class="at">pos.v =</span> <span class="st">"top"</span>),</span>
-<span id="cb9-99"><a href="#cb9-99" aria-hidden="true" tabindex="-1"></a>                           )</span>
-<span id="cb9-100"><a href="#cb9-100" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb9-101"><a href="#cb9-101" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(data_airbnb) <span class="sc">+</span> </span>
-<span id="cb9-102"><a href="#cb9-102" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_dots</span>(<span class="at">size =</span> .<span class="dv">1</span>)</span>
-<span id="cb9-103"><a href="#cb9-103" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-104"><a href="#cb9-104" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-105"><a href="#cb9-105" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(<span class="fu">mask</span>(raster_metro, mask_data)) <span class="sc">+</span> </span>
-<span id="cb9-106"><a href="#cb9-106" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_raster</span>(</span>
-<span id="cb9-107"><a href="#cb9-107" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
-<span id="cb9-108"><a href="#cb9-108" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.8</span>, <span class="fl">0.9</span>, <span class="dv">1</span>, <span class="fl">1.15</span>, <span class="fl">1.30</span>, <span class="fl">1.5</span>, <span class="dv">2</span>, <span class="dv">6</span>),  </span>
-<span id="cb9-109"><a href="#cb9-109" aria-hidden="true" tabindex="-1"></a>            <span class="at">values =</span> <span class="st">'-brewer.rd_bu'</span>,</span>
-<span id="cb9-110"><a href="#cb9-110" aria-hidden="true" tabindex="-1"></a>      <span class="at">midpoint =</span> <span class="dv">1</span>,</span>
-<span id="cb9-111"><a href="#cb9-111" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
-<span id="cb9-112"><a href="#cb9-112" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.legend =</span> <span class="fu">tm_legend</span>(<span class="at">title =</span> <span class="st">"Coefficient métro à 500 m (exp)"</span>,</span>
-<span id="cb9-113"><a href="#cb9-113" aria-hidden="true" tabindex="-1"></a>                           <span class="at">position =</span> <span class="fu">tm_pos_in</span>(<span class="at">pos.h =</span> <span class="st">"left"</span>, <span class="at">pos.v =</span> <span class="st">"top"</span>)</span>
-<span id="cb9-114"><a href="#cb9-114" aria-hidden="true" tabindex="-1"></a>                           )</span>
-<span id="cb9-115"><a href="#cb9-115" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb9-116"><a href="#cb9-116" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(data_airbnb) <span class="sc">+</span> </span>
-<span id="cb9-117"><a href="#cb9-117" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_dots</span>(<span class="at">size =</span> .<span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb9-118"><a href="#cb9-118" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(metro) <span class="sc">+</span> </span>
-<span id="cb9-119"><a href="#cb9-119" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_lines</span>(<span class="at">col =</span> <span class="st">'route_name'</span>,</span>
-<span id="cb9-120"><a href="#cb9-120" aria-hidden="true" tabindex="-1"></a>             <span class="at">lwd =</span> <span class="dv">4</span>,</span>
-<span id="cb9-121"><a href="#cb9-121" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.scale =</span> <span class="fu">tm_scale_categorical</span>(<span class="at">values =</span> metro_colors),</span>
-<span id="cb9-122"><a href="#cb9-122" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.legend =</span> <span class="fu">tm_legend</span>(<span class="at">title =</span> <span class="st">"Ligne de métro"</span>,</span>
-<span id="cb9-123"><a href="#cb9-123" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">position =</span> <span class="fu">tm_pos_in</span>(<span class="at">pos.h =</span> <span class="st">"left"</span>, <span class="at">pos.v =</span> <span class="st">"top"</span>),</span>
-<span id="cb9-124"><a href="#cb9-124" aria-hidden="true" tabindex="-1"></a>                                    )</span>
-<span id="cb9-125"><a href="#cb9-125" aria-hidden="true" tabindex="-1"></a>             ) <span class="sc">+</span></span>
-<span id="cb9-126"><a href="#cb9-126" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(data_airbnb) <span class="sc">+</span> <span class="fu">tm_dots</span>(<span class="at">size =</span> .<span class="dv">1</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell quarto-layout-panel" data-layout-ncol="1" data-layout-align="center">
+<span id="cb9-86"><a href="#cb9-86" aria-hidden="true" tabindex="-1"></a>                           <span class="at">frame =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb9-87"><a href="#cb9-87" aria-hidden="true" tabindex="-1"></a>                           <span class="at">position =</span> <span class="fu">tm_pos_in</span>(<span class="at">pos.h =</span> <span class="st">"left"</span>, <span class="at">pos.v =</span> <span class="st">"top"</span>))</span>
+<span id="cb9-88"><a href="#cb9-88" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb9-89"><a href="#cb9-89" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(data_airbnb) <span class="sc">+</span> <span class="fu">tm_dots</span>(<span class="at">size =</span> .<span class="dv">1</span>)</span>
+<span id="cb9-90"><a href="#cb9-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-91"><a href="#cb9-91" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(<span class="fu">mask</span>(raster_veg, mask_data)) <span class="sc">+</span> </span>
+<span id="cb9-92"><a href="#cb9-92" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_raster</span>(</span>
+<span id="cb9-93"><a href="#cb9-93" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
+<span id="cb9-94"><a href="#cb9-94" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="fl">0.8</span>, <span class="fl">0.9</span>, <span class="fl">0.95</span>, <span class="dv">1</span>, <span class="fl">1.05</span>, <span class="fl">1.1</span>, <span class="fl">1.2</span>),     </span>
+<span id="cb9-95"><a href="#cb9-95" aria-hidden="true" tabindex="-1"></a>      <span class="at">midpoint =</span> <span class="dv">1</span>,</span>
+<span id="cb9-96"><a href="#cb9-96" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="st">'-brewer.rd_bu'</span>,</span>
+<span id="cb9-97"><a href="#cb9-97" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
+<span id="cb9-98"><a href="#cb9-98" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.legend =</span> <span class="fu">tm_legend</span>(<span class="at">title =</span> <span class="st">"Coefficient couverture végétale (exp)"</span>,</span>
+<span id="cb9-99"><a href="#cb9-99" aria-hidden="true" tabindex="-1"></a>                           <span class="at">frame =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb9-100"><a href="#cb9-100" aria-hidden="true" tabindex="-1"></a>                           <span class="at">position =</span> <span class="fu">tm_pos_in</span>(<span class="at">pos.h =</span> <span class="st">"left"</span>, <span class="at">pos.v =</span> <span class="st">"top"</span>),</span>
+<span id="cb9-101"><a href="#cb9-101" aria-hidden="true" tabindex="-1"></a>                           )</span>
+<span id="cb9-102"><a href="#cb9-102" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb9-103"><a href="#cb9-103" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(data_airbnb) <span class="sc">+</span> </span>
+<span id="cb9-104"><a href="#cb9-104" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_dots</span>(<span class="at">size =</span> .<span class="dv">1</span>)</span>
+<span id="cb9-105"><a href="#cb9-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-106"><a href="#cb9-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-107"><a href="#cb9-107" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(<span class="fu">mask</span>(raster_metro, mask_data)) <span class="sc">+</span> </span>
+<span id="cb9-108"><a href="#cb9-108" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_raster</span>(</span>
+<span id="cb9-109"><a href="#cb9-109" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
+<span id="cb9-110"><a href="#cb9-110" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.8</span>, <span class="fl">0.9</span>, <span class="dv">1</span>, <span class="fl">1.15</span>, <span class="fl">1.30</span>, <span class="fl">1.5</span>, <span class="dv">2</span>, <span class="dv">6</span>),  </span>
+<span id="cb9-111"><a href="#cb9-111" aria-hidden="true" tabindex="-1"></a>            <span class="at">values =</span> <span class="st">'-brewer.rd_bu'</span>,</span>
+<span id="cb9-112"><a href="#cb9-112" aria-hidden="true" tabindex="-1"></a>      <span class="at">midpoint =</span> <span class="dv">1</span>,</span>
+<span id="cb9-113"><a href="#cb9-113" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
+<span id="cb9-114"><a href="#cb9-114" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.legend =</span> <span class="fu">tm_legend</span>(<span class="at">title =</span> <span class="st">"Coefficient métro à 500 m (exp)"</span>,</span>
+<span id="cb9-115"><a href="#cb9-115" aria-hidden="true" tabindex="-1"></a>                           <span class="at">frame =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb9-116"><a href="#cb9-116" aria-hidden="true" tabindex="-1"></a>                           <span class="at">position =</span> <span class="fu">tm_pos_in</span>(<span class="at">pos.h =</span> <span class="st">"left"</span>, <span class="at">pos.v =</span> <span class="st">"top"</span>)</span>
+<span id="cb9-117"><a href="#cb9-117" aria-hidden="true" tabindex="-1"></a>                           )</span>
+<span id="cb9-118"><a href="#cb9-118" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb9-119"><a href="#cb9-119" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(data_airbnb) <span class="sc">+</span> </span>
+<span id="cb9-120"><a href="#cb9-120" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_dots</span>(<span class="at">size =</span> .<span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb9-121"><a href="#cb9-121" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(metro) <span class="sc">+</span> </span>
+<span id="cb9-122"><a href="#cb9-122" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_lines</span>(<span class="at">col =</span> <span class="st">'route_name'</span>,</span>
+<span id="cb9-123"><a href="#cb9-123" aria-hidden="true" tabindex="-1"></a>             <span class="at">lwd =</span> <span class="dv">4</span>,</span>
+<span id="cb9-124"><a href="#cb9-124" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.scale =</span> <span class="fu">tm_scale_categorical</span>(<span class="at">values =</span> metro_colors),</span>
+<span id="cb9-125"><a href="#cb9-125" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.legend =</span> <span class="fu">tm_legend</span>(<span class="at">title =</span> <span class="st">"Ligne de métro"</span>,</span>
+<span id="cb9-126"><a href="#cb9-126" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">frame =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb9-127"><a href="#cb9-127" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">position =</span> <span class="fu">tm_pos_in</span>(<span class="at">pos.h =</span> <span class="st">"left"</span>, <span class="at">pos.v =</span> <span class="st">"top"</span>),</span>
+<span id="cb9-128"><a href="#cb9-128" aria-hidden="true" tabindex="-1"></a>                                    )</span>
+<span id="cb9-129"><a href="#cb9-129" aria-hidden="true" tabindex="-1"></a>             ) <span class="sc">+</span></span>
+<span id="cb9-130"><a href="#cb9-130" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(data_airbnb) <span class="sc">+</span> <span class="fu">tm_dots</span>(<span class="at">size =</span> .<span class="dv">1</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell quarto-layout-panel" data-layout-align="center" data-layout-ncol="1">
 <div class="quarto-layout-row">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 <div id="fig-htgam1-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -863,10 +867,10 @@ Figure&nbsp;10.3: Effet spatial métro à 500 mètres
 </div>
 <p>Les figures <a href="#fig-htgam1-1" class="quarto-xref"><span>10.1</span></a> à <a href="#fig-htgam1-3" class="quarto-xref"><span>10.3</span></a> illustrent les trois splines ajustées à nos coefficients variant spatialement.</p>
 <p>Pour le métro (<a href="#fig-htgam1-3" class="quarto-xref">figure&nbsp;<span>10.3</span></a>), il est important de ne pas interpréter les valeurs en dehors de la zone dans laquelle nous avons des stations de métro. En effet, les splines ont tendance à mal interpoler les valeurs en dehors de l’étendue observée, car elles se contentent de prolonger la tendance. Nous observons que les prix des logements Airbnb tendent à être plus faibles le long de la ligne bleue, mais aussi le long de la portion Ouest de la ligne verte. Il s’agit d’une réduction relativement faible (&lt;&nbsp;10&nbsp;%). À proximité de la station Berry-UQAM, permettant la connexion entre les lignes orange, jaune et verte, nous pouvons observer des prix des Airbnb légèrement plus élevés de 15&nbsp;% à 30&nbsp;% pour les Airbnb à moins de 500&nbsp;mètres d’une ligne de métro.</p>
-<p>Une augmentation de 25&nbsp;points de pourcentage de la densité végétale est associée avec des réductions de prix pouvant allant jusqu’à 20&nbsp;% (<a href="#fig-htgam1-2" class="quarto-xref">figure&nbsp;<span>10.2</span></a>). Ces réductions suivent généralement un gradiant concentrique autour du centre-ville. Proche du Mont-Royal, l’impact de la densité végétal est légèrement positif avec une augmentation des prix atteignant 5&nbsp;%. Dans l’Ouest, dans l’arrondissement Pointe-Claire, l’impact du couvert végétal semble plus élevé encore (de 5 à 10&nbsp;%). Cependant, nous disposons d’assez peu d’observations pour confirmer cette observation.</p>
+<p>Une augmentation de 25&nbsp;points de pourcentage de la densité végétale est associée avec des réductions de prix pouvant allant jusqu’à 20&nbsp;% (<a href="#fig-htgam1-2" class="quarto-xref">figure&nbsp;<span>10.2</span></a>). Ces réductions suivent généralement un gradient concentrique autour du centre-ville. Proche du Mont-Royal, l’impact de la densité végétal est légèrement positif avec une augmentation des prix atteignant 5&nbsp;%. Dans l’Ouest, dans l’arrondissement Pointe-Claire, l’impact du couvert végétal semble plus élevé encore (de 5 à 10&nbsp;%). Cependant, nous disposons d’assez peu d’observations pour confirmer cette observation.</p>
 <p>Le fait que le logement soit privé a toujours un impact positif le prix du logement. Cependant, cet effet est bien supérieur au Centre-Ville et dans les quartiers centraux dans lesquels le prix des Airbnb est au moins doublé. Plus on s’éloigne du Centre-Ville, plus l’effet diminue, atteignant par exemple une augmentation de seulement 50&nbsp;% au niveau de l’arrondissement Montréal-Est.</p>
 <p><strong>Attention</strong>, cette interprétation repose uniquement sur les valeurs moyennes prédites pour les coefficients variant spatialement. Si la valeur de <em>p</em> d’une spline est significative pour le modèle général (premier test), cela ne veut pas dire que sa contribution est significativement différente de zéro sur l’ensemble de son domaine de définition (second test).</p>
-<p>Nous calculons donc ci-dessous des pseudo valeurs de <em>p</em> locales pour déterminer si les coefficients locaux sont significativement différents de zéro. Pour ce faire, nous utilisons deux approches. La première est basée sur une approximation via une distribution normale. Elle est considérée valide lorsque le nombre d’observations est grand.</p>
+<p>Nous calculons donc ci-dessous des pseudovaleurs de <em>p</em> locales pour déterminer si les coefficients locaux sont significativement différents de zéro. Pour ce faire, nous utilisons deux approches. La première est basée sur une approximation via une distribution normale. Elle est considérée valide lorsque le nombre d’observations est grand.</p>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extraction des termes et de leur écart-type</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(model3, <span class="at">newdata =</span> pred_df, <span class="at">type =</span> <span class="st">'terms'</span>, <span class="at">se =</span> T )</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(preds<span class="sc">$</span>fit)</span>
@@ -901,46 +905,51 @@ Figure&nbsp;10.3: Effet spatial métro à 500 mètres
 <span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> colors,</span>
 <span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
 <span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.legend =</span> <span class="fu">tm_legend</span>(<span class="at">title =</span> <span class="st">"Valeur de p (norm.) pour le </span><span class="sc">\n</span><span class="st">coefficient logement privé"</span>,</span>
-<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>                           <span class="at">position =</span> <span class="fu">tm_pos_in</span>(<span class="at">pos.h =</span> <span class="st">"left"</span>, <span class="at">pos.v =</span> <span class="st">"top"</span>)</span>
-<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>                           )</span>
-<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(data_airbnb) <span class="sc">+</span> </span>
-<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_dots</span>(<span class="at">size =</span> .<span class="dv">1</span>)</span>
-<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(<span class="fu">mask</span>(raster_veg, mask_data)) <span class="sc">+</span> </span>
-<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_raster</span>(</span>
-<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
-<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.3</span>, <span class="dv">1</span>),     </span>
-<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> colors,</span>
-<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
-<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.legend =</span> <span class="fu">tm_legend</span>(<span class="at">title =</span> <span class="st">"Valeur de p (norm.) pour le </span><span class="sc">\n</span><span class="st">coefficient couverture végétale"</span>,</span>
-<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>                           <span class="at">position =</span> <span class="fu">tm_pos_in</span>(<span class="at">pos.h =</span> <span class="st">"left"</span>, <span class="at">pos.v =</span> <span class="st">"top"</span>)</span>
-<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a>                           )</span>
-<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(data_airbnb) <span class="sc">+</span> </span>
-<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_dots</span>(<span class="at">size =</span> .<span class="dv">1</span>)</span>
-<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(<span class="fu">mask</span>(raster_metro, mask_data)) <span class="sc">+</span> </span>
-<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_raster</span>(</span>
-<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
-<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.3</span>, <span class="dv">1</span>),     </span>
-<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> colors,</span>
-<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
-<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.legend =</span> <span class="fu">tm_legend</span>(<span class="at">title =</span> <span class="st">"Valeur de p (norm.) pour le </span><span class="sc">\n</span><span class="st">coefficient métro à 500 m"</span>,</span>
-<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a>                           <span class="at">position =</span> <span class="fu">tm_pos_in</span>(<span class="at">pos.h =</span> <span class="st">"left"</span>, <span class="at">pos.v =</span> <span class="st">"top"</span>),</span>
-<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a>                           <span class="at">frame =</span> <span class="cn">FALSE</span>)) <span class="sc">+</span></span>
-<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(metro) <span class="sc">+</span> </span>
-<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_lines</span>(<span class="at">col =</span> <span class="st">'route_name'</span>,</span>
-<span id="cb10-65"><a href="#cb10-65" aria-hidden="true" tabindex="-1"></a>             <span class="at">lwd =</span> <span class="dv">4</span>,</span>
-<span id="cb10-66"><a href="#cb10-66" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.scale =</span> <span class="fu">tm_scale_categorical</span>(</span>
-<span id="cb10-67"><a href="#cb10-67" aria-hidden="true" tabindex="-1"></a>               <span class="at">values =</span> metro_colors),</span>
-<span id="cb10-68"><a href="#cb10-68" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.legend =</span> <span class="fu">tm_legend</span>(<span class="at">title =</span> <span class="st">"Ligne de métro"</span>,</span>
-<span id="cb10-69"><a href="#cb10-69" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">position =</span> <span class="fu">tm_pos_in</span>(<span class="at">pos.h =</span> <span class="st">"left"</span>, <span class="at">pos.v =</span> <span class="st">"top"</span>)</span>
-<span id="cb10-70"><a href="#cb10-70" aria-hidden="true" tabindex="-1"></a>                                    )</span>
-<span id="cb10-71"><a href="#cb10-71" aria-hidden="true" tabindex="-1"></a>             ) <span class="sc">+</span></span>
-<span id="cb10-72"><a href="#cb10-72" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(data_airbnb) <span class="sc">+</span> </span>
-<span id="cb10-73"><a href="#cb10-73" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_dots</span>(<span class="at">size =</span> .<span class="dv">1</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell quarto-layout-panel" data-layout-ncol="1" data-layout-align="center">
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>                           <span class="at">frame =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>                           <span class="at">position =</span> <span class="fu">tm_pos_in</span>(<span class="at">pos.h =</span> <span class="st">"left"</span>, <span class="at">pos.v =</span> <span class="st">"top"</span>)</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>                           )</span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(data_airbnb) <span class="sc">+</span> </span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_dots</span>(<span class="at">size =</span> .<span class="dv">1</span>)</span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(<span class="fu">mask</span>(raster_veg, mask_data)) <span class="sc">+</span> </span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_raster</span>(</span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.3</span>, <span class="dv">1</span>),     </span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> colors,</span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.legend =</span> <span class="fu">tm_legend</span>(<span class="at">title =</span> <span class="st">"Valeur de p (norm.) pour le </span><span class="sc">\n</span><span class="st">coefficient couverture végétale"</span>,</span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a>                           <span class="at">frame =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>                           <span class="at">position =</span> <span class="fu">tm_pos_in</span>(<span class="at">pos.h =</span> <span class="st">"left"</span>, <span class="at">pos.v =</span> <span class="st">"top"</span>)</span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a>                           )</span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(data_airbnb) <span class="sc">+</span> </span>
+<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_dots</span>(<span class="at">size =</span> .<span class="dv">1</span>)</span>
+<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(<span class="fu">mask</span>(raster_metro, mask_data)) <span class="sc">+</span> </span>
+<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_raster</span>(</span>
+<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
+<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.3</span>, <span class="dv">1</span>),     </span>
+<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> colors,</span>
+<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
+<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.legend =</span> <span class="fu">tm_legend</span>(<span class="at">title =</span> <span class="st">"Valeur de p (norm.) pour le </span><span class="sc">\n</span><span class="st">coefficient métro à 500 m"</span>,</span>
+<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a>                           <span class="at">frame =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a>                           <span class="at">position =</span> <span class="fu">tm_pos_in</span>(<span class="at">pos.h =</span> <span class="st">"left"</span>, <span class="at">pos.v =</span> <span class="st">"top"</span>)</span>
+<span id="cb10-65"><a href="#cb10-65" aria-hidden="true" tabindex="-1"></a>                           )</span>
+<span id="cb10-66"><a href="#cb10-66" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb10-67"><a href="#cb10-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(metro) <span class="sc">+</span> </span>
+<span id="cb10-68"><a href="#cb10-68" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_lines</span>(<span class="at">col =</span> <span class="st">'route_name'</span>,</span>
+<span id="cb10-69"><a href="#cb10-69" aria-hidden="true" tabindex="-1"></a>             <span class="at">lwd =</span> <span class="dv">4</span>,</span>
+<span id="cb10-70"><a href="#cb10-70" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.scale =</span> <span class="fu">tm_scale_categorical</span>(</span>
+<span id="cb10-71"><a href="#cb10-71" aria-hidden="true" tabindex="-1"></a>               <span class="at">values =</span> metro_colors),</span>
+<span id="cb10-72"><a href="#cb10-72" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.legend =</span> <span class="fu">tm_legend</span>(<span class="at">title =</span> <span class="st">"Ligne de métro"</span>,</span>
+<span id="cb10-73"><a href="#cb10-73" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">frame =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb10-74"><a href="#cb10-74" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">position =</span> <span class="fu">tm_pos_in</span>(<span class="at">pos.h =</span> <span class="st">"left"</span>, <span class="at">pos.v =</span> <span class="st">"top"</span>)</span>
+<span id="cb10-75"><a href="#cb10-75" aria-hidden="true" tabindex="-1"></a>                                    )</span>
+<span id="cb10-76"><a href="#cb10-76" aria-hidden="true" tabindex="-1"></a>             ) <span class="sc">+</span></span>
+<span id="cb10-77"><a href="#cb10-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(data_airbnb) <span class="sc">+</span> </span>
+<span id="cb10-78"><a href="#cb10-78" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_dots</span>(<span class="at">size =</span> .<span class="dv">1</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell quarto-layout-panel" data-layout-align="center" data-layout-ncol="1">
 <div class="quarto-layout-row">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 <div id="fig-ht2ln-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -1034,7 +1043,7 @@ Figure&nbsp;10.6: Effet spatial métro à 500m (valeur de p norm.)
 <span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a><span class="fu">crs</span>(raster_metro) <span class="ot">&lt;-</span> <span class="fu">crs</span>(data_airbnb)</span>
 <span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">rev</span>(<span class="fu">c</span>(<span class="st">'#F7F7F7'</span>,<span class="st">'#D1E5F0'</span>, <span class="st">'#92C5DE'</span>, <span class="st">'#4393C3'</span>, <span class="st">'#2166AC'</span>))</span>
-<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_options</span>(<span class="at">frame =</span> <span class="cn">FALSE</span>, <span class="at">legend.frame =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_options</span>(<span class="at">frame =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(<span class="fu">mask</span>(raster_private, mask_data)) <span class="sc">+</span> </span>
 <span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_raster</span>(</span>
@@ -1043,44 +1052,48 @@ Figure&nbsp;10.6: Effet spatial métro à 500m (valeur de p norm.)
 <span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> colors,</span>
 <span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
 <span id="cb11-58"><a href="#cb11-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.legend =</span> <span class="fu">tm_legend</span>(<span class="at">title =</span> <span class="st">"Valeur de p (sim.) pour le </span><span class="sc">\n</span><span class="st">coefficient logement privé"</span>,</span>
-<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a>                           <span class="at">position =</span> <span class="fu">tm_pos_in</span>(<span class="at">pos.h =</span> <span class="st">"left"</span>, <span class="at">pos.v =</span> <span class="st">"top"</span>)</span>
-<span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a>                           )</span>
-<span id="cb11-61"><a href="#cb11-61" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb11-62"><a href="#cb11-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(data_airbnb) <span class="sc">+</span> <span class="fu">tm_dots</span>(<span class="at">size =</span> .<span class="dv">1</span>)</span>
-<span id="cb11-63"><a href="#cb11-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-64"><a href="#cb11-64" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(<span class="fu">mask</span>(raster_veg, mask_data)) <span class="sc">+</span> </span>
-<span id="cb11-65"><a href="#cb11-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_raster</span>(</span>
-<span id="cb11-66"><a href="#cb11-66" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
-<span id="cb11-67"><a href="#cb11-67" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.3</span>, <span class="dv">1</span>),     </span>
-<span id="cb11-68"><a href="#cb11-68" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> colors,</span>
-<span id="cb11-69"><a href="#cb11-69" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
-<span id="cb11-70"><a href="#cb11-70" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.legend =</span> <span class="fu">tm_legend</span>(<span class="at">title =</span> <span class="st">"valeur de p (sim.) pour le </span><span class="sc">\n</span><span class="st">coefficient couverture végétale"</span>,</span>
-<span id="cb11-71"><a href="#cb11-71" aria-hidden="true" tabindex="-1"></a>                           <span class="at">position =</span> <span class="fu">tm_pos_in</span>(<span class="at">pos.h =</span> <span class="st">"left"</span>, <span class="at">pos.v =</span> <span class="st">"top"</span>)</span>
-<span id="cb11-72"><a href="#cb11-72" aria-hidden="true" tabindex="-1"></a>                           )</span>
-<span id="cb11-73"><a href="#cb11-73" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb11-74"><a href="#cb11-74" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(data_airbnb) <span class="sc">+</span> <span class="fu">tm_dots</span>(<span class="at">size =</span> .<span class="dv">1</span>)</span>
-<span id="cb11-75"><a href="#cb11-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-76"><a href="#cb11-76" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(<span class="fu">mask</span>(raster_metro, mask_data)) <span class="sc">+</span> </span>
-<span id="cb11-77"><a href="#cb11-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_raster</span>(</span>
-<span id="cb11-78"><a href="#cb11-78" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
-<span id="cb11-79"><a href="#cb11-79" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.3</span>, <span class="dv">1</span>),     </span>
-<span id="cb11-80"><a href="#cb11-80" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> colors,</span>
-<span id="cb11-81"><a href="#cb11-81" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
-<span id="cb11-82"><a href="#cb11-82" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.legend =</span> <span class="fu">tm_legend</span>(<span class="at">title =</span> <span class="st">"Valeur de p (sim.) pour le </span><span class="sc">\n</span><span class="st">coefficient métro à 500 m"</span>,</span>
-<span id="cb11-83"><a href="#cb11-83" aria-hidden="true" tabindex="-1"></a>                           <span class="at">position =</span> <span class="fu">tm_pos_in</span>(<span class="at">pos.h =</span> <span class="st">"left"</span>, <span class="at">pos.v =</span> <span class="st">"top"</span>)</span>
-<span id="cb11-84"><a href="#cb11-84" aria-hidden="true" tabindex="-1"></a>                           )</span>
-<span id="cb11-85"><a href="#cb11-85" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb11-86"><a href="#cb11-86" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(metro) <span class="sc">+</span> </span>
-<span id="cb11-87"><a href="#cb11-87" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_lines</span>(<span class="at">col =</span> <span class="st">'route_name'</span>,</span>
-<span id="cb11-88"><a href="#cb11-88" aria-hidden="true" tabindex="-1"></a>             <span class="at">lwd =</span> <span class="dv">4</span>,</span>
-<span id="cb11-89"><a href="#cb11-89" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.scale =</span> <span class="fu">tm_scale_categorical</span>(</span>
-<span id="cb11-90"><a href="#cb11-90" aria-hidden="true" tabindex="-1"></a>               <span class="at">values =</span> metro_colors),</span>
-<span id="cb11-91"><a href="#cb11-91" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.legend =</span> <span class="fu">tm_legend</span>(<span class="at">title =</span> <span class="st">"Ligne de métro"</span>,</span>
-<span id="cb11-92"><a href="#cb11-92" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">position =</span> <span class="fu">tm_pos_in</span>(<span class="at">pos.h =</span> <span class="st">"left"</span>, <span class="at">pos.v =</span> <span class="st">"top"</span>)</span>
-<span id="cb11-93"><a href="#cb11-93" aria-hidden="true" tabindex="-1"></a>                                    )</span>
-<span id="cb11-94"><a href="#cb11-94" aria-hidden="true" tabindex="-1"></a>             ) <span class="sc">+</span></span>
-<span id="cb11-95"><a href="#cb11-95" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(data_airbnb) <span class="sc">+</span> <span class="fu">tm_dots</span>(<span class="at">size =</span> .<span class="dv">1</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell quarto-layout-panel" data-layout-ncol="1" data-layout-align="center">
+<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a>                           <span class="at">position =</span> <span class="fu">tm_pos_in</span>(<span class="at">pos.h =</span> <span class="st">"left"</span>, <span class="at">pos.v =</span> <span class="st">"top"</span>),</span>
+<span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a>                           <span class="at">frame =</span> <span class="cn">FALSE</span></span>
+<span id="cb11-61"><a href="#cb11-61" aria-hidden="true" tabindex="-1"></a>                           )</span>
+<span id="cb11-62"><a href="#cb11-62" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb11-63"><a href="#cb11-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(data_airbnb) <span class="sc">+</span> <span class="fu">tm_dots</span>(<span class="at">size =</span> .<span class="dv">1</span>)</span>
+<span id="cb11-64"><a href="#cb11-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-65"><a href="#cb11-65" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(<span class="fu">mask</span>(raster_veg, mask_data)) <span class="sc">+</span> </span>
+<span id="cb11-66"><a href="#cb11-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_raster</span>(</span>
+<span id="cb11-67"><a href="#cb11-67" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
+<span id="cb11-68"><a href="#cb11-68" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.3</span>, <span class="dv">1</span>),     </span>
+<span id="cb11-69"><a href="#cb11-69" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> colors,</span>
+<span id="cb11-70"><a href="#cb11-70" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
+<span id="cb11-71"><a href="#cb11-71" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.legend =</span> <span class="fu">tm_legend</span>(<span class="at">title =</span> <span class="st">"valeur de p (sim.) pour le </span><span class="sc">\n</span><span class="st">coefficient couverture végétale"</span>,</span>
+<span id="cb11-72"><a href="#cb11-72" aria-hidden="true" tabindex="-1"></a>                           <span class="at">position =</span> <span class="fu">tm_pos_in</span>(<span class="at">pos.h =</span> <span class="st">"left"</span>, <span class="at">pos.v =</span> <span class="st">"top"</span>),</span>
+<span id="cb11-73"><a href="#cb11-73" aria-hidden="true" tabindex="-1"></a>                           <span class="at">frame =</span> <span class="cn">FALSE</span></span>
+<span id="cb11-74"><a href="#cb11-74" aria-hidden="true" tabindex="-1"></a>                           )</span>
+<span id="cb11-75"><a href="#cb11-75" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb11-76"><a href="#cb11-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(data_airbnb) <span class="sc">+</span> <span class="fu">tm_dots</span>(<span class="at">size =</span> .<span class="dv">1</span>)</span>
+<span id="cb11-77"><a href="#cb11-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-78"><a href="#cb11-78" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(<span class="fu">mask</span>(raster_metro, mask_data)) <span class="sc">+</span> </span>
+<span id="cb11-79"><a href="#cb11-79" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_raster</span>(</span>
+<span id="cb11-80"><a href="#cb11-80" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
+<span id="cb11-81"><a href="#cb11-81" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.3</span>, <span class="dv">1</span>),     </span>
+<span id="cb11-82"><a href="#cb11-82" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> colors,</span>
+<span id="cb11-83"><a href="#cb11-83" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
+<span id="cb11-84"><a href="#cb11-84" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.legend =</span> <span class="fu">tm_legend</span>(<span class="at">title =</span> <span class="st">"Valeur de p (sim.) pour le </span><span class="sc">\n</span><span class="st">coefficient métro à 500 m"</span>,</span>
+<span id="cb11-85"><a href="#cb11-85" aria-hidden="true" tabindex="-1"></a>                           <span class="at">position =</span> <span class="fu">tm_pos_in</span>(<span class="at">pos.h =</span> <span class="st">"left"</span>, <span class="at">pos.v =</span> <span class="st">"top"</span>),</span>
+<span id="cb11-86"><a href="#cb11-86" aria-hidden="true" tabindex="-1"></a>                           <span class="at">frame =</span> <span class="cn">FALSE</span></span>
+<span id="cb11-87"><a href="#cb11-87" aria-hidden="true" tabindex="-1"></a>                           )</span>
+<span id="cb11-88"><a href="#cb11-88" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb11-89"><a href="#cb11-89" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(metro) <span class="sc">+</span> </span>
+<span id="cb11-90"><a href="#cb11-90" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_lines</span>(<span class="at">col =</span> <span class="st">'route_name'</span>,</span>
+<span id="cb11-91"><a href="#cb11-91" aria-hidden="true" tabindex="-1"></a>             <span class="at">lwd =</span> <span class="dv">4</span>,</span>
+<span id="cb11-92"><a href="#cb11-92" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.scale =</span> <span class="fu">tm_scale_categorical</span>(</span>
+<span id="cb11-93"><a href="#cb11-93" aria-hidden="true" tabindex="-1"></a>               <span class="at">values =</span> metro_colors),</span>
+<span id="cb11-94"><a href="#cb11-94" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.legend =</span> <span class="fu">tm_legend</span>(<span class="at">title =</span> <span class="st">"Ligne de métro"</span>,</span>
+<span id="cb11-95"><a href="#cb11-95" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">position =</span> <span class="fu">tm_pos_in</span>(<span class="at">pos.h =</span> <span class="st">"left"</span>, <span class="at">pos.v =</span> <span class="st">"top"</span>),</span>
+<span id="cb11-96"><a href="#cb11-96" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">frame =</span> <span class="cn">FALSE</span></span>
+<span id="cb11-97"><a href="#cb11-97" aria-hidden="true" tabindex="-1"></a>                                    )</span>
+<span id="cb11-98"><a href="#cb11-98" aria-hidden="true" tabindex="-1"></a>             ) <span class="sc">+</span></span>
+<span id="cb11-99"><a href="#cb11-99" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(data_airbnb) <span class="sc">+</span> <span class="fu">tm_dots</span>(<span class="at">size =</span> .<span class="dv">1</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell quarto-layout-panel" data-layout-align="center" data-layout-ncol="1">
 <div class="quarto-layout-row">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 <div id="fig-ht2sim-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -1129,10 +1142,10 @@ Figure&nbsp;10.9: Effet spatial métro à 500m (valeur de sim.)
 </section>
 <section id="sec-102" class="level2" data-number="10.2">
 <h2 data-number="10.2" class="anchored" data-anchor-id="sec-102"><span class="header-section-number">10.2</span> Modèles linéaires généralisés à effets mixtes (GLMM)</h2>
-<p>Dans cette section, nous expliquons comment un effet aléatoire peut être utilisé pour permettre à un coefficient de varier spatialement dans un modèle GLMM. Pour un rappel sur les GLMM et les effets aléatoires, vous pouvez consulter le <a href="https://serieboldr.com/MethodesQuantitatives/09-GLMM.html">chapitre sur les GLMM</a> du livre <em>Méthodes quantitatives en sciences sociales&nbsp;: un grand bol d’R</em> <span class="citation" data-cites="RBoldAirMethodesQuanti">(<a href="references.html#ref-RBoldAirMethodesQuanti" role="doc-biblioref">Apparicio et Gelb 2022</a>)</span>. Vous pouvez également relire la <a href="02-GLS_CAR_GLMM.html#sec-023" class="quarto-xref">section&nbsp;<span>2.3</span></a> de ce manuel dans laquelle nous avons expliqué comment un effet aléatoire peut être utilisé pour modéliser un effet spatial.</p>
+<p>Dans cette section, nous expliquons comment utiliser un effet aléatoire pour permettre à un coefficient de varier spatialement dans un modèle GLMM. Pour un rappel sur les GLMM et les effets aléatoires, vous pouvez consulter le <a href="https://serieboldr.com/MethodesQuantitatives/09-GLMM.html">chapitre sur les GLMM</a> du livre <em>Méthodes quantitatives en sciences sociales&nbsp;: un grand bol d’R</em> <span class="citation" data-cites="RBoldAirMethodesQuanti">(<a href="references.html#ref-RBoldAirMethodesQuanti" role="doc-biblioref">Apparicio et Gelb 2022</a>)</span>. Vous pouvez également relire la <a href="02-GLS_CAR_GLMM.html#sec-023" class="quarto-xref">section&nbsp;<span>2.3</span></a> de ce manuel dans laquelle nous avons expliqué comment un effet aléatoire peut être utilisé pour modéliser un effet spatial.</p>
 <section id="sec-1021" class="level3" data-number="10.2.1">
 <h3 data-number="10.2.1" class="anchored" data-anchor-id="sec-1021"><span class="header-section-number">10.2.1</span> Effets aléatoires et coefficients variant spatialement</h3>
-<p>Pour rappel, un effet aléatoire dans un modèle est un terme dont nous supposons que les valeurs proviennent d’une distribution normale. La forme la plus courante d’un effet aléatoire est l’intercepte aléatoire, permettant de contrôler les effets de groupes. En effet, il est primordial de contrôler le fait que deux observations provenant d’un même groupe ou plus de chances de ressembler que deux observations provenant de groupes différents. Dans la <a href="02-GLS_CAR_GLMM.html#sec-023" class="quarto-xref">section&nbsp;<span>2.3</span></a>, nous avons montré comment introduire une structure de covariance spatiale (CAR, Matérn, exponentielle, etc.) pour un effet aléatoire. Cette structure permet ainsi de tenir compte du fait que deux observations proches spatialement ont plus de chance de se ressembler que deux observations lointaines.</p>
+<p>À titre de rappel, un effet aléatoire dans un modèle est un terme dont nous supposons que les valeurs proviennent d’une distribution normale. La forme la plus courante d’un effet aléatoire est la constante aléatoire, permettant de contrôler les effets de groupes. En effet, il est primordial de contrôler le fait que deux observations provenant d’un même groupe ou plus de chances de ressembler que deux observations provenant de groupes différents. Dans la <a href="02-GLS_CAR_GLMM.html#sec-023" class="quarto-xref">section&nbsp;<span>2.3</span></a>, nous avons montré comment introduire une structure de covariance spatiale (CAR, Matérn, exponentielle, etc.) pour un effet aléatoire. Cette structure permet ainsi de tenir compte du fait que deux observations proches spatialement ont plus de chance de se ressembler que deux observations lointaines.</p>
 <p>Nous avions notamment formulé le GLMM suivant&nbsp;:</p>
 <p><span id="eq-spglmm1"><span class="math display">\[
 \begin{aligned}
@@ -1167,8 +1180,8 @@ Figure&nbsp;10.9: Effet spatial métro à 500m (valeur de sim.)
 </div>
 <div class="bloc_attention-body">
 <p>Le fait que la variance d’un effet aléatoire est différente de zéro ne signifie pas pour autant que les valeurs estimées de cet effet aléatoire sont significativement différentes de zéro.</p>
-<p>Dans le cas des GLMM avec coefficients variant spatialement, nous formulons l’hypothèse que la variation locale d’un coefficient provient d’un processus gaussien spatial. La variance de ce processus gaussien peut être significativement différente de zéro, mais les réalisations de ce processus peuvent ne pas être significativement différentes de zéro. En d’autres termes, les bonus et malus locaux des coefficients peuvent être tellement faibles et incertains que leurs contributions finales au modèle est anecdotique, et ce, même si la variance de l’effet aléatoire est significative. Il est donc important lorsque l’on cartographie les coefficients variant spatialement de bien indiquer où ceux-ci sont significativement différents de zéro. Il s’agit exactement du même enjeu qu’avec les <em>splines</em> spatiales présentées plus tôt.</p>
-<p>Prenons un exemple avec un modèle fictif. Admettons que pour ce modèle, nous avons estimé un coefficient fixe <span class="math inline">\(\beta_j = 0.5\)</span> qui est significatif au seuil de <span class="math inline">\(p &lt; 0.01\)</span>. Ce coefficient représente l’effet moyen de la variable <span class="math inline">\(j\)</span> quand nous ne savons pas où nous nous trouvons sur le territoire, soit l’effet moyen sur l’ensemble du territoire. Admettons aussi que nous avons estimé un effet aléatoire suivant un processus gaussien spatial dont la variance est de <span class="math inline">\(\sigma = 0.1\)</span> et que cette variance est significativement différente de zéro. Pour un emplacement <span class="math inline">\(i\)</span>, notre modèle a déterminé que la valeur de l’effet aléatoire est de <span class="math inline">\(\eta_j = 0.05\)</span>, mais que cet effet n’est pas significativement différent de zéro avec <span class="math inline">\(p = 0.15\)</span>. Le coefficient au point <span class="math inline">\(i\)</span> peut être calculé par la simple somme des deux effets: <span class="math inline">\(\beta_{ji} = \beta_j + \eta_j\)</span>, mais il ne sera pas statistiquement différent de <span class="math inline">\(\beta_j\)</span> puisque <span class="math inline">\(\eta_j\)</span> n’est pas lui même significativement différent de zéro.</p>
+<p>Dans le cas des GLMM avec coefficients variant spatialement, nous formulons l’hypothèse que la variation locale d’un coefficient provient d’un processus gaussien spatial. La variance de ce processus gaussien peut être significativement différente de zéro, mais les réalisations de ce processus peuvent ne pas être significativement différentes de zéro. En d’autres termes, les bonus et malus locaux des coefficients peuvent être tellement faibles et incertains que leurs contributions finales au modèle sont anecdotiques, et ce, même si la variance de l’effet aléatoire est significative. Il est donc important lorsque l’on cartographie les coefficients variant spatialement de bien indiquer où ceux-ci sont significativement différents de zéro. Il s’agit exactement du même enjeu qu’avec les <em>splines</em> spatiales présentées plus tôt.</p>
+<p>Prenons un exemple avec un modèle fictif. Admettons que pour ce modèle, nous avons estimé un coefficient fixe <span class="math inline">\(\beta_j = 0.5\)</span> qui est significatif au seuil de <span class="math inline">\(p &lt; 0.01\)</span>. Ce coefficient représente l’effet moyen de la variable <span class="math inline">\(j\)</span> quand nous ne savons pas où nous nous trouvons sur le territoire, soit l’effet moyen sur l’ensemble du territoire. Admettons aussi que nous avons estimé un effet aléatoire suivant un processus gaussien spatial dont la variance est de <span class="math inline">\(\sigma = 0.1\)</span> et que cette variance est significativement différente de zéro. Pour un emplacement <span class="math inline">\(i\)</span>, notre modèle a déterminé que la valeur de l’effet aléatoire est de <span class="math inline">\(\eta_j = 0.05\)</span>, mais que cet effet n’est pas significativement différent de zéro avec <span class="math inline">\(p = 0.15\)</span>. Le coefficient au point <span class="math inline">\(i\)</span> peut être calculé par la simple somme des deux effets&nbsp;: <span class="math inline">\(\beta_{ji} = \beta_j + \eta_j\)</span>, mais il ne sera pas statistiquement différent de <span class="math inline">\(\beta_j\)</span> puisque <span class="math inline">\(\eta_j\)</span> n’est pas lui-même significativement différent de zéro.</p>
 <p>Il serait aussi possible d’avoir une situation différente dans laquelle <span class="math inline">\(\beta_j\)</span> n’est pas significatif&nbsp;: <span class="math inline">\(\beta_j = 0.05\)</span> avec <span class="math inline">\(p = 0.35\)</span>. Dans cette situation, l’effet général de <span class="math inline">\(\beta_j\)</span> est proche de zéro sur l’ensemble du territoire. Admettons maintenant que <span class="math inline">\(\eta_j = 0.15\)</span> avec <span class="math inline">\(p &lt; 0.01\)</span>. Cela signifierait que pour le point du territoire <span class="math inline">\(i\)</span>, l’effet de la variable <span class="math inline">\(j\)</span> est <span class="math inline">\(x_j \times(\beta_j + \eta_j)\)</span>. Cependant, puisque l’effet général <span class="math inline">\(\beta_j\)</span> n’est pas différent de zéro, alors il est possible de dire que l’effet local est uniquement dû à <span class="math inline">\(\eta_j\)</span>.</p>
 </div>
 </div>
@@ -1177,8 +1190,8 @@ Figure&nbsp;10.9: Effet spatial métro à 500m (valeur de sim.)
 <h3 data-number="10.2.2" class="anchored" data-anchor-id="sec-1022"><span class="header-section-number">10.2.2</span> Mise en œuvre dans R</h3>
 <p>Pour illustrer comment des effets aléatoires peuvent être utilisés pour faire varier spatialement les coefficients d’un modèle, nous allons reprendre l’exemple des décès attribués à la Covid-19 aux États-Unis. Nous tenterons d’améliorer le modèle GLMM présenté à la <a href="02-GLS_CAR_GLMM.html#sec-0232" class="quarto-xref">section&nbsp;<span>2.3.2</span></a>.</p>
 <p>Il existe actuellement assez peu de <em>packages</em> R pour ajuster ce type de modèle. <code>spBayes</code> et <code>INLA</code> sont très flexibles, mais utilisent des méthodes d’ajustement bayésiennes que nous ne couvrons pas dans ce livre. Pour les méthodes fréquentistes, les choix sont assez limités avec les <em>packages</em> <code>varycoef</code> et <code>sdmTMB</code>. Le premier ne permet pas d’ajuster des GLM et se limite à des modèles linéaires classique (<code>family = gaussian</code>). Par conséquent, nous utiliserons ici uniquement le <em>package</em> <code>sdmTMB</code>.</p>
-<p>Puisque l’estimation d’effets aléatoires spatiaux est relativement coûteuse en temps de calcul, <code>sdmTMB</code> utilise une stratégie relativement récente (<em>Stochastic Partial Differential Equation</em>) consistant à approximer ces effets aléatoires <span class="citation" data-cites="lindgren2011explicit">(<a href="references.html#ref-lindgren2011explicit" role="doc-biblioref">Lindgren, Rue et Lindström 2011</a>)</span>. L’idée générale est de découper la zone d’étude en un ensemble de triangles (<em>mesh</em>) dont les extrémités sont appelés des nœuds (oui, comme pour une <em>spline</em>). L’effet aléatoire spatial est estimé pour chaque nœud, et les valeurs entre les nœuds sont ensuite calculées par interpolation bilinéaire. Ces effets aléatoires suivent des processus gaussiens discrets (<em>Markov random field</em>) avec des matrices de covariance suivant une structure Matérn. Cette méthode d’estimation est particulièrement efficace, car elle simplifie grandement le calcul de l’effet aléatoire. Le processus gaussien continu (<em>gaussian field</em>) est approximé par un processus gaussien discret (<em>gaussian markov random field</em>). Cette formulation permet de limiter la dépendance spatiale continue à une dépendance spatiale de voisinage, ce qui réduit considérablement la taille des matrices à manipuler pour estimer les effets aléatoires.</p>
-<p>Pour faciliter l’ajustement du modèle avec <code>sdmTMB</code>, il est nécessaire que les différentes variables continues soient centrées et réduites. Nous allons également transformer les coordonnées géographiques en dizaines de kilomètres. Il est également nécessaire de créer une <em>mesh</em>. Cette dernière doit être suffisamment précise pour résumer efficacement les relations spatiales étudiées. Cependant, plus la <em>mesh</em> est fine, plus le temps de calcul est important car plus le nombre d’effets aléatoires à estimer est grand.</p>
+<p>Puisque l’estimation d’effets aléatoires spatiaux est relativement coûteuse en temps de calcul, <code>sdmTMB</code> utilise une stratégie relativement récente (<em>Stochastic Partial Differential Equation</em>) consistant à approximer ces effets aléatoires <span class="citation" data-cites="lindgren2011explicit">(<a href="references.html#ref-lindgren2011explicit" role="doc-biblioref">Lindgren, Rue et Lindström 2011</a>)</span>. L’idée générale est de découper la zone d’étude en un ensemble de triangles (<em>mesh</em>) dont les extrémités sont appelées des nœuds (oui, comme pour une <em>spline</em>). L’effet aléatoire spatial est estimé pour chaque nœud, et les valeurs entre les nœuds sont ensuite calculées par interpolation bilinéaire. Ces effets aléatoires suivent des processus gaussiens discrets (<em>Markov random field</em>) avec des matrices de covariance suivant une structure Matérn. Cette méthode d’estimation est particulièrement efficace, car elle simplifie grandement le calcul de l’effet aléatoire. Le processus gaussien continu (<em>gaussian field</em>) est approximé par un processus gaussien discret (<em>gaussian markov random field</em>). Cette formulation permet de limiter la dépendance spatiale continue à une dépendance spatiale de voisinage, ce qui réduit considérablement la taille des matrices à manipuler pour estimer les effets aléatoires.</p>
+<p>Pour faciliter l’ajustement du modèle avec <code>sdmTMB</code>, il est nécessaire que les différentes variables continues soient centrées et réduites. Nous allons également transformer les coordonnées géographiques en dizaines de kilomètres. Il est également nécessaire de créer une <em>mesh</em>. Cette dernière doit être suffisamment précise pour résumer efficacement les relations spatiales étudiées. Cependant, plus la <em>mesh</em> est fine, plus le temps de calcul est important, car plus le nombre d’effets aléatoires à estimer est grand.</p>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tmap, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
@@ -1196,7 +1209,7 @@ Figure&nbsp;10.9: Effet spatial métro à 500m (valeur de sim.)
 <span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>                              covid_data<span class="sc">$</span>deaths_3</span>
 <span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>                              )</span>
 <span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Conservation uniquement des comtés unique</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Conservation des comtés uniques</span></span>
 <span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>covid_data <span class="ot">&lt;-</span> covid_data <span class="sc">%&gt;%</span> </span>
 <span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(FIPS) <span class="sc">%&gt;%</span> </span>
 <span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">1</span>)</span>
@@ -1231,7 +1244,7 @@ Figure&nbsp;10.9: Effet spatial métro à 500m (valeur de sim.)
 <span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mesh1)</span>
 <span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mesh2)</span>
 <span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mesh3)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell quarto-layout-panel" data-layout-ncol="2" data-layout-align="center">
+<div class="cell quarto-layout-panel" data-layout-align="center" data-layout-ncol="2">
 <div class="quarto-layout-row">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-mesh-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -1273,7 +1286,7 @@ Figure&nbsp;10.12: Mesh équilibrée
 </div>
 </div>
 </div>
-<p>Maintenant que nous disposons de notre <em>mesh</em> et que nous avons appliqué les transformations aux données, nous ajustons un modèle de référence dans lequel aucun coefficient ne varie spatialement. Nous avons seulement un intercepte spatial, tel que nous l’avions également fait dans la <a href="02-GLS_CAR_GLMM.html#sec-0232" class="quarto-xref">section&nbsp;<span>2.3.2</span></a>.</p>
+<p>Maintenant que nous disposons de notre <em>mesh</em> et que nous avons appliqué les transformations aux données, nous ajustons un modèle de référence dans lequel aucun coefficient ne varie spatialement. Nous avons seulement une constante spatiale, comme réalisé dans la <a href="02-GLS_CAR_GLMM.html#sec-0232" class="quarto-xref">section&nbsp;<span>2.3.2</span></a>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcul d'un modèle nul qui sera utilisé pour calculer les différents </span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># pseudos R2</span></span>
@@ -1342,7 +1355,7 @@ Figure&nbsp;10.12: Mesh équilibrée
 <img src="10-Heterogenite_GAM_GLMM_files/figure-html/fig-heteroresid1-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-heteroresid1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;10.13: Résidus simulés du modèle sans coefficients variant spatialement
+Figure&nbsp;10.13: Résidus simulés du modèle sans coefficient variant spatialement
 </figcaption>
 </figure>
 </div>
@@ -1394,7 +1407,7 @@ Figure&nbsp;10.14: Résidus simulés du modèle sans coefficients variant spatia
 </div>
 <p>La <a href="#fig-heteroresid1B" class="quarto-xref">figure&nbsp;<span>10.14</span></a> montre que le modèle parvient tout de même à effectuer des prédictions qui se rapprochent des valeurs réelles.</p>
 <p>Nous considérons ici plusieurs coefficients pouvant avoir un effet variant spatialement. Par exemple, l’intensité des inégalités socio-économiques varie d’un État à l’autre, ce qui pourrait se traduire par des effets plus ou moins prononcés des variables socio-économiques. Les variables sur l’application des mesures sanitaires ou sur la mobilité sont de moins bonne qualité, nous éviterons donc de les faire varier spatialement pour éviter des risques de surinterprétation. La distance à l’aéroport le plus proche pourrait aussi avoir un effet variant spatialement, car tous les aéroports n’ont probablement pas eu la même contribution lors de la pandémie.</p>
-<p>Nous commençons donc avec un modèle ajoutant ces différents effets pour ensuite retirer ceux qui ne sont pas significatifs.</p>
+<p>Nous construisons ainsi un modèle avec ces différents effets pour ensuite retirer ceux qui ne sont pas significatifs.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="fu">sdmTMB</span>(</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> <span class="fu">st_drop_geometry</span>(data_mode1),</span>
@@ -1516,7 +1529,7 @@ Tableau&nbsp;10.2: Variations spatiales des coefficients
 </figure>
 </div>
 </div>
-<p>Le <a href="#tbl-Model2EffetsSpatiaux" class="quarto-xref">tableau&nbsp;<span>10.2</span></a> indique clairement que trois de nos sept coefficients spatiaux n’ont pas de variation spatiale significative (<code>conf.low &lt; 0.01</code>). Nous allons donc réajuster le modèle en retirant ces trois termes (<code>cr_dist_to_airport, cr_per_hispanic, cr_per_black</code>).</p>
+<p>Le <a href="#tbl-Model2EffetsSpatiaux" class="quarto-xref">tableau&nbsp;<span>10.2</span></a> indique clairement que trois de nos sept coefficients spatiaux n’ont pas de variation spatiale significative (<code>IC 2,5 % &lt; 0.01</code>). Nous allons donc réajuster le modèle en retirant ces trois termes (<code>cr_dist_to_airport, cr_per_hispanic, cr_per_black</code>).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span>  <span class="fu">sdmTMB</span>(</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> <span class="fu">st_drop_geometry</span>(data_mode1),</span>
@@ -1551,7 +1564,7 @@ Figure&nbsp;10.15: Résidus simulés du modèle avec coefficients variant spatia
 </div>
 </div>
 </div>
-<p>La nouvelle version du modèle incluant nos coefficients variant significativement spatialement obtient également des bons résidus simulés (<a href="#fig-heteroresid2" class="quarto-xref">figure&nbsp;<span>10.15</span></a>).</p>
+<p>La nouvelle version du modèle incluant nos coefficients variant significativement spatialement obtient également de bons résidus simulés (<a href="#fig-heteroresid2" class="quarto-xref">figure&nbsp;<span>10.15</span></a>).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>r2_model2 <span class="ot">&lt;-</span> <span class="fu">rsqs</span>(</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">loglike.full =</span> <span class="fu">as.numeric</span>(<span class="fu">logLik</span>(model2)),</span>
@@ -1619,8 +1632,8 @@ Tableau&nbsp;10.3: Comparaison de la qualité d’ajustement des modèles 1 et 2
 <pre><code>[1] 22468.75 22371.70</code></pre>
 </div>
 </div>
-<p>Le AIC conditionnel du second modèle est plus petit que celui du premier modèle, indiquant un meilleur ajustement. À titre de rappel, l’AIC conditionnel est une version du AIC plus adaptée pour comparer des modèles à effets mixtes si leurs effets aléatoires sont différents (voir la <a href="02-GLS_CAR_GLMM.html#sec-0232" class="quarto-xref">section&nbsp;<span>2.3.2</span></a>).</p>
-<p>Nous pouvons à présent analyser les effets fixes du modèle. Pour rappel, les variables indépendantes ont été centrées et réduites. Nous devons donc diviser les coefficients par les écarts types originaux de nos variables indépendantes pour permettre une interprétation dans l’échelle originale des données. Nous devons aussi les mettre en exponentiel afin de pouvoir les interpréter (puisque la fonction de lien est la fonction log).</p>
+<p>L’AIC conditionnel du second modèle est plus petit que celui du premier modèle, indiquant un meilleur ajustement. À titre de rappel, l’AIC conditionnel est une version du AIC plus adaptée pour comparer des modèles à effets mixtes si leurs effets aléatoires sont différents (voir la <a href="02-GLS_CAR_GLMM.html#sec-0232" class="quarto-xref">section&nbsp;<span>2.3.2</span></a>).</p>
+<p>Nous pouvons à présent analyser les effets fixes du modèle. Pour rappel, les variables indépendantes ont été centrées et réduites. Nous devons donc diviser les coefficients par les écarts types originaux de nos variables indépendantes pour permettre une interprétation dans l’échelle originale des données. Nous devons aussi les mettre en exponentiel afin de pouvoir les interpréter, puisque la fonction de lien est la fonction log.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extraction des coefficients et de leur intervalle de confiance</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>tab_fixe <span class="ot">&lt;-</span> <span class="fu">tidy</span>(model2, <span class="at">effects =</span> <span class="st">'fixed'</span>, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span>
@@ -1648,10 +1661,11 @@ Tableau&nbsp;10.3: Comparaison de la qualité d’ajustement des modèles 1 et 2
 <span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>  tab_fixe[[col]] <span class="ot">&lt;-</span> <span class="fu">exp</span>(tab_fixe[[col]] <span class="sc">/</span> sd_df<span class="sc">$</span>sd[ids])</span>
 <span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>tab_fixe<span class="sc">$</span>std.error <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(tab_fixe, <span class="at">digits =</span> <span class="dv">3</span>,</span>
-<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>             <span class="at">format.args =</span> <span class="fu">list</span>(<span class="at">decimal.mark =</span> <span class="st">','</span>, <span class="at">big.mark =</span> <span class="st">" "</span>),</span>
-<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">'terme'</span>,<span class="st">'coefficient'</span>, <span class="st">'IC 2,5%'</span>, <span class="st">'IC 97,5%'</span>, <span class="st">'coefficient standardisé'</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>tab_fixe[<span class="dv">1</span>, <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"constante"</span></span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(tab_fixe, <span class="at">digits =</span> <span class="dv">3</span>,</span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>             <span class="at">format.args =</span> <span class="fu">list</span>(<span class="at">decimal.mark =</span> <span class="st">','</span>, <span class="at">big.mark =</span> <span class="st">" "</span>),</span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">'terme'</span>,<span class="st">'coefficient'</span>, <span class="st">'IC 2,5%'</span>, <span class="st">'IC 97,5%'</span>, <span class="st">'coefficient standardisé'</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <colgroup>
@@ -1672,7 +1686,7 @@ Tableau&nbsp;10.3: Comparaison de la qualité d’ajustement des modèles 1 et 2
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: left;">constante</td>
 <td style="text-align: right;">0,001</td>
 <td style="text-align: right;">0,001</td>
 <td style="text-align: right;">0,001</td>
@@ -1766,7 +1780,7 @@ Tableau&nbsp;10.3: Comparaison de la qualité d’ajustement des modèles 1 et 2
 </table>
 </div>
 </div>
-<p>Finalement, nous pouvons extraire les effets aléatoires du modèle et plus spécifiquement nos coefficients variant spatialement. Pour cela, nous devons additionner le coefficient général et sa variation spatiale. Puisque nous avons centré et réduit nos variables, nous devons diviser les coefficients obtenu par l’écart type original de ces variables pour pouvoir les interpréter dans leur échelle originale. Efi, il nous reste à appliquer la fonction exponentielle pour obtenir l’effet local multiplicatif des variables indépendantes sur le taux de décès. La fonction <code>predict</code> du package <code>sdmTMB</code> permet d’extraire à la fois les valeurs prédites mais aussi les coefficients spatiaux du modèle.</p>
+<p>Finalement, nous pouvons extraire les effets aléatoires du modèle et plus spécifiquement nos coefficients variant spatialement. Pour cela, nous devons additionner le coefficient général et sa variation spatiale. Puisque nous avons centré et réduit nos variables, nous devons diviser les coefficients obtenus par l’écart type original de ces variables pour pouvoir les interpréter dans leur échelle originale. Effet, il reste à appliquer la fonction exponentielle pour obtenir l’effet local multiplicatif des variables indépendantes sur le taux de décès. La fonction <code>predict</code> du package <code>sdmTMB</code> permet d’extraire à la fois les valeurs prédites, mais aussi les coefficients spatiaux du modèle.</p>
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(matrixStats)</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">888</span>)</span>
@@ -1780,7 +1794,7 @@ Tableau&nbsp;10.3: Comparaison de la qualité d’ajustement des modèles 1 et 2
 <span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Extraction de 999 simulations des valeurs locales des coefficients spatiaux</span></span>
 <span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>preds2 <span class="ot">&lt;-</span> <span class="fu">predict</span>(model2, <span class="at">type =</span> <span class="st">'link'</span>, <span class="at">nsim =</span> <span class="dv">999</span>, <span class="at">sims_var =</span> <span class="st">'zeta_s'</span>)</span>
 <span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Extraction de 999 simulations des valeurs locales de l'intercepte spatial</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Extraction de 999 simulations des valeurs locales de la constante spatiale</span></span>
 <span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>preds3 <span class="ot">&lt;-</span> <span class="fu">predict</span>(model2, <span class="at">type =</span> <span class="st">'link'</span>, <span class="at">nsim =</span> <span class="dv">999</span>, <span class="at">sims_var =</span> <span class="st">'omega_s'</span>)</span>
 <span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Pour chacun des coefficients spatiaux, déterminer si la variation spatiale est </span></span>
@@ -1821,20 +1835,20 @@ Tableau&nbsp;10.3: Comparaison de la qualité d’ajustement des modèles 1 et 2
 <span id="cb25-52"><a href="#cb25-52" aria-hidden="true" tabindex="-1"></a>                           <span class="at">decimal.mark =</span> <span class="st">","</span>,</span>
 <span id="cb25-53"><a href="#cb25-53" aria-hidden="true" tabindex="-1"></a>                           <span class="at">big.mark =</span> <span class="st">" "</span>,</span>
 <span id="cb25-54"><a href="#cb25-54" aria-hidden="true" tabindex="-1"></a>                           <span class="at">digits =</span> <span class="dv">2</span>)</span>
-<span id="cb25-55"><a href="#cb25-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-56"><a href="#cb25-56" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_options</span>(<span class="at">frame =</span> <span class="cn">FALSE</span>, <span class="at">legend.frame =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb25-57"><a href="#cb25-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-58"><a href="#cb25-58" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(data_mode1) <span class="sc">+</span></span>
-<span id="cb25-59"><a href="#cb25-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
-<span id="cb25-60"><a href="#cb25-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="cn">NULL</span>,</span>
-<span id="cb25-61"><a href="#cb25-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">'sp_coeff_cr_per_atleast_hs'</span>,</span>
-<span id="cb25-62"><a href="#cb25-62" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
-<span id="cb25-63"><a href="#cb25-63" aria-hidden="true" tabindex="-1"></a>      <span class="at">style =</span> <span class="st">'fisher'</span>, <span class="at">n =</span> <span class="dv">7</span>, <span class="at">midpoint =</span> <span class="dv">1</span>,</span>
-<span id="cb25-64"><a href="#cb25-64" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="st">'-brewer.rd_bu'</span>,</span>
-<span id="cb25-65"><a href="#cb25-65" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
-<span id="cb25-66"><a href="#cb25-66" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.legend =</span> <span class="fu">tm_legend</span>(</span>
-<span id="cb25-67"><a href="#cb25-67" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">"Coef. diplôme d'études secondaires"</span>, </span>
-<span id="cb25-68"><a href="#cb25-68" aria-hidden="true" tabindex="-1"></a>      <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"center"</span>, <span class="st">"bottom"</span>),</span>
+<span id="cb25-55"><a href="#cb25-55" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_options</span>(<span class="at">frame =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb25-56"><a href="#cb25-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-57"><a href="#cb25-57" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(data_mode1) <span class="sc">+</span></span>
+<span id="cb25-58"><a href="#cb25-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
+<span id="cb25-59"><a href="#cb25-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="cn">NULL</span>,</span>
+<span id="cb25-60"><a href="#cb25-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">'sp_coeff_cr_per_atleast_hs'</span>,</span>
+<span id="cb25-61"><a href="#cb25-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
+<span id="cb25-62"><a href="#cb25-62" aria-hidden="true" tabindex="-1"></a>      <span class="at">style =</span> <span class="st">'fisher'</span>, <span class="at">n =</span> <span class="dv">7</span>, <span class="at">midpoint =</span> <span class="dv">1</span>,</span>
+<span id="cb25-63"><a href="#cb25-63" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="st">'-brewer.rd_bu'</span>,</span>
+<span id="cb25-64"><a href="#cb25-64" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
+<span id="cb25-65"><a href="#cb25-65" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.legend =</span> <span class="fu">tm_legend</span>(</span>
+<span id="cb25-66"><a href="#cb25-66" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">"Coef. pour le diplôme d'études secondaires"</span>, </span>
+<span id="cb25-67"><a href="#cb25-67" aria-hidden="true" tabindex="-1"></a>      <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"center"</span>, <span class="st">"bottom"</span>),</span>
+<span id="cb25-68"><a href="#cb25-68" aria-hidden="true" tabindex="-1"></a>      <span class="at">frame =</span> <span class="cn">FALSE</span>,</span>
 <span id="cb25-69"><a href="#cb25-69" aria-hidden="true" tabindex="-1"></a>      <span class="at">orientation =</span> <span class="st">"landscape"</span>)</span>
 <span id="cb25-70"><a href="#cb25-70" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb25-71"><a href="#cb25-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(<span class="fu">subset</span>(data_mode1, <span class="sc">!</span>data_mode1<span class="sc">$</span>sp_sign_cr_per_atleast_hs)) <span class="sc">+</span></span>
@@ -1853,77 +1867,81 @@ Tableau&nbsp;10.3: Comparaison de la qualité d’ajustement des modèles 1 et 2
 <span id="cb25-84"><a href="#cb25-84" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="st">'-brewer.rd_bu'</span>,</span>
 <span id="cb25-85"><a href="#cb25-85" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
 <span id="cb25-86"><a href="#cb25-86" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.legend =</span> <span class="fu">tm_legend</span>(</span>
-<span id="cb25-87"><a href="#cb25-87" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">"Coef. revenu"</span>, </span>
+<span id="cb25-87"><a href="#cb25-87" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">"Coef. pour le revenu"</span>, </span>
 <span id="cb25-88"><a href="#cb25-88" aria-hidden="true" tabindex="-1"></a>      <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"center"</span>, <span class="st">"bottom"</span>),</span>
-<span id="cb25-89"><a href="#cb25-89" aria-hidden="true" tabindex="-1"></a>      <span class="at">orientation =</span> <span class="st">"landscape"</span>)</span>
-<span id="cb25-90"><a href="#cb25-90" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb25-91"><a href="#cb25-91" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(<span class="fu">subset</span>(data_mode1, <span class="sc">!</span>data_mode1<span class="sc">$</span>sp_sign_cr_income)) <span class="sc">+</span></span>
-<span id="cb25-92"><a href="#cb25-92" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="at">col =</span> <span class="cn">NULL</span>, <span class="at">fill =</span> <span class="st">'grey'</span>) <span class="sc">+</span></span>
-<span id="cb25-93"><a href="#cb25-93" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_add_legend</span>(<span class="at">type =</span> <span class="st">'polygons'</span>, </span>
-<span id="cb25-94"><a href="#cb25-94" aria-hidden="true" tabindex="-1"></a>                <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"center"</span>, <span class="st">"bottom"</span>),</span>
-<span id="cb25-95"><a href="#cb25-95" aria-hidden="true" tabindex="-1"></a>                <span class="at">labels =</span> <span class="st">'non significatif'</span>, </span>
-<span id="cb25-96"><a href="#cb25-96" aria-hidden="true" tabindex="-1"></a>                <span class="at">col =</span> <span class="cn">NA</span>)</span>
-<span id="cb25-97"><a href="#cb25-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-98"><a href="#cb25-98" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(data_mode1) <span class="sc">+</span></span>
-<span id="cb25-99"><a href="#cb25-99" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
-<span id="cb25-100"><a href="#cb25-100" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="cn">NULL</span>,</span>
-<span id="cb25-101"><a href="#cb25-101" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">'sp_coeff_cr_per_nursing'</span>,</span>
-<span id="cb25-102"><a href="#cb25-102" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
-<span id="cb25-103"><a href="#cb25-103" aria-hidden="true" tabindex="-1"></a>      <span class="at">style =</span> <span class="st">'fisher'</span>, <span class="at">n =</span> <span class="dv">7</span>, <span class="at">midpoint =</span> <span class="dv">1</span>,</span>
-<span id="cb25-104"><a href="#cb25-104" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="st">'-brewer.rd_bu'</span>,</span>
-<span id="cb25-105"><a href="#cb25-105" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
-<span id="cb25-106"><a href="#cb25-106" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.legend =</span> <span class="fu">tm_legend</span>(</span>
-<span id="cb25-107"><a href="#cb25-107" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">"Coef. population en soin de longue durée"</span>, </span>
-<span id="cb25-108"><a href="#cb25-108" aria-hidden="true" tabindex="-1"></a>      <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"center"</span>, <span class="st">"bottom"</span>),</span>
-<span id="cb25-109"><a href="#cb25-109" aria-hidden="true" tabindex="-1"></a>      <span class="at">orientation =</span> <span class="st">"landscape"</span>)</span>
-<span id="cb25-110"><a href="#cb25-110" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb25-111"><a href="#cb25-111" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(<span class="fu">subset</span>(data_mode1, <span class="sc">!</span>data_mode1<span class="sc">$</span>sp_sign_cr_per_nursing)) <span class="sc">+</span></span>
-<span id="cb25-112"><a href="#cb25-112" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="at">col =</span> <span class="cn">NULL</span>, <span class="at">fill =</span> <span class="st">'grey'</span>) <span class="sc">+</span></span>
-<span id="cb25-113"><a href="#cb25-113" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_add_legend</span>(<span class="at">type =</span> <span class="st">'polygons'</span>, </span>
-<span id="cb25-114"><a href="#cb25-114" aria-hidden="true" tabindex="-1"></a>                <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"center"</span>, <span class="st">"bottom"</span>),</span>
-<span id="cb25-115"><a href="#cb25-115" aria-hidden="true" tabindex="-1"></a>                <span class="at">labels =</span> <span class="st">'non significatif'</span>, </span>
-<span id="cb25-116"><a href="#cb25-116" aria-hidden="true" tabindex="-1"></a>                <span class="at">col =</span> <span class="cn">NA</span>)</span>
-<span id="cb25-117"><a href="#cb25-117" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-118"><a href="#cb25-118" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(data_mode1) <span class="sc">+</span></span>
-<span id="cb25-119"><a href="#cb25-119" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
-<span id="cb25-120"><a href="#cb25-120" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="cn">NULL</span>,</span>
-<span id="cb25-121"><a href="#cb25-121" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">'sp_coeff_cr_X65plus'</span>,</span>
-<span id="cb25-122"><a href="#cb25-122" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
-<span id="cb25-123"><a href="#cb25-123" aria-hidden="true" tabindex="-1"></a>      <span class="at">style =</span> <span class="st">'fisher'</span>, <span class="at">n =</span> <span class="dv">7</span>, <span class="at">midpoint =</span> <span class="dv">1</span>,</span>
-<span id="cb25-124"><a href="#cb25-124" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="st">'-brewer.rd_bu'</span>,</span>
-<span id="cb25-125"><a href="#cb25-125" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
-<span id="cb25-126"><a href="#cb25-126" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.legend =</span> <span class="fu">tm_legend</span>(</span>
-<span id="cb25-127"><a href="#cb25-127" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">"Coef. 65 ans et plus"</span>, </span>
-<span id="cb25-128"><a href="#cb25-128" aria-hidden="true" tabindex="-1"></a>      <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"center"</span>, <span class="st">"bottom"</span>),</span>
-<span id="cb25-129"><a href="#cb25-129" aria-hidden="true" tabindex="-1"></a>      <span class="at">orientation =</span> <span class="st">"landscape"</span>)</span>
-<span id="cb25-130"><a href="#cb25-130" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb25-131"><a href="#cb25-131" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(<span class="fu">subset</span>(data_mode1, <span class="sc">!</span>data_mode1<span class="sc">$</span>sp_sign_cr_X65plus)) <span class="sc">+</span></span>
-<span id="cb25-132"><a href="#cb25-132" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="at">col =</span> <span class="cn">NULL</span>, <span class="at">fill =</span> <span class="st">'grey'</span>) <span class="sc">+</span></span>
-<span id="cb25-133"><a href="#cb25-133" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_add_legend</span>(<span class="at">type =</span> <span class="st">'polygons'</span>, </span>
-<span id="cb25-134"><a href="#cb25-134" aria-hidden="true" tabindex="-1"></a>                <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"center"</span>, <span class="st">"bottom"</span>),</span>
-<span id="cb25-135"><a href="#cb25-135" aria-hidden="true" tabindex="-1"></a>                <span class="at">labels =</span> <span class="st">'non significatif'</span>, </span>
-<span id="cb25-136"><a href="#cb25-136" aria-hidden="true" tabindex="-1"></a>                <span class="at">col =</span> <span class="cn">NA</span>)</span>
-<span id="cb25-137"><a href="#cb25-137" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-138"><a href="#cb25-138" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(data_mode1) <span class="sc">+</span></span>
-<span id="cb25-139"><a href="#cb25-139" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
-<span id="cb25-140"><a href="#cb25-140" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="cn">NULL</span>,</span>
-<span id="cb25-141"><a href="#cb25-141" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">'rand_intercept'</span>,</span>
-<span id="cb25-142"><a href="#cb25-142" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
-<span id="cb25-143"><a href="#cb25-143" aria-hidden="true" tabindex="-1"></a>      <span class="at">style =</span> <span class="st">'fisher'</span>, <span class="at">n =</span> <span class="dv">7</span>, <span class="at">midpoint =</span> <span class="dv">1</span>,</span>
-<span id="cb25-144"><a href="#cb25-144" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="st">'-brewer.rd_bu'</span>,</span>
-<span id="cb25-145"><a href="#cb25-145" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
-<span id="cb25-146"><a href="#cb25-146" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.legend =</span> <span class="fu">tm_legend</span>(</span>
-<span id="cb25-147"><a href="#cb25-147" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">"Intercepte aléatoire spatial"</span>, </span>
-<span id="cb25-148"><a href="#cb25-148" aria-hidden="true" tabindex="-1"></a>      <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"center"</span>, <span class="st">"bottom"</span>),</span>
-<span id="cb25-149"><a href="#cb25-149" aria-hidden="true" tabindex="-1"></a>      <span class="at">orientation =</span> <span class="st">"landscape"</span>)</span>
-<span id="cb25-150"><a href="#cb25-150" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb25-151"><a href="#cb25-151" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(<span class="fu">subset</span>(data_mode1, <span class="sc">!</span>data_mode1<span class="sc">$</span>rand_intercept_sign)) <span class="sc">+</span></span>
-<span id="cb25-152"><a href="#cb25-152" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="at">col =</span> <span class="cn">NULL</span>, <span class="at">fill =</span> <span class="st">'grey'</span>) <span class="sc">+</span></span>
-<span id="cb25-153"><a href="#cb25-153" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_add_legend</span>(<span class="at">type =</span> <span class="st">'polygons'</span>, </span>
-<span id="cb25-154"><a href="#cb25-154" aria-hidden="true" tabindex="-1"></a>                <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"center"</span>, <span class="st">"bottom"</span>),</span>
-<span id="cb25-155"><a href="#cb25-155" aria-hidden="true" tabindex="-1"></a>                <span class="at">labels =</span> <span class="st">'non significatif'</span>, </span>
-<span id="cb25-156"><a href="#cb25-156" aria-hidden="true" tabindex="-1"></a>                <span class="at">col =</span> <span class="cn">NA</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell quarto-layout-panel" data-layout-ncol="2" data-layout-align="center">
+<span id="cb25-89"><a href="#cb25-89" aria-hidden="true" tabindex="-1"></a>      <span class="at">frame =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb25-90"><a href="#cb25-90" aria-hidden="true" tabindex="-1"></a>      <span class="at">orientation =</span> <span class="st">"landscape"</span>)</span>
+<span id="cb25-91"><a href="#cb25-91" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb25-92"><a href="#cb25-92" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(<span class="fu">subset</span>(data_mode1, <span class="sc">!</span>data_mode1<span class="sc">$</span>sp_sign_cr_income)) <span class="sc">+</span></span>
+<span id="cb25-93"><a href="#cb25-93" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="at">col =</span> <span class="cn">NULL</span>, <span class="at">fill =</span> <span class="st">'grey'</span>) <span class="sc">+</span></span>
+<span id="cb25-94"><a href="#cb25-94" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_add_legend</span>(<span class="at">type =</span> <span class="st">'polygons'</span>, </span>
+<span id="cb25-95"><a href="#cb25-95" aria-hidden="true" tabindex="-1"></a>                <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"center"</span>, <span class="st">"bottom"</span>),</span>
+<span id="cb25-96"><a href="#cb25-96" aria-hidden="true" tabindex="-1"></a>                <span class="at">labels =</span> <span class="st">'non significatif'</span>, </span>
+<span id="cb25-97"><a href="#cb25-97" aria-hidden="true" tabindex="-1"></a>                <span class="at">col =</span> <span class="cn">NA</span>)</span>
+<span id="cb25-98"><a href="#cb25-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-99"><a href="#cb25-99" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(data_mode1) <span class="sc">+</span></span>
+<span id="cb25-100"><a href="#cb25-100" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
+<span id="cb25-101"><a href="#cb25-101" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="cn">NULL</span>,</span>
+<span id="cb25-102"><a href="#cb25-102" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">'sp_coeff_cr_per_nursing'</span>,</span>
+<span id="cb25-103"><a href="#cb25-103" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
+<span id="cb25-104"><a href="#cb25-104" aria-hidden="true" tabindex="-1"></a>      <span class="at">style =</span> <span class="st">'fisher'</span>, <span class="at">n =</span> <span class="dv">7</span>, <span class="at">midpoint =</span> <span class="dv">1</span>,</span>
+<span id="cb25-105"><a href="#cb25-105" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="st">'-brewer.rd_bu'</span>,</span>
+<span id="cb25-106"><a href="#cb25-106" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
+<span id="cb25-107"><a href="#cb25-107" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.legend =</span> <span class="fu">tm_legend</span>(</span>
+<span id="cb25-108"><a href="#cb25-108" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">"Coef. pour la population en soin de longue durée"</span>, </span>
+<span id="cb25-109"><a href="#cb25-109" aria-hidden="true" tabindex="-1"></a>      <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"center"</span>, <span class="st">"bottom"</span>),</span>
+<span id="cb25-110"><a href="#cb25-110" aria-hidden="true" tabindex="-1"></a>      <span class="at">frame =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb25-111"><a href="#cb25-111" aria-hidden="true" tabindex="-1"></a>      <span class="at">orientation =</span> <span class="st">"landscape"</span>)</span>
+<span id="cb25-112"><a href="#cb25-112" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb25-113"><a href="#cb25-113" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(<span class="fu">subset</span>(data_mode1, <span class="sc">!</span>data_mode1<span class="sc">$</span>sp_sign_cr_per_nursing)) <span class="sc">+</span></span>
+<span id="cb25-114"><a href="#cb25-114" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="at">col =</span> <span class="cn">NULL</span>, <span class="at">fill =</span> <span class="st">'grey'</span>) <span class="sc">+</span></span>
+<span id="cb25-115"><a href="#cb25-115" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_add_legend</span>(<span class="at">type =</span> <span class="st">'polygons'</span>, </span>
+<span id="cb25-116"><a href="#cb25-116" aria-hidden="true" tabindex="-1"></a>                <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"center"</span>, <span class="st">"bottom"</span>),</span>
+<span id="cb25-117"><a href="#cb25-117" aria-hidden="true" tabindex="-1"></a>                <span class="at">labels =</span> <span class="st">'non significatif'</span>, </span>
+<span id="cb25-118"><a href="#cb25-118" aria-hidden="true" tabindex="-1"></a>                <span class="at">col =</span> <span class="cn">NA</span>)</span>
+<span id="cb25-119"><a href="#cb25-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-120"><a href="#cb25-120" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(data_mode1) <span class="sc">+</span></span>
+<span id="cb25-121"><a href="#cb25-121" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
+<span id="cb25-122"><a href="#cb25-122" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="cn">NULL</span>,</span>
+<span id="cb25-123"><a href="#cb25-123" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">'sp_coeff_cr_X65plus'</span>,</span>
+<span id="cb25-124"><a href="#cb25-124" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
+<span id="cb25-125"><a href="#cb25-125" aria-hidden="true" tabindex="-1"></a>      <span class="at">style =</span> <span class="st">'fisher'</span>, <span class="at">n =</span> <span class="dv">7</span>, <span class="at">midpoint =</span> <span class="dv">1</span>,</span>
+<span id="cb25-126"><a href="#cb25-126" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="st">'-brewer.rd_bu'</span>,</span>
+<span id="cb25-127"><a href="#cb25-127" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
+<span id="cb25-128"><a href="#cb25-128" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.legend =</span> <span class="fu">tm_legend</span>(</span>
+<span id="cb25-129"><a href="#cb25-129" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">"Coef. pour les 65 ans et plus"</span>, </span>
+<span id="cb25-130"><a href="#cb25-130" aria-hidden="true" tabindex="-1"></a>      <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"center"</span>, <span class="st">"bottom"</span>),</span>
+<span id="cb25-131"><a href="#cb25-131" aria-hidden="true" tabindex="-1"></a>      <span class="at">frame =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb25-132"><a href="#cb25-132" aria-hidden="true" tabindex="-1"></a>      <span class="at">orientation =</span> <span class="st">"landscape"</span>)</span>
+<span id="cb25-133"><a href="#cb25-133" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb25-134"><a href="#cb25-134" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(<span class="fu">subset</span>(data_mode1, <span class="sc">!</span>data_mode1<span class="sc">$</span>sp_sign_cr_X65plus)) <span class="sc">+</span></span>
+<span id="cb25-135"><a href="#cb25-135" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="at">col =</span> <span class="cn">NULL</span>, <span class="at">fill =</span> <span class="st">'grey'</span>) <span class="sc">+</span></span>
+<span id="cb25-136"><a href="#cb25-136" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_add_legend</span>(<span class="at">type =</span> <span class="st">'polygons'</span>, </span>
+<span id="cb25-137"><a href="#cb25-137" aria-hidden="true" tabindex="-1"></a>                <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"center"</span>, <span class="st">"bottom"</span>),</span>
+<span id="cb25-138"><a href="#cb25-138" aria-hidden="true" tabindex="-1"></a>                <span class="at">labels =</span> <span class="st">'non significatif'</span>, </span>
+<span id="cb25-139"><a href="#cb25-139" aria-hidden="true" tabindex="-1"></a>                <span class="at">col =</span> <span class="cn">NA</span>)</span>
+<span id="cb25-140"><a href="#cb25-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-141"><a href="#cb25-141" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(data_mode1) <span class="sc">+</span></span>
+<span id="cb25-142"><a href="#cb25-142" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
+<span id="cb25-143"><a href="#cb25-143" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="cn">NULL</span>,</span>
+<span id="cb25-144"><a href="#cb25-144" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">'rand_intercept'</span>,</span>
+<span id="cb25-145"><a href="#cb25-145" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
+<span id="cb25-146"><a href="#cb25-146" aria-hidden="true" tabindex="-1"></a>      <span class="at">style =</span> <span class="st">'fisher'</span>, <span class="at">n =</span> <span class="dv">7</span>, <span class="at">midpoint =</span> <span class="dv">1</span>,</span>
+<span id="cb25-147"><a href="#cb25-147" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="st">'-brewer.rd_bu'</span>,</span>
+<span id="cb25-148"><a href="#cb25-148" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
+<span id="cb25-149"><a href="#cb25-149" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.legend =</span> <span class="fu">tm_legend</span>(</span>
+<span id="cb25-150"><a href="#cb25-150" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">"Constante aléatoire spatial"</span>, </span>
+<span id="cb25-151"><a href="#cb25-151" aria-hidden="true" tabindex="-1"></a>      <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"center"</span>, <span class="st">"bottom"</span>),</span>
+<span id="cb25-152"><a href="#cb25-152" aria-hidden="true" tabindex="-1"></a>      <span class="at">frame =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb25-153"><a href="#cb25-153" aria-hidden="true" tabindex="-1"></a>      <span class="at">orientation =</span> <span class="st">"landscape"</span>)</span>
+<span id="cb25-154"><a href="#cb25-154" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb25-155"><a href="#cb25-155" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(<span class="fu">subset</span>(data_mode1, <span class="sc">!</span>data_mode1<span class="sc">$</span>rand_intercept_sign)) <span class="sc">+</span></span>
+<span id="cb25-156"><a href="#cb25-156" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="at">col =</span> <span class="cn">NULL</span>, <span class="at">fill =</span> <span class="st">'grey'</span>) <span class="sc">+</span></span>
+<span id="cb25-157"><a href="#cb25-157" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_add_legend</span>(<span class="at">type =</span> <span class="st">'polygons'</span>, </span>
+<span id="cb25-158"><a href="#cb25-158" aria-hidden="true" tabindex="-1"></a>                <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"center"</span>, <span class="st">"bottom"</span>),</span>
+<span id="cb25-159"><a href="#cb25-159" aria-hidden="true" tabindex="-1"></a>                <span class="at">labels =</span> <span class="st">'non significatif'</span>, </span>
+<span id="cb25-160"><a href="#cb25-160" aria-hidden="true" tabindex="-1"></a>                <span class="at">col =</span> <span class="cn">NA</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell quarto-layout-panel" data-layout-align="center" data-layout-ncol="2">
 <div class="quarto-layout-row">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <div id="fig-glmmheterospacecoeff-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -1991,11 +2009,11 @@ Figure&nbsp;10.20: Intercepte aléatoire spatial
 </div>
 </div>
 </div>
-<p>Attention, dans les cartes ci-dessus (<a href="#fig-glmmheterospacecoeff-1" class="quarto-xref"><span>10.16</span></a> à <a href="#fig-glmmheterospacecoeff-5" class="quarto-xref"><span>10.20</span></a>), les comtés grisés correspondent à des comtés pour lesquels le coefficient cartographié n’a pas significativement varié spatialement. Dans ces cas-ci, l’effet qui s’applique dans le Comté est tout simplement l’effet fixe général pour ce coefficient.</p>
+<p>Attention, dans les cartes ci-dessus (figures <a href="#fig-glmmheterospacecoeff-1" class="quarto-xref"><span>10.16</span></a> à <a href="#fig-glmmheterospacecoeff-5" class="quarto-xref"><span>10.20</span></a>), les comtés grisés correspondent à des comtés pour lesquels le coefficient cartographié n’a pas significativement varié spatialement. Dans ces cas-ci, l’effet qui s’applique dans le comté est tout simplement l’effet fixe général pour ce coefficient.</p>
 <p>Premièrement, nous remarquons que les variations spatiales des coefficients du niveau d’éducation et du revenu sont toutes les deux beaucoup trop faibles pour avoir un impact réellement significatif. Il serait donc plus prudent de considérer que ces deux coefficients ne varient pas spatialement.</p>
 <p>Deuxièmement, pour le coefficient associé à la population en soin de longue durée, trois zones semblent caractérisées par des variations locales supérieures à zéro, soit une partie de l’État du Missouri, le nord de la Virginie en frontière avec l’État de Washington, et enfin quelques Comtés de l’État de New York. Cet effet suggère que la mortalité associée à cette population a été plus importante dans ces zones. Avec des coefficients variant entre 1,13 et 1,40 dans les deux premières zones et entre 2,5 et plus de 3 pour la troisième.</p>
 <p>Troisièmement, le pourcentage de la population de 65&nbsp;ans et plus a un effet variant un peu plus spatialement avec deux zones dans lesquels elle est associée avec une réduction du taux de décès (États de New York, New Hampshire, Vermont, Massachusetts, Connecticut et Rhode Island, et l’ouest des États de Washington et de l’Oregon); et trois zones dans lesquelles elle est associée avec une augmentation du taux de décès (États de l’Iowa, Nebraska, Kansas, Ohio et Floride).</p>
-<p>Finalement, l’intercepte spatial montre un impact significatif dans un plus grand nombre de Comtés. L’ouest des États-Unis tend à avoir des taux de décès plus élevés (jusqu’à 2,5&nbsp;fois) toutes choses étant égales par ailleurs. À l’inverse, le Nord Ouest avec les États de Washington, de l’Idaho, de l’Oregon et le Nord de la Californie sont caractérisés par des taux plus faibles (jusqu’à 50&nbsp;%). Dans l’est, l’État de New York et la Pennsylvanie sont aussi caractérisés par des taux plus élevés, alors que la Virginie et la Caroline du Nord ont tendance à avoir des taux plus faibles.</p>
+<p>Finalement, la constante spatiale montre un impact significatif dans un plus grand nombre de Comtés. L’ouest des États-Unis tend à avoir des taux de décès plus élevés (jusqu’à 2,5&nbsp;fois) toutes choses étant égales par ailleurs. À l’inverse, le nord-ouest avec les États de Washington, de l’Idaho, de l’Oregon et le nord de la Californie sont caractérisés par des taux plus faibles (jusqu’à 50&nbsp;%). Dans l’est, l’État de New York et la Pennsylvanie sont aussi caractérisés par des taux plus élevés, alors que la Virginie et la Caroline du Nord ont tendance à avoir des taux plus faibles.</p>
 </section>
 </section>
 <section id="sec-103" class="level2" data-number="10.3">
@@ -2132,7 +2150,7 @@ Relisez au besoin la <a href="#sec-1011" class="quarto-xref">section&nbsp;<span>
 </tr>
 <tr>
 <td>
-<label>soutraites</label>
+<label>soustraites</label>
 </td>
 <td>
 <input type="radio" name="q2" value="4">
@@ -2256,7 +2274,7 @@ Relisez au besoin la <a href="#sec-1011" class="quarto-xref">section&nbsp;<span>
 </tr>
 <tr>
 <td>
-<label>Ne pas tenir compte de la significativité locale risque d’entrainer une sur-interprétation des résultats</label>
+<label>Ne pas tenir compte de la significativité locale risque d’entrainer une surinterprétation des résultats</label>
 </td>
 <td>
 <input type="checkbox" name="q5" value="3">
@@ -2270,13 +2288,13 @@ Relisez au besoin la <a href="#sec-1011" class="quarto-xref">section&nbsp;<span>
 Dans un modèle GLMM, comment les effets aléatoires permettent-ils de capturer la variation spatiale d’un coefficient?
 </div>
 <div>
-Relisez au besoin la <span class="quarto-unresolved-ref">?sec-1031</span>.
+Relisez au besoin la <a href="#sec-1021" class="quarto-xref">section&nbsp;<span>10.2.1</span></a>.
 </div>
 <div class="quizlib-question-answers">
 <table class="table table-sm table-striped small">
 <tbody><tr>
 <td>
-<label>En ajustant un effet aléatoire avec une structure de covariance spatiale sur le coefficient en question</label>
+<label>En ajustant un effet aléatoire avec une structure de covariance spatiale sur le coefficient en question.</label>
 </td>
 <td>
 <input type="checkbox" name="q6" value="1">
@@ -2284,7 +2302,7 @@ Relisez au besoin la <span class="quarto-unresolved-ref">?sec-1031</span>.
 </tr>
 <tr>
 <td>
-<label>En ajoutant au modèle un processus gaussien sur le coefficient en question</label>
+<label>En ajoutant au modèle un processus gaussien sur le coefficient en question.</label>
 </td>
 <td>
 <input type="checkbox" name="q6" value="2">
@@ -2292,7 +2310,7 @@ Relisez au besoin la <span class="quarto-unresolved-ref">?sec-1031</span>.
 </tr>
 <tr>
 <td>
-<label>En ajoutant une interaction entre le coefficients en question et les coordonnées géographiques</label>
+<label>En ajoutant une interaction entre le coefficient et les coordonnées géographiques.</label>
 </td>
 <td>
 <input type="checkbox" name="q6" value="3">
@@ -2300,7 +2318,7 @@ Relisez au besoin la <span class="quarto-unresolved-ref">?sec-1031</span>.
 </tr>
 <tr>
 <td>
-<label>En ajoutant des fonctions de base spatiales combinées au coefficient en question</label>
+<label>En ajoutant des fonctions de base spatiales combinées au coefficient en question.</label>
 </td>
 <td>
 <input type="checkbox" name="q6" value="4">
@@ -2327,7 +2345,7 @@ Vérifiez votre résultat
 <p><strong>Exercice 1.</strong> Réalisation d’un modèle GAM avec des splines et coefficients variant spatialement</p>
 </div>
 <div class="bloc_exercice-body">
-<p>Complétez le code ci-dessous. Vous constaterez que la constance</p>
+<p>Complétez le code ci-dessous.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
@@ -2441,7 +2459,7 @@ Vérifiez votre résultat
 <span id="cb26-110"><a href="#cb26-110" aria-hidden="true" tabindex="-1"></a>                           <span class="at">decimal.mark =</span> <span class="st">","</span>,</span>
 <span id="cb26-111"><a href="#cb26-111" aria-hidden="true" tabindex="-1"></a>                           <span class="at">big.mark =</span> <span class="st">" "</span></span>
 <span id="cb26-112"><a href="#cb26-112" aria-hidden="true" tabindex="-1"></a>                           )</span>
-<span id="cb26-113"><a href="#cb26-113" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_options</span>(<span class="at">frame =</span> <span class="cn">FALSE</span>, <span class="at">legend.frame =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb26-113"><a href="#cb26-113" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_options</span>(<span class="at">frame =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb26-114"><a href="#cb26-114" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-115"><a href="#cb26-115" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(<span class="fu">mask</span>(raster_NivVieMed, mask_data)) <span class="sc">+</span> </span>
 <span id="cb26-116"><a href="#cb26-116" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_raster</span>(</span>
@@ -2452,9 +2470,10 @@ Vérifiez votre résultat
 <span id="cb26-121"><a href="#cb26-121" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="st">'-brewer.rd_bu'</span>,</span>
 <span id="cb26-122"><a href="#cb26-122" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
 <span id="cb26-123"><a href="#cb26-123" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.legend =</span> <span class="fu">tm_legend</span>(<span class="at">title =</span> <span class="st">"Niveau de vie"</span>,</span>
-<span id="cb26-124"><a href="#cb26-124" aria-hidden="true" tabindex="-1"></a>                           <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="at">pos.h =</span> <span class="st">"left"</span>, <span class="at">pos.v =</span> <span class="st">"top"</span>)</span>
-<span id="cb26-125"><a href="#cb26-125" aria-hidden="true" tabindex="-1"></a>                           )</span>
-<span id="cb26-126"><a href="#cb26-126" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb26-124"><a href="#cb26-124" aria-hidden="true" tabindex="-1"></a>                           <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="at">pos.h =</span> <span class="st">"left"</span>, <span class="at">pos.v =</span> <span class="st">"top"</span>),</span>
+<span id="cb26-125"><a href="#cb26-125" aria-hidden="true" tabindex="-1"></a>                           <span class="at">frame =</span> <span class="cn">FALSE</span></span>
+<span id="cb26-126"><a href="#cb26-126" aria-hidden="true" tabindex="-1"></a>                           )</span>
+<span id="cb26-127"><a href="#cb26-127" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Correction à la <a href="11-Exercices.html#sec-11101" class="quarto-xref">section&nbsp;<span>11.10.1</span></a>.</p>
 </div>
@@ -2628,7 +2647,7 @@ Vérifiez votre résultat
 <span id="cb28-114"><a href="#cb28-114" aria-hidden="true" tabindex="-1"></a>                           <span class="at">big.mark =</span> <span class="st">" "</span>,</span>
 <span id="cb28-115"><a href="#cb28-115" aria-hidden="true" tabindex="-1"></a>                           <span class="at">digits =</span> <span class="dv">2</span>)</span>
 <span id="cb28-116"><a href="#cb28-116" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-117"><a href="#cb28-117" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_options</span>(<span class="at">frame =</span> <span class="cn">FALSE</span>, <span class="at">legend.frame =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb28-117"><a href="#cb28-117" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_options</span>(<span class="at">frame =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb28-118"><a href="#cb28-118" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-119"><a href="#cb28-119" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(LyonIris) <span class="sc">+</span></span>
 <span id="cb28-120"><a href="#cb28-120" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
@@ -2641,54 +2660,57 @@ Vérifiez votre résultat
 <span id="cb28-127"><a href="#cb28-127" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.legend =</span> <span class="fu">tm_legend</span>(</span>
 <span id="cb28-128"><a href="#cb28-128" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">"Constante aléatoire spatial"</span>, </span>
 <span id="cb28-129"><a href="#cb28-129" aria-hidden="true" tabindex="-1"></a>      <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"center"</span>, <span class="st">"bottom"</span>),</span>
-<span id="cb28-130"><a href="#cb28-130" aria-hidden="true" tabindex="-1"></a>      <span class="at">orientation =</span> <span class="st">"landscape"</span>)</span>
-<span id="cb28-131"><a href="#cb28-131" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb28-132"><a href="#cb28-132" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(<span class="fu">subset</span>(LyonIris, <span class="sc">!</span>LyonIris<span class="sc">$</span>rand_intercept_sign)) <span class="sc">+</span></span>
-<span id="cb28-133"><a href="#cb28-133" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="at">col =</span> <span class="cn">NULL</span>, <span class="at">fill =</span> <span class="st">'grey'</span>) <span class="sc">+</span></span>
-<span id="cb28-134"><a href="#cb28-134" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_add_legend</span>(<span class="at">type =</span> <span class="st">'polygons'</span>, </span>
-<span id="cb28-135"><a href="#cb28-135" aria-hidden="true" tabindex="-1"></a>                <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"center"</span>, <span class="st">"bottom"</span>),</span>
-<span id="cb28-136"><a href="#cb28-136" aria-hidden="true" tabindex="-1"></a>                <span class="at">labels =</span> <span class="st">'non significatif'</span>, </span>
-<span id="cb28-137"><a href="#cb28-137" aria-hidden="true" tabindex="-1"></a>                <span class="at">col =</span> <span class="cn">NA</span>)</span>
-<span id="cb28-138"><a href="#cb28-138" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-139"><a href="#cb28-139" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(LyonIris) <span class="sc">+</span></span>
-<span id="cb28-140"><a href="#cb28-140" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
-<span id="cb28-141"><a href="#cb28-141" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="cn">NULL</span>,</span>
-<span id="cb28-142"><a href="#cb28-142" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">'sp_coeff_cr_Pct_Img'</span>,</span>
-<span id="cb28-143"><a href="#cb28-143" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
-<span id="cb28-144"><a href="#cb28-144" aria-hidden="true" tabindex="-1"></a>      <span class="at">style =</span> <span class="st">'fisher'</span>, <span class="at">n =</span> <span class="dv">7</span>, <span class="at">midpoint =</span> <span class="dv">0</span>,</span>
-<span id="cb28-145"><a href="#cb28-145" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="st">'-brewer.rd_bu'</span>,</span>
-<span id="cb28-146"><a href="#cb28-146" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
-<span id="cb28-147"><a href="#cb28-147" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.legend =</span> <span class="fu">tm_legend</span>(</span>
-<span id="cb28-148"><a href="#cb28-148" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">"Constante aléatoire spatial"</span>, </span>
-<span id="cb28-149"><a href="#cb28-149" aria-hidden="true" tabindex="-1"></a>      <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"center"</span>, <span class="st">"bottom"</span>),</span>
-<span id="cb28-150"><a href="#cb28-150" aria-hidden="true" tabindex="-1"></a>      <span class="at">orientation =</span> <span class="st">"landscape"</span>)</span>
-<span id="cb28-151"><a href="#cb28-151" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb28-152"><a href="#cb28-152" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(<span class="fu">subset</span>(LyonIris, <span class="sc">!</span>LyonIris<span class="sc">$</span>sp_sign_cr_Pct_Img)) <span class="sc">+</span></span>
-<span id="cb28-153"><a href="#cb28-153" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="at">col =</span> <span class="cn">NULL</span>, <span class="at">fill =</span> <span class="st">'grey'</span>) <span class="sc">+</span></span>
-<span id="cb28-154"><a href="#cb28-154" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_add_legend</span>(<span class="at">type =</span> <span class="st">'polygons'</span>, </span>
-<span id="cb28-155"><a href="#cb28-155" aria-hidden="true" tabindex="-1"></a>                <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"center"</span>, <span class="st">"bottom"</span>),</span>
-<span id="cb28-156"><a href="#cb28-156" aria-hidden="true" tabindex="-1"></a>                <span class="at">labels =</span> <span class="st">'non significatif'</span>, </span>
-<span id="cb28-157"><a href="#cb28-157" aria-hidden="true" tabindex="-1"></a>                <span class="at">col =</span> <span class="cn">NA</span>)</span>
-<span id="cb28-158"><a href="#cb28-158" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-159"><a href="#cb28-159" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(LyonIris) <span class="sc">+</span></span>
-<span id="cb28-160"><a href="#cb28-160" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
-<span id="cb28-161"><a href="#cb28-161" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="cn">NULL</span>,</span>
-<span id="cb28-162"><a href="#cb28-162" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">'sp_coeff_cr_NivVieMed'</span>,</span>
-<span id="cb28-163"><a href="#cb28-163" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
-<span id="cb28-164"><a href="#cb28-164" aria-hidden="true" tabindex="-1"></a>      <span class="at">style =</span> <span class="st">'fisher'</span>, <span class="at">n =</span> <span class="dv">7</span>, <span class="at">midpoint =</span> <span class="dv">0</span>,</span>
-<span id="cb28-165"><a href="#cb28-165" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="st">'-brewer.rd_bu'</span>,</span>
-<span id="cb28-166"><a href="#cb28-166" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
-<span id="cb28-167"><a href="#cb28-167" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.legend =</span> <span class="fu">tm_legend</span>(</span>
-<span id="cb28-168"><a href="#cb28-168" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">"Constante aléatoire spatial"</span>, </span>
-<span id="cb28-169"><a href="#cb28-169" aria-hidden="true" tabindex="-1"></a>      <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"center"</span>, <span class="st">"bottom"</span>),</span>
-<span id="cb28-170"><a href="#cb28-170" aria-hidden="true" tabindex="-1"></a>      <span class="at">orientation =</span> <span class="st">"landscape"</span>)</span>
-<span id="cb28-171"><a href="#cb28-171" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb28-172"><a href="#cb28-172" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(<span class="fu">subset</span>(LyonIris, <span class="sc">!</span>LyonIris<span class="sc">$</span>sp_sign_cr_NivVieMed)) <span class="sc">+</span></span>
-<span id="cb28-173"><a href="#cb28-173" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="at">col =</span> <span class="cn">NULL</span>, <span class="at">fill =</span> <span class="st">'grey'</span>) <span class="sc">+</span></span>
-<span id="cb28-174"><a href="#cb28-174" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_add_legend</span>(<span class="at">type =</span> <span class="st">'polygons'</span>, </span>
-<span id="cb28-175"><a href="#cb28-175" aria-hidden="true" tabindex="-1"></a>                <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"center"</span>, <span class="st">"bottom"</span>),</span>
-<span id="cb28-176"><a href="#cb28-176" aria-hidden="true" tabindex="-1"></a>                <span class="at">labels =</span> <span class="st">'non significatif'</span>, </span>
-<span id="cb28-177"><a href="#cb28-177" aria-hidden="true" tabindex="-1"></a>                <span class="at">col =</span> <span class="cn">NA</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb28-130"><a href="#cb28-130" aria-hidden="true" tabindex="-1"></a>      <span class="at">frame =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb28-131"><a href="#cb28-131" aria-hidden="true" tabindex="-1"></a>      <span class="at">orientation =</span> <span class="st">"landscape"</span>)</span>
+<span id="cb28-132"><a href="#cb28-132" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb28-133"><a href="#cb28-133" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(<span class="fu">subset</span>(LyonIris, <span class="sc">!</span>LyonIris<span class="sc">$</span>rand_intercept_sign)) <span class="sc">+</span></span>
+<span id="cb28-134"><a href="#cb28-134" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="at">col =</span> <span class="cn">NULL</span>, <span class="at">fill =</span> <span class="st">'grey'</span>) <span class="sc">+</span></span>
+<span id="cb28-135"><a href="#cb28-135" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_add_legend</span>(<span class="at">type =</span> <span class="st">'polygons'</span>, </span>
+<span id="cb28-136"><a href="#cb28-136" aria-hidden="true" tabindex="-1"></a>                <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"center"</span>, <span class="st">"bottom"</span>),</span>
+<span id="cb28-137"><a href="#cb28-137" aria-hidden="true" tabindex="-1"></a>                <span class="at">labels =</span> <span class="st">'non significatif'</span>, </span>
+<span id="cb28-138"><a href="#cb28-138" aria-hidden="true" tabindex="-1"></a>                <span class="at">col =</span> <span class="cn">NA</span>)</span>
+<span id="cb28-139"><a href="#cb28-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-140"><a href="#cb28-140" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(LyonIris) <span class="sc">+</span></span>
+<span id="cb28-141"><a href="#cb28-141" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
+<span id="cb28-142"><a href="#cb28-142" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="cn">NULL</span>,</span>
+<span id="cb28-143"><a href="#cb28-143" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">'sp_coeff_cr_Pct_Img'</span>,</span>
+<span id="cb28-144"><a href="#cb28-144" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
+<span id="cb28-145"><a href="#cb28-145" aria-hidden="true" tabindex="-1"></a>      <span class="at">style =</span> <span class="st">'fisher'</span>, <span class="at">n =</span> <span class="dv">7</span>, <span class="at">midpoint =</span> <span class="dv">0</span>,</span>
+<span id="cb28-146"><a href="#cb28-146" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="st">'-brewer.rd_bu'</span>,</span>
+<span id="cb28-147"><a href="#cb28-147" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
+<span id="cb28-148"><a href="#cb28-148" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.legend =</span> <span class="fu">tm_legend</span>(</span>
+<span id="cb28-149"><a href="#cb28-149" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">"Constante aléatoire spatial"</span>, </span>
+<span id="cb28-150"><a href="#cb28-150" aria-hidden="true" tabindex="-1"></a>      <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"center"</span>, <span class="st">"bottom"</span>),</span>
+<span id="cb28-151"><a href="#cb28-151" aria-hidden="true" tabindex="-1"></a>      <span class="at">frame =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb28-152"><a href="#cb28-152" aria-hidden="true" tabindex="-1"></a>      <span class="at">orientation =</span> <span class="st">"landscape"</span>)</span>
+<span id="cb28-153"><a href="#cb28-153" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb28-154"><a href="#cb28-154" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(<span class="fu">subset</span>(LyonIris, <span class="sc">!</span>LyonIris<span class="sc">$</span>sp_sign_cr_Pct_Img)) <span class="sc">+</span></span>
+<span id="cb28-155"><a href="#cb28-155" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="at">col =</span> <span class="cn">NULL</span>, <span class="at">fill =</span> <span class="st">'grey'</span>) <span class="sc">+</span></span>
+<span id="cb28-156"><a href="#cb28-156" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_add_legend</span>(<span class="at">type =</span> <span class="st">'polygons'</span>, </span>
+<span id="cb28-157"><a href="#cb28-157" aria-hidden="true" tabindex="-1"></a>                <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"center"</span>, <span class="st">"bottom"</span>),</span>
+<span id="cb28-158"><a href="#cb28-158" aria-hidden="true" tabindex="-1"></a>                <span class="at">labels =</span> <span class="st">'non significatif'</span>, </span>
+<span id="cb28-159"><a href="#cb28-159" aria-hidden="true" tabindex="-1"></a>                <span class="at">col =</span> <span class="cn">NA</span>)</span>
+<span id="cb28-160"><a href="#cb28-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-161"><a href="#cb28-161" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(LyonIris) <span class="sc">+</span></span>
+<span id="cb28-162"><a href="#cb28-162" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
+<span id="cb28-163"><a href="#cb28-163" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="cn">NULL</span>,</span>
+<span id="cb28-164"><a href="#cb28-164" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">'sp_coeff_cr_NivVieMed'</span>,</span>
+<span id="cb28-165"><a href="#cb28-165" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.scale =</span> <span class="fu">tm_scale_intervals</span>(</span>
+<span id="cb28-166"><a href="#cb28-166" aria-hidden="true" tabindex="-1"></a>      <span class="at">style =</span> <span class="st">'fisher'</span>, <span class="at">n =</span> <span class="dv">7</span>, <span class="at">midpoint =</span> <span class="dv">0</span>,</span>
+<span id="cb28-167"><a href="#cb28-167" aria-hidden="true" tabindex="-1"></a>      <span class="at">values =</span> <span class="st">'-brewer.rd_bu'</span>,</span>
+<span id="cb28-168"><a href="#cb28-168" aria-hidden="true" tabindex="-1"></a>      <span class="at">label.format =</span> legende_parametres),</span>
+<span id="cb28-169"><a href="#cb28-169" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill.legend =</span> <span class="fu">tm_legend</span>(</span>
+<span id="cb28-170"><a href="#cb28-170" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">"Constante aléatoire spatial"</span>, </span>
+<span id="cb28-171"><a href="#cb28-171" aria-hidden="true" tabindex="-1"></a>      <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"center"</span>, <span class="st">"bottom"</span>),</span>
+<span id="cb28-172"><a href="#cb28-172" aria-hidden="true" tabindex="-1"></a>      <span class="at">frame =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb28-173"><a href="#cb28-173" aria-hidden="true" tabindex="-1"></a>      <span class="at">orientation =</span> <span class="st">"landscape"</span>)</span>
+<span id="cb28-174"><a href="#cb28-174" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb28-175"><a href="#cb28-175" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(<span class="fu">subset</span>(LyonIris, <span class="sc">!</span>LyonIris<span class="sc">$</span>sp_sign_cr_NivVieMed)) <span class="sc">+</span></span>
+<span id="cb28-176"><a href="#cb28-176" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(<span class="at">col =</span> <span class="cn">NULL</span>, <span class="at">fill =</span> <span class="st">'grey'</span>) <span class="sc">+</span></span>
+<span id="cb28-177"><a href="#cb28-177" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_add_legend</span>(<span class="at">type =</span> <span class="st">'polygons'</span>, </span>
+<span id="cb28-178"><a href="#cb28-178" aria-hidden="true" tabindex="-1"></a>                <span class="at">position =</span> <span class="fu">tm_pos_out</span>(<span class="st">"center"</span>, <span class="st">"bottom"</span>),</span>
+<span id="cb28-179"><a href="#cb28-179" aria-hidden="true" tabindex="-1"></a>                <span class="at">labels =</span> <span class="st">'non significatif'</span>, </span>
+<span id="cb28-180"><a href="#cb28-180" aria-hidden="true" tabindex="-1"></a>                <span class="at">col =</span> <span class="cn">NA</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Correction à la <a href="11-Exercices.html#sec-11103" class="quarto-xref">section&nbsp;<span>11.10.3</span></a>.</p>
 </div>
