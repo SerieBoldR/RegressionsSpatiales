@@ -4,7 +4,7 @@
 
 **Résumé :** Ce livre vise à décrire une panoplie de méthodes de régression spatiale avec le logiciel ouvert R. La philosophie de ce livre est de donner toutes les clés de compréhension et de mise en œuvre des méthodes abordées dans R. La présentation des méthodes est basée sur une approche compréhensive et intuitive plutôt que mathématique, sans pour autant négliger la rigueur statistique.
 
-Le livre a d'ailleurs été écrit intégralement dans R avec [Quatro](https://quarto.org/).
+Le livre a d'ailleurs été écrit intégralement dans R avec [Quarto](https://quarto.org/).
 
 ## Structure du livre
 
